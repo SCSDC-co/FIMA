@@ -1,7 +1,8 @@
 #ifndef FIMA_TUI_H
 #define FIMA_TUI_H
 
-#include <iostream>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/screen.hpp>
 
 void printTui();
 
