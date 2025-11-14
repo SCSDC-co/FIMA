@@ -4,6 +4,6 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 
-void printTui();
+void printTui(std::string path);
 
 #endif

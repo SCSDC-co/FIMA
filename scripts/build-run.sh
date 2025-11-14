@@ -15,12 +15,12 @@ if [ "$dir" = "scripts" ]; then
 fi
 
 build() {
-    cmake .. || {
+    cmake --preset default .. || {
         echo "CMake configuration failed"
         exit 1
     }
 
-    make -j"$(nproc)" || {
+    ninja || {
         echo "Build failed"
         exit 1
     }

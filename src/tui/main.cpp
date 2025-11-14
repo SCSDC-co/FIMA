@@ -4,17 +4,33 @@
 #include <string>
 #include <vector>
 
+#include "../../include/helpers/list_directories.h"
 #include "../../include/tui/main.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 
-void printTui() {
+void printTui(std::string path) {
     using namespace ftxui;
 
-    // temporary values
-    std::string path = "really/cool/path";
-    std::vector<std::string> dirDirs;
-    std::vector<std::string> dirFiles;
+    std::vector<std::string> listOfTheDirectory = list_directories(path);
+
+    std::vector<Element> dirDirs;
+
+    std::vector<Element> dirFiles;
+
+    for (std::string dir : listOfTheDirectory) {
+        int lastSlash = dir.rfind('/');
+
+        dir = dir.erase(0, lastSlash + 1);
+
+        if (std::filesystem::is_directory(dir)) {
+            dir.append("/");
+
+            dirDirs.push_back(text(dir));
+        } else {
+            dirFiles.push_back(text(dir));
+        }
+    }
 
     auto document = vbox({
 
