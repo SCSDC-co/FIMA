@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ./get-source-files.sh
+./get-cli11-latest.sh
 
 cat ./utils/ascii-art.txt
 

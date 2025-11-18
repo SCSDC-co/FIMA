@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> list_directories(const std::string &path);
+namespace fs = std::filesystem;
+
+std::vector<fs::path> get_directories_entries(const fs::path &path);
 
 #endif

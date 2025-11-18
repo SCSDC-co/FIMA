@@ -1,24 +1,36 @@
 #include <filesystem>
-#include <iostream>
 #include <string>
 
+// I ABSOLUTELY LOVE THIS LIBRARY
+#include "../include/cli/CLI11.hpp"
+#include "../include/modules/ls/main.h"
 #include "../include/tui/main.h"
 
-int main(int argc, char *argv[]) {
-    std::string path;
+namespace fs = std::filesystem;
 
-    if (argc < 2) {
-        path = ".";
-    } else if (std::filesystem::is_directory(argv[1])) {
-        path = argv[1];
-    } else {
-        std::cout << "You need to specify a directory!" << std::endl;
-        std::cout << argv[1] << "Is not a valid directory" << std::endl;
+int main(int argc, char **argv) {
+    CLI::App app{"FIMA - Fast, Minimal & Awesome File Manager"};
+    argv = app.ensure_utf8(argv);
 
-        return 1;
+    fs::path path{fs::current_path()};
+    app.add_option("directory", path,
+                   "Directory to work on (default current directory)")
+        ->check(CLI::ExistingDirectory)
+        ->expected(0, 1);
+
+    CLI::App *ls_subcmd = app.add_subcommand(
+        "ls",
+        "Prints the content of the current directory like the ls command");
+
+    CLI11_PARSE(app, argc, argv);
+
+    if (*ls_subcmd) {
+        ls(path);
+
+        return 0;
     }
 
-    printTui(path);
+    start_tui(path);
 
     return 0;
 }

@@ -14,6 +14,7 @@ FIMA (File Manager) is a simple and fast file manager, written in C++.
 | CMake | Build system configuration generator |
 | Make | Build system |
 | FTXUI | TUI library |
+| CLI11 | CLI parsing |
 
 
 ## Scripts
@@ -26,6 +27,9 @@ These are the most important ones (so far):
 
 - `scripts/build-run.sh`
   - This is the script used to build, run or both the program
+
+- `scripts/get-cli11-latest.sh`
+  - This is the script used the get the latest version of `cli11`
 
 > [!IMPORTANT]
 > All the scripts should be run in the `scripts/` directory, so make sure to cd into it
