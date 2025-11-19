@@ -1,5 +1,4 @@
-#ifndef FIMA_LIST_DIRECTORIES_H
-#define FIMA_LIST_DIRECTORIES_H
+#pragma once
 
 #include <filesystem>
 #include <string>
@@ -8,5 +7,3 @@
 namespace fs = std::filesystem;
 
 std::vector<fs::path> get_directories_entries(const fs::path &path);
-
-#endif

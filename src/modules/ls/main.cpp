@@ -1,9 +1,10 @@
+#include "../../../include/modules/ls/main.h"
+
 #include <filesystem>
-#include <iostream>
 #include <vector>
 
 #include "../../../include/helpers/get_directories_entries.h"
-#include "../../../include/modules/ls/main.h"
+#include "../../../include/tui/modules/ls/ls_tui.h"
 
 namespace fs = std::filesystem;
 
@@ -26,15 +27,5 @@ void ls(fs::path path) {
         }
     }
 
-    std::cout << "DIRS:" << std::endl;
-
-    for (const auto &entry : dirDirs) {
-        std::cout << entry << std::endl;
-    }
-
-    std::cout << "FILES:" << std::endl;
-
-    for (const auto &entry : dirFiles) {
-        std::cout << entry << std::endl;
-    }
+    ls_tui(dirDirs, dirFiles);
 }

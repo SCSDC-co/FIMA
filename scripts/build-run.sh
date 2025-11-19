@@ -55,7 +55,7 @@ select opt in "${options[@]}"; do
         break
         ;;
     "Quit")
-        break
+        exit 0
         ;;
     *)
         echo "invalid option $REPLY"

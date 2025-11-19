@@ -1,3 +1,5 @@
+#include "../../include/tui/main.h"
+
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -5,7 +7,6 @@
 #include <vector>
 
 #include "../../include/helpers/get_directories_entries.h"
-#include "../../include/tui/main.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 

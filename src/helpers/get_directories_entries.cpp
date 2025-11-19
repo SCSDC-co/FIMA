@@ -1,8 +1,8 @@
+#include "../../include/helpers/get_directories_entries.h"
+
 #include <filesystem>
 #include <string>
 #include <vector>
-
-#include "../../include/helpers/get_directories_entries.h"
 
 namespace fs = std::filesystem;
 
