@@ -9,7 +9,7 @@
 namespace fs = std::filesystem;
 
 void ls(fs::path path) {
-    std::vector<fs::path> listOfTheDirectory = get_directories_entries(path);
+    std::vector<fs::path> listOfTheDirectory{get_directories_entries(path)};
 
     std::vector<std::string> dirDirs;
 

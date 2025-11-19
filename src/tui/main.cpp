@@ -15,7 +15,7 @@ namespace fs = std::filesystem;
 void start_tui(fs::path path) {
     using namespace ftxui;
 
-    std::vector<fs::path> listOfTheDirectory = get_directories_entries(path);
+    std::vector<fs::path> listOfTheDirectory{get_directories_entries(path)};
 
     std::vector<Element> dirDirs;
 
