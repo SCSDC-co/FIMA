@@ -11,6 +11,10 @@
 
 namespace fs = std::filesystem;
 
+/*  This file will contain both the core logic of the tree but also the TUI
+ *  logic, i'm too lazy to put them in 2 different files XD
+ */
+
 void tree(const fs::path &path) {
     using namespace ftxui;
 
@@ -59,7 +63,7 @@ void tree(const fs::path &path) {
         prefix_str += (is_last ? "╰──" : "├──");
 
         Element prefix_elem = text(" " + prefix_str + " ");
-        Element name_elem = text(name);
+        Element name_elem = text(name + " ");
 
         if (is_dir) {
             name_elem = name_elem | color(Color::Green);
