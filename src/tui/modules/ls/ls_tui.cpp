@@ -1,7 +1,6 @@
 #include "../../../../include/tui/modules/ls/ls_tui.h"
 
 #include <ftxui/dom/elements.hpp>
-#include <ftxui/dom/table.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <string>
@@ -14,34 +13,37 @@ void ls_tui(std::vector<std::string> dirs_vector,
             std::vector<std::string> files_vector) {
     using namespace ftxui;
 
-    std::vector<std::vector<Element>> rows;
-
-    rows.push_back({text("DIRS"), text("FILES")});
+    std::vector<Element> dirs;
+    std::vector<Element> files;
 
     size_t max_rows{std::max(dirs_vector.size(), files_vector.size())};
 
-    for (size_t i = 0; i < max_rows; ++i) {
-        Element dir_cell{i < dirs_vector.size() ? text(dirs_vector[i])
-                                                : text("")};
+    for (size_t i = 0; i < max_rows; i++) {
+        Element dir_cell{i < dirs_vector.size()
+                             ? text(" " + dirs_vector[i] + " ")
+                             : text("")};
 
-        Element file_cell{i < files_vector.size() ? text(files_vector[i])
-                                                  : text("")};
+        Element file_cell{i < files_vector.size()
+                              ? text(" " + files_vector[i] + " ") |
+                                    color(Color::White)
+                              : text("") | color(Color::White)};
 
-        rows.push_back({dir_cell, file_cell});
+        dirs.push_back(dir_cell);
+        files.push_back(file_cell);
     }
 
-    auto table = Table(rows);
+    Element dir_window =
+        window(text(" DIRS ") | bold, vbox(dirs)) | color(Color::Green);
 
-    table.SelectAll().Border(ROUNDED);
-    table.SelectAll().SeparatorVertical(LIGHT);
+    Element files_window =
+        window(text(" FILES ") | bold, vbox(files)) | color(Color::Green);
 
-    table.SelectRow(0).BorderBottom(LIGHT);
+    auto main_box = hbox({
+        dir_window,
+        files_window,
+    });
 
-    table.SelectAll().Decorate(color(Color::Green));
-
-    table.SelectColumn(1).Decorate(color(Color::White));
-
-    auto document = table.Render();
+    auto document = main_box;
     auto screen = Screen::Create(Dimension::Fit(document));
     Render(screen, document);
     screen.Print();
