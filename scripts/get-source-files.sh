@@ -2,7 +2,7 @@
 
 # This is a script for getting all the source files of FIMA
 
-touch ./cmake/files.cmake
+touch ../scripts/cmake/files.cmake
 
 cd ..
 

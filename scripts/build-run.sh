@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
-./get-source-files.sh
-./get-cli11-latest.sh
-
-cat ./utils/ascii-art.txt
+set -eo pipefail
 
 dir=$(basename "$(pwd)")
 
@@ -36,8 +31,62 @@ run() {
     ./fima
 }
 
+get-files-cli11-latest() {
+    ../scripts/get-source-files.sh
+    ../scripts/get-cli11-latest.sh
+}
+
+help() {
+    echo "USAGE"
+    echo "    $0 {1|2|3} | -h|--help"
+    echo ""
+    echo "OPTIONS"
+    echo "    This is the script for running, build or both FIMA"
+    echo ""
+    echo "OPTIONS"
+    echo "    1            build"
+    echo "    2            run"
+    echo "    3            build & run"
+    echo "    -h|--help    print the help message"
+
+    exit 0
+}
+
+if [ -z "$1" ]; then
+    echo ""
+else
+    case "$1" in
+    1)
+        get-files-cli11-latest
+        build
+        exit 0
+        ;;
+    2)
+        run
+        exit 0
+        ;;
+    3)
+        get-files-cli11-latest
+        build
+        run
+        exit 0
+        ;;
+    "-h" | "--help")
+        help
+        ;;
+    *)
+        echo "Invalid option $1"
+        help
+        ;;
+    esac
+fi
+
+get-files-cli11-latest
+
+cat ./utils/ascii-art.txt
+
 PS3="Please enter your choice: "
-options=("Build" "Run" "Build and Run" "Quit")
+options=("Build" "Run" "Build and Run" "Quit" "Help")
 
 select opt in "${options[@]}"; do
     case $opt in
@@ -57,8 +106,12 @@ select opt in "${options[@]}"; do
     "Quit")
         exit 0
         ;;
+    "Help")
+        help
+        ;;
     *)
         echo "invalid option $REPLY"
+        help
         ;;
     esac
 done
