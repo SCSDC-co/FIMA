@@ -59,6 +59,7 @@ else
     1)
         get-files-cli11-latest
         build
+        echo ""
         exit 0
         ;;
     2)
@@ -69,6 +70,7 @@ else
         get-files-cli11-latest
         build
         run
+        echo ""
         exit 0
         ;;
     "-h" | "--help")
@@ -83,7 +85,9 @@ fi
 
 get-files-cli11-latest
 
-cat ./utils/ascii-art.txt
+cat ../scripts/utils/ascii-art.txt
+
+echo ""
 
 PS3="Please enter your choice: "
 options=("Build" "Run" "Build and Run" "Quit" "Help")
@@ -91,14 +95,17 @@ options=("Build" "Run" "Build and Run" "Quit" "Help")
 select opt in "${options[@]}"; do
     case $opt in
     "Build")
+        echo ""
         build
         break
         ;;
     "Run")
+        echo ""
         run
         break
         ;;
     "Build and Run")
+        echo ""
         build
         run
         break
@@ -107,6 +114,7 @@ select opt in "${options[@]}"; do
         exit 0
         ;;
     "Help")
+        echo ""
         help
         ;;
     *)
@@ -115,3 +123,5 @@ select opt in "${options[@]}"; do
         ;;
     esac
 done
+
+echo ""

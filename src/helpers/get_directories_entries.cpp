@@ -7,7 +7,7 @@
 namespace fs = std::filesystem;
 
 std::vector<fs::path> get_directories_entries(const fs::path &path) {
-    std::vector<fs::path> directories;
+    std::vector<fs::path> directory_content;
 
     for (const fs::path &entry : std::filesystem::directory_iterator(path)) {
         std::string name{entry.filename().string()};
@@ -16,8 +16,8 @@ std::vector<fs::path> get_directories_entries(const fs::path &path) {
             continue;
         }
 
-        directories.push_back(entry);
+        directory_content.push_back(entry);
     }
 
-    return directories;
+    return directory_content;
 }

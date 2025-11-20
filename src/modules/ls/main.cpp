@@ -11,9 +11,9 @@ namespace fs = std::filesystem;
 void ls(fs::path path) {
     std::vector<fs::path> listOfTheDirectory{get_directories_entries(path)};
 
-    std::vector<std::string> dirDirs;
+    std::vector<std::string> vector_directories;
 
-    std::vector<std::string> dirFiles;
+    std::vector<std::string> vector_files;
 
     for (const fs::path &entry : listOfTheDirectory) {
         auto name{entry.filename().string()};
@@ -21,11 +21,11 @@ void ls(fs::path path) {
         if (fs::is_directory(entry)) {
             name += "/";
 
-            dirDirs.push_back(name);
+            vector_directories.push_back(name);
         } else {
-            dirFiles.push_back(name);
+            vector_files.push_back(name);
         }
     }
 
-    ls_tui(dirDirs, dirFiles);
+    ls_tui(vector_directories, vector_files);
 }

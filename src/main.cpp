@@ -4,6 +4,7 @@
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
 #include "../include/modules/ls/main.h"
+#include "../include/modules/tree/main.h"
 #include "../include/tui/main.h"
 
 namespace fs = std::filesystem;
@@ -19,13 +20,21 @@ int main(int argc, char **argv) {
         ->expected(0, 1);
 
     CLI::App *ls_subcmd = app.add_subcommand(
-        "ls",
-        "Prints the content of the current directory like the ls command");
+        "ls", "Prints the content of the directory like the ls command");
+
+    CLI::App *tree_subcmd =
+        app.add_subcommand("tree", "Prints the tree of the directory");
 
     CLI11_PARSE(app, argc, argv);
 
     if (*ls_subcmd) {
         ls(path);
+
+        return 0;
+    }
+
+    if (*tree_subcmd) {
+        tree(path);
 
         return 0;
     }
