@@ -4,8 +4,10 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
+#include <string>
 #include <vector>
 
+#include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 
@@ -15,14 +17,19 @@ namespace fs = std::filesystem;
  *  logic, i'm too lazy to put them in 2 different files XD
  */
 
-void tree(const fs::path &path) {
+void tree(const fs::path &path, bool tui) {
     using namespace ftxui;
 
-    std::string path_name = path.string();
+    int number_of_files = 0;
+    int number_of_dirs = 0;
+
+    std::string path_name = path.string() + "/";
 
     std::vector<bool> last_flags;
 
-    std::vector<Element> tree_vector;
+    std::vector<std::string> tree_vector;
+
+    std::vector<Element> tree_vector_tui;
 
     for (fs::recursive_directory_iterator it(path), end; it != end; ++it) {
         int depth = it.depth() + 1;
@@ -32,6 +39,12 @@ void tree(const fs::path &path) {
 
         if (is_dir) {
             name += "/";
+
+            number_of_dirs++;
+        }
+
+        if (fs::is_regular_file(*it)) {
+            number_of_files++;
         }
 
         fs::path parent = it->path().parent_path();
@@ -60,9 +73,16 @@ void tree(const fs::path &path) {
         for (int d = 1; d < depth; ++d) {
             prefix_str += (last_flags[d - 1] ? "    " : "│   ");
         }
-        prefix_str += (is_last ? "╰──" : "├──");
 
-        Element prefix_elem = text(" " + prefix_str + " ");
+        prefix_str += (is_last ? "╰── " : "├── ");
+
+        if (!tui) {
+            tree_vector.push_back(prefix_str + name);
+
+            continue;
+        }
+
+        Element prefix_elem = text(prefix_str);
         Element name_elem = text(name + " ");
 
         if (is_dir) {
@@ -73,16 +93,48 @@ void tree(const fs::path &path) {
 
         Element total_string = hbox({prefix_elem, name_elem});
 
-        tree_vector.push_back(total_string);
+        tree_vector_tui.push_back(total_string);
     }
 
-    Element main_box =
-        window(text(" Tree: " + path_name + " ") | bold, vbox(tree_vector)) |
-        color(Color::Green);
+    if (tui) {
+        Element main_box =
+            window(
+                text(" Tree: " + path_name + " ") | bold,
+                vbox(
 
-    auto document = main_box;
-    auto screen = Screen::Create(Dimension::Fit(document));
-    Render(screen, document);
-    screen.Print();
-    std::cout << std::endl;
+                    hbox(text(" "), vbox(tree_vector_tui)),
+
+                    text(""),
+
+                    vbox(
+
+                        hbox(text(" Number of directories: ") |
+                                 color(Color::Green),
+                             text(std::to_string(number_of_dirs)) |
+                                 color(Color::White)),
+
+                        hbox(text(" Number of files: ") | color(Color::Green),
+                             text(std::to_string(number_of_files)) |
+                                 color(Color::White))
+
+                            ))) |
+            color(Color::Green);
+
+        auto document = main_box;
+        auto screen = Screen::Create(Dimension::Fit(document));
+        Render(screen, document);
+        screen.Print();
+        std::cout << '\n';
+    } else {
+        std::cout << path_name << '\n';
+
+        for (const auto &entry : tree_vector) {
+            std::cout << entry << '\n';
+        }
+
+        std::cout << '\n';
+
+        std::cout << "Number of directories: " << number_of_dirs << '\n';
+        std::cout << "Number of files: " << number_of_files << '\n';
+    }
 }

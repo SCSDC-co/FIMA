@@ -5,4 +5,4 @@
 
 namespace fs = std::filesystem;
 
-void ls(fs::path path);
+void ls(fs::path path, bool tui);

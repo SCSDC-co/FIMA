@@ -8,7 +8,7 @@
 
 namespace fs = std::filesystem;
 
-void ls(fs::path path) {
+void ls(fs::path path, bool tui) {
     std::vector<fs::path> listOfTheDirectory{get_directories_entries(path)};
 
     std::vector<std::string> vector_directories;
@@ -27,5 +27,21 @@ void ls(fs::path path) {
         }
     }
 
-    ls_tui(vector_directories, vector_files);
+    if (tui) {
+        ls_tui(vector_directories, vector_files);
+    } else {
+        std::cout << "DIRS" << '\n';
+
+        for (const auto &entry : vector_directories) {
+            std::cout << entry << '\n';
+        }
+
+        std::cout << '\n';
+
+        std::cout << "FILES" << '\n';
+
+        for (const auto &entry : vector_files) {
+            std::cout << entry << '\n';
+        }
+    }
 }

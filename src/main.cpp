@@ -19,22 +19,28 @@ int main(int argc, char **argv) {
         ->check(CLI::ExistingDirectory)
         ->expected(0, 1);
 
+    bool tui{false};
+    app.add_flag("-n,--not-tui", tui, "Disable TUI")
+        ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
     CLI::App *ls_subcmd = app.add_subcommand(
         "ls", "Prints the content of the directory like the ls command");
 
-    CLI::App *tree_subcmd =
-        app.add_subcommand("tree", "Prints the tree of the directory");
+    CLI::App *tree_subcmd = app.add_subcommand(
+        "tree", "Prints the tree of the directory like the tree command");
 
     CLI11_PARSE(app, argc, argv);
 
+    tui = !tui;
+
     if (*ls_subcmd) {
-        ls(path);
+        ls(path, tui);
 
         return 0;
     }
 
     if (*tree_subcmd) {
-        tree(path);
+        tree(path, tui);
 
         return 0;
     }
