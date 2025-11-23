@@ -15,10 +15,6 @@
 
 namespace fs = std::filesystem;
 
-/*  This file will contain both the core logic of the tree but also the TUI
- *  logic, i'm too lazy to put them in 2 different files XD
- */
-
 std::vector<Element> tree_vector_tui;
 
 size_t number_of_files = 0;
