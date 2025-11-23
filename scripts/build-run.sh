@@ -32,8 +32,9 @@ run() {
 }
 
 get-files-cli11-latest() {
-    ../scripts/get-source-files.sh
-    ../scripts/get-cli11-latest.sh
+    ../scripts/get-source-files.sh >/dev/null
+    ../scripts/get-cli11-latest.sh >/dev/null
+    echo "Updated sources + downloaded CLI11 latest"
 }
 
 help() {
@@ -57,8 +58,12 @@ if [ -z "$1" ]; then
 else
     case "$1" in
     1)
+        echo ""
         get-files-cli11-latest
+        echo ""
+
         build
+
         echo ""
         exit 0
         ;;
@@ -67,9 +72,13 @@ else
         exit 0
         ;;
     3)
+        echo ""
         get-files-cli11-latest
+        echo ""
+
         build
         run
+
         echo ""
         exit 0
         ;;

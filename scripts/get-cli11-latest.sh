@@ -14,5 +14,7 @@ FILE_URL=$(curl -s $API_URL | jq -r '.assets[] | select(.name=="CLI11.hpp") | .b
 
 curl -sSL "$FILE_URL" -o "$OUTPUT_DIR"
 
+echo ""
 echo "Downloaded CLI11.hpp from latest release!"
 echo "Output: $OUTPUT_DIR"
+echo ""

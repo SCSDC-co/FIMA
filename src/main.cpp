@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
         ->expected(0, 1);
 
     bool tui{false};
-    app.add_flag("-n,--not-tui", tui, "Disable TUI")
+    app.add_flag("-n,--not-tui", tui, "Disable TUI (only works on ls and tree)")
         ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
     CLI::App *ls_subcmd = app.add_subcommand(
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     }
 
     if (*tree_subcmd) {
-        tree(path, tui);
+        tree(path, "", tui);
 
         return 0;
     }
