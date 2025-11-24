@@ -111,7 +111,7 @@ else
         echo
         build
         run
-        format-lint
+        format
         echo
         exit 0
         ;;
@@ -119,7 +119,8 @@ else
         help
         ;;
     *)
-        echo "Invalid option $1"
+        echo
+        echo -e "\033[31mInvalid option:\033[0m $1"
         help
         ;;
     esac
@@ -152,7 +153,7 @@ select opt in "${options[@]}"; do
         ;;
     "Format")
         echo
-        format-lint
+        format
         echo
         break
         ;;
@@ -160,7 +161,7 @@ select opt in "${options[@]}"; do
         echo
         build
         run
-        format-lint
+        format
         break
         ;;
     "Quit")
