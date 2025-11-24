@@ -44,35 +44,29 @@ get-files-cli11-latest() {
     echo "Updated sources + downloaded CLI11 latest"
 }
 
-format-lint() {
-    ../scripts/utils/fix-compile_commands.sh >/dev/null
-
+format() {
     for file in $(find ../src/ -type f -name "*.cpp"); do
-        clang-tidy -p=compile_commands_clean.json "$file"
+        clang-format -i "$file"
 
-        echo "Linted: $file"
-
-        clang-format "$file"
-
-        echo "Formatted: $file"
+        echo -e "\033[32mFormatted:\033[0m $file"
     done
 }
 
 help() {
     echo
     echo -e "\033[32mUSAGE\033[0m"
-    echo "    $0 {1|2|3|4|5} | -h|--help"
+    echo "    $0 [OPTIONS]"
     echo
     echo -e "\033[32mDESCRIPTION\033[0m"
-    echo "    This is the script for run, build, lint, format or do everything for FIMA"
+    echo "    Build, run, format and manage the FIMA project from a single script."
     echo
     echo -e "\033[32mOPTIONS\033[0m"
-    echo -e "    1           build"
-    echo -e "    2           run"
-    echo -e "    3           build & run"
-    echo -e "    4           format & lint"
-    echo -e "    5           does everything"
-    echo -e "    -h|--help   print the help message"
+    echo "    -b | --build         Build the project"
+    echo "    -r | --run           Run the executable"
+    echo "    -br| --build-run     Build and then run"
+    echo "    -f | --format        Format all source files"
+    echo "    -a | --all           Build, format and run everything"
+    echo "    -h | --help          Show this help message"
     echo
 
     exit 0
@@ -82,7 +76,7 @@ if [ -z "$1" ]; then
     echo
 else
     case "$1" in
-    1)
+    "-b" | "--build")
         echo
         get-files-cli11-latest
         echo
@@ -92,11 +86,11 @@ else
         echo
         exit 0
         ;;
-    2)
+    "-r" | "--run")
         run
         exit 0
         ;;
-    3)
+    "-br" | "--build-run")
         echo
         get-files-cli11-latest
         echo
@@ -107,13 +101,13 @@ else
         echo
         exit 0
         ;;
-    4)
+    "-f" | "--format")
         echo
-        format-lint
+        format
         echo
         exit 0
         ;;
-    5)
+    "-a" | "--all")
         echo
         build
         run
@@ -136,7 +130,7 @@ get-files-cli11-latest
 echo
 
 PS3="Please enter your choice: "
-options=("Build" "Run" "Build and Run" "Format and lint" "All" "Quit" "Help")
+options=("Build" "Run" "Build and Run" "Format" "All" "Quit" "Help")
 
 select opt in "${options[@]}"; do
     case $opt in
@@ -156,7 +150,7 @@ select opt in "${options[@]}"; do
         run
         break
         ;;
-    "Format and lint")
+    "Format")
         echo
         format-lint
         echo
