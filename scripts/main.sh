@@ -126,8 +126,6 @@ else
     esac
 fi
 
-get-files-cli11-latest
-
 echo
 
 PS3="Please enter your choice: "
@@ -137,31 +135,44 @@ select opt in "${options[@]}"; do
     case $opt in
     "Build")
         echo
+
+        get-files-cli11-latest
         build
+
         break
         ;;
     "Run")
         echo
+
         run
+
         break
         ;;
     "Build and Run")
         echo
+
+        get-files-cli11-latest
         build
         run
+
         break
         ;;
     "Format")
         echo
+
         format
+
         echo
         break
         ;;
     "All")
         echo
+
+        format
+        get-files-cli11-latest
         build
         run
-        format
+
         break
         ;;
     "Quit")
