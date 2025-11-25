@@ -1,4 +1,4 @@
-#include "../../../../include/tui/modules/tree/tree_tui.h"
+#include "../../../../include/tui/commands/tree/tree_tui.h"
 
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -16,7 +16,9 @@ void tree_tui(std::string path_name,
               size_t number_of_dirs, size_t number_of_files) {
     Element main_box =
         window(
-            text(" Tree: " + path_name + "/ ") | bold,
+            text(" Tree: " + path_name +
+                 (path_name.back() == '/' ? " " : "/ ")) |
+                bold,
             vbox(
 
                 hbox(text(" "), vbox(tree_vector_tui)),

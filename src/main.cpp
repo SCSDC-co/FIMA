@@ -3,8 +3,8 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
-#include "../include/modules/ls/main.h"
-#include "../include/modules/tree/main.h"
+#include "../include/commands/ls/main.h"
+#include "../include/commands/tree/main.h"
 #include "../include/tui/main.h"
 
 namespace fs = std::filesystem;

@@ -5,6 +5,10 @@
 # This script is used for everything
 ###########
 
+export GUM_CHOOSE_HEADER_FOREGROUND="#76946A"
+export GUM_CHOOSE_CURSOR_FOREGROUND="#76946A"
+export GUM_CHOOSE_ITEM_FOREGROUND="#2A2A2A"
+
 set -eo pipefail
 
 echo
@@ -126,27 +130,25 @@ else
     esac
 fi
 
-echo
+if command -v gum >/dev/null 2>&1; then
+    SELECTION=$(
+        gum choose \
+            --header "What do you want to do?" \
+            --height=7 \
+            "Build" "Run" "Build and run" "Format" "All" "Quit" "Help"
+    )
 
-PS3="Please enter your choice: "
-options=("Build" "Run" "Build and Run" "Format" "All" "Quit" "Help")
-
-select opt in "${options[@]}"; do
-    case $opt in
+    case "$SELECTION" in
     "Build")
         echo
 
         get-files-cli11-latest
         build
-
-        break
         ;;
     "Run")
         echo
 
         run
-
-        break
         ;;
     "Build and Run")
         echo
@@ -154,16 +156,11 @@ select opt in "${options[@]}"; do
         get-files-cli11-latest
         build
         run
-
-        break
         ;;
     "Format")
         echo
 
         format
-
-        echo
-        break
         ;;
     "All")
         echo
@@ -172,8 +169,6 @@ select opt in "${options[@]}"; do
         get-files-cli11-latest
         build
         run
-
-        break
         ;;
     "Quit")
         exit 0
@@ -181,11 +176,69 @@ select opt in "${options[@]}"; do
     "Help")
         help
         ;;
-    *)
-        echo "invalid option $REPLY"
-        help
-        ;;
     esac
-done
+else
+    echo
+
+    PS3="Please enter your choice: "
+    options=("Build" "Run" "Build and Run" "Format" "All" "Quit" "Help")
+
+    select opt in "${options[@]}"; do
+        case $opt in
+        "Build")
+            echo
+
+            get-files-cli11-latest
+            build
+
+            break
+            ;;
+        "Run")
+            echo
+
+            run
+
+            break
+            ;;
+        "Build and Run")
+            echo
+
+            get-files-cli11-latest
+            build
+            run
+
+            break
+            ;;
+        "Format")
+            echo
+
+            format
+
+            echo
+            break
+            ;;
+        "All")
+            echo
+
+            format
+            get-files-cli11-latest
+            build
+            run
+
+            break
+            ;;
+        "Quit")
+            exit 0
+            ;;
+        "Help")
+            help
+            ;;
+        *)
+            echo "invalid option $REPLY"
+            help
+            ;;
+        esac
+    done
+fi
 
 echo

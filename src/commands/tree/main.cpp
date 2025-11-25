@@ -1,4 +1,4 @@
-#include "../../../include/modules/tree/main.h"
+#include "../../../include/commands/tree/main.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../../include/tui/modules/tree/tree_tui.h"
+#include "../../../include/tui/commands/tree/tree_tui.h"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
@@ -57,7 +57,7 @@ void create_tree(std::string path, std::string prefix, bool tui) {
         if (!tui) {
             if (entry.is_directory()) {
                 std::cout << green << prefix << pointers[0]
-                          << entry.path().filename().string() << reset
+                          << entry.path().filename().string() << "/" << reset
                           << std::endl;
             } else {
                 std::cout << green << prefix << pointers[0] << reset
@@ -92,7 +92,8 @@ void create_tree(std::string path, std::string prefix, bool tui) {
 
 void tree(const fs::path &path, std::string prefix, bool tui) {
     if (!tui) {
-        std::cout << green << path.string() << "/" << reset << '\n';
+        std::cout << green << path.string()
+                  << (path.string().back() == '/' ? "" : "/") << reset << '\n';
     }
 
     create_tree(path.string(), prefix, tui);

@@ -1,9 +1,9 @@
 set(SOURCE_FILES
     src/helpers/get_directories_entries.cpp
-    src/tui/modules/tree/tree_tui.cpp
-    src/tui/modules/ls/ls_tui.cpp
-    src/modules/tree/main.cpp
-    src/modules/ls/main.cpp
+    src/tui/commands/tree/tree_tui.cpp
+    src/tui/commands/ls/ls_tui.cpp
+    src/commands/tree/main.cpp
+    src/commands/ls/main.cpp
     src/tui/main.cpp
     src/main.cpp
 )
