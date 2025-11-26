@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
     CLI::App app{"FIMA - Fast, Minimal & Awesome File Manager"};
     argv = app.ensure_utf8(argv);
 
+    bool tui{false};
     bool display_version{false};
+
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
     fs::path path{fs::current_path()};
@@ -25,15 +27,17 @@ int main(int argc, char **argv) {
         ->check(CLI::ExistingDirectory)
         ->expected(0, 1);
 
-    bool tui{false};
-    app.add_flag("-n,--not-tui", tui, "Disable TUI (only works on ls and tree)")
-        ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
-
     CLI::App *ls_subcmd = app.add_subcommand(
         "ls", "Prints the content of the directory like the ls command");
 
+    ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
+        ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
     CLI::App *tree_subcmd = app.add_subcommand(
         "tree", "Prints the tree of the directory like the tree command");
+
+    tree_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
+        ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
     CLI11_PARSE(app, argc, argv);
 
