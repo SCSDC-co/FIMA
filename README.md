@@ -41,3 +41,17 @@ These are the most important ones (so far):
 **Other dependencies**:
 - **Curl**: for downloading the latest version of CLI11
 - **jq**: for parsing the json that github provides
+
+## Road Map
+
+- [ ] add the following commands:
+  - [ ] `create`
+  - [ ] `remove`
+  - [ ] `copy`
+  - [ ] `move`
+  - [ ] `permissions`
+  - [ ] `info`
+
+## License
+
+This product is under the GPL 3.0 license, see [LICENSE](./LICENSE) for more details.
