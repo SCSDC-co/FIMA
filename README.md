@@ -50,7 +50,7 @@ These are the most important ones (so far):
 
 - [ ] add the following commands:
   - [x] `create`
-  - [ ] `remove`
+  - [x] `remove`
   - [ ] `copy`
   - [ ] `move`
   - [ ] `permissions`

@@ -7,6 +7,8 @@
 #include "../include/commands/create/directory.h"
 #include "../include/commands/create/file.h"
 #include "../include/commands/ls/main.h"
+#include "../include/commands/remove/directory.h"
+#include "../include/commands/remove/file.h"
 #include "../include/commands/tree/main.h"
 #include "../include/tui/main.h"
 
@@ -20,7 +22,7 @@ int main(int argc, char **argv) {
 
     bool tui{false};
     bool display_version{false};
-    std::string path_to_create;
+    std::string path_to_create_or_remove;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
@@ -45,9 +47,16 @@ int main(int argc, char **argv) {
     CLI::App *create_subcmd =
         app.add_subcommand("create", "Create a dir or a file");
 
-    create_subcmd->add_option("path", path_to_create, "Path to create");
+    create_subcmd->add_option("path", path_to_create_or_remove,
+                              "File or dir to create");
     create_subcmd->add_subcommand("dir", "Creates a directory");
     create_subcmd->add_subcommand("file", "Creates a file");
+
+    CLI::App *remove_subcmd =
+        app.add_subcommand("remove", "Removes a file or a directory");
+
+    remove_subcmd->add_option("path", path_to_create_or_remove,
+                              "File or dir to remove");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -72,11 +81,21 @@ int main(int argc, char **argv) {
     }
 
     if (create_subcmd->got_subcommand("dir")) {
-        create_dir(path_to_create);
+        create_dir(path_to_create_or_remove);
 
         return 0;
     } else if (create_subcmd->got_subcommand("file")) {
-        create_file(path_to_create);
+        create_file(path_to_create_or_remove);
+
+        return 0;
+    }
+
+    if (*remove_subcmd) {
+        if (fs::is_regular_file(path_to_create_or_remove)) {
+            remove_file(path_to_create_or_remove);
+        } else if (fs::is_directory(path_to_create_or_remove)) {
+            remove_dir(path_to_create_or_remove);
+        }
 
         return 0;
     }
