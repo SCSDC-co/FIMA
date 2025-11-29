@@ -20,8 +20,6 @@ int main(int argc, char **argv) {
 
     bool tui{false};
     bool display_version{false};
-    bool file_flag{false};
-    bool dir_flag{false};
     std::string path_to_create;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
@@ -48,8 +46,8 @@ int main(int argc, char **argv) {
         app.add_subcommand("create", "Create a dir or a file");
 
     create_subcmd->add_option("path", path_to_create, "Path to create");
-    create_subcmd->add_flag("--file", file_flag, "Create a file");
-    create_subcmd->add_flag("--dir", dir_flag, "Create a directory");
+    create_subcmd->add_subcommand("dir", "Creates a directory");
+    create_subcmd->add_subcommand("file", "Creates a file");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -73,14 +71,12 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if (*create_subcmd) {
-        if (file_flag) {
-            create_file(path);
-        } else if (dir_flag) {
-            create_dir(path);
-        } else {
-            std::cout << "You need to choose a directory or a file!" << '\n';
-        }
+    if (create_subcmd->got_subcommand("dir")) {
+        create_dir(path_to_create);
+
+        return 0;
+    } else if (create_subcmd->got_subcommand("file")) {
+        create_file(path_to_create);
 
         return 0;
     }
