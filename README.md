@@ -49,7 +49,7 @@ These are the most important ones (so far):
 ## Road Map
 
 - [ ] add the following commands:
-  - [ ] `create`
+  - [x] `create`
   - [ ] `remove`
   - [ ] `copy`
   - [ ] `move`
