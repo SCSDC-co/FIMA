@@ -8,6 +8,8 @@ namespace fs = std::filesystem;
 void create_dir(fs::path path) {
     if (fs::is_directory(path)) {
         std::cout << "This directory already exist! " << path << '\n';
+
+        return;
     }
 
     fs::create_directory(path);
