@@ -12,7 +12,7 @@ void create_dir(fs::path path) {
         return;
     }
 
-    fs::create_directory(path);
+    fs::create_directories(path);
 
     std::cout << "Directory created at: " << path << '\n';
 }

@@ -3,10 +3,12 @@ set(SOURCE_FILES
     src/tui/commands/tree/tree_tui.cpp
     src/commands/remove/directory.cpp
     src/commands/create/directory.cpp
+    src/commands/copy/directory.cpp
     src/tui/commands/ls/ls_tui.cpp
     src/commands/remove/file.cpp
     src/commands/create/file.cpp
     src/commands/tree/main.cpp
+    src/commands/copy/file.cpp
     src/commands/ls/main.cpp
     src/tui/main.cpp
     src/main.cpp

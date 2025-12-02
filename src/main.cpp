@@ -4,6 +4,8 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
+#include "../include/commands/copy/directory.h"
+#include "../include/commands/copy/file.h"
 #include "../include/commands/create/directory.h"
 #include "../include/commands/create/file.h"
 #include "../include/commands/ls/main.h"
@@ -22,7 +24,10 @@ int main(int argc, char **argv) {
 
     bool tui{false};
     bool display_version{false};
-    std::string path_to_create_or_remove;
+
+    fs::path path_to_create_or_remove;
+    fs::path path_to_copy;
+    fs::path destination;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
@@ -32,11 +37,19 @@ int main(int argc, char **argv) {
         ->check(CLI::ExistingDirectory)
         ->expected(0, 1);
 
+    /*  ==============
+     *  LS SUB COMMAND
+     */
+
     CLI::App *ls_subcmd = app.add_subcommand(
         "ls", "Prints the content of the directory like the ls command");
 
     ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
         ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
+    /*  ==============
+     *  TREE SUB COMMAND
+     */
 
     CLI::App *tree_subcmd = app.add_subcommand(
         "tree", "Prints the tree of the directory like the tree command");
@@ -44,19 +57,38 @@ int main(int argc, char **argv) {
     tree_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
         ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
+    /*  ==============
+     *  CREATE SUB COMMAND
+     */
+
     CLI::App *create_subcmd =
-        app.add_subcommand("create", "Create a dir or a file");
+        app.add_subcommand("create", "Create a directory or a file");
 
     create_subcmd->add_option("path", path_to_create_or_remove,
                               "File or dir to create");
     create_subcmd->add_subcommand("dir", "Creates a directory");
     create_subcmd->add_subcommand("file", "Creates a file");
 
+    /*  ==============
+     *  REMOVE SUB COMMAND
+     */
+
     CLI::App *remove_subcmd =
         app.add_subcommand("remove", "Removes a file or a directory");
 
     remove_subcmd->add_option("path", path_to_create_or_remove,
-                              "File or dir to remove");
+                              "File or directory to remove");
+
+    /*  ==============
+     *  COPY SUB COMMAND
+     */
+
+    CLI::App *copy_subcmd =
+        app.add_subcommand("copy", "Copy a file or a directory");
+
+    copy_subcmd->add_option("source-file", path_to_copy,
+                            "File or directory copy");
+    copy_subcmd->add_option("destination", destination, "Destination");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -95,6 +127,16 @@ int main(int argc, char **argv) {
             remove_file(path_to_create_or_remove);
         } else if (fs::is_directory(path_to_create_or_remove)) {
             remove_dir(path_to_create_or_remove);
+        }
+
+        return 0;
+    }
+
+    if (*copy_subcmd) {
+        if (fs::is_regular_file(path_to_copy)) {
+            fima_copy_file(path_to_copy, destination);
+        } else if (fs::is_directory(path_to_copy)) {
+            fima_copy_directory(path_to_copy, destination);
         }
 
         return 0;
