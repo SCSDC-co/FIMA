@@ -51,7 +51,7 @@ These are the most important ones (so far):
 - [ ] add the following commands:
   - [x] `create`
   - [x] `remove`
-  - [ ] `copy`
+  - [x] `copy`
   - [ ] `move`
   - [ ] `permissions`
   - [ ] `info`
