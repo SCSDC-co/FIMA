@@ -5,4 +5,8 @@
 
 namespace fs = std::filesystem;
 
-void tree(const fs::path &path, std::string prefix, bool tui);
+namespace fima {
+    namespace tree {
+        void start(const fs::path &path, std::string prefix, bool tui);
+    }
+} // namespace fima

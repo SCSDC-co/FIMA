@@ -5,14 +5,18 @@
 
 namespace fs = std::filesystem;
 
-void remove_dir(fs::path path) {
-    if (!fs::is_directory(path)) {
-        std::cout << "The directory doesn't exitst!" << path << '\n';
+namespace fima {
+    namespace remove {
+        void dir(fs::path path) {
+            if (!fs::is_directory(path)) {
+                std::cout << "The directory doesn't exitst!" << path << '\n';
 
-        return;
-    }
+                return;
+            }
 
-    fs::remove_all(path);
+            fs::remove_all(path);
 
-    std::cout << "Directory removed: " << path << '\n';
-}
+            std::cout << "Directory removed: " << path << '\n';
+        }
+    } // namespace remove
+} // namespace fima

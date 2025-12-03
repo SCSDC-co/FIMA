@@ -13,52 +13,58 @@
 
 namespace fs = std::filesystem;
 
-void start_tui(fs::path path) {
-    using namespace ftxui;
+namespace fima {
+    namespace tui {
+        void start_tui(fs::path path) {
+            using namespace ftxui;
 
-    std::vector<fs::path> list_of_the_directory{get_directories_entries(path)};
+            std::vector<fs::path> list_of_the_directory{
+                fima::helpers::get_directories_entries(path)};
 
-    sort(list_of_the_directory.begin(), list_of_the_directory.end(),
-         [](auto &a, auto &b) {
-             if (fs::is_directory(a) && !fs::is_directory(b)) {
-                 return true;
-             }
+            sort(list_of_the_directory.begin(), list_of_the_directory.end(),
+                 [](auto &a, auto &b) {
+                     if (fs::is_directory(a) && !fs::is_directory(b)) {
+                         return true;
+                     }
 
-             if (!fs::is_directory(a) && fs::is_directory(b)) {
-                 return false;
-             }
+                     if (!fs::is_directory(a) && fs::is_directory(b)) {
+                         return false;
+                     }
 
-             return a.filename() < b.filename();
-         });
+                     return a.filename() < b.filename();
+                 });
 
-    std::vector<Element> path_entries;
+            std::vector<Element> path_entries;
 
-    for (const fs::path &entry : list_of_the_directory) {
-        auto name = entry.filename().string();
+            for (const fs::path &entry : list_of_the_directory) {
+                auto name = entry.filename().string();
 
-        if (fs::is_directory(entry)) {
-            name += "/";
+                if (fs::is_directory(entry)) {
+                    name += "/";
+                }
+
+                path_entries.push_back(text(name) |
+                                       (fs::is_directory(entry)
+                                            ? color(Color::Green)
+                                            : color(Color::White)));
+            }
+
+            auto document = vbox({
+
+                hflow({
+                    text(" PATH ") | border | color(Color::Green),
+                    text(path) | border | flex | color(Color::Green),
+                }),
+
+                border(
+
+                    vbox({vbox(path_entries)})) |
+                    flex | color(Color::Green),
+            });
+
+            auto screen = Screen::Create(Dimension::Full(), Dimension::Full());
+            Render(screen, document);
+            screen.Print();
         }
-
-        path_entries.push_back(text(name) |
-                               (fs::is_directory(entry) ? color(Color::Green)
-                                                        : color(Color::White)));
-    }
-
-    auto document = vbox({
-
-        hflow({
-            text(" PATH ") | border | color(Color::Green),
-            text(path) | border | flex | color(Color::Green),
-        }),
-
-        border(
-
-            vbox({vbox(path_entries)})) |
-            flex | color(Color::Green),
-    });
-
-    auto screen = Screen::Create(Dimension::Full(), Dimension::Full());
-    Render(screen, document);
-    screen.Print();
-}
+    } // namespace tui
+} // namespace fima

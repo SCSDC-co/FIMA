@@ -4,4 +4,8 @@
 
 namespace fs = std::filesystem;
 
-void create_dir(fs::path path);
+namespace fima {
+    namespace create {
+        void dir(fs::path path);
+    }
+} // namespace fima

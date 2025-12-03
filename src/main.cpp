@@ -129,32 +129,32 @@ int main(int argc, char **argv) {
     }
 
     if (*ls_subcmd) {
-        ls(path, tui);
+        fima::ls::start(path, tui);
 
         return 0;
     }
 
     if (*tree_subcmd) {
-        tree(path, "", tui);
+        fima::tree::start(path, "", tui);
 
         return 0;
     }
 
     if (create_subcmd->got_subcommand("dir")) {
-        create_dir(path_to_create_or_remove);
+        fima::create::dir(path_to_create_or_remove);
 
         return 0;
     } else if (create_subcmd->got_subcommand("file")) {
-        create_file(path_to_create_or_remove);
+        fima::create::file(path_to_create_or_remove);
 
         return 0;
     }
 
     if (*remove_subcmd) {
         if (fs::is_regular_file(path_to_create_or_remove)) {
-            remove_file(path_to_create_or_remove);
+            fima::remove::file(path_to_create_or_remove);
         } else if (fs::is_directory(path_to_create_or_remove)) {
-            remove_dir(path_to_create_or_remove);
+            fima::remove::dir(path_to_create_or_remove);
         }
 
         return 0;
@@ -162,27 +162,27 @@ int main(int argc, char **argv) {
 
     if (*copy_subcmd) {
         if (fs::is_regular_file(path_to_copy)) {
-            fima_copy_file(path_to_copy, destination);
+            fima::copy::file(path_to_copy, destination);
         } else if (fs::is_directory(path_to_copy)) {
-            fima_copy_directory(path_to_copy, destination);
+            fima::copy::directory(path_to_copy, destination);
         }
 
         return 0;
     }
 
     if (*rename_subcmd) {
-        fima_rename(old_name, new_name);
+        fima::rename(old_name, new_name);
 
         return 0;
     }
 
     if (*perms_subcmd) {
-        get_perms(perms_path);
+        fima::get_perms(perms_path);
 
         return 0;
     }
 
-    start_tui(path);
+    fima::tui::start_tui(path);
 
     return 0;
 }

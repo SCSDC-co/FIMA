@@ -89,23 +89,28 @@ void create_tree(std::string path, std::string prefix, bool tui) {
         }
     }
 }
+namespace fima {
+    namespace tree {
+        void start(const fs::path &path, std::string prefix, bool tui) {
+            if (!tui) {
+                std::cout << green << path.string()
+                          << (path.string().back() == '/' ? "" : "/") << reset
+                          << '\n';
+            }
 
-void tree(const fs::path &path, std::string prefix, bool tui) {
-    if (!tui) {
-        std::cout << green << path.string()
-                  << (path.string().back() == '/' ? "" : "/") << reset << '\n';
-    }
+            create_tree(path.string(), prefix, tui);
 
-    create_tree(path.string(), prefix, tui);
+            if (tui) {
+                fima::tree::tui(path, tree_vector_tui, number_of_dirs,
+                                number_of_files);
+            } else {
+                std::cout << '\n';
 
-    if (tui) {
-        tree_tui(path, tree_vector_tui, number_of_dirs, number_of_files);
-    } else {
-        std::cout << '\n';
-
-        std::cout << green << "Number of directories: " << reset
-                  << std::to_string(number_of_dirs) << '\n';
-        std::cout << green << "Number of files: " << reset
-                  << std::to_string(number_of_files) << '\n';
-    }
-}
+                std::cout << green << "Number of directories: " << reset
+                          << std::to_string(number_of_dirs) << '\n';
+                std::cout << green << "Number of files: " << reset
+                          << std::to_string(number_of_files) << '\n';
+            }
+        }
+    } // namespace tree
+} // namespace fima

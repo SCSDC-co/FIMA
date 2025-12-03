@@ -3,6 +3,7 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 ColumnLimit: 80
+NamespaceIndentation: All
 
 SortIncludes: true
 IncludeBlocks: Regroup

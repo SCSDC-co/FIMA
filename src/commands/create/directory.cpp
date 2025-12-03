@@ -5,14 +5,18 @@
 
 namespace fs = std::filesystem;
 
-void create_dir(fs::path path) {
-    if (fs::is_directory(path)) {
-        std::cout << "This directory already exist! " << path << '\n';
+namespace fima {
+    namespace create {
+        void dir(fs::path path) {
+            if (fs::is_directory(path)) {
+                std::cout << "This directory already exist! " << path << '\n';
 
-        return;
-    }
+                return;
+            }
 
-    fs::create_directories(path);
+            fs::create_directories(path);
 
-    std::cout << "Directory created at: " << path << '\n';
-}
+            std::cout << "Directory created at: " << path << '\n';
+        }
+    } // namespace create
+} // namespace fima

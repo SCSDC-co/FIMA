@@ -6,15 +6,19 @@
 
 namespace fs = std::filesystem;
 
-void create_file(fs::path path) {
-    if (fs::is_regular_file(path)) {
-        std::cout << "This file already exists! " << path << '\n';
+namespace fima {
+    namespace create {
+        void file(fs::path path) {
+            if (fs::is_regular_file(path)) {
+                std::cout << "This file already exists! " << path << '\n';
 
-        return;
-    }
+                return;
+            }
 
-    std::ofstream outfile{path};
-    outfile.close();
+            std::ofstream outfile{path};
+            outfile.close();
 
-    std::cout << "File created at: " << path << '\n';
-}
+            std::cout << "File created at: " << path << '\n';
+        }
+    } // namespace create
+} // namespace fima

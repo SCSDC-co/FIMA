@@ -4,4 +4,8 @@
 
 namespace fs = std::filesystem;
 
-void ls(fs::path path, bool tui);
+namespace fima {
+    namespace ls {
+        void start(fs::path path, bool tui);
+    }
+} // namespace fima

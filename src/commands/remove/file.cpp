@@ -5,14 +5,18 @@
 
 namespace fs = std::filesystem;
 
-void remove_file(fs::path path) {
-    if (!fs::is_regular_file(path)) {
-        std::cout << "The file doesn't exitst!" << path << '\n';
+namespace fima {
+    namespace remove {
+        void file(fs::path path) {
+            if (!fs::is_regular_file(path)) {
+                std::cout << "The file doesn't exitst!" << path << '\n';
 
-        return;
-    }
+                return;
+            }
 
-    fs::remove(path);
+            fs::remove(path);
 
-    std::cout << "File removed: " << path << '\n';
-}
+            std::cout << "File removed: " << path << '\n';
+        }
+    } // namespace remove
+} // namespace fima

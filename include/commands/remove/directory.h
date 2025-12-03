@@ -4,4 +4,8 @@
 
 namespace fs = std::filesystem;
 
-void remove_dir(fs::path path);
+namespace fima {
+    namespace remove {
+        void dir(fs::path path);
+    }
+} // namespace fima

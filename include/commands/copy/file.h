@@ -4,4 +4,8 @@
 
 namespace fs = std::filesystem;
 
-void fima_copy_file(fs::path source, fs::path destination);
+namespace fima {
+    namespace copy {
+        void file(fs::path source, fs::path destination);
+    }
+} // namespace fima

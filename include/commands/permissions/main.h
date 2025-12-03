@@ -4,4 +4,6 @@
 
 namespace fs = std::filesystem;
 
-void get_perms(fs::path path);
+namespace fima {
+    void get_perms(fs::path path);
+}
