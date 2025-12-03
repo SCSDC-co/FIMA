@@ -11,6 +11,7 @@
 #include "../include/commands/ls/main.h"
 #include "../include/commands/remove/directory.h"
 #include "../include/commands/remove/file.h"
+#include "../include/commands/rename/main.h"
 #include "../include/commands/tree/main.h"
 #include "../include/tui/main.h"
 
@@ -25,9 +26,12 @@ int main(int argc, char **argv) {
     bool tui{false};
     bool display_version{false};
 
+    // names should be descriptive
     fs::path path_to_create_or_remove;
     fs::path path_to_copy;
     fs::path destination;
+    fs::path old_name;
+    fs::path new_name;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
@@ -47,7 +51,7 @@ int main(int argc, char **argv) {
     ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
         ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
-    /*  ==============
+    /*  ================
      *  TREE SUB COMMAND
      */
 
@@ -57,7 +61,7 @@ int main(int argc, char **argv) {
     tree_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
         ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
-    /*  ==============
+    /*  ==================
      *  CREATE SUB COMMAND
      */
 
@@ -69,7 +73,7 @@ int main(int argc, char **argv) {
     create_subcmd->add_subcommand("dir", "Creates a directory");
     create_subcmd->add_subcommand("file", "Creates a file");
 
-    /*  ==============
+    /*  ==================
      *  REMOVE SUB COMMAND
      */
 
@@ -79,7 +83,7 @@ int main(int argc, char **argv) {
     remove_subcmd->add_option("path", path_to_create_or_remove,
                               "File or directory to remove");
 
-    /*  ==============
+    /*  ================
      *  COPY SUB COMMAND
      */
 
@@ -89,6 +93,18 @@ int main(int argc, char **argv) {
     copy_subcmd->add_option("source-file", path_to_copy,
                             "File or directory copy");
     copy_subcmd->add_option("destination", destination, "Destination");
+
+    /*  ==================
+     *  RENAME SUB COMMAND
+     */
+
+    CLI::App *rename_subcmd =
+        app.add_subcommand("rename", "Rename/move a file or a directory");
+
+    rename_subcmd->add_option("old-name", old_name,
+                              "File or directory to move or rename");
+    rename_subcmd->add_option("new-name", new_name,
+                              "The new name for the directory or file");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -138,6 +154,12 @@ int main(int argc, char **argv) {
         } else if (fs::is_directory(path_to_copy)) {
             fima_copy_directory(path_to_copy, destination);
         }
+
+        return 0;
+    }
+
+    if (*rename_subcmd) {
+        fima_rename(old_name, new_name);
 
         return 0;
     }

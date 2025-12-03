@@ -52,8 +52,7 @@ These are the most important ones (so far):
   - [x] `create`
   - [x] `remove`
   - [x] `copy`
-  - [ ] `rename`
-  - [ ] `move`
+  - [x] `rename`
   - [ ] `permissions`
   - [ ] `info`
 
