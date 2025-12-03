@@ -53,7 +53,7 @@ These are the most important ones (so far):
   - [x] `remove`
   - [x] `copy`
   - [x] `rename`
-  - [ ] `permissions`
+  - [x] `permissions`
   - [ ] `info`
 
 ## License

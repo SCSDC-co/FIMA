@@ -9,6 +9,7 @@
 #include "../include/commands/create/directory.h"
 #include "../include/commands/create/file.h"
 #include "../include/commands/ls/main.h"
+#include "../include/commands/permissions/main.h"
 #include "../include/commands/remove/directory.h"
 #include "../include/commands/remove/file.h"
 #include "../include/commands/rename/main.h"
@@ -32,6 +33,7 @@ int main(int argc, char **argv) {
     fs::path destination;
     fs::path old_name;
     fs::path new_name;
+    fs::path perms_path;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
@@ -106,6 +108,16 @@ int main(int argc, char **argv) {
     rename_subcmd->add_option("new-name", new_name,
                               "The new name for the directory or file");
 
+    /*  =================
+     *  PERMS SUB COMMAND
+     */
+
+    CLI::App *perms_subcmd =
+        app.add_subcommand("perms", "Shows a directory/file permissions");
+
+    perms_subcmd->add_option("path", perms_path,
+                             "The file path to read permissions from");
+
     CLI11_PARSE(app, argc, argv);
 
     tui = !tui;
@@ -160,6 +172,12 @@ int main(int argc, char **argv) {
 
     if (*rename_subcmd) {
         fima_rename(old_name, new_name);
+
+        return 0;
+    }
+
+    if (*perms_subcmd) {
+        get_perms(perms_path);
 
         return 0;
     }

@@ -4,4 +4,4 @@
 
 namespace fs = std::filesystem;
 
-void ls(fs::path path, bool tui);
+void get_perms(fs::path path);

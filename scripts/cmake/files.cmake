@@ -2,6 +2,7 @@ set(SOURCE_FILES
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/remove/directory.cpp
+    src/commands/permissions/main.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
     src/tui/commands/ls/ls_tui.cpp
