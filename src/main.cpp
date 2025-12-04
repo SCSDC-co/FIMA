@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
@@ -10,8 +11,7 @@
 #include "../include/commands/create/file.h"
 #include "../include/commands/ls/main.h"
 #include "../include/commands/permissions/main.h"
-#include "../include/commands/remove/directory.h"
-#include "../include/commands/remove/file.h"
+#include "../include/commands/remove/main.h"
 #include "../include/commands/rename/main.h"
 #include "../include/commands/tree/main.h"
 #include "../include/tui/main.h"
@@ -28,12 +28,12 @@ int main(int argc, char **argv) {
     bool display_version{false};
 
     // names should be descriptive
-    fs::path path_to_create_or_remove;
+    std::vector<fs::path> path_to_create_or_remove;
+    std::vector<fs::path> perms_path;
     fs::path path_to_copy;
     fs::path destination;
     fs::path old_name;
     fs::path new_name;
-    fs::path perms_path;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
 
@@ -151,11 +151,7 @@ int main(int argc, char **argv) {
     }
 
     if (*remove_subcmd) {
-        if (fs::is_regular_file(path_to_create_or_remove)) {
-            fima::remove::file(path_to_create_or_remove);
-        } else if (fs::is_directory(path_to_create_or_remove)) {
-            fima::remove::dir(path_to_create_or_remove);
-        }
+        fima::remove(path_to_create_or_remove);
 
         return 0;
     }
