@@ -13,7 +13,8 @@ namespace fima {
         void file(const std::vector<fs::path> &paths) {
             for (const auto &entry : paths) {
                 if (fs::is_regular_file(entry)) {
-                    std::cerr << "This file already exists: " << entry << '\n';
+                    std::cerr << "This file already exists: " << entry.string()
+                              << '\n';
 
                     continue;
                 }
@@ -22,9 +23,9 @@ namespace fima {
                     std::ofstream outfile{entry};
                     outfile.close();
 
-                    std::clog << "File created at: " << entry << '\n';
+                    std::clog << "File created at: " << entry.string() << '\n';
                 } catch (const std::exception &ex) {
-                    std::cerr << "Failed to create file: " << entry
+                    std::cerr << "Failed to create file: " << entry.string()
                               << std::endl;
                     std::cerr << ex.what() << std::endl;
                 }

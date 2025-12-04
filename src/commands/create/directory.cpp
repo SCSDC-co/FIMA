@@ -13,8 +13,9 @@ namespace fima {
             for (const auto &entry : paths) {
 
                 if (fs::is_directory(entry)) {
-                    std::cerr << "This directory already exists: " << entry
-                              << std::endl;
+                    std::cerr
+                        << "This directory already exists: " << entry.string()
+                        << std::endl;
 
                     continue;
                 }
@@ -22,10 +23,12 @@ namespace fima {
                 try {
                     fs::create_directories(entry);
 
-                    std::clog << "Directory created at: " << entry << '\n';
+                    std::clog << "Directory created at: " << entry.string()
+                              << '\n';
                 } catch (const std::exception &ex) {
-                    std::cerr << "Failed to create the directory: " << entry
-                              << std::endl;
+                    std::cerr
+                        << "Failed to create the directory: " << entry.string()
+                        << std::endl;
                     std::cerr << ex.what() << std::endl;
                 }
             }
