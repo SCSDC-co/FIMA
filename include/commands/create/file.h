@@ -1,11 +1,12 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fs = std::filesystem;
 
 namespace fima {
     namespace create {
-        void file(fs::path path);
+        void file(const std::vector<fs::path> &paths);
     }
 } // namespace fima
