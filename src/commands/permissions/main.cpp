@@ -10,7 +10,7 @@ namespace fima {
     void get_perms(const std::vector<fs::path> &paths) {
         for (const auto &entry : paths) {
             if (!fs::exists(entry)) {
-                std::cerr << "The path doesn't exists! " << entry << std::endl;
+                std::cerr << "The path doesn't exists: " << entry << std::endl;
 
                 continue;
             }
@@ -54,7 +54,7 @@ namespace fima {
                 show('x', fs::perms::others_exec);
                 std::cout << " " << entry << '\n';
             } catch (const std::exception &ex) {
-                std::cerr << "Failed to get permissions for " << entry
+                std::cerr << "Failed to get permissions for: " << entry
                           << std::endl;
                 std::cerr << ex.what() << std::endl;
             }

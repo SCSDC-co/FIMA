@@ -10,7 +10,7 @@ namespace fima {
     void remove(const std::vector<fs::path> &paths) {
         for (const auto &entry : paths) {
             if (!fs::exists(entry)) {
-                std::cerr << "The path doesn't exists! " << entry << std::endl;
+                std::cerr << "The path doesn't exists: " << entry << std::endl;
 
                 continue;
             }
@@ -20,7 +20,7 @@ namespace fima {
 
                 std::clog << "Item removed: " << entry << '\n';
             } catch (const std::exception &ex) {
-                std::cerr << "Failed to remove directory!" << std::endl;
+                std::cerr << "Failed to remove directory:" << std::endl;
                 std::cerr << ex.what() << std::endl;
             }
         }
