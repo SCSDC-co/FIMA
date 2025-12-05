@@ -1,8 +1,8 @@
 #include "../../../../include/tui/commands/tree/tree_tui.h"
 
+#include <cstdio>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
-#include <iostream>
 #include <vector>
 
 #include "ftxui/dom/elements.hpp"
@@ -24,7 +24,9 @@ namespace fima {
 
                            hbox(text(" "), vbox(tree_vector_tui)),
 
-                           text(""),
+                           filler(),
+
+                           separator(),
 
                            vbox(
 
@@ -42,10 +44,11 @@ namespace fima {
                 color(Color::Green);
 
             auto document = main_box;
-            auto screen = Screen::Create(Dimension::Fit(document));
+            auto screen =
+                Screen::Create(Dimension::Fit(document), Dimension::Full());
             Render(screen, document);
             screen.Print();
-            std::cout << '\n';
+            getchar();
         }
     } // namespace tree
 } // namespace fima
