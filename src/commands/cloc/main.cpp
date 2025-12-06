@@ -10,7 +10,8 @@
 
 namespace fs = std::filesystem;
 
-#define MULTI_LINE_COMMENT_START "^ *(/\\*|<!--|\\\{-|\"\"\"|'''|--\\\[\\\[).*$"
+#define MULTI_LINE_COMMENT_START                                               \
+    "^ *(/\\*.*|<!--.*|\\\{-.*|\"\"\".*|'''.*|--\\\[\\\[.*).*$"
 #define MULTI_LINE_COMMENT_END "^ *(\\*/|-->|-}|\"\"\"|'''|\\]\\]).*$"
 
 namespace fima {
