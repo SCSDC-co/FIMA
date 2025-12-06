@@ -1,4 +1,5 @@
 set(SOURCE_FILES
+    src/commands/cloc/helpers/is_comment.cpp
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/permissions/main.cpp
