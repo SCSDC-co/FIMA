@@ -8,30 +8,31 @@
 namespace fs = std::filesystem;
 
 namespace fima {
-    namespace create {
-        void dir(const std::vector<fs::path> &paths) {
-            for (const auto &entry : paths) {
 
-                if (fs::is_directory(entry)) {
-                    std::cerr
-                        << "This directory already exists: " << entry.string()
-                        << std::endl;
+namespace create {
 
-                    continue;
-                }
+void dir(const std::vector<fs::path> &paths) {
+    for (const auto &entry : paths) {
 
-                try {
-                    fs::create_directories(entry);
+        if (fs::is_directory(entry)) {
+            std::cerr << "This directory already exists: " << entry.string()
+                      << std::endl;
 
-                    std::clog << "Directory created at: " << entry.string()
-                              << '\n';
-                } catch (const std::exception &ex) {
-                    std::cerr
-                        << "Failed to create the directory: " << entry.string()
-                        << std::endl;
-                    std::cerr << ex.what() << std::endl;
-                }
-            }
+            continue;
         }
-    } // namespace create
+
+        try {
+            fs::create_directories(entry);
+
+            std::clog << "Directory created at: " << entry.string() << '\n';
+        } catch (const std::exception &ex) {
+            std::cerr << "Failed to create the directory: " << entry.string()
+                      << std::endl;
+            std::cerr << ex.what() << std::endl;
+        }
+    }
+}
+
+} // namespace create
+
 } // namespace fima

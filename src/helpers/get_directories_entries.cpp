@@ -7,22 +7,25 @@
 namespace fs = std::filesystem;
 
 namespace fima {
-    namespace helpers {
-        std::vector<fs::path> get_directories_entries(const fs::path &path) {
-            std::vector<fs::path> directory_content;
 
-            for (const fs::path &entry :
-                 std::filesystem::directory_iterator(path)) {
-                std::string name{entry.filename().string()};
+namespace helpers {
 
-                if (name[0] == '.') {
-                    continue;
-                }
+std::vector<fs::path> get_directories_entries(const fs::path &path) {
+    std::vector<fs::path> directory_content;
 
-                directory_content.push_back(entry);
-            }
+    for (const fs::path &entry : std::filesystem::directory_iterator(path)) {
+        std::string name{entry.filename().string()};
 
-            return directory_content;
+        if (name[0] == '.') {
+            continue;
         }
-    } // namespace helpers
+
+        directory_content.push_back(entry);
+    }
+
+    return directory_content;
+}
+
+} // namespace helpers
+
 } // namespace fima

@@ -10,6 +10,7 @@ set(SOURCE_FILES
     src/commands/create/file.cpp
     src/commands/tree/main.cpp
     src/commands/copy/file.cpp
+    src/commands/cloc/main.cpp
     src/commands/ls/main.cpp
     src/tui/main.cpp
     src/main.cpp

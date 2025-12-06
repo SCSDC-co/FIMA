@@ -10,47 +10,51 @@
 namespace fs = std::filesystem;
 
 namespace fima {
-    namespace ls {
-        void start(fs::path path, bool tui) {
-            std::vector<fs::path> listOfTheDirectory{
-                fima::helpers::get_directories_entries(path)};
 
-            std::vector<std::string> vector_directories;
+namespace ls {
 
-            std::vector<std::string> vector_files;
+void start(fs::path path, bool tui) {
+    std::vector<fs::path> listOfTheDirectory{
+        fima::helpers::get_directories_entries(path)};
 
-            std::string green = "\033[32m";
-            std::string reset = "\033[0m";
+    std::vector<std::string> vector_directories;
 
-            for (const fs::path &entry : listOfTheDirectory) {
-                auto name{entry.filename().string()};
+    std::vector<std::string> vector_files;
 
-                if (fs::is_directory(entry)) {
-                    name += "/";
+    std::string green = "\033[32m";
+    std::string reset = "\033[0m";
 
-                    vector_directories.push_back(name);
-                } else {
-                    vector_files.push_back(name);
-                }
-            }
+    for (const fs::path &entry : listOfTheDirectory) {
+        auto name{entry.filename().string()};
 
-            if (tui) {
-                fima::ls::tui(vector_directories, vector_files);
-            } else {
-                std::cout << green << "DIRS" << reset << '\n';
+        if (fs::is_directory(entry)) {
+            name += "/";
 
-                for (const auto &entry : vector_directories) {
-                    std::cout << green << entry << reset << '\n';
-                }
-
-                std::cout << '\n';
-
-                std::cout << green << "FILES" << reset << '\n';
-
-                for (const auto &entry : vector_files) {
-                    std::cout << entry << '\n';
-                }
-            }
+            vector_directories.push_back(name);
+        } else {
+            vector_files.push_back(name);
         }
-    } // namespace ls
+    }
+
+    if (tui) {
+        fima::ls::tui(vector_directories, vector_files);
+    } else {
+        std::cout << green << "DIRS" << reset << '\n';
+
+        for (const auto &entry : vector_directories) {
+            std::cout << green << entry << reset << '\n';
+        }
+
+        std::cout << '\n';
+
+        std::cout << green << "FILES" << reset << '\n';
+
+        for (const auto &entry : vector_files) {
+            std::cout << entry << '\n';
+        }
+    }
+}
+
+} // namespace ls
+
 } // namespace fima

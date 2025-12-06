@@ -9,27 +9,30 @@
 namespace fs = std::filesystem;
 
 namespace fima {
-    namespace create {
-        void file(const std::vector<fs::path> &paths) {
-            for (const auto &entry : paths) {
-                if (fs::is_regular_file(entry)) {
-                    std::cerr << "This file already exists: " << entry.string()
-                              << '\n';
 
-                    continue;
-                }
+namespace create {
 
-                try {
-                    std::ofstream outfile{entry};
-                    outfile.close();
+void file(const std::vector<fs::path> &paths) {
+    for (const auto &entry : paths) {
+        if (fs::is_regular_file(entry)) {
+            std::cerr << "This file already exists: " << entry.string() << '\n';
 
-                    std::clog << "File created at: " << entry.string() << '\n';
-                } catch (const std::exception &ex) {
-                    std::cerr << "Failed to create file: " << entry.string()
-                              << std::endl;
-                    std::cerr << ex.what() << std::endl;
-                }
-            }
+            continue;
         }
-    } // namespace create
+
+        try {
+            std::ofstream outfile{entry};
+            outfile.close();
+
+            std::clog << "File created at: " << entry.string() << '\n';
+        } catch (const std::exception &ex) {
+            std::cerr << "Failed to create file: " << entry.string()
+                      << std::endl;
+            std::cerr << ex.what() << std::endl;
+        }
+    }
+}
+
+} // namespace create
+
 } // namespace fima

@@ -5,6 +5,7 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
+#include "../include/commands/cloc/main.h"
 #include "../include/commands/copy/directory.h"
 #include "../include/commands/copy/file.h"
 #include "../include/commands/create/directory.h"
@@ -30,6 +31,7 @@ int main(int argc, char **argv) {
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
     std::vector<fs::path> perms_path;
+    fs::path cloc_file;
     fs::path path_to_copy;
     fs::path destination;
     fs::path old_name;
@@ -118,6 +120,15 @@ int main(int argc, char **argv) {
     perms_subcmd->add_option("path", perms_path,
                              "The file path to read permissions from");
 
+    /*  =================
+     *  PERMS SUB COMMAND
+     */
+
+    CLI::App *cloc_subcmd =
+        app.add_subcommand("cloc", "Count lines of code of a file");
+
+    cloc_subcmd->add_option("path", cloc_file, "The file path to work on");
+
     CLI11_PARSE(app, argc, argv);
 
     tui = !tui;
@@ -174,6 +185,12 @@ int main(int argc, char **argv) {
 
     if (*perms_subcmd) {
         fima::get_perms(perms_path);
+
+        return 0;
+    }
+
+    if (*cloc_subcmd) {
+        fima::cloc::cout_lines(cloc_file);
 
         return 0;
     }
