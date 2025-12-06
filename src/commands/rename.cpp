@@ -1,3 +1,5 @@
+#include "../../include/commands/rename.h"
+
 #include <filesystem>
 #include <iostream>
 

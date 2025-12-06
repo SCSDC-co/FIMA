@@ -1,4 +1,4 @@
-#include "../../../include/commands/remove/main.h"
+#include "../../include/commands/remove.h"
 
 #include <filesystem>
 #include <iostream>

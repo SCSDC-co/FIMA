@@ -1,4 +1,4 @@
-#include "../../include/tui/main.h"
+#include "../../include/tui/tui.h"
 
 #include <algorithm>
 #include <filesystem>

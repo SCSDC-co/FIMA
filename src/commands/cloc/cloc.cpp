@@ -1,4 +1,4 @@
-#include "../../../include/commands/cloc/main.h"
+#include "../../../include/commands/cloc/cloc.h"
 
 #include <filesystem>
 #include <fstream>

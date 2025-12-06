@@ -2,17 +2,17 @@ set(SOURCE_FILES
     src/commands/cloc/helpers/is_comment.cpp
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
-    src/commands/permissions/main.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
     src/tui/commands/ls/ls_tui.cpp
-    src/commands/rename/main.cpp
-    src/commands/remove/main.cpp
+    src/commands/permissions.cpp
     src/commands/create/file.cpp
-    src/commands/tree/main.cpp
     src/commands/copy/file.cpp
-    src/commands/cloc/main.cpp
-    src/commands/ls/main.cpp
-    src/tui/main.cpp
+    src/commands/cloc/cloc.cpp
+    src/commands/rename.cpp
+    src/commands/remove.cpp
+    src/commands/tree.cpp
+    src/commands/ls.cpp
+    src/tui/tui.cpp
     src/main.cpp
 )

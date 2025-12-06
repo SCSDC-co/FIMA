@@ -1,11 +1,11 @@
-#include "../../../include/commands/ls/main.h"
+#include "../../include/commands/ls.h"
 
 #include <filesystem>
 #include <iostream>
 #include <vector>
 
-#include "../../../include/helpers/get_directories_entries.h"
-#include "../../../include/tui/commands/ls/ls_tui.h"
+#include "../../include/helpers/get_directories_entries.h"
+#include "../../include/tui/commands/ls/ls_tui.h"
 
 namespace fs = std::filesystem;
 

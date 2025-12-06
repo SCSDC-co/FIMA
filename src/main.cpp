@@ -5,17 +5,17 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
-#include "../include/commands/cloc/main.h"
+#include "../include/commands/cloc/cloc.h"
 #include "../include/commands/copy/directory.h"
 #include "../include/commands/copy/file.h"
 #include "../include/commands/create/directory.h"
 #include "../include/commands/create/file.h"
-#include "../include/commands/ls/main.h"
-#include "../include/commands/permissions/main.h"
-#include "../include/commands/remove/main.h"
-#include "../include/commands/rename/main.h"
-#include "../include/commands/tree/main.h"
-#include "../include/tui/main.h"
+#include "../include/commands/ls.h"
+#include "../include/commands/permissions.h"
+#include "../include/commands/remove.h"
+#include "../include/commands/rename.h"
+#include "../include/commands/tree.h"
+#include "../include/tui/tui.h"
 
 #define VERSION "1.0.0"
 

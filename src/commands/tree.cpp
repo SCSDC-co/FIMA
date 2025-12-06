@@ -1,4 +1,4 @@
-#include "../../../include/commands/tree/main.h"
+#include "../../include/commands/tree.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../../include/tui/commands/tree/tree_tui.h"
+#include "../../include/tui/commands/tree/tree_tui.h"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
