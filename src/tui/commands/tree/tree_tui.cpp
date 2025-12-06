@@ -1,8 +1,8 @@
 #include "../../../../include/tui/commands/tree/tree_tui.h"
 
-#include <cstdio>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
+#include <iostream>
 #include <vector>
 
 #include "ftxui/dom/elements.hpp"
@@ -48,7 +48,7 @@ namespace fima {
                 Screen::Create(Dimension::Fit(document), Dimension::Full());
             Render(screen, document);
             screen.Print();
-            getchar();
+            std::cin.get();
         }
     } // namespace tree
 } // namespace fima
