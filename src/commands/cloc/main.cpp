@@ -14,7 +14,7 @@ namespace cloc {
 void cout_lines(fs::path path) {
     int number_of_lines_total{0};
     int number_of_lines_blank{0};
-    int number_of_lines{0};
+    int number_of_lines_code{0};
 
     std::string line;
     std::ifstream file(path);
@@ -26,15 +26,15 @@ void cout_lines(fs::path path) {
             continue;
         }
 
-        ++number_of_lines;
+        ++number_of_lines_code;
     }
 
-    number_of_lines_total = number_of_lines_blank + number_of_lines;
+    number_of_lines_total = number_of_lines_blank + number_of_lines_code;
 
     std::cout << "Number of lines of " << path.string() << '\n';
     std::cout << "Total " << number_of_lines_total << '\n';
     std::cout << "Blank " << number_of_lines_blank << '\n';
-    std::cout << "Other " << number_of_lines << '\n';
+    std::cout << "Code " << number_of_lines_code << '\n';
 }
 
 } // namespace cloc
