@@ -20,7 +20,7 @@ void cout_lines(fs::path path) {
     std::ifstream file(path);
 
     while (std::getline(file, line)) {
-        if (line.empty()) {
+        if (line.find_first_not_of(" \t\r\n") == std::string::npos) {
             ++number_of_lines_blank;
 
             continue;
