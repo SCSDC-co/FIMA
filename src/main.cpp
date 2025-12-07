@@ -190,7 +190,7 @@ int main(int argc, char **argv) {
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::cout_lines(cloc_file);
+        fima::cloc::start(cloc_file);
 
         return 0;
     }

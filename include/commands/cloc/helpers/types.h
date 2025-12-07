@@ -8,8 +8,14 @@ namespace fima {
 
 namespace cloc {
 
-void start(fs::path path);
+struct LineStats {
+    fs::path path;
+    int total;
+    int blank;
+    int comment;
+    int code;
+};
 
-}
+} // namespace cloc
 
 } // namespace fima

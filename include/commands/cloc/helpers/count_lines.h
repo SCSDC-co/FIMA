@@ -2,13 +2,15 @@
 
 #include <filesystem>
 
+#include "./types.h"
+
 namespace fs = std::filesystem;
 
 namespace fima {
 
 namespace cloc {
 
-void start(fs::path path);
+fima::cloc::LineStats cout_lines(fs::path path);
 
 }
 

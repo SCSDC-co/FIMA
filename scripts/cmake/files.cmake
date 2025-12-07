@@ -1,6 +1,8 @@
 set(SOURCE_FILES
+    src/commands/cloc/helpers/count_lines.cpp
     src/commands/cloc/helpers/is_comment.cpp
     src/helpers/get_directories_entries.cpp
+    src/commands/cloc/helpers/print.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
