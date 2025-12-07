@@ -14,7 +14,8 @@ namespace fs = std::filesystem;
 namespace fima {
 
 namespace cloc {
-fima::cloc::LineStats cout_lines(fs::path path) {
+
+fima::cloc::FileStats cout_lines(fs::path path) {
     int number_of_lines_total{0};
     int number_of_lines_blank{0};
     int number_of_lines_code{0};
@@ -24,6 +25,8 @@ fima::cloc::LineStats cout_lines(fs::path path) {
 
     std::string line;
     std::ifstream file(path);
+
+    fima::cloc::FileStats file_stats;
 
     while (std::getline(file, line)) {
         if (line.find_first_not_of(" \t\r\n") == std::string::npos) {
@@ -62,8 +65,6 @@ fima::cloc::LineStats cout_lines(fs::path path) {
 
     number_of_lines_total =
         number_of_lines_blank + number_of_lines_code + number_of_lines_comment;
-
-    fima::cloc::LineStats file_stats;
 
     file_stats.path = path;
     file_stats.total = number_of_lines_total;

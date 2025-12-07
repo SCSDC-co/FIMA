@@ -6,7 +6,7 @@ namespace fima {
 
 namespace cloc {
 
-void print(fima::cloc::LineStats file);
+void print(fima::cloc::FileStats file);
 
 }
 

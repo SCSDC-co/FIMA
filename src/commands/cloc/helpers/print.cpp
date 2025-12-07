@@ -8,7 +8,7 @@ namespace fima {
 
 namespace cloc {
 
-void print(fima::cloc::LineStats file) {
+void print(fima::cloc::FileStats file) {
     std::cout << "Number of lines of " << file.path.string() << '\n';
     std::cout << "Total   " << file.total << '\n';
     std::cout << "Blank   " << file.blank << '\n';

@@ -8,7 +8,7 @@ namespace fima {
 
 namespace cloc {
 
-struct LineStats {
+struct FileStats {
     fs::path path;
     int total;
     int blank;

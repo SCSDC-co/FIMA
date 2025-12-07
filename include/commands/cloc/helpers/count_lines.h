@@ -10,7 +10,7 @@ namespace fima {
 
 namespace cloc {
 
-fima::cloc::LineStats cout_lines(fs::path path);
+fima::cloc::FileStats cout_lines(fs::path path);
 
 }
 

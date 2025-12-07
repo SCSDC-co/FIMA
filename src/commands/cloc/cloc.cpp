@@ -13,7 +13,7 @@ namespace fima {
 namespace cloc {
 
 void start(fs::path path) {
-    fima::cloc::LineStats file;
+    fima::cloc::FileStats file;
 
     file = fima::cloc::cout_lines(path);
 
