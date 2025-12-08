@@ -1,6 +1,8 @@
 #include "../../../include/commands/cloc/cloc.h"
 
 #include <filesystem>
+#include <iostream>
+#include <vector>
 
 #include "../../../include/commands/cloc/helpers/file_stats.h"
 
@@ -10,12 +12,18 @@ namespace fima {
 
 namespace cloc {
 
-void start(fs::path path) {
+void start(std::vector<fs::path> path) {
     fima::cloc::FileStats stats;
 
-    stats.process(path);
+    for (const auto &entry : path) {
+        stats.process(entry);
 
-    stats.print();
+        stats.print();
+
+        if (&entry != &*path.rbegin()) {
+            std::cout << '\n';
+        }
+    }
 }
 
 } // namespace cloc

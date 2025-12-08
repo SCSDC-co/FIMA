@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -8,7 +9,7 @@ namespace fima {
 
 namespace cloc {
 
-void start(fs::path path);
+void start(std::vector<fs::path> path);
 
 }
 
