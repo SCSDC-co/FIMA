@@ -2,9 +2,7 @@
 
 #include <filesystem>
 
-#include "../../../include/commands/cloc/helpers/count_lines.h"
-#include "../../../include/commands/cloc/helpers/print.h"
-#include "../../../include/commands/cloc/helpers/types.h"
+#include "../../../include/commands/cloc/helpers/file_stats.h"
 
 namespace fs = std::filesystem;
 
@@ -13,11 +11,11 @@ namespace fima {
 namespace cloc {
 
 void start(fs::path path) {
-    fima::cloc::FileStats file;
+    fima::cloc::FileStats stats;
 
-    file = fima::cloc::cout_lines(path);
+    stats.process(path);
 
-    fima::cloc::print(file);
+    stats.print();
 }
 
 } // namespace cloc

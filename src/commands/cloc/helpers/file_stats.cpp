@@ -1,13 +1,10 @@
-#include "../../../../include/commands/cloc/helpers/count_lines.h"
+#include "../../../../include/commands/cloc/helpers/file_stats.h"
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <regex>
 #include <string>
-
-#include "../../../../include/commands/cloc/helpers/is_comment.h"
-#include "../../../../include/commands/cloc/helpers/regex.h"
-#include "../../../../include/commands/cloc/helpers/types.h"
 
 namespace fs = std::filesystem;
 
@@ -15,7 +12,7 @@ namespace fima {
 
 namespace cloc {
 
-fima::cloc::FileStats cout_lines(fs::path path) {
+void FileStats::process(fs::path path) {
     int number_of_lines_total{0};
     int number_of_lines_blank{0};
     int number_of_lines_code{0};
@@ -25,8 +22,6 @@ fima::cloc::FileStats cout_lines(fs::path path) {
 
     std::string line;
     std::ifstream file(path);
-
-    fima::cloc::FileStats file_stats;
 
     while (std::getline(file, line)) {
         if (line.find_first_not_of(" \t\r\n") == std::string::npos) {
@@ -41,7 +36,7 @@ fima::cloc::FileStats cout_lines(fs::path path) {
 
         if (!is_multi_line &&
             std::regex_match(line,
-                             std::regex(regex::MULTI_LINE_COMMENT_START))) {
+                             std::regex(this->MULTI_LINE_COMMENT_START))) {
 
             is_multi_line = true;
             ++number_of_lines_comment;
@@ -53,7 +48,7 @@ fima::cloc::FileStats cout_lines(fs::path path) {
             ++number_of_lines_comment;
 
             if (std::regex_match(line,
-                                 std::regex(regex::MULTI_LINE_COMMENT_END))) {
+                                 std::regex(this->MULTI_LINE_COMMENT_END))) {
                 is_multi_line = false;
             }
 
@@ -66,13 +61,23 @@ fima::cloc::FileStats cout_lines(fs::path path) {
     number_of_lines_total =
         number_of_lines_blank + number_of_lines_code + number_of_lines_comment;
 
-    file_stats.path = path;
-    file_stats.total = number_of_lines_total;
-    file_stats.blank = number_of_lines_blank;
-    file_stats.comment = number_of_lines_comment;
-    file_stats.code = number_of_lines_code;
+    this->code = number_of_lines_code;
+    this->blank = number_of_lines_blank;
+    this->total = number_of_lines_total;
+    this->comment = number_of_lines_comment;
+    this->path = path;
+}
 
-    return file_stats;
+void FileStats::print() {
+    char dash{'-'};
+    auto number_of_dashes{std::to_string(this->total).size()};
+
+    std::cout << "Number of lines of " << this->path.string() << '\n';
+    std::cout << "Comment " << this->comment << '\n';
+    std::cout << "Blank   " << this->blank << '\n';
+    std::cout << "Code    " << this->code << '\n';
+    std::cout << "--------" << std::string(number_of_dashes, dash) << '\n';
+    std::cout << "Total   " << this->total << '\n';
 }
 
 } // namespace cloc
