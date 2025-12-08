@@ -35,7 +35,8 @@ class FileStats {
     }
 
   public:
-    void process(fs::path path);
+    void count_lines(const fs::path &path);
+    void process(const fs::directory_entry &path);
     void print();
 };
 

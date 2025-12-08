@@ -14,7 +14,7 @@ namespace fima {
 namespace ls {
 
 void start(fs::path path, bool tui) {
-    std::vector<fs::path> listOfTheDirectory{
+    std::vector<fs::directory_entry> listOfTheDirectory{
         fima::helpers::get_directories_entries(path)};
 
     std::vector<std::string> vector_directories;

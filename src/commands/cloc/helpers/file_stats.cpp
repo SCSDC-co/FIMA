@@ -5,6 +5,9 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <vector>
+
+#include "../../../../include/helpers/get_directories_entries.h"
 
 namespace fs = std::filesystem;
 
@@ -12,7 +15,7 @@ namespace fima {
 
 namespace cloc {
 
-void FileStats::process(fs::path path) {
+void FileStats::count_lines(const fs::path &path) {
     int number_of_lines_total{0};
     int number_of_lines_blank{0};
     int number_of_lines_code{0};
@@ -68,6 +71,31 @@ void FileStats::process(fs::path path) {
     this->path = path;
 }
 
+void FileStats::process(const fs::directory_entry &path) {
+    if (path.is_directory()) {
+        std::vector<fs::directory_entry> path_entries =
+            fima::helpers::get_directories_entries_recursive(path);
+
+        for (auto it = path_entries.begin(); it != path_entries.end();) {
+            if (it->is_directory()) {
+                it = path_entries.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        for (const auto &entry : path_entries) {
+            this->count_lines(entry);
+
+            this->print();
+        }
+    } else if (path.is_regular_file()) {
+        this->count_lines(path);
+
+        this->print();
+    }
+}
+
 void FileStats::print() {
     char dash{'-'};
     auto number_of_dashes{std::to_string(this->total).size()};
@@ -78,6 +106,7 @@ void FileStats::print() {
     std::cout << "Code    " << this->code << '\n';
     std::cout << "--------" << std::string(number_of_dashes, dash) << '\n';
     std::cout << "Total   " << this->total << '\n';
+    std::cout << '\n';
 }
 
 } // namespace cloc

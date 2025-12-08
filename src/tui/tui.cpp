@@ -20,20 +20,20 @@ namespace tui {
 void start_tui(fs::path path) {
     using namespace ftxui;
 
-    std::vector<fs::path> list_of_the_directory{
+    std::vector<fs::directory_entry> list_of_the_directory{
         fima::helpers::get_directories_entries(path)};
 
     sort(list_of_the_directory.begin(), list_of_the_directory.end(),
          [](auto &a, auto &b) {
-             if (fs::is_directory(a) && !fs::is_directory(b)) {
+             if (a.is_directory() && !b.is_directory()) {
                  return true;
              }
 
-             if (!fs::is_directory(a) && fs::is_directory(b)) {
+             if (!a.is_directory() && b.is_directory()) {
                  return false;
              }
 
-             return a.filename() < b.filename();
+             return a.path().filename() < b.path().filename();
          });
 
     std::vector<Element> path_entries;
