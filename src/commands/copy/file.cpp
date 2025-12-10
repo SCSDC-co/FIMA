@@ -9,7 +9,9 @@ namespace fima {
 
 namespace copy {
 
-void file(fs::path source, fs::path destination) {
+void
+file(fs::path source, fs::path destination)
+{
     if (!fs::is_regular_file(source)) {
         std::cout << "The source file is a directory or does not exists! "
                   << source << '\n';

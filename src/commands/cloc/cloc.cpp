@@ -11,10 +11,12 @@ namespace fima {
 
 namespace cloc {
 
-void start(std::vector<fs::directory_entry> path) {
+void
+start(std::vector<fs::directory_entry> path)
+{
     fima::cloc::FileStats stats;
 
-    for (const fs::directory_entry &entry : path) {
+    for (const fs::directory_entry& entry : path) {
         stats.process(entry);
     }
 }

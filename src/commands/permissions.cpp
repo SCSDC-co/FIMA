@@ -8,8 +8,10 @@ namespace fs = std::filesystem;
 
 namespace fima {
 
-void get_perms(const std::vector<fs::path> &paths) {
-    for (const auto &entry : paths) {
+void
+get_perms(const std::vector<fs::path>& paths)
+{
+    for (const auto& entry : paths) {
         if (!fs::exists(entry)) {
             std::cerr << "The path doesn't exists: " << entry.string()
                       << std::endl;
@@ -20,7 +22,7 @@ void get_perms(const std::vector<fs::path> &paths) {
         try {
             auto st = fs::status(entry);
 
-            fs::perms permissions{st.permissions()};
+            fs::perms permissions{ st.permissions() };
 
             auto show = [=](char op, fs::perms perm) {
                 std::cout << (fs::perms::none == (perm & permissions) ? '-'
@@ -55,7 +57,7 @@ void get_perms(const std::vector<fs::path> &paths) {
             show('w', fs::perms::others_write);
             show('x', fs::perms::others_exec);
             std::cout << " " << entry.string() << '\n';
-        } catch (const std::exception &ex) {
+        } catch (const std::exception& ex) {
             std::cerr << "Failed to get permissions for: " << entry.string()
                       << std::endl;
             std::cerr << ex.what() << std::endl;

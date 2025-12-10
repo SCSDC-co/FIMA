@@ -17,14 +17,18 @@ namespace fima {
 
 namespace tui {
 
-void start_tui(fs::path path) {
+void
+start_tui(fs::path path)
+{
     using namespace ftxui;
 
     std::vector<fs::directory_entry> list_of_the_directory{
-        fima::helpers::get_directories_entries(path)};
+        fima::helpers::get_directories_entries(path)
+    };
 
-    sort(list_of_the_directory.begin(), list_of_the_directory.end(),
-         [](auto &a, auto &b) {
+    sort(list_of_the_directory.begin(),
+         list_of_the_directory.end(),
+         [](auto& a, auto& b) {
              if (a.is_directory() && !b.is_directory()) {
                  return true;
              }
@@ -38,7 +42,7 @@ void start_tui(fs::path path) {
 
     std::vector<Element> path_entries;
 
-    for (const fs::path &entry : list_of_the_directory) {
+    for (const fs::path& entry : list_of_the_directory) {
         auto name = entry.filename().string();
 
         if (fs::is_directory(entry)) {
@@ -52,15 +56,15 @@ void start_tui(fs::path path) {
 
     auto document = vbox({
 
-        hflow({
-            text(" PATH ") | border | color(Color::Green),
-            text(path) | border | flex | color(Color::Green),
-        }),
+      hflow({
+        text(" PATH ") | border | color(Color::Green),
+        text(path) | border | flex | color(Color::Green),
+      }),
 
-        border(
+      border(
 
-            vbox({vbox(path_entries)})) |
-            flex | color(Color::Green),
+        vbox({ vbox(path_entries) })) |
+        flex | color(Color::Green),
     });
 
     auto screen = Screen::Create(Dimension::Full(), Dimension::Full());

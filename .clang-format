@@ -1,8 +1,10 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Mozilla
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 ColumnLimit: 80
+InsertBraces: true
+LineEnding: LF
 
 SortIncludes: true
 IncludeBlocks: Regroup

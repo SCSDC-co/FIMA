@@ -6,7 +6,8 @@
 namespace fs = std::filesystem;
 
 namespace fima {
-    namespace create {
-        void file(const std::vector<fs::path> &paths);
-    }
+namespace create {
+void
+file(const std::vector<fs::path>& paths);
+}
 } // namespace fima

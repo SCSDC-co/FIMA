@@ -54,6 +54,12 @@ format() {
 
         echo -e "\033[32mFormatted:\033[0m $file"
     done
+
+    for file in $(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" -print); do
+        clang-format -i "$file"
+
+        echo -e "\033[32mFormatted:\033[0m $file"
+    done
 }
 
 help() {

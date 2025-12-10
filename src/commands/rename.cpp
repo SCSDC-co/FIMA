@@ -7,7 +7,9 @@ namespace fs = std::filesystem;
 
 namespace fima {
 
-void rename(fs::path old_name, fs::path new_name) {
+void
+rename(fs::path old_name, fs::path new_name)
+{
     if (!fs::exists(old_name)) {
         std::cout << "The directory/file you want to rename does not exists!"
                   << '\n';

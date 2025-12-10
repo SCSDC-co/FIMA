@@ -9,7 +9,8 @@ namespace fima {
 
 namespace cloc {
 
-void start(std::vector<fs::directory_entry> path);
+void
+start(std::vector<fs::directory_entry> path);
 
 }
 
