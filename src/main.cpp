@@ -193,8 +193,6 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        std::cout << '\n';
-
         fima::cloc::start(cloc_path);
 
         return 0;

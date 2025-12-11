@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <vector>
 
-#include "../../../include/commands/cloc/helpers/file_stats.h"
+#include "../../../include/commands/cloc/helpers/file_stats.hpp"
 
 namespace fs = std::filesystem;
 

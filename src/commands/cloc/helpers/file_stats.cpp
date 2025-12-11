@@ -1,8 +1,10 @@
 #include "../../../../include/commands/cloc/helpers/file_stats.hpp"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <ranges>
 #include <regex>
 #include <stdexcept>
 #include <string>
@@ -91,7 +93,7 @@ FileStats::create_lisp_like() const
     LanguageSpec spec;
 
     // FileType(name, extensions)
-    // I fucking hate this
+    // I fucking hate this formatting
     spec.file_types = { FileType("Lisp", { ".lisp", ".cl", ".lsp" }),
                         FileType("Scheme", { ".scm", ".ss" }),
                         FileType("Emacs Lisp", { ".el" }),
@@ -188,6 +190,14 @@ LanguageSpec::create(Type type)
     }
 }
 
+bool
+FileStats::is_comment(std::string line) const
+{
+    bool result;
+
+    return result;
+}
+
 void
 FileStats::count_lines(const fs::path& path) const
 {
@@ -209,6 +219,45 @@ FileStats::create_row(const std::string& language) const
 void
 FileStats::process(const fs::directory_entry& path) const
 {
+    std::string file_extension{ path.path().extension() };
+    std::string file_type{};
+    std::string file_name{ path.path().filename() };
+
+    LanguageSpec lang_stats;
+
+    if (file_name == "CMakeLists.txt") {
+        lang_stats = LanguageSpec::create(LanguageSpec::Type::ShellLike);
+
+        file_type = "CMake";
+    } else if (file_name == "Makefile") {
+        lang_stats = LanguageSpec::create(LanguageSpec::Type::ShellLike);
+
+        file_type = "Makefile";
+    } else {
+        auto it = this->EXTENSION_TYPE_MAP.find(file_extension);
+
+        LanguageSpec::Type type = it != this->EXTENSION_TYPE_MAP.end()
+                                    ? it->second
+                                    : LanguageSpec::Type::Unkown;
+
+        lang_stats = LanguageSpec::create(type);
+
+        for (const auto& ft : lang_stats.file_types) {
+            for (const auto& ext : ft.extensions) {
+                if (file_extension == ext) {
+                    file_type = ft.type_name;
+                }
+            }
+        }
+    }
+
+    auto number_of_dashes = file_name.size();
+
+    std::cout << "File name: " << file_name << '\n';
+    std::cout << "-----------" << std::string(number_of_dashes, '-') << '\n';
+    std::cout << "File extension: " << file_extension << '\n';
+    std::cout << "File type:      " << file_type << '\n';
+    std::cout << '\n';
 }
 
 } // namespace cloc

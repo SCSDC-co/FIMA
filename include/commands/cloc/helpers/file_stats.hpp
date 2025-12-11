@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <unordered_map>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -86,6 +87,7 @@ class LanguageSpec : public Validatable
         Markup,
         Asm,
         PlainText,
+        Unkown,
         COUNT_
     };
 
@@ -110,6 +112,96 @@ class FileStats
     LanguageSpec create_asm_like() const;
     LanguageSpec create_markup_like() const;
     LanguageSpec create_plain_text() const;
+
+    const std::unordered_map<std::string, LanguageSpec::Type>
+      EXTENSION_TYPE_MAP = {
+          // --- C-LIKE ---
+          { ".cpp", LanguageSpec::Type::CLike },
+          { ".cxx", LanguageSpec::Type::CLike },
+          { ".cc", LanguageSpec::Type::CLike },
+          { ".c++", LanguageSpec::Type::CLike },
+          { ".C", LanguageSpec::Type::CLike },
+          { ".hpp", LanguageSpec::Type::CLike },
+          { ".hh", LanguageSpec::Type::CLike },
+          { ".hxx", LanguageSpec::Type::CLike },
+          { ".inl", LanguageSpec::Type::CLike },
+          { ".tpp", LanguageSpec::Type::CLike },
+          { ".c", LanguageSpec::Type::CLike },
+          { ".h", LanguageSpec::Type::CLike },
+          { ".rs", LanguageSpec::Type::CLike },
+          { ".cs", LanguageSpec::Type::CLike },
+          { ".java", LanguageSpec::Type::CLike },
+          { ".kt", LanguageSpec::Type::CLike },
+          { ".kts", LanguageSpec::Type::CLike },
+          { ".go", LanguageSpec::Type::CLike },
+          { ".js", LanguageSpec::Type::CLike },
+          { ".jsx", LanguageSpec::Type::CLike },
+          { ".ts", LanguageSpec::Type::CLike },
+          { ".tsx", LanguageSpec::Type::CLike },
+          { ".jsonc", LanguageSpec::Type::CLike },
+          { ".groovy", LanguageSpec::Type::CLike },
+          { ".swift", LanguageSpec::Type::CLike },
+          { ".m", LanguageSpec::Type::CLike },
+          { ".mm", LanguageSpec::Type::CLike },
+          { ".d", LanguageSpec::Type::CLike },
+          { ".zig", LanguageSpec::Type::CLike },
+          { ".scala", LanguageSpec::Type::CLike },
+          { ".vert", LanguageSpec::Type::CLike },
+          { ".frag", LanguageSpec::Type::CLike },
+          { ".glsl", LanguageSpec::Type::CLike },
+          { ".hlsl", LanguageSpec::Type::CLike },
+
+          // --- SHELL-LIKE ---
+          { ".sh", LanguageSpec::Type::ShellLike },
+          { ".bash", LanguageSpec::Type::ShellLike },
+          { ".zsh", LanguageSpec::Type::ShellLike },
+          { ".py", LanguageSpec::Type::ShellLike },
+          { ".cmake", LanguageSpec::Type::ShellLike },
+          { ".yaml", LanguageSpec::Type::ShellLike },
+          { ".yml", LanguageSpec::Type::ShellLike },
+          { ".ini", LanguageSpec::Type::ShellLike },
+          { ".config", LanguageSpec::Type::ShellLike },
+          { ".toml", LanguageSpec::Type::ShellLike },
+
+          // --- LISP-LIKE ---
+          { ".lisp", LanguageSpec::Type::LispLike },
+          { ".cl", LanguageSpec::Type::LispLike },
+          { ".lsp", LanguageSpec::Type::LispLike },
+          { ".scm", LanguageSpec::Type::LispLike },
+          { ".ss", LanguageSpec::Type::LispLike },
+          { ".el", LanguageSpec::Type::LispLike },
+          { ".rkt", LanguageSpec::Type::LispLike },
+          { ".hy", LanguageSpec::Type::LispLike },
+          { ".clj", LanguageSpec::Type::LispLike },
+          { ".cljs", LanguageSpec::Type::LispLike },
+          { ".cljc", LanguageSpec::Type::LispLike },
+
+          // --- ASM ---
+          { ".asm", LanguageSpec::Type::Asm },
+          { ".s", LanguageSpec::Type::Asm },
+          { ".S", LanguageSpec::Type::Asm },
+          { ".inc", LanguageSpec::Type::Asm },
+
+          // --- MARKUP ---
+          { ".html", LanguageSpec::Type::Markup },
+          { ".xml", LanguageSpec::Type::Markup },
+          { ".xhtml", LanguageSpec::Type::Markup },
+          { ".svg", LanguageSpec::Type::Markup },
+          { ".mml", LanguageSpec::Type::Markup },
+          { ".md", LanguageSpec::Type::Markup },
+          { ".markdown", LanguageSpec::Type::Markup },
+          { ".tex", LanguageSpec::Type::Markup },
+          { ".rst", LanguageSpec::Type::Markup },
+          { ".adoc", LanguageSpec::Type::Markup },
+          { ".asciidoc", LanguageSpec::Type::Markup },
+          { ".php", LanguageSpec::Type::Markup },
+
+          // --- PLAIN TEXT ---
+          { ".txt", LanguageSpec::Type::PlainText },
+          { ".csv", LanguageSpec::Type::PlainText },
+          { ".json", LanguageSpec::Type::PlainText },
+      };
+    // there are 75 total extensions, WTF
 
     [[nodiscard]] bool is_comment(std::string line) const;
     [[nodiscard]] std::vector<std::string> create_row(
