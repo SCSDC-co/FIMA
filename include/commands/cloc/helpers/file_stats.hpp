@@ -1,6 +1,9 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <filesystem>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -103,6 +106,30 @@ class LanguageSpec : public Validatable
     [[nodiscard]] static LanguageSpec create(Type type);
 };
 
+class FileLines
+{
+  private:
+    int total_lines;
+    int blank_lines;
+    int comment_lines;
+    int code_lines;
+
+  public:
+    [[nodiscard]] int get_total_lines() const { return this->total_lines; }
+    [[nodiscard]] int get_code_lines() const { return this->code_lines; }
+    [[nodiscard]] int get_comment_lines() const { return this->comment_lines; }
+    [[nodiscard]] int get_blank_lines() const { return this->blank_lines; }
+
+    void set_code_lines(int lines) { this->code_lines = lines; }
+    void set_comment_lines(int lines) { this->comment_lines = lines; }
+    void set_blank_lines(int lines) { this->blank_lines = lines; }
+    void set_total_lines()
+    {
+        this->total_lines =
+          this->code_lines + this->comment_lines + this->blank_lines;
+    }
+};
+
 class FileStats
 {
   public:
@@ -203,11 +230,17 @@ class FileStats
       };
     // there are 75 total extensions, WTF
 
-    [[nodiscard]] bool is_comment(std::string line) const;
     [[nodiscard]] std::vector<std::string> create_row(
       const std::string& language) const;
 
-    void count_lines(const fs::path& path) const;
+    [[nodiscard]] bool is_blank(const std::string& s) const
+    {
+        return std::all_of(
+          s.begin(), s.end(), [](unsigned char c) { return std::isspace(c); });
+    }
+
+    [[nodiscard]] FileLines count_lines(const fs::path& path,
+                                        LanguageSpec::Type type) const;
     void process(const fs::directory_entry& path) const;
 };
 

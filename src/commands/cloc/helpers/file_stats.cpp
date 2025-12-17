@@ -190,22 +190,88 @@ LanguageSpec::create(Type type)
     }
 }
 
-bool
-FileStats::is_comment(std::string line) const
-{
-    bool result;
-
-    return result;
-}
-
-void
-FileStats::count_lines(const fs::path& path) const
+FileLines
+FileStats::count_lines(const fs::path& path, LanguageSpec::Type type) const
 {
     std::string line;
+    std::string single_comment_start;
+    std::string multi_comment_start;
+    std::string multi_comment_end;
+
     std::ifstream file(path);
 
-    while (std::getline(file, line)) {
+    switch (type) {
+        case LanguageSpec::Type::CLike:
+            single_comment_start = "//";
+            multi_comment_start = "/*";
+            multi_comment_end = "*/";
+
+            break;
+        case LanguageSpec::Type::ShellLike:
+            single_comment_start = "#";
+
+            break;
+        case LanguageSpec::Type::LispLike:
+            single_comment_start = ";";
+
+            break;
+        case LanguageSpec::Type::Markup:
+            multi_comment_start = "<!--";
+            multi_comment_end = "-->";
+
+            break;
+        case LanguageSpec::Type::Asm:
+            single_comment_start = ";";
+
+            break;
     }
+
+    int code_lines{ 0 };
+    int blank_lines{ 0 };
+    int comment_lines{ 0 };
+
+    bool is_multi_comment{ false };
+
+    FileLines lines;
+
+    while (std::getline(file, line)) {
+        if (this->is_blank(line)) {
+            ++blank_lines;
+
+            continue;
+        }
+
+        if (!is_multi_comment && line.starts_with(multi_comment_start)) {
+            is_multi_comment = true;
+
+            ++comment_lines;
+
+            continue;
+        }
+
+        if (is_multi_comment) {
+            ++comment_lines;
+
+            continue;
+        }
+
+        if (is_multi_comment && line.ends_with(multi_comment_end)) {
+            is_multi_comment = false;
+
+            ++comment_lines;
+
+            continue;
+        }
+
+        ++code_lines;
+    }
+
+    lines.set_code_lines(code_lines);
+    lines.set_blank_lines(blank_lines);
+    lines.set_comment_lines(comment_lines);
+    lines.set_total_lines();
+
+    return lines;
 }
 
 std::vector<std::string>
@@ -220,10 +286,12 @@ void
 FileStats::process(const fs::directory_entry& path) const
 {
     std::string file_extension{ path.path().extension() };
-    std::string file_type{};
     std::string file_name{ path.path().filename() };
+    std::string file_type{};
 
     LanguageSpec lang_stats;
+
+    LanguageSpec::Type type;
 
     if (file_name == "CMakeLists.txt") {
         lang_stats = LanguageSpec::create(LanguageSpec::Type::ShellLike);
@@ -236,9 +304,9 @@ FileStats::process(const fs::directory_entry& path) const
     } else {
         auto it = this->EXTENSION_TYPE_MAP.find(file_extension);
 
-        LanguageSpec::Type type = it != this->EXTENSION_TYPE_MAP.end()
-                                    ? it->second
-                                    : LanguageSpec::Type::Unkown;
+        type = it != this->EXTENSION_TYPE_MAP.end()
+                 ? it->second
+                 : LanguageSpec::Type::Unkown;
 
         lang_stats = LanguageSpec::create(type);
 
@@ -252,11 +320,19 @@ FileStats::process(const fs::directory_entry& path) const
     }
 
     auto number_of_dashes = file_name.size();
+    FileLines file_lines{ count_lines(path.path(), type) };
 
     std::cout << "File name: " << file_name << '\n';
     std::cout << "-----------" << std::string(number_of_dashes, '-') << '\n';
     std::cout << "File extension: " << file_extension << '\n';
     std::cout << "File type:      " << file_type << '\n';
+    std::cout << "-----------" << std::string(number_of_dashes, '-') << '\n';
+    std::cout << "Lines" << '\n';
+    std::cout << "-----------" << std::string(number_of_dashes, '-') << '\n';
+    std::cout << "Total:   " << file_lines.get_total_lines() << '\n';
+    std::cout << "Comment: " << file_lines.get_comment_lines() << '\n';
+    std::cout << "Blank:   " << file_lines.get_blank_lines() << '\n';
+    std::cout << "Code:    " << file_lines.get_code_lines() << '\n';
     std::cout << '\n';
 }
 
