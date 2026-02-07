@@ -1,4 +1,4 @@
-#include "../../../../include/tui/commands/ls/ls_tui.h"
+#include "tui/commands/ls/ls_tui.h"
 
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>

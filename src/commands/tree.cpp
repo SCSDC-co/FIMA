@@ -1,4 +1,4 @@
-#include "../../include/commands/tree.h"
+#include "commands/tree.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -8,11 +8,11 @@
 #include <string>
 #include <vector>
 
-#include "../../include/helpers/colors.h"
-#include "../../include/tui/commands/tree/tree_tui.h"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
+#include "helpers/colors.h"
+#include "tui/commands/tree/tree_tui.h"
 
 namespace fs = std::filesystem;
 

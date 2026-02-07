@@ -1,4 +1,4 @@
-#include "../../../include/commands/create/directory.h"
+#include "commands/create/directory.h"
 
 #include <exception>
 #include <filesystem>

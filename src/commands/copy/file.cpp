@@ -1,4 +1,4 @@
-#include "../../../include/commands/copy/file.h"
+#include "commands/copy/file.h"
 
 #include <filesystem>
 #include <iostream>

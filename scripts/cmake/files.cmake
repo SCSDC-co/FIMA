@@ -1,4 +1,4 @@
-set(SOURCE_FILES
+add_library(fima_lib
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
@@ -12,5 +12,4 @@ set(SOURCE_FILES
     src/commands/tree.cpp
     src/commands/ls.cpp
     src/tui/tui.cpp
-    src/main.cpp
 )

@@ -1,4 +1,4 @@
-#include "../../include/commands/permissions.h"
+#include "commands/permissions.h"
 
 #include <filesystem>
 #include <iostream>

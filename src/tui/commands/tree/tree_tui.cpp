@@ -1,4 +1,4 @@
-#include "../../../../include/tui/commands/tree/tree_tui.h"
+#include "tui/commands/tree/tree_tui.h"
 
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>

@@ -1,4 +1,4 @@
-#include "../../include/helpers/get_directories_entries.h"
+#include "helpers/get_directories_entries.h"
 
 #include <filesystem>
 #include <string>

@@ -1,4 +1,4 @@
-#include "../../include/tui/tui.h"
+#include "tui/tui.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "../../include/helpers/get_directories_entries.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
+#include "helpers/get_directories_entries.h"
 
 namespace fs = std::filesystem;
 

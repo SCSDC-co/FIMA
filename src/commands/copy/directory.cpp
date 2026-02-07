@@ -1,4 +1,4 @@
-#include "../../../include/commands/copy/directory.h"
+#include "commands/copy/directory.h"
 
 #include <filesystem>
 #include <iostream>

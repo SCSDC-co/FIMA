@@ -4,17 +4,17 @@
 #include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
-#include "../include/cli/CLI11.hpp"
-#include "../include/commands/copy/directory.h"
-#include "../include/commands/copy/file.h"
-#include "../include/commands/create/directory.h"
-#include "../include/commands/create/file.h"
-#include "../include/commands/ls.h"
-#include "../include/commands/permissions.h"
-#include "../include/commands/remove.h"
-#include "../include/commands/rename.h"
-#include "../include/commands/tree.h"
-#include "../include/tui/tui.h"
+#include "cli/CLI11.hpp"
+#include "commands/copy/directory.h"
+#include "commands/copy/file.h"
+#include "commands/create/directory.h"
+#include "commands/create/file.h"
+#include "commands/ls.h"
+#include "commands/permissions.h"
+#include "commands/remove.h"
+#include "commands/rename.h"
+#include "commands/tree.h"
+#include "tui/tui.h"
 
 #define VERSION "1.0.0"
 
