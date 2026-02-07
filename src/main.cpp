@@ -5,7 +5,6 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "../include/cli/CLI11.hpp"
-#include "../include/commands/cloc/cloc.h"
 #include "../include/commands/copy/directory.h"
 #include "../include/commands/copy/file.h"
 #include "../include/commands/create/directory.h"
@@ -193,7 +192,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::start(cloc_path);
+        // still need to be implemented
 
         return 0;
     }

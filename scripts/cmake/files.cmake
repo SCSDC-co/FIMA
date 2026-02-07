@@ -1,5 +1,4 @@
 set(SOURCE_FILES
-    src/commands/cloc/helpers/file_stats.cpp
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
@@ -8,7 +7,6 @@ set(SOURCE_FILES
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
-    src/commands/cloc/cloc.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/commands/tree.cpp

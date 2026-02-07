@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "../../include/helpers/colors.h"
 #include "../../include/tui/commands/tree/tree_tui.h"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
@@ -22,9 +23,6 @@ size_t number_of_dirs = 0;
 
 std::vector<std::string> inner_pointers = { "├── ", "│   " };
 std::vector<std::string> final_pointers = { "╰── ", "    " };
-
-std::string green = "\033[32m";
-std::string reset = "\033[0m";
 
 void
 create_tree(std::string path, std::string prefix, bool tui)
@@ -58,11 +56,12 @@ create_tree(std::string path, std::string prefix, bool tui)
 
         if (!tui) {
             if (entry.is_directory()) {
-                std::cout << green << prefix << pointers[0]
-                          << entry.path().filename().string() << "/" << reset
-                          << std::endl;
+                std::cout << fima::colors::GREEN << prefix << pointers[0]
+                          << entry.path().filename().string() << "/"
+                          << fima::colors::RESET << std::endl;
             } else {
-                std::cout << green << prefix << pointers[0] << reset
+                std::cout << fima::colors::GREEN << prefix << pointers[0]
+                          << fima::colors::RESET
                           << entry.path().filename().string() << std::endl;
             }
         } else if (tui) {
@@ -100,8 +99,9 @@ void
 start(const fs::path& path, std::string prefix, bool tui)
 {
     if (!tui) {
-        std::cout << green << path.string()
-                  << (path.string().back() == '/' ? "" : "/") << reset << '\n';
+        std::cout << fima::colors::GREEN << path.string()
+                  << (path.string().back() == '/' ? "" : "/")
+                  << fima::colors::RESET << '\n';
     }
 
     create_tree(path.string(), prefix, tui);
@@ -111,9 +111,11 @@ start(const fs::path& path, std::string prefix, bool tui)
     } else {
         std::cout << '\n';
 
-        std::cout << green << "Number of directories: " << reset
+        std::cout << fima::colors::GREEN
+                  << "Number of directories: " << fima::colors::RESET
                   << std::to_string(number_of_dirs) << '\n';
-        std::cout << green << "Number of files: " << reset
+        std::cout << fima::colors::GREEN
+                  << "Number of files: " << fima::colors::RESET
                   << std::to_string(number_of_files) << '\n';
     }
 }
