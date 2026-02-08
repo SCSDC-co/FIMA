@@ -69,13 +69,10 @@ log(logger_type type,
     const std::string& message,
     const std::string& additional_message)
 {
+    std::filesystem::path path = get_log_file();
+
     static std::ofstream log_file;
-
-    if (!log_file.is_open()) {
-        std::filesystem::path path = get_log_file();
-
-        log_file.open(path, std::ios::app);
-    }
+    log_file.open(path, std::ios::app);
 
     std::chrono::time_point now = std::chrono::system_clock::now();
     std::chrono::time_point time =
