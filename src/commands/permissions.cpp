@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "helpers/colors.h"
-#include "helpers/logger.hpp"
+#include "helpers/logger.h"
 
 namespace fs = std::filesystem;
 

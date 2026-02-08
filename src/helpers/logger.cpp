@@ -1,4 +1,4 @@
-#pragma once
+#include "helpers/logger.h"
 
 #include <chrono>
 #include <filesystem>
@@ -64,13 +64,7 @@ namespace fima {
 
 namespace helpers {
 
-enum class logger_type
-{
-    LOG,
-    ERROR
-};
-
-inline void
+void
 log(logger_type type,
     const std::string& message,
     const std::string& additional_message)

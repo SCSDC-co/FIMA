@@ -2,10 +2,9 @@
 
 #include <exception>
 #include <filesystem>
-#include <iostream>
 #include <vector>
 
-#include "helpers/logger.hpp"
+#include "helpers/logger.h"
 
 namespace fs = std::filesystem;
 

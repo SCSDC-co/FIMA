@@ -9,6 +9,7 @@ add_library(fima_lib
     src/commands/copy/file.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
+    src/helpers/logger.cpp
     src/commands/tree.cpp
     src/commands/ls.cpp
     src/tui/tui.cpp

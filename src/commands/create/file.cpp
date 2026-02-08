@@ -3,10 +3,9 @@
 #include <exception>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <vector>
 
-#include "helpers/logger.hpp"
+#include "helpers/logger.h"
 
 namespace fs = std::filesystem;
 
