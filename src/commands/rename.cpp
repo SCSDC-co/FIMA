@@ -3,30 +3,48 @@
 #include <filesystem>
 #include <iostream>
 
+#include "helpers/colors.h"
+#include "helpers/logger.hpp"
+
 namespace fs = std::filesystem;
 
 namespace fima {
 
 void
-rename(fs::path old_name, fs::path new_name)
+rename(const fs::path old_name, const fs::path new_name)
 {
     if (!fs::exists(old_name)) {
-        std::cout << "The directory/file you want to rename does not exists!"
-                  << '\n';
-        std::cout << old_name << '\n';
+        fima::helpers::log(fima::helpers::logger_type::ERROR,
+                           "The item you want to rename does not exist: ",
+                           old_name.string());
 
         return;
     }
 
     if (fs::exists(new_name)) {
-        std::cout << new_name << " does already exists!";
+        fima::helpers::log(fima::helpers::logger_type::ERROR,
+                           "The item already exists: ",
+                           new_name.string());
 
         return;
     }
 
-    fs::rename(old_name, new_name);
+    try {
+        fs::rename(old_name, new_name);
 
-    std::cout << old_name << " renamed to " << new_name << '\n';
+        std::clog << old_name << fima::colors::GREEN << " renamed to "
+                  << fima::colors::RESET << new_name << '\n';
+    } catch (const std::exception& ex) {
+        fima::helpers::log(
+          fima::helpers::logger_type::ERROR, "Failed to rename the item: ", "");
+
+        fima::helpers::log(
+          fima::helpers::logger_type::ERROR, "  Old name: ", old_name.string());
+        fima::helpers::log(
+          fima::helpers::logger_type::ERROR, "  New name: ", new_name.string());
+
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
+    }
 
     return;
 }

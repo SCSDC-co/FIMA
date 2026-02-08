@@ -2,7 +2,12 @@
 
 #include <filesystem>
 #include <iostream>
+#include <string>
+#include <string_view>
 #include <vector>
+
+#include "helpers/colors.h"
+#include "helpers/logger.hpp"
 
 namespace fs = std::filesystem;
 
@@ -13,8 +18,9 @@ get_perms(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (!fs::exists(entry)) {
-            std::cerr << "The path doesn't exists: " << entry.string()
-                      << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "The path doesn't exists: ",
+                               entry.string());
 
             continue;
         }
@@ -24,43 +30,80 @@ get_perms(const std::vector<fs::path>& paths)
 
             fs::perms permissions{ st.permissions() };
 
-            auto show = [=](char op, fs::perms perm) {
-                std::cout << (fs::perms::none == (perm & permissions) ? '-'
-                                                                      : op);
+            auto show = [=](const std::string& color, char op, fs::perms perm) {
+                std::cout << color
+                          << (fs::perms::none == (perm & permissions) ? '-'
+                                                                      : op)
+                          << fima::colors::RESET;
+            };
+
+            auto print_ft = [](const std::string_view& color, char c) {
+                std::cout << color << fima::colors::BOLD << c
+                          << fima::colors::RESET;
             };
 
             if (fs::is_regular_file(st)) {
-                std::cout << "-";
+                print_ft("", '-');
             } else if (fs::is_directory(st)) {
-                std::cout << "d";
+                print_ft(fima::colors::GREEN, 'd');
             } else if (fs::is_symlink(st)) {
-                std::cout << "l";
+                print_ft(fima::colors::BLUE, 'l');
             } else if (fs::is_character_file(st)) {
-                std::cout << "c";
+                print_ft("", 'c');
             } else if (fs::is_block_file(st)) {
-                std::cout << "b";
+                print_ft("", 'b');
             } else if (fs::is_fifo(st)) {
-                std::cout << "p";
+                print_ft("", 'p');
             } else if (fs::is_socket(st)) {
-                std::cout << "s";
+                print_ft("", 's');
             } else {
-                std::cout << "?"; // unknown type
+                print_ft("", '?'); // unknown type
             }
 
-            show('r', fs::perms::owner_read);
-            show('w', fs::perms::owner_write);
-            show('x', fs::perms::owner_exec);
-            show('r', fs::perms::group_read);
-            show('w', fs::perms::group_write);
-            show('x', fs::perms::group_exec);
-            show('r', fs::perms::others_read);
-            show('w', fs::perms::others_write);
-            show('x', fs::perms::others_exec);
-            std::cout << " " << entry.string() << '\n';
+            show(std::string(fima::colors::RED) +
+                   std::string(fima::colors::BOLD),
+                 'r',
+                 fs::perms::owner_read);
+            show(std::string(fima::colors::YELLOW) +
+                   std::string(fima::colors::BOLD),
+                 'w',
+                 fs::perms::owner_write);
+            show(std::string(fima::colors::GREEN) +
+                   std::string(fima::colors::BOLD),
+                 'x',
+                 fs::perms::owner_exec);
+            show(std::string(fima::colors::RED) +
+                   std::string(fima::colors::BOLD),
+                 'r',
+                 fs::perms::group_read);
+            show(std::string(fima::colors::YELLOW) +
+                   std::string(fima::colors::BOLD),
+                 'w',
+                 fs::perms::group_write);
+            show(std::string(fima::colors::GREEN) +
+                   std::string(fima::colors::BOLD),
+                 'x',
+                 fs::perms::group_exec);
+            show(std::string(fima::colors::RED) +
+                   std::string(fima::colors::BOLD),
+                 'r',
+                 fs::perms::others_read);
+            show(std::string(fima::colors::YELLOW) +
+                   std::string(fima::colors::BOLD),
+                 'w',
+                 fs::perms::others_write);
+            show(std::string(fima::colors::GREEN) +
+                   std::string(fima::colors::BOLD),
+                 'x',
+                 fs::perms::others_exec);
+            std::cout << "  " << entry.string()
+                      << (fs::is_directory(st) ? "/" : "") << '\n';
         } catch (const std::exception& ex) {
-            std::cerr << "Failed to get permissions for: " << entry.string()
-                      << std::endl;
-            std::cerr << ex.what() << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "Failed to get permissions for: ",
+                               entry.string());
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "", ex.what());
         }
     }
 }

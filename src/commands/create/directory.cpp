@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+#include "helpers/logger.hpp"
+
 namespace fs = std::filesystem;
 
 namespace fima {
@@ -17,8 +19,9 @@ dir(const std::vector<fs::path>& paths)
     for (const auto& entry : paths) {
 
         if (fs::is_directory(entry)) {
-            std::cerr << "This directory already exists: " << entry.string()
-                      << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "This directory already exists: ",
+                               entry.string());
 
             continue;
         }
@@ -26,11 +29,15 @@ dir(const std::vector<fs::path>& paths)
         try {
             fs::create_directories(entry);
 
-            std::clog << "Directory created at: " << entry.string() << '\n';
+            fima::helpers::log(fima::helpers::logger_type::LOG,
+                               "Directory created at: ",
+                               entry.string());
         } catch (const std::exception& ex) {
-            std::cerr << "Failed to create the directory: " << entry.string()
-                      << std::endl;
-            std::cerr << ex.what() << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "Failed to create the directory: ",
+                               entry.string());
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "", ex.what());
         }
     }
 }

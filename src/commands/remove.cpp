@@ -1,8 +1,9 @@
 #include "commands/remove.h"
 
 #include <filesystem>
-#include <iostream>
 #include <vector>
+
+#include "helpers/logger.hpp"
 
 namespace fs = std::filesystem;
 
@@ -13,8 +14,9 @@ remove(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (!fs::exists(entry)) {
-            std::cerr << "The path doesn't exists: " << entry.string()
-                      << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "The path doesn't exists: ",
+                               entry.string());
 
             continue;
         }
@@ -22,11 +24,15 @@ remove(const std::vector<fs::path>& paths)
         try {
             fs::remove_all(entry);
 
-            std::clog << "Item removed: " << entry.string() << '\n';
+            fima::helpers::log(fima::helpers::logger_type::LOG,
+                               "Item removed: ",
+                               entry.string());
         } catch (const std::exception& ex) {
-            std::cerr << "Failed to remove directory: " << entry.string()
-                      << std::endl;
-            std::cerr << ex.what() << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "Failed to remove directory: ",
+                               entry.string());
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "", ex.what());
         }
     }
 }

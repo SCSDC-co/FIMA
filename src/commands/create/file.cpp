@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
+#include "helpers/logger.hpp"
+
 namespace fs = std::filesystem;
 
 namespace fima {
@@ -17,7 +19,9 @@ file(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (fs::is_regular_file(entry)) {
-            std::cerr << "This file already exists: " << entry.string() << '\n';
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "This file already exists: ",
+                               entry.string());
 
             continue;
         }
@@ -26,11 +30,15 @@ file(const std::vector<fs::path>& paths)
             std::ofstream outfile{ entry };
             outfile.close();
 
-            std::clog << "File created at: " << entry.string() << '\n';
+            fima::helpers::log(fima::helpers::logger_type::LOG,
+                               "File created at: ",
+                               entry.string());
         } catch (const std::exception& ex) {
-            std::cerr << "Failed to create file: " << entry.string()
-                      << std::endl;
-            std::cerr << ex.what() << std::endl;
+            fima::helpers::log(fima::helpers::logger_type::ERROR,
+                               "Failed to create the file: ",
+                               entry.string());
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "", ex.what());
         }
     }
 }
