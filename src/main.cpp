@@ -5,6 +5,7 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "cli/CLI11.hpp"
+#include "commands/cloc/cloc.h"
 #include "commands/copy/directory.h"
 #include "commands/copy/file.h"
 #include "commands/create/directory.h"
@@ -23,7 +24,7 @@ namespace fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
-    CLI::App app{ "FIMA - Fast, Minimal & Awesome File Manager" };
+    CLI::App app{ "FIMA - Fast, Incredible, Minimal & Awesome File Manager" };
     argv = app.ensure_utf8(argv);
 
     bool tui{ false };
@@ -192,7 +193,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        // still need to be implemented
+        fima::cloc::main();
 
         return 0;
     }

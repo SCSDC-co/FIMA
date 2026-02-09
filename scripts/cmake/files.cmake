@@ -7,6 +7,7 @@ add_library(fima_lib
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
+    src/commands/cloc/cloc.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/helpers/logger.cpp
