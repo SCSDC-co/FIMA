@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <vector>
 
-namespace fs = std::filesystem;
-
 namespace fima {
+
 void
-get_perms(const std::vector<fs::path>& paths);
+get_perms(const std::vector<std::filesystem::path>& paths);
+
 }

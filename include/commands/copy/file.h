@@ -2,11 +2,13 @@
 
 #include <filesystem>
 
-namespace fs = std::filesystem;
-
 namespace fima {
+
 namespace copy {
+
 void
-file(fs::path source, fs::path destination);
+file(std::filesystem::path source, std::filesystem::path destination);
+
 }
+
 } // namespace fima

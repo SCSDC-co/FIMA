@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-namespace fs = std::filesystem;
-
 namespace fima {
+
 void
-rename(fs::path old_name, fs::path new_name);
+rename(std::filesystem::path old_name, std::filesystem::path new_name);
+
 }

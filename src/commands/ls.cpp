@@ -17,9 +17,8 @@ namespace ls {
 void
 start(fs::path path, bool tui)
 {
-    std::vector<fs::directory_entry> listOfTheDirectory{
-        fima::helpers::get_directories_entries(path)
-    };
+    std::vector<fs::directory_entry> listOfTheDirectory{ fima::helpers::get_directories_entries(
+      path) };
 
     std::vector<std::string> vector_directories;
 
@@ -40,18 +39,15 @@ start(fs::path path, bool tui)
     if (tui) {
         fima::ls::tui(vector_directories, vector_files);
     } else {
-        std::cout << fima::colors::GREEN << "DIRS" << fima::colors::RESET
-                  << '\n';
+        std::cout << fima::colors::GREEN << "DIRS" << fima::colors::RESET << '\n';
 
         for (const auto& entry : vector_directories) {
-            std::cout << fima::colors::GREEN << entry << fima::colors::RESET
-                      << '\n';
+            std::cout << fima::colors::GREEN << entry << fima::colors::RESET << '\n';
         }
 
         std::cout << '\n';
 
-        std::cout << fima::colors::GREEN << "FILES" << fima::colors::RESET
-                  << '\n';
+        std::cout << fima::colors::GREEN << "FILES" << fima::colors::RESET << '\n';
 
         for (const auto& entry : vector_files) {
             std::cout << entry << '\n';

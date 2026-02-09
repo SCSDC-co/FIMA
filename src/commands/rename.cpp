@@ -22,9 +22,8 @@ rename(const fs::path old_name, const fs::path new_name)
     }
 
     if (fs::exists(new_name)) {
-        fima::helpers::log(fima::helpers::logger_type::ERROR,
-                           "The item already exists: ",
-                           new_name.string());
+        fima::helpers::log(
+          fima::helpers::logger_type::ERROR, "The item already exists: ", new_name.string());
 
         return;
     }
@@ -32,16 +31,13 @@ rename(const fs::path old_name, const fs::path new_name)
     try {
         fs::rename(old_name, new_name);
 
-        std::clog << old_name << fima::colors::GREEN << " renamed to "
-                  << fima::colors::RESET << new_name << '\n';
+        std::clog << old_name << fima::colors::GREEN << " renamed to " << fima::colors::RESET
+                  << new_name << '\n';
     } catch (const std::exception& ex) {
-        fima::helpers::log(
-          fima::helpers::logger_type::ERROR, "Failed to rename the item: ", "");
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "Failed to rename the item: ", "");
 
-        fima::helpers::log(
-          fima::helpers::logger_type::ERROR, "  Old name: ", old_name.string());
-        fima::helpers::log(
-          fima::helpers::logger_type::ERROR, "  New name: ", new_name.string());
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "  Old name: ", old_name.string());
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "  New name: ", new_name.string());
 
         fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
     }

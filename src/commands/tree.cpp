@@ -57,17 +57,16 @@ create_tree(std::string path, std::string prefix, bool tui)
         if (!tui) {
             if (entry.is_directory()) {
                 std::cout << fima::colors::GREEN << prefix << pointers[0]
-                          << entry.path().filename().string() << "/"
-                          << fima::colors::RESET << std::endl;
+                          << entry.path().filename().string() << "/" << fima::colors::RESET
+                          << std::endl;
             } else {
-                std::cout << fima::colors::GREEN << prefix << pointers[0]
-                          << fima::colors::RESET
+                std::cout << fima::colors::GREEN << prefix << pointers[0] << fima::colors::RESET
                           << entry.path().filename().string() << std::endl;
             }
         } else if (tui) {
             Element prefix_elem = text(prefix) | color(Color::Green);
-            Element name_elem = text(entry.path().filename().string() +
-                                     (entry.is_directory() ? "/ " : " "));
+            Element name_elem =
+              text(entry.path().filename().string() + (entry.is_directory() ? "/ " : " "));
             Element first_pointer = text(pointers[0]);
 
             if (entry.is_directory()) {
@@ -76,8 +75,7 @@ create_tree(std::string path, std::string prefix, bool tui)
                 name_elem = name_elem | color(Color::White);
             }
 
-            Element total_string =
-              hbox({ prefix_elem, first_pointer, name_elem });
+            Element total_string = hbox({ prefix_elem, first_pointer, name_elem });
 
             tree_vector_tui.push_back(total_string);
         }
@@ -100,8 +98,7 @@ start(const fs::path& path, std::string prefix, bool tui)
 {
     if (!tui) {
         std::cout << fima::colors::GREEN << path.string()
-                  << (path.string().back() == '/' ? "" : "/")
-                  << fima::colors::RESET << '\n';
+                  << (path.string().back() == '/' ? "" : "/") << fima::colors::RESET << '\n';
     }
 
     create_tree(path.string(), prefix, tui);
@@ -111,11 +108,9 @@ start(const fs::path& path, std::string prefix, bool tui)
     } else {
         std::cout << '\n';
 
-        std::cout << fima::colors::GREEN
-                  << "Number of directories: " << fima::colors::RESET
+        std::cout << fima::colors::GREEN << "Number of directories: " << fima::colors::RESET
                   << std::to_string(number_of_dirs) << '\n';
-        std::cout << fima::colors::GREEN
-                  << "Number of files: " << fima::colors::RESET
+        std::cout << fima::colors::GREEN << "Number of files: " << fima::colors::RESET
                   << std::to_string(number_of_files) << '\n';
     }
 }

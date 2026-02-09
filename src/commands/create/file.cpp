@@ -18,9 +18,8 @@ file(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (fs::is_regular_file(entry)) {
-            fima::helpers::log(fima::helpers::logger_type::ERROR,
-                               "This file already exists: ",
-                               entry.string());
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "This file already exists: ", entry.string());
 
             continue;
         }
@@ -29,15 +28,12 @@ file(const std::vector<fs::path>& paths)
             std::ofstream outfile{ entry };
             outfile.close();
 
-            fima::helpers::log(fima::helpers::logger_type::LOG,
-                               "File created at: ",
-                               entry.string());
-        } catch (const std::exception& ex) {
-            fima::helpers::log(fima::helpers::logger_type::ERROR,
-                               "Failed to create the file: ",
-                               entry.string());
             fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "", ex.what());
+              fima::helpers::logger_type::LOG, "File created at: ", entry.string());
+        } catch (const std::exception& ex) {
+            fima::helpers::log(
+              fima::helpers::logger_type::ERROR, "Failed to create the file: ", entry.string());
+            fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
         }
     }
 }

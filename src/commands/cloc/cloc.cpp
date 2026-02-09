@@ -45,13 +45,10 @@ main()
 
     for (const json& lang : j["languages"]) {
         language_name = lang["name"].get<std::string>();
-        language_extensions =
-          lang["extensions"].get<std::vector<std::string>>();
+        language_extensions = lang["extensions"].get<std::vector<std::string>>();
         language_comment_single = lang["comments"]["single"].get<std::string>();
-        language_comment_multiline_start =
-          lang["comments"]["multiline_start"].get<std::string>();
-        language_comment_multiline_end =
-          lang["comments"]["multiline_end"].get<std::string>();
+        language_comment_multiline_start = lang["comments"]["multiline_start"].get<std::string>();
+        language_comment_multiline_end = lang["comments"]["multiline_end"].get<std::string>();
     }
 
     std::cout << "language: " << language_name << '\n';
@@ -63,8 +60,7 @@ main()
 
     std::cout << "comments:" << '\n';
     std::cout << "  single: " << language_comment_single << '\n';
-    std::cout << "  multi line start: " << language_comment_multiline_start
-              << '\n';
+    std::cout << "  multi line start: " << language_comment_multiline_start << '\n';
     std::cout << "  multi line end: " << language_comment_multiline_end << '\n';
 }
 

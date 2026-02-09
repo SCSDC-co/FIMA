@@ -52,8 +52,7 @@ get_log_file()
     // If no file is found it will create a new one
 
     std::chrono::time_point now = std::chrono::system_clock::now();
-    std::chrono::time_point time =
-      std::chrono::floor<std::chrono::seconds>(now);
+    std::chrono::time_point time = std::chrono::floor<std::chrono::seconds>(now);
 
     std::string current_time = std::format("{:%Y%b%d_%H%M%S}", time);
 
@@ -65,9 +64,7 @@ namespace fima {
 namespace helpers {
 
 void
-log(logger_type type,
-    const std::string& message,
-    const std::string& additional_message)
+log(logger_type type, const std::string& message, const std::string& additional_message)
 {
     std::filesystem::path path = get_log_file();
 
@@ -75,15 +72,14 @@ log(logger_type type,
     log_file.open(path, std::ios::app);
 
     std::chrono::time_point now = std::chrono::system_clock::now();
-    std::chrono::time_point time =
-      std::chrono::floor<std::chrono::seconds>(now);
+    std::chrono::time_point time = std::chrono::floor<std::chrono::seconds>(now);
 
     std::string current_time = std::format("{:%Y%b%d_%H%M%S}", time);
 
     switch (type) {
         case logger_type::LOG:
-            std::clog << fima::colors::GREEN << message << fima::colors::RESET
-                      << additional_message << '\n';
+            std::clog << fima::colors::GREEN << message << fima::colors::RESET << additional_message
+                      << '\n';
 
             if (log_file.is_open()) {
                 log_file << "[" << current_time << "]  " << "[LOG] " << message
@@ -93,12 +89,12 @@ log(logger_type type,
             break;
 
         case logger_type::ERROR:
-            std::cerr << fima::colors::RED << message << fima::colors::RESET
-                      << additional_message << std::endl;
+            std::cerr << fima::colors::RED << message << fima::colors::RESET << additional_message
+                      << std::endl;
 
             if (log_file.is_open()) {
-                log_file << "[" << current_time << "]  " << "[ERROR] "
-                         << message << additional_message << '\n';
+                log_file << "[" << current_time << "]  " << "[ERROR] " << message
+                         << additional_message << '\n';
             }
 
             break;

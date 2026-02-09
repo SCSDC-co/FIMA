@@ -3,11 +3,13 @@
 #include <filesystem>
 #include <vector>
 
-namespace fs = std::filesystem;
-
 namespace fima {
+
 namespace create {
+
 void
-dir(const std::vector<fs::path>& paths);
+dir(const std::vector<std::filesystem::path>& paths);
+
 }
+
 } // namespace fima

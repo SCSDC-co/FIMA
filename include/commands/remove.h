@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <vector>
 
-namespace fs = std::filesystem;
-
 namespace fima {
+
 void
-remove(const std::vector<fs::path>& paths);
+remove(const std::vector<std::filesystem::path>& paths);
+
 } // namespace fima

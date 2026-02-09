@@ -2,7 +2,7 @@ BasedOnStyle: Mozilla
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
-ColumnLimit: 80
+ColumnLimit: 100
 InsertBraces: true
 LineEnding: LF
 

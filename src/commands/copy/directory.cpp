@@ -26,23 +26,17 @@ directory(fs::path source, fs::path destination)
     }
 
     try {
-        fs::copy(source,
-                 destination,
-                 fs::copy_options::overwrite_existing |
-                   fs::copy_options::recursive);
+        fs::copy(
+          source, destination, fs::copy_options::overwrite_existing | fs::copy_options::recursive);
 
-        std::clog << fima::colors::GREEN << "Directory " << fima::colors::RESET
-                  << source.string() << fima::colors::GREEN << " copied to "
-                  << fima::colors::RESET << destination.string() << '\n';
+        std::clog << fima::colors::GREEN << "Directory " << fima::colors::RESET << source.string()
+                  << fima::colors::GREEN << " copied to " << fima::colors::RESET
+                  << destination.string() << '\n';
     } catch (const std::exception& ex) {
-        fima::helpers::log(fima::helpers::logger_type::ERROR,
-                           "Failed to copy the directory: ",
-                           "");
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "Failed to copy the directory: ", "");
 
-        fima::helpers::log(
-          fima::helpers::logger_type::ERROR, "  Source directory: ", source);
-        fima::helpers::log(
-          fima::helpers::logger_type::ERROR, "  Destination: ", destination);
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "  Source directory: ", source);
+        fima::helpers::log(fima::helpers::logger_type::ERROR, "  Destination: ", destination);
 
         fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
     }

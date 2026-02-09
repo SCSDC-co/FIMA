@@ -21,26 +21,24 @@ tui(std::string path_name,
     size_t number_of_files)
 {
     Element main_box =
-      window(
-        text(" Tree: " + path_name + (path_name.back() == '/' ? " " : "/ ")) |
-          bold,
-        vbox(
+      window(text(" Tree: " + path_name + (path_name.back() == '/' ? " " : "/ ")) | bold,
+             vbox(
 
-          hbox(text(" "), vbox(tree_vector_tui)),
+               hbox(text(" "), vbox(tree_vector_tui)),
 
-          filler(),
+               filler(),
 
-          separator(),
+               separator(),
 
-          vbox(
+               vbox(
 
-            hbox(text(" Number of directories: ") | color(Color::Green),
-                 text(std::to_string(number_of_dirs)) | color(Color::White)),
+                 hbox(text(" Number of directories: ") | color(Color::Green),
+                      text(std::to_string(number_of_dirs)) | color(Color::White)),
 
-            hbox(text(" Number of files: ") | color(Color::Green),
-                 text(std::to_string(number_of_files)) | color(Color::White))
+                 hbox(text(" Number of files: ") | color(Color::Green),
+                      text(std::to_string(number_of_files)) | color(Color::White))
 
-              ))) |
+                   ))) |
       color(Color::Green);
 
     auto document = main_box;

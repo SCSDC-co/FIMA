@@ -22,23 +22,20 @@ start_tui(fs::path path)
 {
     using namespace ftxui;
 
-    std::vector<fs::directory_entry> list_of_the_directory{
-        fima::helpers::get_directories_entries(path)
-    };
+    std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
+      path) };
 
-    sort(list_of_the_directory.begin(),
-         list_of_the_directory.end(),
-         [](auto& a, auto& b) {
-             if (a.is_directory() && !b.is_directory()) {
-                 return true;
-             }
+    sort(list_of_the_directory.begin(), list_of_the_directory.end(), [](auto& a, auto& b) {
+        if (a.is_directory() && !b.is_directory()) {
+            return true;
+        }
 
-             if (!a.is_directory() && b.is_directory()) {
-                 return false;
-             }
+        if (!a.is_directory() && b.is_directory()) {
+            return false;
+        }
 
-             return a.path().filename() < b.path().filename();
-         });
+        return a.path().filename() < b.path().filename();
+    });
 
     std::vector<Element> path_entries;
 
@@ -49,9 +46,8 @@ start_tui(fs::path path)
             name += "/";
         }
 
-        path_entries.push_back(text(name) |
-                               (fs::is_directory(entry) ? color(Color::Green)
-                                                        : color(Color::White)));
+        path_entries.push_back(
+          text(name) | (fs::is_directory(entry) ? color(Color::Green) : color(Color::White)));
     }
 
     auto document = vbox({
