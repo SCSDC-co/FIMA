@@ -33,7 +33,7 @@ create_languages_file(fs::path path)
                 "multiline_end": "*/"
             }
         },
-        "list_like": {
+        "lisp_like": {
             "comments": {
                 "single": ";",
                 "multiline_start": null,
