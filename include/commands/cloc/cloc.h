@@ -1,11 +1,13 @@
 #pragma once
 
+#include <filesystem>
+
 namespace fima {
 
 namespace cloc {
 
 void
-main();
+main(std::filesystem::path path);
 
 }
 

@@ -12,6 +12,10 @@ AlignConsecutiveMacros: Consecutive
 IndentPPDirectives: AfterHash
 PPIndentWidth: 2
 
+BinPackArguments: false
+BinPackLongBracedList: false
+BinPackParameters: OnePerLine
+
 SortIncludes: true
 IncludeBlocks: Regroup
 IncludeCategories:

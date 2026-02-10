@@ -33,7 +33,7 @@ main(int argc, char** argv)
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
     std::vector<fs::path> perms_path;
-    std::vector<fs::directory_entry> cloc_path;
+    fs::path cloc_path;
     fs::path path_to_copy;
     fs::path destination;
     fs::path old_name;
@@ -179,7 +179,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main();
+        fima::cloc::main(cloc_path);
 
         return 0;
     }

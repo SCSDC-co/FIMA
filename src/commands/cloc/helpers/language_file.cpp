@@ -51,7 +51,7 @@ create_languages_file(fs::path path)
             "comments": {
                 "single": "#",
                 "multiline_start": "\"\"\"",
-                "multiline_start": "\"\"\""
+                "multiline_end": "\"\"\""
             }
         }
     }
