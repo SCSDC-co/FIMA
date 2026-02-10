@@ -19,7 +19,7 @@ namespace fs = std::filesystem;
 std::vector<Element> tree_vector_tui;
 
 size_t number_of_files = 0;
-size_t number_of_dirs = 0;
+size_t number_of_dirs  = 0;
 
 std::vector<std::string> inner_pointers = { "├── ", "│   " };
 std::vector<std::string> final_pointers = { "╰── ", "    " };

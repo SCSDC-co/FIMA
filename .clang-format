@@ -6,6 +6,12 @@ ColumnLimit: 100
 InsertBraces: true
 LineEnding: LF
 
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: Consecutive
+
+IndentPPDirectives: AfterHash
+PPIndentWidth: 2
+
 SortIncludes: true
 IncludeBlocks: Regroup
 IncludeCategories:

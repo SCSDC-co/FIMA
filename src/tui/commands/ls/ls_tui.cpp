@@ -44,7 +44,7 @@ tui(std::vector<std::string> dirs_vector, std::vector<std::string> files_vector)
     });
 
     auto document = main_box;
-    auto screen = Screen::Create(Dimension::Fit(document));
+    auto screen   = Screen::Create(Dimension::Fit(document));
     Render(screen, document);
     screen.Print();
     std::cout << std::endl;

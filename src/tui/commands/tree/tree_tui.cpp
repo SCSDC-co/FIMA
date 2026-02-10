@@ -42,7 +42,7 @@ tui(std::string path_name,
       color(Color::Green);
 
     auto document = main_box;
-    auto screen = Screen::Create(Dimension::Fit(document), Dimension::Full());
+    auto screen   = Screen::Create(Dimension::Fit(document), Dimension::Full());
     Render(screen, document);
     screen.Print();
     std::cin.get();

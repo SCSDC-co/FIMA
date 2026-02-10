@@ -1,9 +1,14 @@
 #include "commands/cloc/cloc.h"
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-#include <vector>
+
+#include "helpers/get_data_path.h"
+
+namespace fs = std::filesystem;
 
 namespace fima {
 
@@ -12,56 +17,82 @@ namespace cloc {
 using json = nlohmann::json;
 
 void
-main()
+create_languages_file(fs::path path)
 {
-    std::string language = R"(
+    // if the file exists we exit since it doesn't need to be created
+    if (fs::exists(path)) {
+        return;
+    }
+
+    std::string languages_file = R"(
     {
-        "languages": [
-            {
-                "name": "C++",
-                "extensions": [
-                    ".cpp",
-                    ".cxx",
-                    ".cc"
-                ],
-                "comments": {
-                    "single": "//",
-                    "multiline_start": "/*",
-                    "multiline_end": "*/"
-                }
+        "c_like": {
+            "comments": {
+                "single": "//",
+                "multiline_start": "/*",
+                "multiline_end": "*/"
             }
-        ]
+        },
+        "list_like": {
+            "comments": {
+                "single": ";",
+                "multiline_start": null,
+                "multiline_end": null
+            }
+        },
+        "shell_like": {
+            "comments": {
+                "single": "#",
+                "multiline_start": null,
+                "multiline_end": null
+            }
+        },
+        "python": {
+            "comments": {
+                "single": "#",
+                "multiline_start": "\"\"\"",
+                "multiline_start": "\"\"\""
+            }
+        }
     }
     )";
 
-    json j = json::parse(language);
+    json json_file = json::parse(languages_file);
 
-    std::vector<std::string> language_extensions;
+    static std::ofstream file_path;
 
-    std::string language_name;
-    std::string language_comment_single;
-    std::string language_comment_multiline_start;
-    std::string language_comment_multiline_end;
+    file_path.open(path, std::ios::app);
+    file_path << json_file.dump(2, ' ', true);
+    file_path.close();
+}
 
-    for (const json& lang : j["languages"]) {
-        language_name = lang["name"].get<std::string>();
-        language_extensions = lang["extensions"].get<std::vector<std::string>>();
-        language_comment_single = lang["comments"]["single"].get<std::string>();
-        language_comment_multiline_start = lang["comments"]["multiline_start"].get<std::string>();
-        language_comment_multiline_end = lang["comments"]["multiline_end"].get<std::string>();
+[[nodiscard]] json
+get_languages_file()
+{
+    json file;
+
+    fs::path data_path          = fima::helpers::get_application_data_path();
+    fs::path fima_data_path     = data_path / "fima";
+    fs::path language_file_path = fima_data_path / "languages.json";
+
+    if (!fs::exists(fima_data_path)) {
+        fs::create_directory(fima_data_path);
     }
 
-    std::cout << "language: " << language_name << '\n';
-    std::cout << "extensions:" << '\n';
+    create_languages_file(language_file_path);
 
-    for (const std::string& item : language_extensions) {
-        std::cout << "  " << item << '\n';
-    }
+    std::ifstream file_stream(language_file_path);
+    file = json::parse(file_stream);
 
-    std::cout << "comments:" << '\n';
-    std::cout << "  single: " << language_comment_single << '\n';
-    std::cout << "  multi line start: " << language_comment_multiline_start << '\n';
-    std::cout << "  multi line end: " << language_comment_multiline_end << '\n';
+    return file;
+}
+
+void
+main()
+{
+    json languages_file = get_languages_file();
+
+    std::cout << languages_file.dump(2, ' ', true) << '\n';
 }
 
 }

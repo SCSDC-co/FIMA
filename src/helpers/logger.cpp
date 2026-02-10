@@ -39,9 +39,9 @@ get_log_file()
         fs::file_time_type time = entry.last_write_time();
 
         if (!found || time > newest_time) {
-            newest = entry.path();
+            newest      = entry.path();
             newest_time = time;
-            found = true;
+            found       = true;
         }
     }
 
@@ -51,7 +51,7 @@ get_log_file()
 
     // If no file is found it will create a new one
 
-    std::chrono::time_point now = std::chrono::system_clock::now();
+    std::chrono::time_point now  = std::chrono::system_clock::now();
     std::chrono::time_point time = std::chrono::floor<std::chrono::seconds>(now);
 
     std::string current_time = std::format("{:%Y%b%d_%H%M%S}", time);
@@ -71,7 +71,7 @@ log(logger_type type, const std::string& message, const std::string& additional_
     static std::ofstream log_file;
     log_file.open(path, std::ios::app);
 
-    std::chrono::time_point now = std::chrono::system_clock::now();
+    std::chrono::time_point now  = std::chrono::system_clock::now();
     std::chrono::time_point time = std::chrono::floor<std::chrono::seconds>(now);
 
     std::string current_time = std::format("{:%Y%b%d_%H%M%S}", time);
