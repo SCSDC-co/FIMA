@@ -1,4 +1,5 @@
 add_library(fima_lib
+    src/commands/cloc/helpers/language_file.cpp
     src/helpers/get_directories_entries.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
