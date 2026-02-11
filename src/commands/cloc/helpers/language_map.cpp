@@ -9,8 +9,9 @@ namespace cloc {
 
 namespace helpers {
 
+// this is the map for extension -> family
 // clang-format off
-std::unordered_map<std::string, std::string> language_map = {
+std::unordered_map<std::string, std::string> language_map_family = {
     // c-like
     { ".cpp", "c_like" },
     { ".cxx", "c_like" },
@@ -72,7 +73,7 @@ std::unordered_map<std::string, std::string> language_map = {
     { ".cr", "shell_like" },
     { ".yml", "shell_like" },
     { ".yaml", "shell_like" },
-    { ".nim", "shell_like" },
+    { ".toml", "shell_like" },
     { ".tf", "shell_like" },
     { ".nix", "shell_like" },
     { ".sls", "shell_like" },
@@ -80,12 +81,83 @@ std::unordered_map<std::string, std::string> language_map = {
     // "special" languages
     { ".py", "python" }
 };
+
+// this one is for extension -> language
+std::unordered_map<std::string, std::string> language_map_language = {
+    { ".cpp", "C++" },
+    { ".cxx", "C++" },
+    { ".cc", "C++" },
+    { ".h", "C Header" },
+    { ".hpp", "C++ Header" },
+    { ".hxx", "C++ Header" },
+    { ".inl", "C++ Header" },
+    { ".rs", "Rust" },
+    { ".cs", "C#" },
+    { ".js", "JavaScript" },
+    { ".ts", "TypeScript" },
+    { ".java", "Java" },
+    { ".m", "Objective-C" },
+    { ".php", "PHP" },
+    { ".dart", "Dart" },
+    { ".go", "Go" },
+    { ".swift", "Swift" },
+    { ".kt", "Kotlin" },
+    { ".scala", "Scala" },
+    { ".hx", "Haxe" },
+    { ".hxml", "Haxe" },
+    { ".lisp", "Common Lisp" },
+    { ".lsp", "Common Lisp" },
+    { ".cl", "Common Lisp" },
+    { ".scm", "Scheme" },
+    { ".rkt", "Racket" },
+    { ".clj", "Clojure" },
+    { ".cljs", "Clojure" },
+    { ".cljc", "Clojure" },
+    { ".edn", "EDN" },
+    { ".el", "Emacs Lisp" },
+    { ".ss", "Racket" },
+    { ".hy", "Hy" },
+    { ".janet", "Janet" },
+    { ".fnl", "Fennel" },
+    { ".asm", "Assembly" },
+    { ".s", "Assembly" },
+    { ".sh", "Bash" },
+    { ".zsh", "ZSH" },
+    { ".fish", "Fish" },
+    { ".dash", "Dash" },
+    { ".ksh", "KSH" },
+    { ".ash", "ASH" },
+    { ".tcsh", "TCSH" },
+    { ".csh", "CSH" },
+    { ".rb", "Ruby" },
+    { ".pl", "PL/I" },
+    { ".pm", "PM" },
+    { ".raku", "Raku" },
+    { ".rakumod", "Raku" },
+    { ".p6", "P6" },
+    { ".jl", "Julia" },
+    { ".nim", "Nim" },
+    { ".cr", "Crystal" },
+    { ".yml", "YAML" },
+    { ".yaml", "YAML" },
+    { ".toml", "TOML" },
+    { ".tf", "Tensor Flow" },
+    { ".nix", "NIX" },
+    { ".sls", "S/LS" },
+    { ".py", "Python" }
+};
 // clang-format on
 
 [[nodiscard]] std::string
 get_language_family(std::string extension)
 {
-    return language_map.at(extension);
+    return language_map_family.at(extension);
+}
+
+[[nodiscard]] std::string
+get_language_name(std::string extension)
+{
+    return language_map_language.at(extension);
 }
 
 }

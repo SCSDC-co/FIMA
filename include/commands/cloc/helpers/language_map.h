@@ -11,6 +11,9 @@ namespace helpers {
 [[nodiscard]] std::string
 get_language_family(std::string extension);
 
+[[nodiscard]] std::string
+get_language_name(std::string extension);
+
 }
 
 }

@@ -4,8 +4,10 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
+#include "commands/cloc/helpers/count_lines.h"
 #include "commands/cloc/helpers/language_file.h"
 #include "commands/cloc/helpers/language_map.h"
+#include "helpers/colors.h"
 
 namespace fs = std::filesystem;
 
@@ -22,21 +24,17 @@ main(fs::path path)
 
     std::string file_extension       = path.extension();
     std::string file_language_family = helpers::get_language_family(file_extension);
+    std::string file_language_name   = helpers::get_language_name(file_extension);
 
-    std::cout << path.string() << " extension: " << file_extension << '\n';
-    std::cout << path.string() << " language family: " << file_language_family << '\n';
-    std::cout << path.string() << " comments:" << '\n';
-    std::cout << "  single: "
-              << languages_file[file_language_family]["comments"]["single"].get<std::string>()
-              << '\n';
-    std::cout
-      << "  multiline start: "
-      << languages_file[file_language_family]["comments"]["multiline_start"].get<std::string>()
-      << '\n';
-    std::cout
-      << "  multiline end: "
-      << languages_file[file_language_family]["comments"]["multiline_end"].get<std::string>()
-      << '\n';
+    helpers::FileStats file_stats = helpers::count_lines(path);
+
+    std::cout << fima::colors::GREEN << "File: " << fima::colors::RESET << path.string() << '\n';
+    std::cout << fima::colors::GREEN << "Language name: " << fima::colors::RESET
+              << file_language_name << '\n';
+    std::cout << fima::colors::GREEN << "Language family: " << fima::colors::RESET
+              << file_language_family << '\n';
+    std::cout << fima::colors::GREEN << "Lines of code: " << fima::colors::RESET
+              << file_stats.get_total() << '\n';
 }
 
 }

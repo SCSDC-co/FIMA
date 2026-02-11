@@ -12,9 +12,7 @@ AlignConsecutiveMacros: Consecutive
 IndentPPDirectives: AfterHash
 PPIndentWidth: 2
 
-BinPackArguments: false
-BinPackLongBracedList: false
-BinPackParameters: OnePerLine
+AllowShortFunctionsOnASingleLine: All
 
 SortIncludes: true
 IncludeBlocks: Regroup
