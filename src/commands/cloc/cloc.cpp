@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <string>
 
 #include "commands/cloc/helpers/count_lines.h"
 #include "commands/cloc/helpers/language_file.h"
@@ -26,14 +27,43 @@ main(fs::path path)
     std::string file_language_family = helpers::get_language_family(file_extension);
     std::string file_language_name   = helpers::get_language_name(file_extension);
 
-    helpers::FileStats file_stats = helpers::count_lines(path);
+    std::optional<std::string> single_comment =
+      languages_file[file_language_family]["comments"]["single"].get<std::string>();
+    std::optional<std::string> multiline_start =
+      languages_file[file_language_family]["comments"]["multiline_start"].get<std::string>();
+    std::optional<std::string> multiline_end =
+      languages_file[file_language_family]["comments"]["multiline_end"].get<std::string>();
 
-    std::cout << fima::colors::GREEN << "File: " << fima::colors::RESET << path.string() << '\n';
-    std::cout << fima::colors::GREEN << "Language name: " << fima::colors::RESET
-              << file_language_name << '\n';
-    std::cout << fima::colors::GREEN << "Language family: " << fima::colors::RESET
-              << file_language_family << '\n';
+    helpers::FileStats file_stats =
+      helpers::count_lines(path, single_comment, multiline_start, multiline_end);
+
+    std::cout << fima::colors::GREEN << "File: " << fima::colors::RESET << path.string()
+              << fima::colors::GREEN << " (" << file_language_name << ")" << fima::colors::RESET
+              << '\n';
+
+    std::cout << fima::colors::GREEN << "──────";
+
+    for (int i = 0; i < path.string().length(); ++i) {
+        std::cout << "─";
+    }
+
+    std::cout << "──";
+
+    for (int i = 0; i < file_language_name.length(); ++i) {
+        std::cout << "─";
+    }
+
+    std::cout << "─";
+
+    std::cout << fima::colors::RESET << '\n';
+
     std::cout << fima::colors::GREEN << "Lines of code: " << fima::colors::RESET
+              << file_stats.get_code() << '\n';
+    std::cout << fima::colors::GREEN << "Lines of comments: " << fima::colors::RESET
+              << file_stats.get_comment() << '\n';
+    std::cout << fima::colors::GREEN << "Blank lines: " << fima::colors::RESET
+              << file_stats.get_blank() << '\n';
+    std::cout << fima::colors::GREEN << "Total lines: " << fima::colors::RESET
               << file_stats.get_total() << '\n';
 }
 
