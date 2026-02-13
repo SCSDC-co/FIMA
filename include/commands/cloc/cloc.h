@@ -1,13 +1,14 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fima {
 
 namespace cloc {
 
 void
-main(std::filesystem::path path);
+main(const std::vector<std::filesystem::path>& paths);
 
 }
 

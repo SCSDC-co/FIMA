@@ -33,7 +33,7 @@ main(int argc, char** argv)
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
     std::vector<fs::path> perms_path;
-    fs::path cloc_path;
+    std::vector<fs::path> cloc_paths;
     fs::path path_to_copy;
     fs::path destination;
     fs::path old_name;
@@ -116,7 +116,7 @@ main(int argc, char** argv)
 
     CLI::App* cloc_subcmd = app.add_subcommand("cloc", "Count lines of code of a file");
 
-    cloc_subcmd->add_option("path", cloc_path, "The file path to work on");
+    cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -179,7 +179,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main(cloc_path);
+        fima::cloc::main(cloc_paths);
 
         return 0;
     }

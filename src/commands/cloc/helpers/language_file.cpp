@@ -36,15 +36,15 @@ create_languages_file(fs::path path)
         "lisp_like": {
             "comments": {
                 "single": ";",
-                "multiline_start": null,
-                "multiline_end": null
+                "multiline_start": "",
+                "multiline_end": ""
             }
         },
         "shell_like": {
             "comments": {
                 "single": "#",
-                "multiline_start": null,
-                "multiline_end": null
+                "multiline_start": "",
+                "multiline_end": ""
             }
         },
         "python": {

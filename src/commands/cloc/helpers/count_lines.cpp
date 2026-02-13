@@ -58,9 +58,9 @@ FileStats::get_total() const
 
 FileStats
 count_lines(const fs::path& file_path,
-            const std::optional<std::string>& single_comment,
-            const std::optional<std::string>& multiline_start,
-            const std::optional<std::string>& multiline_end)
+            const std::string& single_comment,
+            const std::string& multiline_start,
+            const std::string& multiline_end)
 {
     FileStats file_stats;
 
@@ -73,8 +73,8 @@ count_lines(const fs::path& file_path,
         int blank_lines{ 0 };
         int comment_lines{ 0 };
 
-        bool can_have_single_comments{ single_comment };
-        bool can_have_multiline_comments{ multiline_start || multiline_end };
+        bool can_have_single_comments{ !single_comment.empty() };
+        bool can_have_multiline_comments{ !(multiline_start.empty() || multiline_end.empty()) };
         bool is_multiline{ false };
 
         while (std::getline(file, line)) {
@@ -86,27 +86,27 @@ count_lines(const fs::path& file_path,
                 continue;
             }
 
-            if (can_have_single_comments && trimmed_line.starts_with(single_comment.value())) {
+            if (can_have_single_comments && trimmed_line.starts_with(single_comment)) {
                 ++comment_lines;
 
                 continue;
             }
 
             if (can_have_multiline_comments) {
-                if (trimmed_line.starts_with(multiline_start.value()) &&
-                    trimmed_line.ends_with(multiline_end.value())) {
+                if (trimmed_line.starts_with(multiline_start) &&
+                    trimmed_line.ends_with(multiline_end)) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (is_multiline && !trimmed_line.ends_with(multiline_end.value())) {
+                if (is_multiline && !trimmed_line.ends_with(multiline_end)) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (!is_multiline && trimmed_line.starts_with(multiline_start.value())) {
+                if (!is_multiline && trimmed_line.starts_with(multiline_start)) {
                     ++comment_lines;
 
                     is_multiline = true;
@@ -114,7 +114,7 @@ count_lines(const fs::path& file_path,
                     continue;
                 }
 
-                if (is_multiline && trimmed_line.starts_with(multiline_end.value())) {
+                if (is_multiline && trimmed_line.starts_with(multiline_end)) {
                     is_multiline = false;
 
                     ++comment_lines;
