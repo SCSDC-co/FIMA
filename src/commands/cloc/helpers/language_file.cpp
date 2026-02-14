@@ -73,8 +73,10 @@ create_languages_file(fs::path path)
             "single": "",
             "multiline_start": "",
             "multiline_end": ""
+        }
     }
-})";
+}
+)";
 
     json json_file = json::parse(languages_file);
 

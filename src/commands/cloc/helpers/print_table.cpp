@@ -64,7 +64,8 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
     table.SelectRectangle(1, -1, 1, -1).DecorateCells(align_right);
 
     Element document = table.Render();
-    Screen screen    = ftxui::Screen::Create(Dimension::Fit(document));
+    Screen screen    = ftxui::Screen::Create(Dimension::Fit(document),
+                                          Dimension::Fixed((table_data.size() * 2) + 1));
     Render(screen, document);
     screen.Print();
     std::cout << std::endl;

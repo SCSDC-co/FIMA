@@ -1,4 +1,7 @@
+#pragma once
+
 #include <string_view>
+#include <unordered_set>
 
 namespace fima {
 
@@ -13,6 +16,10 @@ constexpr std::string_view LOGO    = R"(
 | /          /    ██║     ██║██║ ╚═╝ ██║██║  ██║
 |/__________/     ╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝
 )";
+
+static const std::unordered_set<std::string_view> DEFAULT_DIRS_TO_IGNORE = {
+    ".git", ".cache", ".vscode", "build", "dist", "target", "node_modules"
+};
 
 }
 

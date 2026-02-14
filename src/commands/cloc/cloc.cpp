@@ -29,16 +29,16 @@ main(const std::vector<fs::path>& paths)
 
     std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages;
 
-    std::vector<fs::path> paths_all = {};
+    std::vector<fs::path> paths_all       = {};
+    std::vector<fs::path> sanitized_paths = {};
 
     for (const fs::path& path : paths) {
         if (fs::is_directory(path)) {
-            std::vector<fs::path> items = fima::helpers::get_directories_entries_recursive(path);
+            std::vector<fs::path> items =
+              fima::helpers::get_directories_entries_recursive(path, true);
 
-            for (const fs::path& item : items) {
-                if (!fs::is_directory(item)) {
-                    paths_all.push_back(item);
-                }
+            for (const auto& item : items) {
+                paths_all.push_back(item);
             }
         } else {
             paths_all.push_back(path);
@@ -46,9 +46,14 @@ main(const std::vector<fs::path>& paths)
     }
 
     for (const fs::path& path : paths_all) {
-        std::string file_extension       = path.extension();
-        std::string file_language_family = helpers::get_language_family(file_extension);
-        std::string file_language_name   = helpers::get_language_name(file_extension);
+        if (!fs::is_directory(path)) {
+            sanitized_paths.push_back(path);
+        }
+    }
+
+    for (const fs::path& path : sanitized_paths) {
+        std::string file_language_family = helpers::get_language_family(path);
+        std::string file_language_name   = helpers::get_language_name(path);
 
         std::string single_comment =
           languages_file[file_language_family]["comments"]["single"].get<std::string>();

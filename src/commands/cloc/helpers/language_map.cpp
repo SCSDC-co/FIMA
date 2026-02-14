@@ -1,6 +1,7 @@
 #include "commands/cloc/helpers/language_map.h"
 
 #include <filesystem>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -13,7 +14,6 @@ namespace cloc {
 namespace helpers {
 
 // this is the map for extension -> family
-// clang-format off
 std::unordered_map<std::string, std::string> language_map_family = {
     // c-like
     { ".cpp", "c_like" },
@@ -38,6 +38,7 @@ std::unordered_map<std::string, std::string> language_map_family = {
     { ".hx", "c_like" },
     { ".hxml", "c_like" },
     { ".zig", "c_like" },
+    { ".jsonc", "c_like" },
 
     // lisp-like
     { ".lisp", "lisp_like" },
@@ -100,6 +101,7 @@ std::unordered_map<std::string, std::string> language_map_family = {
     // "special" languages
     { ".py", "python" },
     { ".txt", "text" },
+    { ".json", "text" },
     { ".css", "css" },
     { ".scss", "css" },
     { ".sass", "css" },
@@ -111,6 +113,7 @@ std::unordered_map<std::string, std::string> language_map_family = {
 
 // this one is for extension -> language
 std::unordered_map<std::string, std::string> language_map_language = {
+    // c-like
     { ".cpp", "C++" },
     { ".cxx", "C++" },
     { ".cc", "C++" },
@@ -132,29 +135,34 @@ std::unordered_map<std::string, std::string> language_map_language = {
     { ".scala", "Scala" },
     { ".hx", "Haxe" },
     { ".hxml", "Haxe" },
+    { ".zig", "Zig" },
+
+    // lisp-like
     { ".lisp", "Common Lisp" },
     { ".lsp", "Common Lisp" },
     { ".cl", "Common Lisp" },
     { ".scm", "Scheme" },
     { ".rkt", "Racket" },
+    { ".ss", "Racket" },
     { ".clj", "Clojure" },
     { ".cljs", "Clojure" },
     { ".cljc", "Clojure" },
     { ".edn", "EDN" },
     { ".el", "Emacs Lisp" },
-    { ".ss", "Racket" },
     { ".hy", "Hy" },
     { ".janet", "Janet" },
     { ".fnl", "Fennel" },
     { ".asm", "Assembly" },
     { ".s", "Assembly" },
+
+    // shell-like
     { ".sh", "Bash" },
     { ".zsh", "ZSH" },
     { ".fish", "Fish" },
     { ".dash", "Dash" },
     { ".ksh", "KSH" },
     { ".ash", "ASH" },
-    { ".tcsh", "TCSH" },
+    { ".tcsh", "TSCH" },
     { ".csh", "CSH" },
     { ".rb", "Ruby" },
     { ".pl", "PL/I" },
@@ -165,26 +173,56 @@ std::unordered_map<std::string, std::string> language_map_language = {
     { ".jl", "Julia" },
     { ".nim", "Nim" },
     { ".cr", "Crystal" },
-    { ".yml", "YAML" },
-    { ".yaml", "YAML" },
-    { ".toml", "TOML" },
     { ".tf", "Tensor Flow" },
     { ".nix", "NIX" },
     { ".sls", "S/LS" },
-    { ".py", "Python" }
+    { ".cmake", "CMake" },
+    { ".yaml", "YAML" },
+    { ".yml", "YAML" },
+    { ".toml", "TOML" },
+    { ".ini", "INI" },
+
+    // markup
+    { ".html", "HTML" },
+    { ".htm", "HTML" },
+    { ".xhtml", "XHTML" },
+    { ".md", "Markdown" },
+    { ".markdown", "Markdown" },
+    { ".xml", "XML" },
+    { ".xaml", "XAML" },
+    { ".svg", "SVG" },
+    { ".rst", "RST" },
+    { ".tex", "TeX" },
+    { ".adoc", "ASCII Doc" },
+
+    // "special" languages
+    { ".py", "Python" },
+    { ".txt", "Plain Text" },
+    { ".css", "CSS" },
+    { ".scss", "CSS" },
+    { ".sass", "CSS" },
+    { ".less", "CSS" },
+    { ".styl", "CSS" },
+    { ".stylus", "CSS" },
+    { ".pcss", "CSS" },
+    { ".json", "JSON" },
+    { ".jsonc", "JSONC" },
 };
-// clang-format on
 
 [[nodiscard]] std::string
 get_language_family(fs::path path)
 {
     std::string filename = path.filename();
 
-    static const std::unordered_set<std::string> shell_files = {
+    if (filename == "LICENSE" || filename == "license") {
+        return "text";
+    }
+
+    static const std::unordered_set<std::string> special_shell_type = {
         "CMakeLists.txt", ".gitignore", ".clangd", ".clang-format", ".editorconfig"
     };
 
-    if (shell_files.contains(filename)) {
+    if (special_shell_type.contains(filename)) {
         return "shell_like";
     }
 
@@ -194,8 +232,24 @@ get_language_family(fs::path path)
 }
 
 [[nodiscard]] std::string
-get_language_name(std::string extension)
+get_language_name(fs::path path)
 {
+    std::string filename = path.filename();
+
+    static const std::unordered_set<std::string> special_yaml = {
+        ".gitignore", ".clangd", ".clang-format", ".editorconfig"
+    };
+
+    if (filename == "CMakeLists.txt") {
+        return "CMake";
+    } else if (filename == "LICENSE" || filename == "license") {
+        return "LICENSE";
+    } else if (special_yaml.contains(filename)) {
+        return "YAML";
+    }
+
+    std::string extension = path.extension();
+
     return language_map_language.at(extension);
 }
 
