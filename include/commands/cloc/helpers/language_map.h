@@ -208,7 +208,7 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".ini", "INI" },
     { ".inp", "INP" },
     { ".ps1", "PWSH Script" },
-    { ".bat", "CMD Script" },
+    { ".bat", "CMD" },
     { ".mak", "Make" },
     { ".desktop", "Desktop File" },
     { ".cfg", "CFG" },

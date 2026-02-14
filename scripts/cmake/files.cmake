@@ -1,4 +1,5 @@
 add_library(fima_lib
+    src/commands/cloc/helpers/print_languages.cpp
     src/commands/cloc/helpers/LanguageStats.cpp
     src/commands/cloc/helpers/language_file.cpp
     src/commands/cloc/helpers/language_map.cpp

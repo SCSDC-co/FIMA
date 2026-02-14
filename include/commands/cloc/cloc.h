@@ -8,7 +8,7 @@ namespace fima {
 namespace cloc {
 
 void
-main(const std::vector<std::filesystem::path>& paths);
+main(const std::vector<std::filesystem::path>& paths, const bool& show_languages);
 
 }
 

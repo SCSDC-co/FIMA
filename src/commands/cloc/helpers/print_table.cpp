@@ -1,6 +1,5 @@
 #include "commands/cloc/helpers/print_table.h"
 
-#include <array>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/color.hpp>
@@ -36,10 +35,9 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
 
     std::vector<std::vector<Element>> table_data;
 
-    std::vector<Element> table_header = {
-        text("Language"),   text("Files"),    text("Total Lines"),
-        text("Code Lines"), text("Comments"), text("Blank Lines")
-    };
+    std::vector<Element> table_header = { text("Language") | bold,    text("Files") | bold,
+                                          text("Total Lines") | bold, text("Code Lines") | bold,
+                                          text("Comments") | bold,    text("Blank Lines") | bold };
 
     table_data.push_back(table_header);
 

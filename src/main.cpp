@@ -122,6 +122,12 @@ main(int argc, char** argv)
     cloc_subcmd->add_option(
       "paths", cloc_paths, "The paths to work on (default current directory)");
 
+    bool cloc_showlanguages{ false };
+    cloc_subcmd
+      ->add_flag(
+        "--show-languages,-s", cloc_showlanguages, "Shows all the languages that cloc supports")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
     CLI11_PARSE(app, argc, argv);
 
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
@@ -198,7 +204,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main(cloc_paths);
+        fima::cloc::main(cloc_paths, cloc_showlanguages);
 
         return 0;
     }

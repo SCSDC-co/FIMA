@@ -1,7 +1,6 @@
 #include "commands/cloc/cloc.h"
 
 #include <filesystem>
-#include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
@@ -13,6 +12,7 @@
 #include "commands/cloc/helpers/count_lines.h"
 #include "commands/cloc/helpers/language_file.h"
 #include "commands/cloc/helpers/language_map.h"
+#include "commands/cloc/helpers/print_languages.h"
 #include "commands/cloc/helpers/print_table.h"
 #include "helpers/get_directories_entries.h"
 
@@ -22,11 +22,11 @@ namespace fima {
 
 namespace cloc {
 
-using json = nlohmann::json;
-
 void
-main(const std::vector<fs::path>& paths)
+cloc(const std::vector<fs::path>& paths)
 {
+    using json = nlohmann::json;
+
     json languages_file = helpers::get_languages_file();
 
     std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages;
@@ -114,6 +114,16 @@ main(const std::vector<fs::path>& paths)
     }
 
     fima::cloc::helpers::print_table(analyzed_languages);
+}
+
+void
+main(const std::vector<fs::path>& paths, const bool& show_languages)
+{
+    if (show_languages) {
+        fima::cloc::helpers::show_languages();
+    } else {
+        cloc(paths);
+    }
 }
 
 }
