@@ -25,37 +25,56 @@ create_languages_file(fs::path path)
     }
 
     std::string languages_file = R"(
-    {
-        "c_like": {
-            "comments": {
-                "single": "//",
-                "multiline_start": "/*",
-                "multiline_end": "*/"
-            }
-        },
-        "lisp_like": {
-            "comments": {
-                "single": ";",
-                "multiline_start": "",
-                "multiline_end": ""
-            }
-        },
-        "shell_like": {
-            "comments": {
-                "single": "#",
-                "multiline_start": "",
-                "multiline_end": ""
-            }
-        },
-        "python": {
-            "comments": {
-                "single": "#",
-                "multiline_start": "\"\"\"",
-                "multiline_end": "\"\"\""
-            }
+{
+    "c_like": {
+        "comments": {
+            "single": "//",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
         }
+    },
+    "lisp_like": {
+        "comments": {
+            "single": ";",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "shell_like": {
+        "comments": {
+            "single": "#",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "markup": {
+        "comments": {
+            "single": "",
+            "multiline_start": "<!--",
+            "multiline_end": "-->"
+        }
+    },
+    "python": {
+        "comments": {
+            "single": "#",
+            "multiline_start": "\"\"\"",
+            "multiline_end": "\"\"\""
+        }
+    },
+    "css": {
+        "comments": {
+            "single": "",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
+        }
+    },
+    "text": {
+        "comments": {
+            "single": "",
+            "multiline_start": "",
+            "multiline_end": ""
     }
-    )";
+})";
 
     json json_file = json::parse(languages_file);
 

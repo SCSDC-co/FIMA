@@ -1,7 +1,10 @@
 #include "commands/cloc/helpers/language_map.h"
 
-#include <string>
+#include <filesystem>
 #include <unordered_map>
+#include <unordered_set>
+
+namespace fs = std::filesystem;
 
 namespace fima {
 
@@ -34,6 +37,7 @@ std::unordered_map<std::string, std::string> language_map_family = {
     { ".scala", "c_like" },
     { ".hx", "c_like" },
     { ".hxml", "c_like" },
+    { ".zig", "c_like" },
 
     // lisp-like
     { ".lisp", "lisp_like" },
@@ -71,15 +75,38 @@ std::unordered_map<std::string, std::string> language_map_family = {
     { ".jl", "shell_like" },
     { ".nim", "shell_like" },
     { ".cr", "shell_like" },
-    { ".yml", "shell_like" },
-    { ".yaml", "shell_like" },
-    { ".toml", "shell_like" },
     { ".tf", "shell_like" },
     { ".nix", "shell_like" },
     { ".sls", "shell_like" },
+    { ".cmake", "shell_like" },
+    { ".yaml", "shell_like" },
+    { ".yml", "shell_like" },
+    { ".toml", "shell_like" },
+    { ".ini", "shell_like" },
+
+    // markup
+    { ".html", "markup" },
+    { ".htm", "markup" },
+    { ".xhtml", "markup" },
+    { ".md", "markup" },
+    { ".markdown", "markup" },
+    { ".xml", "markup" },
+    { ".xaml", "markup" },
+    { ".svg", "markup" },
+    { ".rst", "markup" },
+    { ".tex", "markup" },
+    { ".adoc", "markup" },
 
     // "special" languages
-    { ".py", "python" }
+    { ".py", "python" },
+    { ".txt", "text" },
+    { ".css", "css" },
+    { ".scss", "css" },
+    { ".sass", "css" },
+    { ".less", "css" },
+    { ".styl", "css" },
+    { ".stylus", "css" },
+    { ".pcss", "css" },
 };
 
 // this one is for extension -> language
@@ -149,8 +176,20 @@ std::unordered_map<std::string, std::string> language_map_language = {
 // clang-format on
 
 [[nodiscard]] std::string
-get_language_family(std::string extension)
+get_language_family(fs::path path)
 {
+    std::string filename = path.filename();
+
+    static const std::unordered_set<std::string> shell_files = {
+        "CMakeLists.txt", ".gitignore", ".clangd", ".clang-format", ".editorconfig"
+    };
+
+    if (shell_files.contains(filename)) {
+        return "shell_like";
+    }
+
+    std::string extension = path.extension();
+
     return language_map_family.at(extension);
 }
 
