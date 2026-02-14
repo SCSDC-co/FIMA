@@ -34,20 +34,22 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
         return a.second.get_total() > b.second.get_total();
     });
 
-    std::vector<std::vector<std::string>> table_data;
+    std::vector<std::vector<Element>> table_data;
 
-    std::vector<std::string> table_header = { "Language",   "Files",    "Total Lines",
-                                              "Code Lines", "Comments", "Blank Lines" };
+    std::vector<Element> table_header = {
+        text("Language"),   text("Files"),    text("Total Lines"),
+        text("Code Lines"), text("Comments"), text("Blank Lines")
+    };
 
     table_data.push_back(table_header);
 
     for (const auto& [name, stats] : sorted) {
-        table_data.push_back({ name,
-                               std::to_string(stats.get_files()),
-                               std::to_string(stats.get_total()),
-                               std::to_string(stats.get_code()),
-                               std::to_string(stats.get_comment()),
-                               std::to_string(stats.get_blank()) });
+        table_data.push_back({ text(name) | color(Color::White),
+                               text(std::to_string(stats.get_files())) | color(Color::White),
+                               text(std::to_string(stats.get_total())) | color(Color::White),
+                               text(std::to_string(stats.get_code())) | color(Color::White),
+                               text(std::to_string(stats.get_comment())) | color(Color::White),
+                               text(std::to_string(stats.get_blank())) | color(Color::White) });
     }
 
     Table table = Table(table_data);
@@ -57,13 +59,12 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
     TableSelection first_row = table.SelectRow(0);
     first_row.Border(ROUNDED);
     first_row.SeparatorVertical();
-    first_row.DecorateCells(color(Color::Green));
 
     table.SelectRows(1, -1).SeparatorHorizontal();
 
     table.SelectRectangle(1, -1, 1, -1).DecorateCells(align_right);
 
-    Element document = table.Render();
+    Element document = table.Render() | color(Color::Green);
     Screen screen    = ftxui::Screen::Create(Dimension::Fit(document),
                                           Dimension::Fixed((table_data.size() * 2) + 1));
     Render(screen, document);
