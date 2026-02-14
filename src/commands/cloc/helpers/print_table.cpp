@@ -42,7 +42,7 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
     table_data.push_back(table_header);
 
     for (const auto& [name, stats] : sorted) {
-        table_data.push_back({ text(name) | color(Color::White),
+        table_data.push_back({ text(name) | color(Color::Green),
                                text(std::to_string(stats.get_files())) | color(Color::White),
                                text(std::to_string(stats.get_total())) | color(Color::White),
                                text(std::to_string(stats.get_code())) | color(Color::White),
@@ -58,13 +58,11 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
     first_row.Border(ROUNDED);
     first_row.SeparatorVertical();
 
-    table.SelectRows(1, -1).SeparatorHorizontal();
-
     table.SelectRectangle(1, -1, 1, -1).DecorateCells(align_right);
 
     Element document = table.Render() | color(Color::Green);
-    Screen screen    = ftxui::Screen::Create(Dimension::Fit(document),
-                                          Dimension::Fixed((table_data.size() * 2) + 1));
+    Screen screen =
+      ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_data.size() + 3));
     Render(screen, document);
     screen.Print();
     std::cout << std::endl;
