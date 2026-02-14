@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
@@ -119,6 +120,8 @@ main(int argc, char** argv)
     std::vector<fs::path> cloc_paths{ fs::current_path() };
     CLI::App* cloc_subcmd = app.add_subcommand("cloc", "Count lines of code of a file");
 
+    std::unordered_set<fs::path> paths_to_ignore{};
+    cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore");
     cloc_subcmd->add_option(
       "paths", cloc_paths, "The paths to work on (default current directory)");
 
@@ -204,7 +207,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main(cloc_paths, cloc_showlanguages);
+        fima::cloc::main(cloc_paths, cloc_showlanguages, paths_to_ignore);
 
         return 0;
     }

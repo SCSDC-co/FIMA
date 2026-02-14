@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "config.h"
-
 namespace fs = std::filesystem;
 
 namespace fima {
@@ -31,23 +29,24 @@ get_directories_entries(const fs::path& path)
 }
 
 std::vector<fs::path>
-get_directories_entries_recursive(const fs::path& path, const bool& ignore_directories)
+get_directories_entries_recursive(const fs::path& path,
+                                  const bool& ignore_directories,
+                                  const std::unordered_set<std::string>& ignored_files_directories)
 {
     std::vector<fs::path> directory_content;
 
     for (const auto& entry : fs::directory_iterator(path)) {
         std::string name = entry.path().filename().string();
 
-        if (entry.is_directory() && ignore_directories &&
-            fima::config::DEFAULT_DIRS_TO_IGNORE.contains(name)) {
+        if (ignore_directories && ignored_files_directories.contains(name)) {
             continue;
         }
 
         directory_content.push_back(entry.path());
 
         if (entry.is_directory()) {
-            std::vector<fs::path> sub_entries =
-              get_directories_entries_recursive(entry.path(), ignore_directories);
+            std::vector<fs::path> sub_entries = get_directories_entries_recursive(
+              entry.path(), ignore_directories, ignored_files_directories);
 
             directory_content.insert(
               directory_content.end(), sub_entries.begin(), sub_entries.end());

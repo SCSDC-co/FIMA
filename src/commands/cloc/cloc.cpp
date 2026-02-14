@@ -1,6 +1,7 @@
 #include "commands/cloc/cloc.h"
 
 #include <filesystem>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
@@ -14,6 +15,7 @@
 #include "commands/cloc/helpers/language_map.h"
 #include "commands/cloc/helpers/print_languages.h"
 #include "commands/cloc/helpers/print_table.h"
+#include "config.h"
 #include "helpers/get_directories_entries.h"
 
 namespace fs = std::filesystem;
@@ -23,21 +25,28 @@ namespace fima {
 namespace cloc {
 
 void
-cloc(const std::vector<fs::path>& paths)
+cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& paths_to_ignore)
 {
     using json = nlohmann::json;
 
     json languages_file = helpers::get_languages_file();
 
-    std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages;
+    std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages{};
 
     std::vector<fs::path> paths_all       = {};
     std::vector<fs::path> sanitized_paths = {};
 
+    std::unordered_set<std::string> file_or_directories_to_ignore =
+      fima::config::DEFAULT_DIRS_TO_IGNORE;
+
+    for (const fs::path& item : paths_to_ignore) {
+        file_or_directories_to_ignore.insert(item.filename().string());
+    }
+
     for (const fs::path& path : paths) {
         if (fs::is_directory(path)) {
-            std::vector<fs::path> items =
-              fima::helpers::get_directories_entries_recursive(path, true);
+            std::vector<fs::path> items = fima::helpers::get_directories_entries_recursive(
+              path, true, file_or_directories_to_ignore);
 
             for (const auto& item : items) {
                 paths_all.push_back(item);
@@ -117,12 +126,14 @@ cloc(const std::vector<fs::path>& paths)
 }
 
 void
-main(const std::vector<fs::path>& paths, const bool& show_languages)
+main(const std::vector<fs::path>& paths,
+     const bool& show_languages,
+     const std::unordered_set<fs::path>& paths_to_ignore)
 {
     if (show_languages) {
         fima::cloc::helpers::show_languages();
     } else {
-        cloc(paths);
+        cloc(paths, paths_to_ignore);
     }
 }
 
