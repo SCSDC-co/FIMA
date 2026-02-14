@@ -74,6 +74,27 @@ create_languages_file(fs::path path)
             "multiline_start": "",
             "multiline_end": ""
         }
+    },
+    "vim": {
+        "comments": {
+            "single": "\"",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "cmd": {
+        "comments": {
+            "single": "::",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "lua": {
+        "comments": {
+            "single": "--",
+            "multiline_start": "--[[",
+            "multiline_end": "--]]"
+        }
     }
 }
 )";

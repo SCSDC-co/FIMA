@@ -1,9 +1,11 @@
 #include "commands/cloc/cloc.h"
 
 #include <filesystem>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "commands/cloc/helpers/FileStats.h"
@@ -45,10 +47,25 @@ main(const std::vector<fs::path>& paths)
         }
     }
 
+    static const std::unordered_set<std::string> ft_to_skip = {
+        ".zip", ".tar",  ".png",   ".jpeg", ".jpg",  ".mp3",   ".mp4",
+        ".mp2", ".mp1",  ".wav",   ".avi",  ".webp", ".undo",  ".spl",
+        ".ico", ".icns", ".mpack", ".exe",  ".o",    ".class", ".appimage"
+    };
+
     for (const fs::path& path : paths_all) {
-        if (!fs::is_directory(path)) {
-            sanitized_paths.push_back(path);
+        if (fs::is_directory(path)) {
+            continue;
         }
+
+        std::string ext = path.extension().string();
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+        if (ft_to_skip.contains(ext)) {
+            continue;
+        }
+
+        sanitized_paths.push_back(path);
     }
 
     for (const fs::path& path : sanitized_paths) {
