@@ -25,6 +25,10 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".cs", "c_like" },
     { ".js", "c_like" },
     { ".ts", "c_like" },
+    { ".mjs", "c_like" },
+    { ".mts", "c_like" },
+    { ".cjs", "c_like" },
+    { ".cts", "c_like" },
     { ".java", "c_like" },
     { ".m", "c_like" },
     { ".php", "c_like" },
@@ -118,6 +122,7 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".dict", "text" },
     { ".cat", "text" },
     { ".1", "text" },
+    { ".lock", "text" },
 
     // "special" languages
     { ".py", "python" },
@@ -131,6 +136,8 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".vim", "vim" },
     { ".lua", "lua" },
     { ".cmd", "cmd" },
+    { ".jsx", "react" },
+    { ".tsx", "react" },
 };
 
 // this one is for extension -> language
@@ -148,6 +155,10 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".cs", "C#" },
     { ".js", "JavaScript" },
     { ".ts", "TypeScript" },
+    { ".mjs", "JavaScript (ESM)" },
+    { ".mts", "TypeScript (ESM)" },
+    { ".cjs", "JavaScript (CJS)" },
+    { ".cts", "TypeScript (CJS)" },
     { ".java", "Java" },
     { ".m", "Objective-C" },
     { ".php", "PHP" },
@@ -240,6 +251,7 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".dict", "Dictionary" },
     { ".cat", "Text" },
     { ".1", "Man" },
+    { ".lock", "Lock File" },
 
     // "special" languages
     { ".py", "Python" },
@@ -253,6 +265,8 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".vim", "VIM" },
     { ".lua", "Lua" },
     { ".cmd", "CMD" },
+    { ".jsx", "JavaScript React" },
+    { ".tsx", "TypeScript React" },
 };
 
 [[nodiscard]] std::string

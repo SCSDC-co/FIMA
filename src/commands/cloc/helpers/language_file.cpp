@@ -95,6 +95,13 @@ create_languages_file(fs::path path)
             "multiline_start": "--[[",
             "multiline_end": "--]]"
         }
+    },
+    "react": {
+        "comments": {
+            "single": "",
+            "multiline_start": "{/*",
+            "multiline_end": "*/}"
+        }
     }
 }
 )";
