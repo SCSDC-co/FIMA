@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -15,9 +16,9 @@
 #include "commands/remove.h"
 #include "commands/rename.h"
 #include "commands/tree.h"
+#include "config.h"
+#include "helpers/colors.h"
 #include "tui/tui.h"
-
-#define VERSION "1.0.0"
 
 namespace fs = std::filesystem;
 
@@ -33,13 +34,14 @@ main(int argc, char** argv)
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
     std::vector<fs::path> perms_path;
-    std::vector<fs::path> cloc_paths;
     fs::path path_to_copy;
     fs::path destination;
     fs::path old_name;
     fs::path new_name;
 
     app.add_flag("-v,--version", display_version, "Shows the program version");
+    CLI::App* version_subcmd =
+      app.add_subcommand("version", "Print the current version with some extra information");
 
     fs::path path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
@@ -111,19 +113,36 @@ main(int argc, char** argv)
     perms_subcmd->add_option("path", perms_path, "The file path to read permissions from");
 
     /*  =================
-     *  PERMS SUB COMMAND
+     *  CLOC SUB COMMAND
      */
 
+    std::vector<fs::path> cloc_paths{ fs::current_path() };
     CLI::App* cloc_subcmd = app.add_subcommand("cloc", "Count lines of code of a file");
 
-    cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on");
+    cloc_subcmd->add_option(
+      "paths", cloc_paths, "The paths to work on (default current directory)");
 
     CLI11_PARSE(app, argc, argv);
 
+    // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
+    // get the correct value
     tui = !tui;
 
     if (display_version) {
-        std::cout << "FIMA version " << VERSION << std::endl;
+        std::cout << fima::config::VERSION << std::endl;
+
+        return 0;
+    }
+
+    if (*version_subcmd) {
+        std::cout << fima::colors::GREEN;
+
+        std::cout << fima::config::LOGO << '\n';
+
+        std::cout << "Fast, Incredible, Minimal and Awesome File Manager" << '\n' << '\n';
+        std::cout << "Version: " << fima::colors::RESET << fima::config::VERSION << '\n';
+
+        std::cout << '\n';
 
         return 0;
     }
