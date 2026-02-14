@@ -18,6 +18,7 @@ constexpr std::string_view LOGO    = R"(
 |/__________/
 )";
 
+// since these are useless to analyze we put them as default to ignore
 inline static const std::unordered_set<std::string> DEFAULT_DIRS_TO_IGNORE = {
     ".git", ".cache", ".vscode", "build", "dist", "target", "node_modules", ".next"
 };

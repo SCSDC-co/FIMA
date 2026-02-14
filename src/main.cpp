@@ -125,10 +125,10 @@ main(int argc, char** argv)
     cloc_subcmd->add_option(
       "paths", cloc_paths, "The paths to work on (default current directory)");
 
-    bool cloc_showlanguages{ false };
+    bool cloc_show_languages{ false };
     cloc_subcmd
       ->add_flag(
-        "--show-languages,-s", cloc_showlanguages, "Shows all the languages that cloc supports")
+        "--show-languages,-s", cloc_show_languages, "Shows all the languages that cloc supports")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
     CLI11_PARSE(app, argc, argv);
@@ -207,7 +207,7 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main(cloc_paths, cloc_showlanguages, paths_to_ignore);
+        fima::cloc::main(cloc_paths, cloc_show_languages, paths_to_ignore);
 
         return 0;
     }
