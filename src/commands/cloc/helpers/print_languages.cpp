@@ -54,8 +54,11 @@ show_languages()
 
     for (const auto& [lang, exts] : lang_to_exts) {
         table_data.push_back(
-          { text(lang) | color(Color::White), text(join_extensions(exts)) | color(Color::Blue) });
+          { text(lang) | color(Color::Green), text(join_extensions(exts)) | color(Color::Blue) });
     }
+
+    table_data.push_back({ text("Total:") | color(Color::Green),
+                           text(std::to_string(table_data.size() - 1)) | color(Color::Blue) });
 
     Table table = Table(table_data);
 
@@ -65,11 +68,11 @@ show_languages()
     first_row.Border(ROUNDED);
     first_row.SeparatorVertical();
 
-    table.SelectRows(1, -1).SeparatorHorizontal();
+    table.SelectRows(table_data.size() - 2, -1).SeparatorHorizontal();
 
     Element document = table.Render() | color(Color::Green);
-    Screen screen    = ftxui::Screen::Create(Dimension::Fit(document),
-                                          Dimension::Fixed((table_data.size() * 2) + 1));
+    Screen screen =
+      ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_data.size() + 4));
     Render(screen, document);
     screen.Print();
     std::cout << std::endl;
