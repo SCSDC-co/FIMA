@@ -15,7 +15,7 @@ namespace helpers {
 [[nodiscard]] std::string
 get_language_family(fs::path path)
 {
-    std::string filename = path.filename();
+    std::string filename = path.filename().string();
 
     static const std::unordered_set<std::string> special_shell_type = {
         "CMakeLists.txt", ".gitignore",  ".clangd", ".clang-format", ".editorconfig",
@@ -56,7 +56,7 @@ get_language_family(fs::path path)
 [[nodiscard]] std::string
 get_language_name(fs::path path)
 {
-    std::string filename = path.filename();
+    std::string filename = path.filename().string();
 
     static const std::unordered_set<std::string> special_shell = {
         ".gitignore",     ".clangd",    ".clang-format", ".editorconfig", ".git-blame-ignore-revs",
