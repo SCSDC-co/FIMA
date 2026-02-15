@@ -1,3 +1,12 @@
+/*
+ * src/commands/remove.cpp
+ * include/commands/remove.h
+ *
+ * The implementation of the `remove` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/remove.h"
 
 #include <filesystem>

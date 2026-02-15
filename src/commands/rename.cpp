@@ -1,3 +1,12 @@
+/*
+ * src/commands/rename.cpp
+ * include/commands/rename.h
+ *
+ * The implementation of the `rename` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/rename.h"
 
 #include <filesystem>

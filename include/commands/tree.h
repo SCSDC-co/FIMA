@@ -1,3 +1,12 @@
+/*
+ * src/commands/tui.cpp
+ * include/commands/tui.h
+ *
+ * The declaration of the `tree` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

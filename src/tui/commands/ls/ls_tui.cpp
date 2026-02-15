@@ -1,3 +1,12 @@
+/*
+ * src/tui/commands/tree/ls_tui.cpp
+ * include/tui/commands/tree/ls_tui.h
+ *
+ * This file defines the TUI for the `ls` subcommand of FIMA
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "tui/commands/ls/ls_tui.h"
 
 #include <ftxui/dom/elements.hpp>

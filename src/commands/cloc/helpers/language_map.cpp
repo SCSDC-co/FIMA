@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/language_map.cpp
+ * include/commands/cloc/helpers/language_map.h
+ *
+ * This file has the logic for the language map
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/helpers/language_map.h"
 
 #include <filesystem>

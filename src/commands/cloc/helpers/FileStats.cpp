@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/FileStats.cpp
+ * include/commands/cloc/helpers/FileStats.h
+ *
+ * Implementation of the FileStats class
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/helpers/FileStats.h"
 
 namespace fima {

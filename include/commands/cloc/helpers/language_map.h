@@ -1,3 +1,16 @@
+/*
+ * src/commands/cloc/helpers/language_map.cpp
+ * include/commands/cloc/helpers/language_map.h
+ *
+ * This file contains the 2 language maps:
+ * extension -> family
+ * extension -> name
+ *
+ * And the declaration for the logic of them
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

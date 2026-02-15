@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/count_lines.cpp
+ * include/commands/cloc/helpers/count_lines.h
+ *
+ * Declaration of the line counter of `cloc`
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

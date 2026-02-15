@@ -1,3 +1,11 @@
+/*
+ * include/helpers/trim_string.h
+ *
+ * This is a little helper for trimming strings
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <algorithm>

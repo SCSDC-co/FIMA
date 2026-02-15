@@ -1,3 +1,12 @@
+/*
+ * src/commands/create/file.cpp
+ * include/commands/create/file.h
+ *
+ * The declaration of the `create ... file` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

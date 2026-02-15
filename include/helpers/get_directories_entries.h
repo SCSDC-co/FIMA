@@ -1,3 +1,13 @@
+/*
+ * src/helpers/get_directories_entries.cpp
+ * include/helpers/get_directories_entries.h
+ *
+ * This file contains the declaration of the helpers for getting the entries of a directory, both
+ * recursively and not
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

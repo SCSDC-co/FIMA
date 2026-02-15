@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/language_file.cpp
+ * include/commands/cloc/helpers/language_file.h
+ *
+ * This file has the logic for the language file
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/helpers/language_file.h"
 
 #include <filesystem>

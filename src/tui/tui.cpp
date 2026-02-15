@@ -1,3 +1,12 @@
+/*
+ * src/tui/tui.cpp
+ * include/tui/tui.h
+ *
+ * This file is the main entry point of the FIMA's TUI
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "tui/tui.h"
 
 #include <algorithm>

@@ -1,3 +1,11 @@
+/*
+ * include/helpers/colors.h
+ *
+ * This file contain some variables for styling strings
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <string_view>

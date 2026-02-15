@@ -1,3 +1,12 @@
+/*
+ * src/commands/create/directory.cpp
+ * include/commands/create/directory.h
+ *
+ * The implementation of the `create ... dir` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/create/directory.h"
 
 #include <exception>

@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/print_table.cpp
+ * include/commands/cloc/helpers/print_table.h
+ *
+ * This is the logic for printing the cloc table
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/helpers/print_table.h"
 
 #include <ftxui/dom/elements.hpp>

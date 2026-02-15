@@ -1,3 +1,11 @@
+/*
+ * include/helpers/get_data_path.h
+ *
+ * This is an helper for getting the data path for applications
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include <cstdlib>
 #include <filesystem>
 #include <string>

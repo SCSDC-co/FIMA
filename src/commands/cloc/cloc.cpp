@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/cloc.cpp
+ * include/commands/cloc/cloc.h
+ *
+ * The main entry point of the `cloc` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/cloc.h"
 
 #include <filesystem>

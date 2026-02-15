@@ -1,3 +1,12 @@
+/*
+ * src/commands/cloc/helpers/print_languages.cpp
+ * include/commands/cloc/helpers/print_languages.h
+ *
+ * This is the logic for printing the languages that cloc supports
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/cloc/helpers/print_languages.h"
 
 #include <ftxui/dom/elements.hpp>

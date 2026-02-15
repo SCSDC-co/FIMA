@@ -1,3 +1,11 @@
+/*
+ * include/config.h
+ *
+ * This file contains the variables that should be available in all the program
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <string>

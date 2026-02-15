@@ -1,3 +1,11 @@
+/*
+ * src/main.cpp
+ *
+ * The main file of FIMA, it defines the CLI and calls all subprograms
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include <filesystem>
 #include <iostream>
 #include <ostream>

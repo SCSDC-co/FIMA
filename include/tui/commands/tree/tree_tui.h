@@ -1,3 +1,12 @@
+/*
+ * src/tui/commands/tree/tree_tui.cpp
+ * include/tui/commands/tree/tree_tui.h
+ *
+ * This file defines the declaration of the TUI for the `tree` subcommand of FIMA
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <ftxui/dom/elements.hpp>

@@ -1,3 +1,12 @@
+/*
+ * src/commands/permissions.cpp
+ * include/commands/permissions.h
+ *
+ * The declaration of the `permissions` subcommand
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #pragma once
 
 #include <filesystem>

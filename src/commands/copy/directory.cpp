@@ -1,3 +1,12 @@
+/*
+ * src/commands/copy/directory.cpp
+ * include/commands/copy/directory.h
+ *
+ * The implementation of the `copy` subcommand when copying directories
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "commands/copy/directory.h"
 
 #include <filesystem>

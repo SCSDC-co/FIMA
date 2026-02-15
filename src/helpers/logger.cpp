@@ -1,3 +1,12 @@
+/*
+ * src/helpers/logger.cpp
+ * include/helpers/logger.h
+ *
+ * This is the implementation of the logger of FIMA
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ */
+
 #include "helpers/logger.h"
 
 #include <chrono>
