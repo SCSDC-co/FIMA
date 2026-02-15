@@ -31,7 +31,8 @@ namespace helpers {
 
 void
 print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageStats>& language_map,
-            const std::string& sorting)
+            const std::string& sorting,
+            const bool& quiet)
 {
     using namespace ftxui;
 
@@ -63,21 +64,59 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
         });
     }
 
-    std::vector<std::vector<Element>> table_data;
+    int total_files{ 0 };
+    int total_lines{ 0 };
+    int total_code{ 0 };
+    int total_comment{ 0 };
+    int total_blank{ 0 };
 
-    std::vector<Element> table_header = { text("Language") | bold,    text("Files") | bold,
-                                          text("Total Lines") | bold, text("Code Lines") | bold,
-                                          text("Comments") | bold,    text("Blank Lines") | bold };
+    std::vector<std::vector<Element>> table_data;
+    std::vector<Element> table_header;
+
+    if (!quiet) {
+        table_header = { text("Language") | bold,    text("Files") | bold,
+                         text("Total Lines") | bold, text("Code Lines") | bold,
+                         text("Comments") | bold,    text("Blank Lines") | bold };
+    } else {
+        table_header = { text("Language") | bold,
+                         text("Total Lines") | bold,
+                         text("Code Lines") | bold,
+                         text("Comments") | bold,
+                         text("Blank Lines") | bold };
+    }
 
     table_data.push_back(table_header);
 
     for (const auto& [name, stats] : sorted) {
-        table_data.push_back({ text(name) | color(Color::Green),
-                               text(std::to_string(stats.get_files())) | color(Color::White),
-                               text(std::to_string(stats.get_total())) | color(Color::White),
-                               text(std::to_string(stats.get_code())) | color(Color::White),
-                               text(std::to_string(stats.get_comment())) | color(Color::White),
-                               text(std::to_string(stats.get_blank())) | color(Color::White) });
+        if (!quiet) {
+            table_data.push_back({ text(name) | color(Color::Green),
+                                   text(std::to_string(stats.get_files())) | color(Color::White),
+                                   text(std::to_string(stats.get_total())) | color(Color::White),
+                                   text(std::to_string(stats.get_code())) | color(Color::White),
+                                   text(std::to_string(stats.get_comment())) | color(Color::White),
+                                   text(std::to_string(stats.get_blank())) | color(Color::White) });
+
+            total_files += stats.get_files();
+            total_lines += stats.get_total();
+            total_code += stats.get_code();
+            total_comment += stats.get_comment();
+            total_blank += stats.get_blank();
+        } else {
+            table_data.push_back({ text(name) | color(Color::Green),
+                                   text(std::to_string(stats.get_total())) | color(Color::White),
+                                   text(std::to_string(stats.get_code())) | color(Color::White),
+                                   text(std::to_string(stats.get_comment())) | color(Color::White),
+                                   text(std::to_string(stats.get_blank())) | color(Color::White) });
+        }
+    }
+
+    if (!quiet) {
+        table_data.push_back({ text("Total") | color(Color::Green),
+                               text(std::to_string(total_files)) | color(Color::White),
+                               text(std::to_string(total_lines)) | color(Color::White),
+                               text(std::to_string(total_code)) | color(Color::White),
+                               text(std::to_string(total_comment)) | color(Color::White),
+                               text(std::to_string(total_blank)) | color(Color::White) });
     }
 
     Table table = Table(table_data);
@@ -90,9 +129,20 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
     table.SelectRectangle(1, -1, 0, -1).DecorateCells(align_right);
 
+    if (!quiet) {
+        table.SelectRows((table_data.size() - 2), -1).SeparatorHorizontal();
+    }
+
+    int table_size;
+
+    if (quiet) {
+        table_size = table_data.size() + 3;
+    } else {
+        table_size = table_data.size() + 4;
+    }
+
     Element document = table.Render() | color(Color::Green);
-    Screen screen =
-      ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_data.size() + 3));
+    Screen screen = ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_size));
     Render(screen, document);
     screen.Print();
     std::cout << std::endl;

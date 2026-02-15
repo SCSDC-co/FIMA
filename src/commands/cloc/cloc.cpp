@@ -41,7 +41,8 @@ namespace cloc {
 void
 cloc(const std::vector<fs::path>& paths,
      const std::vector<std::regex>& paths_to_ignore,
-     const std::string& sorting)
+     const std::string& sorting,
+     const bool& quiet)
 {
     const std::unordered_set<std::string> sorting_options = {
         "files", "total", "code", "comments", "blank"
@@ -164,19 +165,20 @@ cloc(const std::vector<fs::path>& paths,
         }
     }
 
-    fima::cloc::helpers::print_table(analyzed_languages, sorting);
+    fima::cloc::helpers::print_table(analyzed_languages, sorting, quiet);
 }
 
 void
 main(const std::vector<fs::path>& paths,
      const bool& show_languages,
      const std::vector<std::regex>& paths_to_ignore,
-     const std::string& sorting)
+     const std::string& sorting,
+     const bool& quiet)
 {
     if (show_languages) {
         fima::cloc::helpers::show_languages();
     } else {
-        cloc(paths, paths_to_ignore, sorting);
+        cloc(paths, paths_to_ignore, sorting, quiet);
     }
 }
 

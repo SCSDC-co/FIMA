@@ -151,11 +151,17 @@ main(int argc, char** argv)
     cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
       ->configurable(false);
 
-    std::vector<fs::path> paths_to_ignore{};
-    cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore")->configurable(true);
+    std::vector<fs::path> cloc_paths_to_ignore{};
+    cloc_subcmd->add_option("--ignore,-i", cloc_paths_to_ignore, "Paths to ignore")
+      ->configurable(true);
 
-    std::string sorting{ "total" };
-    cloc_subcmd->add_option("--sort", sorting, "Type of sorting")->configurable(true);
+    std::string cloc_sorting{ "total" };
+    cloc_subcmd->add_option("--sort", cloc_sorting, "Type of sorting")->configurable(true);
+
+    bool cloc_quiet{ false };
+    cloc_subcmd->add_flag("-q,--quiet", cloc_quiet, "Enables quiet output")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
 
     bool cloc_show_languages{ false };
     cloc_subcmd
@@ -242,11 +248,11 @@ main(int argc, char** argv)
     if (*cloc_subcmd) {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : paths_to_ignore) {
+        for (const fs::path& path : cloc_paths_to_ignore) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::cloc::main(cloc_paths, cloc_show_languages, regexes, sorting);
+        fima::cloc::main(cloc_paths, cloc_show_languages, regexes, cloc_sorting, cloc_quiet);
 
         return 0;
     }
