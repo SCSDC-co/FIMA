@@ -23,7 +23,8 @@ namespace cloc {
 namespace helpers {
 
 void
-print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> language_map);
+print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageStats>& language_map,
+            const std::string& sorting);
 
 }
 

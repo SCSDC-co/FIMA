@@ -12,10 +12,12 @@
 #include "commands/cloc/cloc.h"
 
 #include <filesystem>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "commands/cloc/helpers/FileStats.h"
@@ -26,6 +28,7 @@
 #include "commands/cloc/helpers/print_languages.h"
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
+#include "helpers/colors.h"
 #include "helpers/get_directories_entries.h"
 #include "helpers/regex.h"
 
@@ -36,8 +39,27 @@ namespace fima {
 namespace cloc {
 
 void
-cloc(const std::vector<fs::path>& paths, const std::vector<std::regex>& paths_to_ignore)
+cloc(const std::vector<fs::path>& paths,
+     const std::vector<std::regex>& paths_to_ignore,
+     const std::string& sorting)
 {
+    const std::unordered_set<std::string> sorting_options = {
+        "files", "total", "code", "comments", "blank"
+    };
+
+    if (!sorting_options.contains(sorting)) {
+        std::cout << fima::colors::RED << "This sorting option: " << fima::colors::RESET << sorting
+                  << fima::colors::RED << " doesn't exists." << fima::colors::RESET << '\n';
+
+        std::cout << fima::colors::RED << "Available options:" << fima::colors::RESET << '\n';
+
+        for (const std::string& item : sorting_options) {
+            std::cout << "  " << item << (item == "total" ? " (default)" : "") << '\n';
+        }
+
+        return;
+    }
+
     using json = nlohmann::json;
 
     json languages_file = helpers::get_languages_file();
@@ -142,18 +164,19 @@ cloc(const std::vector<fs::path>& paths, const std::vector<std::regex>& paths_to
         }
     }
 
-    fima::cloc::helpers::print_table(analyzed_languages);
+    fima::cloc::helpers::print_table(analyzed_languages, sorting);
 }
 
 void
 main(const std::vector<fs::path>& paths,
      const bool& show_languages,
-     const std::vector<std::regex>& paths_to_ignore)
+     const std::vector<std::regex>& paths_to_ignore,
+     const std::string& sorting)
 {
     if (show_languages) {
         fima::cloc::helpers::show_languages();
     } else {
-        cloc(paths, paths_to_ignore);
+        cloc(paths, paths_to_ignore, sorting);
     }
 }
 

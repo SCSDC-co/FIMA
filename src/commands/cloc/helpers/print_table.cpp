@@ -30,7 +30,8 @@ namespace cloc {
 namespace helpers {
 
 void
-print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> language_map)
+print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageStats>& language_map,
+            const std::string& sorting)
 {
     using namespace ftxui;
 
@@ -40,9 +41,27 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
         sorted.push_back(it);
     }
 
-    std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-        return a.second.get_total() > b.second.get_total();
-    });
+    if (sorting == "total") {
+        std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+            return a.second.get_total() > b.second.get_total();
+        });
+    } else if (sorting == "comments") {
+        std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+            return a.second.get_comment() > b.second.get_comment();
+        });
+    } else if (sorting == "blank") {
+        std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+            return a.second.get_blank() > b.second.get_blank();
+        });
+    } else if (sorting == "code") {
+        std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+            return a.second.get_code() > b.second.get_code();
+        });
+    } else if (sorting == "files") {
+        std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+            return a.second.get_files() > b.second.get_files();
+        });
+    }
 
     std::vector<std::vector<Element>> table_data;
 
