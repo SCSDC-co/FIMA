@@ -12,8 +12,11 @@
 #include "helpers/get_directories_entries.h"
 
 #include <filesystem>
+#include <regex>
 #include <string>
 #include <vector>
+
+#include "helpers/regex.h"
 
 namespace fs = std::filesystem;
 
@@ -42,14 +45,15 @@ get_directories_entries(const fs::path& path)
 std::vector<fs::path>
 get_directories_entries_recursive(const fs::path& path,
                                   const bool& ignore_directories,
-                                  const std::unordered_set<std::string>& ignored_files_directories)
+                                  const std::vector<std::regex>& ignored_files_directories)
 {
     std::vector<fs::path> directory_content;
 
     for (const auto& entry : fs::directory_iterator(path)) {
         std::string name = entry.path().filename().string();
 
-        if (ignore_directories && ignored_files_directories.contains(name)) {
+        if (ignore_directories &&
+            fima::helpers::regex::matches_any_regex(name, ignored_files_directories)) {
             continue;
         }
 

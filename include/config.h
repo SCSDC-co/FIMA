@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <string>
+#include <regex>
 #include <string_view>
-#include <unordered_set>
+#include <vector>
 
 namespace fima {
 
@@ -29,8 +29,11 @@ constexpr std::string_view LOGO    = R"(
 )";
 
 // since these are useless to analyze we put them as default to ignore
-inline static const std::unordered_set<std::string> DEFAULT_DIRS_TO_IGNORE = {
-    ".git", ".cache", ".vscode", "build", "dist", "target", "node_modules", ".next", "bin", "obj"
+inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
+    std::regex{ R"(\.git)" },        std::regex{ R"(\.cache)" }, std::regex{ R"(\.vscode)" },
+    std::regex{ R"(build)" },        std::regex{ R"(dist)" },    std::regex{ R"(target)" },
+    std::regex{ R"(node_modules)" }, std::regex{ R"(\.next)" },  std::regex{ R"(bin)" },
+    std::regex{ R"(obj)" }
 };
 
 }

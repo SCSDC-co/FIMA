@@ -12,7 +12,6 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
@@ -29,6 +28,7 @@
 #include "commands/tree.h"
 #include "config.h"
 #include "helpers/colors.h"
+#include "helpers/regex.h"
 #include "tui/tui.h"
 
 namespace fs = std::filesystem;
@@ -148,7 +148,7 @@ main(int argc, char** argv)
     CLI::App* cloc_subcmd =
       app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
-    std::unordered_set<fs::path> paths_to_ignore{};
+    std::vector<std::string> paths_to_ignore{};
     cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore")->configurable(true);
     cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
       ->configurable(false);
@@ -236,7 +236,13 @@ main(int argc, char** argv)
     }
 
     if (*cloc_subcmd) {
-        fima::cloc::main(cloc_paths, cloc_show_languages, paths_to_ignore);
+        std::vector<std::regex> regexes;
+
+        for (const auto& path : paths_to_ignore) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(std::string(path)));
+        }
+
+        fima::cloc::main(cloc_paths, cloc_show_languages, regexes);
 
         return 0;
     }

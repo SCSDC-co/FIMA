@@ -13,9 +13,9 @@
 
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <regex>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include "commands/cloc/helpers/FileStats.h"
@@ -27,6 +27,7 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "helpers/get_directories_entries.h"
+#include "helpers/regex.h"
 
 namespace fs = std::filesystem;
 
@@ -35,7 +36,7 @@ namespace fima {
 namespace cloc {
 
 void
-cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& paths_to_ignore)
+cloc(const std::vector<fs::path>& paths, const std::vector<std::regex>& paths_to_ignore)
 {
     using json = nlohmann::json;
 
@@ -46,11 +47,10 @@ cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& pat
     std::vector<fs::path> paths_all       = {};
     std::vector<fs::path> sanitized_paths = {};
 
-    std::unordered_set<std::string> file_or_directories_to_ignore =
-      fima::config::DEFAULT_DIRS_TO_IGNORE;
+    std::vector<std::regex> file_or_directories_to_ignore = fima::config::DEFAULT_DIRS_TO_IGNORE;
 
-    for (const fs::path& item : paths_to_ignore) {
-        file_or_directories_to_ignore.insert(item.filename().string());
+    for (const std::regex& item : paths_to_ignore) {
+        file_or_directories_to_ignore.push_back(item);
     }
 
     for (const fs::path& path : paths) {
@@ -66,10 +66,16 @@ cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& pat
         }
     }
 
-    static const std::unordered_set<std::string> ft_to_skip = {
-        ".zip", ".tar",   ".png",      ".jpeg",  ".jpg", ".mp3",  ".mp4",  ".mp2",   ".mp1",
-        ".wav", ".avi",   ".webp",     ".undo",  ".spl", ".ico",  ".icns", ".mpack", ".exe",
-        ".o",   ".class", ".appimage", ".woff2", ".ttf", ".ttf2", ".dll"
+    static const std::vector<std::regex> ft_to_skip = {
+        std::regex{ R"(.*\.zip)" },   std::regex{ R"(.*\.tar)" },   std::regex{ R"(.*\.png)" },
+        std::regex{ R"(.*\.jpeg)" },  std::regex{ R"(.*\.jpg)" },   std::regex{ R"(.*\.mp3)" },
+        std::regex{ R"(.*\.mp4)" },   std::regex{ R"(.*\.mp2)" },   std::regex{ R"(.*\.mp1)" },
+        std::regex{ R"(.*\.wav)" },   std::regex{ R"(.*\.avi)" },   std::regex{ R"(.*\.webp)" },
+        std::regex{ R"(.*\.undo)" },  std::regex{ R"(.*\.spl)" },   std::regex{ R"(.*\.ico)" },
+        std::regex{ R"(.*\.icns)" },  std::regex{ R"(.*\.mpack)" }, std::regex{ R"(.*\.exe)" },
+        std::regex{ R"(.*\.o)" },     std::regex{ R"(.*\.class)" }, std::regex{ R"(.*\.appimage)" },
+        std::regex{ R"(.*\.woff2)" }, std::regex{ R"(.*\.ttf)" },   std::regex{ R"(.*\.ttf2)" },
+        std::regex{ R"(.*\.dll)" }
     };
 
     for (const fs::path& path : paths_all) {
@@ -80,7 +86,7 @@ cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& pat
         std::string ext = path.extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-        if (ft_to_skip.contains(ext)) {
+        if (fima::helpers::regex::matches_any_regex(ext, ft_to_skip)) {
             continue;
         }
 
@@ -138,7 +144,7 @@ cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& pat
 void
 main(const std::vector<fs::path>& paths,
      const bool& show_languages,
-     const std::unordered_set<fs::path>& paths_to_ignore)
+     const std::vector<std::regex>& paths_to_ignore)
 {
     if (show_languages) {
         fima::cloc::helpers::show_languages();
