@@ -50,96 +50,115 @@ main(int argc, char** argv)
     fs::path old_name;
     fs::path new_name;
 
-    app.add_flag("-v,--version", display_version, "Shows the program version");
+    app.add_flag("-v,--version", display_version, "Shows the program version")->configurable(false);
     CLI::App* version_subcmd =
-      app.add_subcommand("version", "Print the current version with some extra information");
+      app.add_subcommand("version", "Print the current version with some extra information")
+        ->configurable(false);
 
     fs::path path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
       ->check(CLI::ExistingDirectory)
-      ->expected(0, 1);
+      ->expected(0, 1)
+      ->configurable(false);
 
     /*  ==============
      *  LS SUB COMMAND
      */
 
     CLI::App* ls_subcmd =
-      app.add_subcommand("ls", "Prints the content of the directory like the ls command");
+      app.add_subcommand("ls", "Prints the content of the directory like the ls command")
+        ->configurable(false);
 
     ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
 
     /*  ================
      *  TREE SUB COMMAND
      */
 
     CLI::App* tree_subcmd =
-      app.add_subcommand("tree", "Prints the tree of the directory like the tree command");
+      app.add_subcommand("tree", "Prints the tree of the directory like the tree command")
+        ->configurable(false);
 
     tree_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
 
     /*  ==================
      *  CREATE SUB COMMAND
      */
 
-    CLI::App* create_subcmd = app.add_subcommand("create", "Create a directory or a file");
+    CLI::App* create_subcmd =
+      app.add_subcommand("create", "Create a directory or a file")->configurable(false);
 
-    create_subcmd->add_option("path", path_to_create_or_remove, "File or dir to create");
-    create_subcmd->add_subcommand("dir", "Creates a directory");
-    create_subcmd->add_subcommand("file", "Creates a file");
+    create_subcmd->add_option("path", path_to_create_or_remove, "File or dir to create")
+      ->configurable(false);
+    create_subcmd->add_subcommand("dir", "Creates a directory")->configurable(false);
+    create_subcmd->add_subcommand("file", "Creates a file")->configurable(false);
 
     /*  ==================
      *  REMOVE SUB COMMAND
      */
 
-    CLI::App* remove_subcmd = app.add_subcommand("remove", "Removes a file or a directory");
+    CLI::App* remove_subcmd =
+      app.add_subcommand("remove", "Removes a file or a directory")->configurable(false);
 
-    remove_subcmd->add_option("path", path_to_create_or_remove, "File or directory to remove");
+    remove_subcmd->add_option("path", path_to_create_or_remove, "File or directory to remove")
+      ->configurable(false);
 
     /*  ================
      *  COPY SUB COMMAND
      */
 
-    CLI::App* copy_subcmd = app.add_subcommand("copy", "Copy a file or a directory");
+    CLI::App* copy_subcmd =
+      app.add_subcommand("copy", "Copy a file or a directory")->configurable(false);
 
-    copy_subcmd->add_option("source-file", path_to_copy, "File or directory copy");
-    copy_subcmd->add_option("destination", destination, "Destination");
+    copy_subcmd->add_option("source-file", path_to_copy, "File or directory copy")
+      ->configurable(false);
+    copy_subcmd->add_option("destination", destination, "Destination")->configurable(false);
 
     /*  ==================
      *  RENAME SUB COMMAND
      */
 
-    CLI::App* rename_subcmd = app.add_subcommand("rename", "Rename/move a file or a directory");
+    CLI::App* rename_subcmd =
+      app.add_subcommand("rename", "Rename/move a file or a directory")->configurable(false);
 
-    rename_subcmd->add_option("old-name", old_name, "File or directory to move or rename");
-    rename_subcmd->add_option("new-name", new_name, "The new name for the directory or file");
+    rename_subcmd->add_option("old-name", old_name, "File or directory to move or rename")
+      ->configurable(false);
+    rename_subcmd->add_option("new-name", new_name, "The new name for the directory or file")
+      ->configurable(false);
 
     /*  =================
      *  PERMS SUB COMMAND
      */
 
-    CLI::App* perms_subcmd = app.add_subcommand("perms", "Shows a directory/file permissions");
+    CLI::App* perms_subcmd =
+      app.add_subcommand("perms", "Shows a directory/file permissions")->configurable(false);
 
-    perms_subcmd->add_option("path", perms_path, "The file path to read permissions from");
+    perms_subcmd->add_option("path", perms_path, "The file path to read permissions from")
+      ->configurable(false);
 
     /*  =================
      *  CLOC SUB COMMAND
      */
 
     std::vector<fs::path> cloc_paths{ fs::current_path() };
-    CLI::App* cloc_subcmd = app.add_subcommand("cloc", "Count lines of code of a file");
+    CLI::App* cloc_subcmd =
+      app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
     std::unordered_set<fs::path> paths_to_ignore{};
-    cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore");
-    cloc_subcmd->add_option(
-      "paths", cloc_paths, "The paths to work on (default current directory)");
+    cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore")->configurable(true);
+    cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
+      ->configurable(false);
 
     bool cloc_show_languages{ false };
     cloc_subcmd
       ->add_flag(
         "--show-languages,-s", cloc_show_languages, "Shows all the languages that cloc supports")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(false);
 
     CLI11_PARSE(app, argc, argv);
 
