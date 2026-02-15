@@ -148,7 +148,7 @@ main(int argc, char** argv)
     CLI::App* cloc_subcmd =
       app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
-    std::vector<std::string> paths_to_ignore{};
+    std::vector<fs::path> paths_to_ignore{};
     cloc_subcmd->add_option("--ignore,-i", paths_to_ignore, "Paths to ignore")->configurable(true);
     cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
       ->configurable(false);
@@ -238,8 +238,8 @@ main(int argc, char** argv)
     if (*cloc_subcmd) {
         std::vector<std::regex> regexes;
 
-        for (const auto& path : paths_to_ignore) {
-            regexes.push_back(fima::helpers::regex::glob_to_regex(std::string(path)));
+        for (const fs::path& path : paths_to_ignore) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
         fima::cloc::main(cloc_paths, cloc_show_languages, regexes);

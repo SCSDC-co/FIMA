@@ -90,6 +90,10 @@ cloc(const std::vector<fs::path>& paths, const std::vector<std::regex>& paths_to
             continue;
         }
 
+        if (fima::helpers::regex::matches_any_regex(path.string(), file_or_directories_to_ignore)) {
+            continue;
+        }
+
         sanitized_paths.push_back(path);
     }
 
