@@ -58,9 +58,9 @@ get_language_name(fs::path path)
 {
     std::string filename = path.filename();
 
-    static const std::unordered_set<std::string> special_yaml = {
-        ".gitignore",    ".clangd",    ".clang-format", ".editorconfig", "git-blame-ignore-revs",
-        "gitattributes", ".clang-tidy"
+    static const std::unordered_set<std::string> special_shell = {
+        ".gitignore",     ".clangd",    ".clang-format", ".editorconfig", ".git-blame-ignore-revs",
+        ".gitattributes", ".clang-tidy"
     };
 
     if (filename == "CMakeLists.txt") {
@@ -69,7 +69,7 @@ get_language_name(fs::path path)
         return "LICENSE";
     } else if (filename == "Makefile" || filename == "BSDmakefile") {
         return "Make";
-    } else if (special_yaml.contains(filename)) {
+    } else if (special_shell.contains(filename)) {
         return "YAML";
     }
 
