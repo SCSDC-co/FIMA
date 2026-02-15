@@ -125,6 +125,8 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".adoc", "markup" },
     { ".wxs", "markup" },
     { ".manifest", "markup" },
+    { ".csproj", "markup" },
+    { ".wixproj", "markup" },
 
     // text
     { ".txt", "text" },
@@ -256,6 +258,8 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".adoc", "ASCII Doc" },
     { ".wxs", "WIX" },
     { ".manifest", "Manifest" },
+    { ".csproj", "C# Project" },
+    { ".wixproj", "WIX Project" },
 
     // text
     { ".txt", "Text" },

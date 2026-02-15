@@ -67,9 +67,9 @@ cloc(const std::vector<fs::path>& paths, const std::unordered_set<fs::path>& pat
     }
 
     static const std::unordered_set<std::string> ft_to_skip = {
-        ".zip",   ".tar", ".png", ".jpeg",  ".jpg",      ".mp3",   ".mp4", ".mp2",
-        ".mp1",   ".wav", ".avi", ".webp",  ".undo",     ".spl",   ".ico", ".icns",
-        ".mpack", ".exe", ".o",   ".class", ".appimage", ".woff2", ".ttf", ".ttf2"
+        ".zip", ".tar",   ".png",      ".jpeg",  ".jpg", ".mp3",  ".mp4",  ".mp2",   ".mp1",
+        ".wav", ".avi",   ".webp",     ".undo",  ".spl", ".ico",  ".icns", ".mpack", ".exe",
+        ".o",   ".class", ".appimage", ".woff2", ".ttf", ".ttf2", ".dll"
     };
 
     for (const fs::path& path : paths_all) {
