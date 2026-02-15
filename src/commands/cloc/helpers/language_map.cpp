@@ -19,16 +19,17 @@ get_language_family(fs::path path)
 
     static const std::unordered_set<std::string> special_shell_type = {
         "CMakeLists.txt", ".gitignore",  ".clangd", ".clang-format", ".editorconfig",
-        "Makefile",       "BSDmakefile", ".bashrc", ".zshrc"
+        "Makefile",       "BSDmakefile", ".bashrc", ".zshrc",        ".styluaignore"
     };
 
     static const std::unordered_set<std::string> special_text_type = { "LICENSE",
                                                                        "license",
-                                                                       "mailmap" };
+                                                                       ".mailmap" };
 
-    static const std::unordered_set<std::string> special_lua_type = { ".luacov",
-                                                                      ".luacheckrc",
-                                                                      "mailmap" };
+    static const std::unordered_set<std::string> special_lua_type = {
+        ".luacov",
+        ".luacheckrc",
+    };
 
     if (special_text_type.contains(filename)) {
         return "text";
