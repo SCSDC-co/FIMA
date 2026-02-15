@@ -8,6 +8,8 @@
  * See LICENSE file for details.
  */
 
+#pragma once
+
 #include <cstdlib>
 #include <filesystem>
 #include <string>
