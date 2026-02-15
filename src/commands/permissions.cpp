@@ -56,33 +56,24 @@ get_perms(const std::vector<fs::path>& paths)
                 print_ft("", '?'); // unknown type
             }
 
-            show(std::string(fima::colors::RED) + std::string(fima::colors::BOLD),
+            show(std::string(fima::colors::RED) + std::string(fima::colors::BOLD) +
+                   std::string(fima::colors::UNDERLINE),
                  'r',
                  fs::perms::owner_read);
-            show(std::string(fima::colors::YELLOW) + std::string(fima::colors::BOLD),
+            show(std::string(fima::colors::YELLOW) + std::string(fima::colors::BOLD) +
+                   std::string(fima::colors::UNDERLINE),
                  'w',
                  fs::perms::owner_write);
-            show(std::string(fima::colors::GREEN) + std::string(fima::colors::BOLD),
+            show(std::string(fima::colors::GREEN) + std::string(fima::colors::BOLD) +
+                   std::string(fima::colors::UNDERLINE),
                  'x',
                  fs::perms::owner_exec);
-            show(std::string(fima::colors::RED) + std::string(fima::colors::BOLD),
-                 'r',
-                 fs::perms::group_read);
-            show(std::string(fima::colors::YELLOW) + std::string(fima::colors::BOLD),
-                 'w',
-                 fs::perms::group_write);
-            show(std::string(fima::colors::GREEN) + std::string(fima::colors::BOLD),
-                 'x',
-                 fs::perms::group_exec);
-            show(std::string(fima::colors::RED) + std::string(fima::colors::BOLD),
-                 'r',
-                 fs::perms::others_read);
-            show(std::string(fima::colors::YELLOW) + std::string(fima::colors::BOLD),
-                 'w',
-                 fs::perms::others_write);
-            show(std::string(fima::colors::GREEN) + std::string(fima::colors::BOLD),
-                 'x',
-                 fs::perms::others_exec);
+            show(std::string(fima::colors::RED), 'r', fs::perms::group_read);
+            show(std::string(fima::colors::YELLOW), 'w', fs::perms::group_write);
+            show(std::string(fima::colors::GREEN), 'x', fs::perms::group_exec);
+            show(std::string(fima::colors::RED), 'r', fs::perms::others_read);
+            show(std::string(fima::colors::YELLOW), 'w', fs::perms::others_write);
+            show(std::string(fima::colors::GREEN), 'x', fs::perms::others_exec);
             std::cout << "  " << entry.string() << (fs::is_directory(st) ? "/" : "") << '\n';
         } catch (const std::exception& ex) {
             fima::helpers::log(

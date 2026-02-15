@@ -13,7 +13,8 @@ inline constexpr std::string_view RED    = "\033[31m";
 inline constexpr std::string_view BLUE   = "\033[34m";
 inline constexpr std::string_view YELLOW = "\033[33m";
 
-inline constexpr std::string_view BOLD = "\033[1m";
+inline constexpr std::string_view BOLD      = "\033[1m";
+inline constexpr std::string_view UNDERLINE = "\033[4m";
 
 }
 
