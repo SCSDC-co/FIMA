@@ -58,7 +58,7 @@ print_table(std::unordered_map<std::string, fima::cloc::classes::LanguageStats> 
     first_row.Border(ROUNDED);
     first_row.SeparatorVertical();
 
-    table.SelectRectangle(1, -1, 1, -1).DecorateCells(align_right);
+    table.SelectRectangle(1, -1, 0, -1).DecorateCells(align_right);
 
     Element document = table.Render() | color(Color::Green);
     Screen screen =

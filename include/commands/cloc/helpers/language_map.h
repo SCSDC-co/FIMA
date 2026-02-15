@@ -94,6 +94,7 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".mak", "shell_like" },
     { ".desktop", "shell_like" },
     { ".cfg", "shell_like" },
+    { ".conf", "shell_like" },
 
     // markup
     { ".html", "markup" },
@@ -123,6 +124,7 @@ inline std::unordered_map<std::string, std::string> language_map_family = {
     { ".cat", "text" },
     { ".1", "text" },
     { ".lock", "text" },
+    { ".log", "text" },
 
     // "special" languages
     { ".py", "python" },
@@ -223,6 +225,7 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".mak", "Make" },
     { ".desktop", "Desktop File" },
     { ".cfg", "CFG" },
+    { ".conf", "Config File" },
 
     // markup
     { ".html", "HTML" },
@@ -252,6 +255,7 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".cat", "Text" },
     { ".1", "Man" },
     { ".lock", "Lock File" },
+    { ".log", "Log" },
 
     // "special" languages
     { ".py", "Python" },
