@@ -5,6 +5,8 @@
  * This file defines the TUI for the `tree` subcommand of FIMA
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ * This software is licensed under the GPL-3.0-or-later.
+ * See LICENSE file for details.
  */
 
 #include "tui/commands/tree/tree_tui.h"

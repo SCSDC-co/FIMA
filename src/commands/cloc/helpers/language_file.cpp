@@ -5,6 +5,8 @@
  * This file has the logic for the language file
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ * This software is licensed under the GPL-3.0-or-later.
+ * See LICENSE file for details.
  */
 
 #include "commands/cloc/helpers/language_file.h"
