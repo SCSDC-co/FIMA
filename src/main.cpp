@@ -28,8 +28,8 @@
 #include "commands/tree.h"
 #include "config.h"
 #include "helpers/colors.h"
-#include "helpers/regex.h"
 #include "tui/tui.h"
+#include "utility/regex.h"
 
 namespace fs = std::filesystem;
 

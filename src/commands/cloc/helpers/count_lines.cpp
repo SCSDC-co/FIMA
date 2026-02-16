@@ -16,7 +16,7 @@
 #include <string>
 
 #include "commands/cloc/helpers/FileStats.h"
-#include "helpers/trim_string.h"
+#include "utility/trim_string.h"
 
 namespace fs = std::filesystem;
 

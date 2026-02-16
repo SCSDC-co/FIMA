@@ -30,7 +30,7 @@
 #include "config.h"
 #include "helpers/colors.h"
 #include "helpers/get_directories_entries.h"
-#include "helpers/regex.h"
+#include "utility/regex.h"
 
 namespace fs = std::filesystem;
 

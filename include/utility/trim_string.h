@@ -1,7 +1,7 @@
 /*
- * include/helpers/trim_string.h
+ * include/utility/trim_string.h
  *
- * This is a little helper for trimming strings
+ * This is a little utility for trimming strings
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
