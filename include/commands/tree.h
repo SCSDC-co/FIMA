@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/commands/tui.cpp
+ * include/commands/tui.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * The declaration of the `tree` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,13 +12,14 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
 
 namespace fima {
 
-namespace copy {
+namespace tree {
 
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
+start(const std::filesystem::path& path, std::string prefix, bool tui);
 
 }
 

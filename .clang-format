@@ -1,9 +1,26 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Mozilla
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
-ColumnLimit: 80
-NamespaceIndentation: All
+ColumnLimit: 100
+InsertBraces: true
+LineEnding: LF
+
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: Consecutive
+
+IndentPPDirectives: AfterHash
+PPIndentWidth: 2
+
+AllowShortFunctionsOnASingleLine: All
+
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCaseColons: false
+
+FixNamespaceComments: true
 
 SortIncludes: true
 IncludeBlocks: Regroup

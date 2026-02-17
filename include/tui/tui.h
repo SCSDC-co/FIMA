@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/tui/tui.cpp
+ * include/tui/tui.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * This file is the declaration of the main entry point of the FIMA's TUI
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -15,10 +15,10 @@
 
 namespace fima {
 
-namespace copy {
+namespace tui {
 
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
+start_tui(std::filesystem::path path);
 
 }
 

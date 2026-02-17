@@ -1,16 +1,24 @@
-set(SOURCE_FILES
+add_library(fima_lib
+    src/commands/cloc/helpers/print_languages.cpp
+    src/commands/cloc/helpers/LanguageStats.cpp
+    src/commands/cloc/helpers/language_file.cpp
+    src/commands/cloc/helpers/language_map.cpp
+    src/commands/cloc/helpers/print_table.cpp
+    src/commands/cloc/helpers/count_lines.cpp
     src/helpers/get_directories_entries.cpp
+    src/commands/cloc/helpers/FileStats.cpp
     src/tui/commands/tree/tree_tui.cpp
-    src/commands/permissions/main.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
     src/tui/commands/ls/ls_tui.cpp
-    src/commands/rename/main.cpp
-    src/commands/remove/main.cpp
+    src/commands/permissions.cpp
     src/commands/create/file.cpp
-    src/commands/tree/main.cpp
     src/commands/copy/file.cpp
-    src/commands/ls/main.cpp
-    src/tui/main.cpp
-    src/main.cpp
+    src/commands/cloc/cloc.cpp
+    src/commands/rename.cpp
+    src/commands/remove.cpp
+    src/helpers/logger.cpp
+    src/commands/tree.cpp
+    src/commands/ls.cpp
+    src/tui/tui.cpp
 )

@@ -1,1 +1,10 @@
+# trash
 build/
+.cache/
+
+# IDE stuff
+.vscode/
+.idea/
+
+# mac OS shit
+.DS_Store

@@ -1,0 +1,305 @@
+/*
+ * src/commands/cloc/helpers/language_map.cpp
+ * include/commands/cloc/helpers/language_map.h
+ *
+ * This file contains the 2 language maps:
+ * extension -> family
+ * extension -> name
+ *
+ * And the declaration for the logic of them
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ * This software is licensed under the GPL-3.0-or-later.
+ * See LICENSE file for details.
+ */
+
+#pragma once
+
+#include <filesystem>
+#include <string>
+#include <unordered_map>
+
+namespace fima {
+
+namespace cloc {
+
+namespace helpers {
+
+// this is the map for extension -> family
+inline std::unordered_map<std::string, std::string> language_map_family = {
+    // c-like
+    { ".cpp", "c_like" },
+    { ".cxx", "c_like" },
+    { ".cc", "c_like" },
+    { ".c", "c_like" },
+    { ".h", "c_like" },
+    { ".hpp", "c_like" },
+    { ".hxx", "c_like" },
+    { ".inl", "c_like" },
+    { ".rs", "c_like" },
+    { ".cs", "c_like" },
+    { ".js", "c_like" },
+    { ".ts", "c_like" },
+    { ".mjs", "c_like" },
+    { ".mts", "c_like" },
+    { ".cjs", "c_like" },
+    { ".cts", "c_like" },
+    { ".java", "c_like" },
+    { ".m", "c_like" },
+    { ".php", "c_like" },
+    { ".dart", "c_like" },
+    { ".go", "c_like" },
+    { ".swift", "c_like" },
+    { ".kt", "c_like" },
+    { ".scala", "c_like" },
+    { ".hx", "c_like" },
+    { ".hxml", "c_like" },
+    { ".zig", "c_like" },
+    { ".zon", "c_like" },
+    { ".jsonc", "c_like" },
+    { ".rc", "c_like" },
+
+    // lisp-like
+    { ".lisp", "lisp_like" },
+    { ".lsp", "lisp_like" },
+    { ".cl", "lisp_like" },
+    { ".scm", "lisp_like" },
+    { ".rkt", "lisp_like" },
+    { ".clj", "lisp_like" },
+    { ".cljs", "lisp_like" },
+    { ".cljc", "lisp_like" },
+    { ".edn", "lisp_like" },
+    { ".el", "lisp_like" },
+    { ".ss", "lisp_like" },
+    { ".hy", "lisp_like" },
+    { ".janet", "lisp_like" },
+    { ".fnl", "lisp_like" },
+    { ".asm", "lisp_like" },
+    { ".s", "lisp_like" },
+
+    // shell-like
+    { ".sh", "shell_like" },
+    { ".zsh", "shell_like" },
+    { ".fish", "shell_like" },
+    { ".dash", "shell_like" },
+    { ".ksh", "shell_like" },
+    { ".ash", "shell_like" },
+    { ".tcsh", "shell_like" },
+    { ".csh", "shell_like" },
+    { ".rb", "shell_like" },
+    { ".pl", "shell_like" },
+    { ".pm", "shell_like" },
+    { ".raku", "shell_like" },
+    { ".rakumod", "shell_like" },
+    { ".p6", "shell_like" },
+    { ".jl", "shell_like" },
+    { ".nim", "shell_like" },
+    { ".cr", "shell_like" },
+    { ".tf", "shell_like" },
+    { ".nix", "shell_like" },
+    { ".sls", "shell_like" },
+    { ".cmake", "shell_like" },
+    { ".yaml", "shell_like" },
+    { ".yml", "shell_like" },
+    { ".toml", "shell_like" },
+    { ".ini", "shell_like" },
+    { ".inp", "shell_like" },
+    { ".ps1", "shell_like" },
+    { ".bat", "shell_like" },
+    { ".mak", "shell_like" },
+    { ".desktop", "shell_like" },
+    { ".cfg", "shell_like" },
+    { ".conf", "shell_like" },
+
+    // markup
+    { ".html", "markup" },
+    { ".htm", "markup" },
+    { ".xhtml", "markup" },
+    { ".md", "markup" },
+    { ".markdown", "markup" },
+    { ".xml", "markup" },
+    { ".xaml", "markup" },
+    { ".svg", "markup" },
+    { ".rst", "markup" },
+    { ".tex", "markup" },
+    { ".adoc", "markup" },
+    { ".wxs", "markup" },
+    { ".manifest", "markup" },
+    { ".csproj", "markup" },
+    { ".wixproj", "markup" },
+
+    // text
+    { ".txt", "text" },
+    { ".json", "text" },
+    { ".tutor", "text" },
+    { ".in", "text" },
+    { ".ti", "text" },
+    { ".supp", "text" },
+    { ".ok", "text" },
+    { ".example", "text" },
+    { ".dict", "text" },
+    { ".cat", "text" },
+    { ".1", "text" },
+    { ".lock", "text" },
+    { ".log", "text" },
+
+    // "special" languages
+    { ".py", "python" },
+    { ".css", "css" },
+    { ".scss", "css" },
+    { ".sass", "css" },
+    { ".less", "css" },
+    { ".styl", "css" },
+    { ".stylus", "css" },
+    { ".pcss", "css" },
+    { ".vim", "vim" },
+    { ".lua", "lua" },
+    { ".cmd", "cmd" },
+    { ".jsx", "react" },
+    { ".tsx", "react" },
+};
+
+// this one is for extension -> language
+inline std::unordered_map<std::string, std::string> language_map_name = {
+    // c-like
+    { ".cpp", "C++" },
+    { ".cxx", "C++" },
+    { ".cc", "C++" },
+    { ".c", "C" },
+    { ".h", "C Header" },
+    { ".hpp", "C++ Header" },
+    { ".hxx", "C++ Header" },
+    { ".inl", "C++ Header" },
+    { ".rs", "Rust" },
+    { ".cs", "C#" },
+    { ".js", "JavaScript" },
+    { ".ts", "TypeScript" },
+    { ".mjs", "JavaScript (ESM)" },
+    { ".mts", "TypeScript (ESM)" },
+    { ".cjs", "JavaScript (CJS)" },
+    { ".cts", "TypeScript (CJS)" },
+    { ".java", "Java" },
+    { ".m", "Objective-C" },
+    { ".php", "PHP" },
+    { ".dart", "Dat" },
+    { ".go", "Go" },
+    { ".swift", "Switf" },
+    { ".kt", "Kotlin" },
+    { ".scala", "Scala" },
+    { ".hx", "Haxe" },
+    { ".hxml", "Haxe" },
+    { ".zig", "Zig" },
+    { ".zon", "ZON" },
+    { ".jsonc", "JSONC" },
+    { ".rc", "RC" },
+
+    // lisp-like
+    { ".lisp", "Common Lisp" },
+    { ".lsp", "Common Lisp" },
+    { ".cl", "Common Lisp" },
+    { ".scm", "Scheme" },
+    { ".rkt", "Racket" },
+    { ".clj", "Clojure" },
+    { ".cljs", "Clojure" },
+    { ".cljc", "Clojure" },
+    { ".edn", "EDN" },
+    { ".el", "Emacs Lisp" },
+    { ".hy", "Hy" },
+    { ".janet", "Janet" },
+    { ".fnl", "Fennel" },
+    { ".asm", "Assembly" },
+    { ".s", "Assembly" },
+
+    // shell-like
+    { ".sh", "Bash" },
+    { ".zsh", "ZSH" },
+    { ".fish", "Fish" },
+    { ".dash", "Dash" },
+    { ".ksh", "KSH" },
+    { ".ash", "ASH" },
+    { ".tcsh", "TCSH" },
+    { ".csh", "CSH" },
+    { ".rb", "Ruby" },
+    { ".pl", "PL/I" },
+    { ".pm", "PM" },
+    { ".raku", "Raku" },
+    { ".rakumod", "Raku" },
+    { ".p6", "P6" },
+    { ".jl", "Julia" },
+    { ".nim", "Nim" },
+    { ".cr", "Crystal" },
+    { ".tf", "Tensor Flow" },
+    { ".nix", "NIX" },
+    { ".sls", "S/LS" },
+    { ".cmake", "CMake" },
+    { ".yaml", "YAML" },
+    { ".yml", "YAML" },
+    { ".toml", "TOML" },
+    { ".ini", "INI" },
+    { ".inp", "INP" },
+    { ".ps1", "PWSH Script" },
+    { ".bat", "CMD" },
+    { ".mak", "Make" },
+    { ".desktop", "Desktop File" },
+    { ".cfg", "CFG" },
+    { ".conf", "Config File" },
+
+    // markup
+    { ".html", "HTML" },
+    { ".htm", "HTML" },
+    { ".xhtml", "XHTML" },
+    { ".md", "Markdown" },
+    { ".markdown", "Markdown" },
+    { ".xml", "XML" },
+    { ".xaml", "XAML" },
+    { ".svg", "SVG" },
+    { ".rst", "RST" },
+    { ".tex", "TeX" },
+    { ".adoc", "ASCII Doc" },
+    { ".wxs", "WIX" },
+    { ".manifest", "Manifest" },
+    { ".csproj", "C# Project" },
+    { ".wixproj", "WIX Project" },
+
+    // text
+    { ".txt", "Text" },
+    { ".json", "JSON" },
+    { ".tutor", "Tutor" },
+    { ".in", "IN" },
+    { ".ti", "TI" },
+    { ".supp", "SUPP" },
+    { ".ok", "Text" },
+    { ".example", "Text" },
+    { ".dict", "Dictionary" },
+    { ".cat", "Text" },
+    { ".1", "Man" },
+    { ".lock", "Lock File" },
+    { ".log", "Log" },
+
+    // "special" languages
+    { ".py", "Python" },
+    { ".css", "CSS" },
+    { ".scss", "CSS" },
+    { ".sass", "CSS" },
+    { ".less", "CSS" },
+    { ".styl", "CSS" },
+    { ".stylus", "CSS" },
+    { ".pcss", "CSS" },
+    { ".vim", "VIM" },
+    { ".lua", "Lua" },
+    { ".cmd", "CMD" },
+    { ".jsx", "JavaScript React" },
+    { ".tsx", "TypeScript React" },
+};
+
+[[nodiscard]] std::string
+get_language_family(std::filesystem::path path);
+
+[[nodiscard]] std::string
+get_language_name(std::filesystem::path path);
+
+} // namespace helpers
+
+} // namespace cloc
+
+} // namespace fima

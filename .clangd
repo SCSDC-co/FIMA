@@ -1,0 +1,8 @@
+CompileFlags:
+  Add:
+    - -Wno-unknown-warning-option
+    - -DLAB_PGTBL
+    - -DSOL_PGTBL
+  Remove:
+    - -m*
+    - -f*

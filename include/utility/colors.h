@@ -1,0 +1,31 @@
+/*
+ * include/utility/colors.h
+ *
+ * This file contain some variables for styling strings
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ * This software is licensed under the GPL-3.0-or-later.
+ * See LICENSE file for details.
+ */
+
+#pragma once
+
+#include <string_view>
+
+namespace fima {
+
+namespace colors {
+
+inline constexpr std::string_view RESET = "\033[0m";
+
+inline constexpr std::string_view GREEN  = "\033[32m";
+inline constexpr std::string_view RED    = "\033[31m";
+inline constexpr std::string_view BLUE   = "\033[34m";
+inline constexpr std::string_view YELLOW = "\033[33m";
+
+inline constexpr std::string_view BOLD      = "\033[1m";
+inline constexpr std::string_view UNDERLINE = "\033[4m";
+
+} // namespace colors
+
+} // namespace fima

@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/commands/remove.cpp
+ * include/commands/remove.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * The declaration of the `remove` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,14 +12,11 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fima {
 
-namespace copy {
-
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
-
-}
+remove(const std::vector<std::filesystem::path>& paths);
 
 } // namespace fima

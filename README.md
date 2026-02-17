@@ -54,6 +54,7 @@ These are the most important ones (so far):
   - [x] `copy`
   - [x] `rename`
   - [x] `permissions`
+  - [ ] `cloc`
   - [ ] `info`
 
 ## License

@@ -1,4 +1,15 @@
-#include "../../../../include/tui/commands/ls/ls_tui.h"
+/*
+ * src/tui/commands/tree/ls_tui.cpp
+ * include/tui/commands/tree/ls_tui.h
+ *
+ * This file defines the TUI for the `ls` subcommand of FIMA
+ *
+ * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
+ * This software is licensed under the GPL-3.0-or-later.
+ * See LICENSE file for details.
+ */
+
+#include "tui/commands/ls/ls_tui.h"
 
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -10,46 +21,46 @@
 #include "ftxui/screen/color.hpp"
 
 namespace fima {
-    namespace ls {
-        void tui(std::vector<std::string> dirs_vector,
-                 std::vector<std::string> files_vector) {
-            using namespace ftxui;
 
-            std::vector<Element> dirs;
-            std::vector<Element> files;
+namespace ls {
 
-            size_t max_rows{std::max(dirs_vector.size(), files_vector.size())};
+void
+tui(std::vector<std::string> dirs_vector, std::vector<std::string> files_vector)
+{
+    using namespace ftxui;
 
-            for (size_t i = 0; i < max_rows; i++) {
-                Element dir_cell{i < dirs_vector.size()
-                                     ? text(" " + dirs_vector[i] + " ")
-                                     : text("")};
+    std::vector<Element> dirs;
+    std::vector<Element> files;
 
-                Element file_cell{i < files_vector.size()
-                                      ? text(" " + files_vector[i] + " ") |
-                                            color(Color::White)
-                                      : text("") | color(Color::White)};
+    size_t max_rows{ std::max(dirs_vector.size(), files_vector.size()) };
 
-                dirs.push_back(dir_cell);
-                files.push_back(file_cell);
-            }
+    for (size_t i = 0; i < max_rows; i++) {
+        Element dir_cell{ i < dirs_vector.size() ? text(" " + dirs_vector[i] + " ") : text("") };
 
-            Element dir_window =
-                window(text(" DIRS ") | bold, vbox(dirs)) | color(Color::Green);
+        Element file_cell{ i < files_vector.size()
+                             ? text(" " + files_vector[i] + " ") | color(Color::White)
+                             : text("") | color(Color::White) };
 
-            Element files_window = window(text(" FILES ") | bold, vbox(files)) |
-                                   color(Color::Green);
+        dirs.push_back(dir_cell);
+        files.push_back(file_cell);
+    }
 
-            auto main_box = hbox({
-                dir_window,
-                files_window,
-            });
+    Element dir_window = window(text(" DIRS ") | bold, vbox(dirs)) | color(Color::Green);
 
-            auto document = main_box;
-            auto screen = Screen::Create(Dimension::Fit(document));
-            Render(screen, document);
-            screen.Print();
-            std::cout << std::endl;
-        }
-    } // namespace ls
+    Element files_window = window(text(" FILES ") | bold, vbox(files)) | color(Color::Green);
+
+    auto main_box = hbox({
+      dir_window,
+      files_window,
+    });
+
+    auto document = main_box;
+    auto screen   = Screen::Create(Dimension::Fit(document));
+    Render(screen, document);
+    screen.Print();
+    std::cout << std::endl;
+}
+
+} // namespace ls
+
 } // namespace fima
