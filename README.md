@@ -2,7 +2,7 @@
 
 # FIMA
 
-<img src="https://skillicons.dev/icons?i=bash,cpp,cmake">
+![skill icons]("https://skillicons.dev/icons?i=bash,cpp,cmake")
 
 </div>
 
@@ -18,12 +18,12 @@ FIMA (File Manager) is a simple and fast file manager, written in C++.
 - **FTXUI**: TUI library
 - **CLI11**: CLI parsing
 
-
 ## Scripts
 
 There is a script directory, where there are all the scripts are located.
 
 These are the most important ones (so far):
+
 - `scripts/utils/get-source-files.sh`
   - This is the script used to get all the `.cpp` files in the `src/` directory
 
@@ -39,10 +39,12 @@ These are the most important ones (so far):
 ## Development Requirements
 
 **Main dependencies**:
+
 - **CMake**: Build system configuration generator
 - **Ninja**: Build System
 
 **Other dependencies**:
+
 - **Curl**: for downloading the latest version of CLI11
 - **jq**: for parsing the json that github provides
 
@@ -54,7 +56,7 @@ These are the most important ones (so far):
   - [x] `copy`
   - [x] `rename`
   - [x] `permissions`
-  - [ ] `cloc`
+  - [x] `cloc`
   - [ ] `info`
 
 ## License
