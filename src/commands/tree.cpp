@@ -22,7 +22,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
-#include "helpers/colors.h"
+#include "utility/colors.h"
 #include "tui/commands/tree/tree_tui.h"
 
 namespace fs = std::filesystem;

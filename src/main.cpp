@@ -27,7 +27,7 @@
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
-#include "helpers/colors.h"
+#include "utility/colors.h"
 #include "tui/tui.h"
 #include "utility/regex.h"
 

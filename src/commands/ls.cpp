@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 
-#include "helpers/colors.h"
+#include "utility/colors.h"
 #include "helpers/get_directories_entries.h"
 #include "tui/commands/ls/ls_tui.h"
 
