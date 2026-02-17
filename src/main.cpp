@@ -36,8 +36,14 @@ namespace fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
-    CLI::App app{ "FIMA - Fast, Incredible, Minimal & Awesome File Manager" };
+    CLI::App app;
     argv = app.ensure_utf8(argv);
+
+    app.name("fima");
+    app.description("FIMA - Fast, Incredible, Minimal & Awesome File Manager");
+
+    app.get_formatter()->column_width(25);
+    app.get_formatter()->long_option_alignment_ratio(0.3);
 
     bool tui{ false };
     bool display_version{ false };
@@ -152,10 +158,10 @@ main(int argc, char** argv)
       ->configurable(true);
 
     std::string cloc_sorting{ "total" };
-    cloc_subcmd->add_option("--sort", cloc_sorting, "Type of sorting")->configurable(true);
+    cloc_subcmd->add_option("--sort,-S", cloc_sorting, "Type of sorting")->configurable(true);
 
     bool cloc_quiet{ false };
-    cloc_subcmd->add_flag("-q,--quiet", cloc_quiet, "Enables quiet output")
+    cloc_subcmd->add_flag("--quiet,-q", cloc_quiet, "Enables quiet output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
