@@ -2,7 +2,7 @@
 
 # FIMA
 
-![skill icons]("https://skillicons.dev/icons?i=bash,cpp,cmake")
+<img src="https://skillicons.dev/icons?i=bash,cpp,cmake" >
 
 </div>
 
