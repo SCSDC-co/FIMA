@@ -49,13 +49,16 @@ get-files-cli11-latest() {
 }
 
 format() {
-    for file in $(find ../src/ -type f -name "*.cpp"); do
+    HEADERS=$(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" -print)
+    SOURCES=$(find ../src/ -type f -name "*.cpp")
+
+    for file in $SOURCES; do
         clang-format -i "$file"
 
         echo -e "\033[32mFormatted:\033[0m $file"
     done
 
-    for file in $(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" -print); do
+    for file in $HEADERS; do
         clang-format -i "$file"
 
         echo -e "\033[32mFormatted:\033[0m $file"
