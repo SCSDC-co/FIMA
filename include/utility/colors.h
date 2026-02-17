@@ -1,5 +1,5 @@
 /*
- * include/helpers/colors.h
+ * include/utility/colors.h
  *
  * This file contain some variables for styling strings
  *
