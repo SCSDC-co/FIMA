@@ -18,7 +18,7 @@ namespace fima {
 namespace ls {
 
 void
-start(std::filesystem::path path, bool tui);
+start(const std::filesystem::path& path);
 
 }
 

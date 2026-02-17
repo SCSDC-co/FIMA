@@ -69,10 +69,6 @@ main(int argc, char** argv)
       app.add_subcommand("ls", "Prints the content of the directory like the ls command")
         ->configurable(false);
 
-    ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(true);
-
     /*  ================
      *  TREE SUB COMMAND
      */
@@ -196,7 +192,7 @@ main(int argc, char** argv)
     }
 
     if (*ls_subcmd) {
-        fima::ls::start(path, tui);
+        fima::ls::start(path);
 
         return 0;
     }

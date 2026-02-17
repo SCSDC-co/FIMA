@@ -10,7 +10,6 @@ add_library(fima_lib
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
-    src/tui/commands/ls/ls_tui.cpp
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
