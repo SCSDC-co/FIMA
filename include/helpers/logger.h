@@ -26,6 +26,6 @@ enum class logger_type
 void
 log(logger_type type, const std::string& message, const std::string& additional_message);
 
-}
+} // namespace helpers
 
-}
+} // namespace fima

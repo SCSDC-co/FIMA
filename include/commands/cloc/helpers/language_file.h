@@ -26,8 +26,8 @@ create_languages_file(std::filesystem::path path);
 [[nodiscard]] nlohmann::json
 get_languages_file();
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

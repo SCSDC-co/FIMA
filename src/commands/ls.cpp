@@ -15,9 +15,9 @@
 #include <iostream>
 #include <vector>
 
-#include "utility/colors.h"
 #include "helpers/get_directories_entries.h"
 #include "tui/commands/ls/ls_tui.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 

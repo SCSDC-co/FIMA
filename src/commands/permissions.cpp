@@ -17,8 +17,8 @@
 #include <string_view>
 #include <vector>
 
-#include "utility/colors.h"
 #include "helpers/logger.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 

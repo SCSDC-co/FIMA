@@ -14,8 +14,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "utility/colors.h"
 #include "helpers/logger.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 

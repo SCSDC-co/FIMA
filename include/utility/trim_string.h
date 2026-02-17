@@ -40,6 +40,6 @@ trim(std::string& s)
     return s;
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace fima

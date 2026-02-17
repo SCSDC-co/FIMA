@@ -114,6 +114,6 @@ log(logger_type type, const std::string& message, const std::string& additional_
     log_file.close();
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace fima

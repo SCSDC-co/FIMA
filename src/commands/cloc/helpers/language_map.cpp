@@ -96,8 +96,8 @@ get_language_name(fs::path path)
     return language_map_name.at(extension);
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

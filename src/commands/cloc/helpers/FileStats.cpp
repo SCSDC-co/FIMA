@@ -59,8 +59,8 @@ FileStats::get_total() const
     return this->total;
 }
 
-}
+} // namespace classes
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

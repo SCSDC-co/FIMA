@@ -22,6 +22,6 @@ show_languages();
 
 }
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

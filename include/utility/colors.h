@@ -26,6 +26,6 @@ inline constexpr std::string_view YELLOW = "\033[33m";
 inline constexpr std::string_view BOLD      = "\033[1m";
 inline constexpr std::string_view UNDERLINE = "\033[4m";
 
-}
+} // namespace colors
 
-}
+} // namespace fima

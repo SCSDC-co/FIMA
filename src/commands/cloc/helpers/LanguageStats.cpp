@@ -29,8 +29,8 @@ LanguageStats::get_files() const
     return this->files;
 };
 
-}
+} // namespace classes
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

@@ -28,4 +28,4 @@ main(const std::vector<std::filesystem::path>& paths,
 
 }
 
-}
+} // namespace fima

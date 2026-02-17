@@ -22,4 +22,4 @@ start_tui(std::filesystem::path path);
 
 }
 
-}
+} // namespace fima

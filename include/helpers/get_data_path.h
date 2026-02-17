@@ -30,6 +30,6 @@ get_application_data_path()
 #endif
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace fima

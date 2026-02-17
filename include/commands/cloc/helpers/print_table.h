@@ -29,6 +29,6 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
 }
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

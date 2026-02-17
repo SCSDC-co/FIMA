@@ -27,8 +27,8 @@
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
-#include "utility/colors.h"
 #include "tui/tui.h"
+#include "utility/colors.h"
 #include "utility/regex.h"
 
 namespace fs = std::filesystem;

@@ -298,8 +298,8 @@ get_language_family(std::filesystem::path path);
 [[nodiscard]] std::string
 get_language_name(std::filesystem::path path);
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

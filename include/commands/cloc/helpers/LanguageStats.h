@@ -30,8 +30,8 @@ class LanguageStats : public FileStats
     [[nodiscard]] int get_files() const;
 };
 
-}
+} // namespace classes
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

@@ -28,8 +28,8 @@
 #include "commands/cloc/helpers/print_languages.h"
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
-#include "utility/colors.h"
 #include "helpers/get_directories_entries.h"
+#include "utility/colors.h"
 #include "utility/regex.h"
 
 namespace fs = std::filesystem;
@@ -182,6 +182,6 @@ main(const std::vector<fs::path>& paths,
     }
 }
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

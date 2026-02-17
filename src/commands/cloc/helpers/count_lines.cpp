@@ -106,8 +106,8 @@ count_lines(const fs::path& file_path,
     return file_stats;
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

@@ -147,8 +147,8 @@ get_languages_file()
     return file;
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

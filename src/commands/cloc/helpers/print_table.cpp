@@ -148,8 +148,8 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
     std::cout << std::endl;
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

@@ -36,6 +36,6 @@ inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
     std::regex{ R"(obj)" }
 };
 
-}
+} // namespace config
 
-}
+} // namespace fima

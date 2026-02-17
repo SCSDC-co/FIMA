@@ -89,8 +89,8 @@ show_languages()
     std::cout << std::endl;
 }
 
-}
+} // namespace helpers
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

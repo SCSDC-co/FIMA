@@ -51,8 +51,8 @@ glob_to_regex(const std::string& glob)
     return std::regex(regex_str);
 }
 
-}
+} // namespace regex
 
-}
+} // namespace helpers
 
-}
+} // namespace fima

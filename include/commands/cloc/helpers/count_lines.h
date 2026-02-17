@@ -29,6 +29,6 @@ count_lines(const std::filesystem::path& file_path,
 
 }
 
-}
+} // namespace cloc
 
-}
+} // namespace fima

@@ -37,8 +37,8 @@ class FileStats
     [[nodiscard]] int get_total() const;
 };
 
-}
+} // namespace classes
 
-}
+} // namespace cloc
 
-}
+} // namespace fima
