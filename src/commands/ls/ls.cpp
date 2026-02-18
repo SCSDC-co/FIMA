@@ -32,6 +32,12 @@ start(const fs::path& path, const fima::options::ls_options& options)
     std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
       path, options.all) };
 
+    std::sort(list_of_the_directory.begin(),
+              list_of_the_directory.end(),
+              [](const fs::directory_entry& a, const fs::directory_entry& b) {
+                  return a.path().filename().string() < b.path().filename().string();
+              });
+
     // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
     std::sort(list_of_the_directory.begin(),
               list_of_the_directory.end(),
