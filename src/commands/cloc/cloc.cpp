@@ -29,6 +29,7 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "helpers/get_directories_entries.h"
+#include "options.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
 
@@ -39,18 +40,16 @@ namespace fima {
 namespace cloc {
 
 void
-cloc(const std::vector<fs::path>& paths,
-     const std::vector<std::regex>& paths_to_ignore,
-     const std::string& sorting,
-     const bool& quiet)
+cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options& options)
 {
     const std::unordered_set<std::string> sorting_options = {
         "files", "total", "code", "comments", "blank"
     };
 
-    if (!sorting_options.contains(sorting)) {
-        std::cout << fima::colors::RED << "This sorting option: " << fima::colors::RESET << sorting
-                  << fima::colors::RED << " doesn't exists." << fima::colors::RESET << '\n';
+    if (!sorting_options.contains(options.sorting)) {
+        std::cout << fima::colors::RED << "This sorting option: " << fima::colors::RESET
+                  << options.sorting << fima::colors::RED << " doesn't exists."
+                  << fima::colors::RESET << '\n';
 
         std::cout << fima::colors::RED << "Available options:" << fima::colors::RESET << '\n';
 
@@ -76,7 +75,7 @@ cloc(const std::vector<fs::path>& paths,
         file_or_directories_to_ignore.push_back(item);
     }
 
-    for (const fs::path& path : paths) {
+    for (const fs::path& path : options.paths) {
         if (fs::is_directory(path)) {
             std::vector<fs::path> items = fima::helpers::get_directories_entries_recursive(
               path, true, file_or_directories_to_ignore);
@@ -165,20 +164,16 @@ cloc(const std::vector<fs::path>& paths,
         }
     }
 
-    fima::cloc::helpers::print_table(analyzed_languages, sorting, quiet);
+    fima::cloc::helpers::print_table(analyzed_languages, options.sorting, options.quiet);
 }
 
 void
-main(const std::vector<fs::path>& paths,
-     const bool& show_languages,
-     const std::vector<std::regex>& paths_to_ignore,
-     const std::string& sorting,
-     const bool& quiet)
+main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options options)
 {
-    if (show_languages) {
+    if (options.show_languages) {
         fima::cloc::helpers::show_languages();
     } else {
-        cloc(paths, paths_to_ignore, sorting, quiet);
+        cloc(paths_to_ignore, options);
     }
 }
 

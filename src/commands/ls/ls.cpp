@@ -17,6 +17,7 @@
 
 #include "commands/ls/helpers/printer.h"
 #include "helpers/get_directories_entries.h"
+#include "options.h"
 
 namespace fs = std::filesystem;
 
@@ -25,10 +26,10 @@ namespace fima {
 namespace ls {
 
 void
-start(const fs::path& path, const bool& icons, const bool& all)
+start(const fs::path& path, const fima::options::ls_options& options)
 {
     std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
-      path, all) };
+      path, options.all) };
 
     // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
     std::sort(list_of_the_directory.begin(),
@@ -43,7 +44,7 @@ start(const fs::path& path, const bool& icons, const bool& all)
         entries.push_back(item.path().filename());
     }
 
-    helpers::print(entries, icons);
+    helpers::print(entries, options.icons);
 }
 
 } // namespace ls

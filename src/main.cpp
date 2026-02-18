@@ -27,6 +27,7 @@
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
+#include "options.h"
 #include "tui/tui.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
@@ -71,16 +72,17 @@ main(int argc, char** argv)
      *  LS SUB COMMAND
      */
 
+    fima::options::ls_options ls_options;
+
     CLI::App* ls_subcmd =
       app.add_subcommand("ls", "Prints the content of the directory like the ls command")
         ->configurable(false);
 
-    bool ls_icons{ false };
-    ls_subcmd->add_flag("-i,--icons", ls_icons, "Puts an icon next to the name of the item")
+    ls_subcmd->add_flag("-i,--icons", ls_options.icons, "Puts an icon next to the name of the item")
       ->configurable(true);
 
-    bool ls_all{ false };
-    ls_subcmd->add_flag("-a,--all", ls_all, "Will also count the dotfiles")->configurable(true);
+    ls_subcmd->add_flag("-a,--all", ls_options.all, "Will also count the dotfiles")
+      ->configurable(true);
 
     /*  ================
      *  TREE SUB COMMAND
@@ -153,29 +155,29 @@ main(int argc, char** argv)
      *  CLOC SUB COMMAND
      */
 
-    std::vector<fs::path> cloc_paths{ fs::current_path() };
+    fima::options::cloc_options cloc_options;
+
     CLI::App* cloc_subcmd =
       app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
-    cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
+    cloc_subcmd
+      ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory)")
       ->configurable(false);
 
-    std::vector<fs::path> cloc_paths_to_ignore{};
-    cloc_subcmd->add_option("--ignore,-i", cloc_paths_to_ignore, "Paths to ignore")
+    std::vector<fs::path> cloc_ignore{};
+    cloc_subcmd->add_option("--ignore,-i", cloc_ignore, "Paths to ignore")->configurable(true);
+
+    cloc_subcmd->add_option("--sort,-S", cloc_options.sorting, "Type of sorting")
       ->configurable(true);
 
-    std::string cloc_sorting{ "total" };
-    cloc_subcmd->add_option("--sort,-S", cloc_sorting, "Type of sorting")->configurable(true);
-
-    bool cloc_quiet{ false };
-    cloc_subcmd->add_flag("--quiet,-q", cloc_quiet, "Enables quiet output")
+    cloc_subcmd->add_flag("--quiet,-q", cloc_options.quiet, "Enables quiet output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    bool cloc_show_languages{ false };
     cloc_subcmd
-      ->add_flag(
-        "--show-languages,-s", cloc_show_languages, "Shows all the languages that cloc supports")
+      ->add_flag("--show-languages,-s",
+                 cloc_options.show_languages,
+                 "Shows all the languages that cloc supports")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
@@ -205,7 +207,7 @@ main(int argc, char** argv)
     }
 
     if (*ls_subcmd) {
-        fima::ls::start(path, ls_icons, ls_all);
+        fima::ls::start(path, ls_options);
 
         return 0;
     }
@@ -257,11 +259,11 @@ main(int argc, char** argv)
     if (*cloc_subcmd) {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : cloc_paths_to_ignore) {
+        for (const fs::path& path : cloc_ignore) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::cloc::main(cloc_paths, cloc_show_languages, regexes, cloc_sorting, cloc_quiet);
+        fima::cloc::main(regexes, cloc_options);
 
         return 0;
     }

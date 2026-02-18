@@ -11,20 +11,17 @@
 
 #pragma once
 
-#include <filesystem>
 #include <regex>
 #include <vector>
+
+#include "options.h"
 
 namespace fima {
 
 namespace cloc {
 
 void
-main(const std::vector<std::filesystem::path>& paths,
-     const bool& show_languages,
-     const std::vector<std::regex>& paths_to_ignore,
-     const std::string& sorting,
-     const bool& quiet);
+main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options options);
 
 }
 

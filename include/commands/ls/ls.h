@@ -13,12 +13,14 @@
 
 #include <filesystem>
 
+#include "options.h"
+
 namespace fima {
 
 namespace ls {
 
 void
-start(const std::filesystem::path& path, const bool& icons, const bool& all);
+start(const std::filesystem::path& path, const fima::options::ls_options& options);
 
 } // namespace ls
 
