@@ -196,7 +196,7 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*version_subcmd) {
+    if (app.got_subcommand(version_subcmd)) {
         std::cout << fima::colors::GREEN;
 
         std::cout << fima::config::LOGO << '\n';
@@ -209,13 +209,13 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*ls_subcmd) {
+    if (app.got_subcommand(ls_subcmd)) {
         fima::ls::start(path, ls_options);
 
         return 0;
     }
 
-    if (*tree_subcmd) {
+    if (app.got_subcommand(tree_subcmd)) {
         fima::tree::start(path, "", tui);
 
         return 0;
@@ -231,13 +231,13 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*remove_subcmd) {
+    if (app.got_subcommand(remove_subcmd)) {
         fima::remove(path_to_create_or_remove);
 
         return 0;
     }
 
-    if (*copy_subcmd) {
+    if (app.got_subcommand(copy_subcmd)) {
         if (fs::is_regular_file(path_to_copy)) {
             fima::copy::file(path_to_copy, destination);
         } else if (fs::is_directory(path_to_copy)) {
@@ -247,19 +247,19 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*rename_subcmd) {
+    if (app.got_subcommand(rename_subcmd)) {
         fima::rename(old_name, new_name);
 
         return 0;
     }
 
-    if (*perms_subcmd) {
+    if (app.got_subcommand(perms_subcmd)) {
         fima::perms::permissions(perms_path);
 
         return 0;
     }
 
-    if (*cloc_subcmd) {
+    if (app.got_subcommand(cloc_subcmd)) {
         std::vector<std::regex> regexes;
 
         for (const fs::path& path : cloc_ignore) {
