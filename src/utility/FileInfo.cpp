@@ -13,6 +13,7 @@
 
 // do not remove chrono is used for get_time
 #include <chrono>
+#include <cmath>
 #include <filesystem>
 #include <format>
 #include <ftxui/dom/node.hpp>
@@ -106,24 +107,27 @@ FileInfo::get_time() const
 [[nodiscard]] std::string
 FileInfo::get_size_with_extension() const
 {
-    std::string size;
+    double s = static_cast<double>(this->get_size());
     std::string ext;
 
-    if (this->get_size() > 1000) {
-        ext  = "KB";
-        size = std::to_string(this->get_size() / 1024);
-    } else if (this->get_size() > 1000000) {
-        ext  = "MB";
-        size = std::to_string(this->get_size() / 1024 / 1024);
-    } else if (this->get_size() > 1000000000) {
-        ext  = "GB";
-        size = std::to_string(this->get_size() / 1024 / 1024 / 1024);
+    if (s >= 1024 * 1024 * 1024) {
+        ext = "GB";
+        s /= 1024 * 1024 * 1024;
+    } else if (s >= 1024 * 1024) {
+        ext = "MB";
+        s /= 1024 * 1024;
+    } else if (s >= 1024) {
+        ext = "KB";
+        s /= 1024;
     } else {
-        ext  = "B";
-        size = std::to_string(this->get_size());
+        ext = "B";
     }
 
-    return size + ext;
+    if (std::floor(s) == s) {
+        return std::format("{:.0f}{}", s, ext);
+    }
+
+    return std::format("{:.1f}{}", s, ext);
 }
 
 [[nodiscard]] ftxui::Element
