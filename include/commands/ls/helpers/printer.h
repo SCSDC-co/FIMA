@@ -11,8 +11,9 @@
 
 #pragma once
 
-#include <filesystem>
 #include <vector>
+
+#include "utility/FileInfo.h"
 
 namespace fima {
 
@@ -21,9 +22,12 @@ namespace ls {
 namespace helpers {
 
 void
-print(const std::vector<std::filesystem::path>& items, const bool& icons);
+print_normal(const std::vector<fima::FileInfo>& items, const bool& icons);
 
-}
+void
+print_long(const std::vector<fima::FileInfo>& files, const bool& icons);
+
+} // namespace helpers
 
 } // namespace ls
 

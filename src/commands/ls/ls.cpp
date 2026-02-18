@@ -18,6 +18,7 @@
 #include "commands/ls/helpers/printer.h"
 #include "helpers/get_directories_entries.h"
 #include "options.h"
+#include "utility/FileInfo.h"
 
 namespace fs = std::filesystem;
 
@@ -38,13 +39,19 @@ start(const fs::path& path, const fima::options::ls_options& options)
                   return a.is_directory() && !b.is_directory();
               });
 
-    std::vector<fs::path> entries{};
+    std::vector<fima::FileInfo> entries{};
 
     for (const fs::directory_entry& item : list_of_the_directory) {
-        entries.push_back(item.path().filename());
+        fima::FileInfo file{ item.path() };
+
+        entries.push_back(file);
     }
 
-    helpers::print(entries, options.icons);
+    if (options.long_output) {
+        helpers::print_long(entries, options.icons);
+    } else {
+        helpers::print_normal(entries, options.icons);
+    }
 }
 
 } // namespace ls

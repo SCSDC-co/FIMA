@@ -29,6 +29,7 @@ struct ls_options
 {
     bool icons{ false };
     bool all{ false };
+    bool long_output{ false };
 };
 
 } // namespace options

@@ -16,10 +16,12 @@ add_library(fima_lib
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
     src/commands/cloc/cloc.cpp
+    src/utility/FileInfo.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/helpers/logger.cpp
     src/commands/ls/ls.cpp
     src/commands/tree.cpp
+    src/utility/file.cpp
     src/tui/tui.cpp
 )

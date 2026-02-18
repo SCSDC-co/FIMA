@@ -84,6 +84,9 @@ main(int argc, char** argv)
     ls_subcmd->add_flag("-a,--all", ls_options.all, "Will also count the dotfiles")
       ->configurable(true);
 
+    ls_subcmd->add_flag("-l,--long", ls_options.long_output, "Display the file metadata")
+      ->configurable(true);
+
     /*  ================
      *  TREE SUB COMMAND
      */
@@ -251,7 +254,7 @@ main(int argc, char** argv)
     }
 
     if (*perms_subcmd) {
-        fima::get_perms(perms_path);
+        fima::perms::persmissions(perms_path);
 
         return 0;
     }
