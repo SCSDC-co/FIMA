@@ -163,7 +163,7 @@ get_perms_tui(const std::filesystem::path& item)
 }
 
 void
-persmissions(const std::vector<fs::path>& paths)
+permissions(const std::vector<fs::path>& paths)
 {
     for (const fs::path& item : paths) {
         if (!fs::exists(item)) {

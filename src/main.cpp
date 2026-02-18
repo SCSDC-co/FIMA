@@ -254,7 +254,7 @@ main(int argc, char** argv)
     }
 
     if (*perms_subcmd) {
-        fima::perms::persmissions(perms_path);
+        fima::perms::permissions(perms_path);
 
         return 0;
     }

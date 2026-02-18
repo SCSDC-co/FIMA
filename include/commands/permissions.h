@@ -26,7 +26,7 @@ ftxui::Element
 get_perms_tui(const std::filesystem::path& item);
 
 void
-persmissions(const std::vector<std::filesystem::path>& paths);
+permissions(const std::vector<std::filesystem::path>& paths);
 
 } // namespace perms
 
