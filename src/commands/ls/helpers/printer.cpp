@@ -64,11 +64,11 @@ void
 print_long(const std::vector<fima::FileInfo>& files, const bool& icons)
 {
     std::vector<std::vector<Element>> table_data{
-        { text("permissions") | color(Color::Green) | underlined,
-          text("  size") | color(Color::Green) | underlined,
-          text("  user") | color(Color::Green) | underlined,
-          text("  date modified") | color(Color::Green) | underlined,
-          text("  name") | color(Color::Green) | underlined },
+        { text("Permissions") | color(Color::Green) | underlined | bold,
+          text("  Size") | color(Color::Green) | underlined | bold,
+          text("  User") | color(Color::Green) | underlined | bold,
+          text("  Date Modified") | color(Color::Green) | underlined | bold,
+          text("  Name") | color(Color::Green) | underlined | bold },
     };
 
     for (const fima::FileInfo& file : files) {
