@@ -123,7 +123,8 @@ FileInfo::get_size_with_extension() const
         ext = "B";
     }
 
-    if (std::floor(s) == s) {
+    // if the number is already rounded there's no need to display the decimal digits
+    if (std::round(s) == s) {
         return std::format("{:.0f}{}", s, ext);
     }
 
