@@ -44,8 +44,6 @@ print_normal(const std::vector<fima::FileInfo>& items, const bool& icons)
         final_string += item.get_name(icons);
 
         if (fs::is_directory(item.get_path())) {
-            final_string += "/";
-
             element_vector.push_back(text(final_string + "  ") | color(Color::Green) | bold);
         } else {
             element_vector.push_back(text(final_string + "  "));
