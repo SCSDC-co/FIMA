@@ -21,7 +21,7 @@
 #include "commands/copy/file.h"
 #include "commands/create/directory.h"
 #include "commands/create/file.h"
-#include "commands/ls.h"
+#include "commands/ls/ls.h"
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
@@ -74,6 +74,13 @@ main(int argc, char** argv)
     CLI::App* ls_subcmd =
       app.add_subcommand("ls", "Prints the content of the directory like the ls command")
         ->configurable(false);
+
+    bool ls_icons{ false };
+    ls_subcmd->add_flag("-i,--icons", ls_icons, "Puts an icon next to the name of the item")
+      ->configurable(true);
+
+    bool ls_all{ false };
+    ls_subcmd->add_flag("-a,--all", ls_all, "Will also count the dotfiles")->configurable(true);
 
     /*  ================
      *  TREE SUB COMMAND
@@ -198,7 +205,7 @@ main(int argc, char** argv)
     }
 
     if (*ls_subcmd) {
-        fima::ls::start(path);
+        fima::ls::start(path, ls_icons, ls_all);
 
         return 0;
     }

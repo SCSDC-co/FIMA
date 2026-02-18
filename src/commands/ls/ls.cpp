@@ -1,6 +1,6 @@
 /*
- * src/commands/ls.cpp
- * include/commands/ls.h
+ * src/commands/ls/ls.cpp
+ * include/commands/ls/ls.h
  *
  * The implementation of the `ls` subcommand
  *
@@ -9,15 +9,14 @@
  * See LICENSE file for details.
  */
 
-#include "commands/ls.h"
+#include "commands/ls/ls.h"
 
 #include <algorithm>
 #include <filesystem>
-#include <iostream>
 #include <vector>
 
+#include "commands/ls/helpers/printer.h"
 #include "helpers/get_directories_entries.h"
-#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 
@@ -26,32 +25,25 @@ namespace fima {
 namespace ls {
 
 void
-start(const fs::path& path)
+start(const fs::path& path, const bool& icons, const bool& all)
 {
     std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
-      path) };
+      path, all) };
 
+    // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
     std::sort(list_of_the_directory.begin(),
               list_of_the_directory.end(),
               [](const fs::directory_entry& a, const fs::directory_entry& b) {
                   return a.is_directory() && !b.is_directory();
               });
 
+    std::vector<fs::path> entries{};
+
     for (const fs::directory_entry& item : list_of_the_directory) {
-        if (item.is_directory()) {
-            std::cout << fima::colors::GREEN << fima::colors::BOLD;
-        }
-
-        std::cout << item.path().filename().string();
-
-        if (item.is_directory()) {
-            std::cout << "/";
-        }
-
-        std::cout << fima::colors::RESET << "  ";
+        entries.push_back(item.path().filename());
     }
 
-    std::cout << '\n';
+    helpers::print(entries, icons);
 }
 
 } // namespace ls

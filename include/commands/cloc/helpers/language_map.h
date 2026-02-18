@@ -181,7 +181,7 @@ inline std::unordered_map<std::string, std::string> language_map_name = {
     { ".java", "Java" },
     { ".m", "Objective-C" },
     { ".php", "PHP" },
-    { ".dart", "Dat" },
+    { ".dart", "Dart" },
     { ".go", "Go" },
     { ".swift", "Switf" },
     { ".kt", "Kotlin" },

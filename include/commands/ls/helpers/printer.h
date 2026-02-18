@@ -1,8 +1,8 @@
 /*
- * src/commands/ls.cpp
- * include/commands/ls.h
+ * src/commands/ls/helpers/printer.cpp
+ * include/commands/ls/helpers/printer.h
  *
- * The declaration of the `ls` subcommand
+ * An helper to print the directory entries
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,14 +12,19 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fima {
 
 namespace ls {
 
+namespace helpers {
+
 void
-start(const std::filesystem::path& path);
+print(const std::vector<std::filesystem::path>& items, const bool& icons);
 
 }
+
+} // namespace ls
 
 } // namespace fima

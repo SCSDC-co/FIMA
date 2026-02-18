@@ -21,7 +21,7 @@ namespace fima {
 namespace helpers {
 
 std::vector<std::filesystem::directory_entry>
-get_directories_entries(const std::filesystem::path& path);
+get_directories_entries(const std::filesystem::path& path, const bool& dotfiles);
 
 std::vector<std::filesystem::path>
 get_directories_entries_recursive(const std::filesystem::path& path,
