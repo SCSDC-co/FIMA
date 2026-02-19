@@ -13,6 +13,27 @@ FIMA (File Manager) is a simple and fast file manager, written in C++.
 > [!WARNING]
 > This program is in its early stage of development, so there might be some bugs.
 
+## Config file
+
+FIMA supports a config file in TOML format, it will be located here in
+`~/.config/fima/config.toml` for linux/macos and `%APPDATA%/fima/config.toml`
+for windows if the file doesn't exists it will create it
+
+Example file:
+
+```toml
+[ls]
+icons = true
+long = true
+verbose = true
+
+[cloc]
+ignore = ["CLI11.hpp"]
+
+[tree]
+no-tui = true
+```
+
 ## Specs
 
 - **C++**: Main language
@@ -61,6 +82,7 @@ These are the most important ones (so far):
   - [x] `permissions`
   - [x] `cloc`
   - [ ] `info`
+- [x] add config file support (TOML format)
 
 ## License
 

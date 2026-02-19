@@ -6,11 +6,22 @@ elseif(APPLE)
     set(DATA_PATH "$ENV{HOME}/Library/Application Support")
 endif()
 
+if(WIN32)
+    set(CONFIG_PATH "$ENV{APPDATA}")
+elseif(UNIX)
+    set(CONFIG_PATH "$ENV{HOME}/.config")
+elseif(APPLE)
+    set(CONFIG_PATH "$ENV{HOME}/.config")
+endif()
+
 set(FIMA_DATA_PATH "${DATA_PATH}/fima")
+set(FIMA_CONFIG_PATH "${CONFIG_PATH}/fima")
 
 file(MAKE_DIRECTORY "${FIMA_DATA_PATH}")
+file(MAKE_DIRECTORY "${FIMA_CONFIG_PATH}")
 
 message(STATUS "Creating the fima data directory: ${FIMA_DATA_PATH}")
+message(STATUS "Creating the fima config directory: ${FIMA_CONFIG_PATH}")
 
 file(COPY_FILE ./assets/languages.json "${FIMA_DATA_PATH}/languages.json")
 file(
@@ -29,6 +40,9 @@ file(
     COPY_FILE ./assets/map_directory_icon.json
     "${FIMA_DATA_PATH}/map_directory_icon.json"
 )
+
+# this creates the file if it doesn't exist, but if the file exist it will do nothing
+file(APPEND "${FIMA_CONFIG_PATH}/config.toml" "")
 
 message(STATUS "Copied files")
 message(
@@ -51,3 +65,4 @@ message(
     STATUS
     "  assets/map_directory_icon.json  -> ${FIMA_DATA_PATH}/map_directory_icon.json"
 )
+message(STATUS "Created config file")

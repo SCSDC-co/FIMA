@@ -9,6 +9,7 @@
  */
 
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -45,6 +46,17 @@ main(int argc, char** argv)
 
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.3);
+
+    if (!fs::exists(fima::config::CONFIG_FILE_PATH)) {
+        std::ofstream outfile{ fima::config::CONFIG_FILE_PATH };
+        outfile.close();
+    }
+
+    app
+      .set_config(
+        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
+      ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
     bool tui{ false };
     bool display_version{ false };
@@ -101,7 +113,7 @@ main(int argc, char** argv)
       app.add_subcommand("tree", "Prints the tree of the directory like the tree command")
         ->configurable(false);
 
-    tree_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
+    tree_subcmd->add_flag("-n,--no-tui", tui, "Disable TUI")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
