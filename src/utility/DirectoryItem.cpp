@@ -11,7 +11,6 @@
 
 #include "utility/DirectoryItem.h"
 
-// do not remove chrono is used for get_time
 #include <chrono>
 #include <cmath>
 #include <filesystem>
@@ -24,37 +23,6 @@
 #include "ftxui/dom/elements.hpp"
 
 namespace fima {
-
-void
-DirectoryItem::set_permissions(const std::string& perms)
-{
-    this->permissions = perms;
-}
-void
-DirectoryItem::set_user(const std::string& user)
-{
-    this->user = user;
-}
-void
-DirectoryItem::set_name(const std::string& name)
-{
-    this->name = name;
-}
-void
-DirectoryItem::set_path(const std::filesystem::path& path)
-{
-    this->path = path;
-}
-void
-DirectoryItem::set_date(const std::filesystem::file_time_type& time)
-{
-    this->date = time;
-}
-void
-DirectoryItem::set_size(const size_t& size)
-{
-    this->size = size;
-}
 
 [[nodiscard]] std::string
 DirectoryItem::get_permissions() const

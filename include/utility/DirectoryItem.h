@@ -41,14 +41,6 @@ class DirectoryItem
       , user(fima::file::get_file_owner(path))
     {
     }
-
-    void set_permissions(const std::string& perms);
-    void set_user(const std::string& user);
-    void set_name(const std::string& name);
-    void set_path(const std::filesystem::path& path);
-    void set_date(const std::filesystem::file_time_type& time);
-    void set_size(const size_t& size);
-
     [[nodiscard]] std::string get_permissions() const;
     [[nodiscard]] std::string get_user() const;
     [[nodiscard]] std::string get_name(const bool& icons) const;
