@@ -12,11 +12,11 @@ add_library(fima_lib
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
+    src/utility/DirectoryItem.cpp
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
     src/commands/cloc/cloc.cpp
-    src/utility/FileInfo.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/helpers/logger.cpp

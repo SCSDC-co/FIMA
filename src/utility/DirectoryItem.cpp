@@ -1,15 +1,15 @@
 /*
- * src/utility/FileInfo.cpp
- * include/utility/FileInfo.h
+ * src/utility/DirectoryItem.cpp
+ * include/utility/DirectoryItem.h
  *
- * The class that represent a file
+ * The class that represent a directory item
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
  * See LICENSE file for details.
  */
 
-#include "utility/FileInfo.h"
+#include "utility/DirectoryItem.h"
 
 // do not remove chrono is used for get_time
 #include <chrono>
@@ -26,48 +26,48 @@
 namespace fima {
 
 void
-FileInfo::set_permissions(const std::string& perms)
+DirectoryItem::set_permissions(const std::string& perms)
 {
     this->permissions = perms;
 }
 void
-FileInfo::set_user(const std::string& user)
+DirectoryItem::set_user(const std::string& user)
 {
     this->user = user;
 }
 void
-FileInfo::set_name(const std::string& name)
+DirectoryItem::set_name(const std::string& name)
 {
     this->name = name;
 }
 void
-FileInfo::set_path(const std::filesystem::path& path)
+DirectoryItem::set_path(const std::filesystem::path& path)
 {
     this->path = path;
 }
 void
-FileInfo::set_date(const std::filesystem::file_time_type& time)
+DirectoryItem::set_date(const std::filesystem::file_time_type& time)
 {
     this->date = time;
 }
 void
-FileInfo::set_size(const size_t& size)
+DirectoryItem::set_size(const size_t& size)
 {
     this->size = size;
 }
 
 [[nodiscard]] std::string
-FileInfo::get_permissions() const
+DirectoryItem::get_permissions() const
 {
     return this->permissions;
 }
 [[nodiscard]] std::string
-FileInfo::get_user() const
+DirectoryItem::get_user() const
 {
     return this->user;
 }
 [[nodiscard]] std::string
-FileInfo::get_name(const bool& icons) const
+DirectoryItem::get_name(const bool& icons) const
 {
     std::string name;
 
@@ -84,17 +84,17 @@ FileInfo::get_name(const bool& icons) const
     return name;
 }
 [[nodiscard]] std::filesystem::path
-FileInfo::get_path() const
+DirectoryItem::get_path() const
 {
     return this->path;
 }
 [[nodiscard]] size_t
-FileInfo::get_size() const
+DirectoryItem::get_size() const
 {
     return this->size;
 }
 [[nodiscard]] std::string
-FileInfo::get_time() const
+DirectoryItem::get_time() const
 {
     using namespace std::chrono;
 
@@ -110,7 +110,7 @@ FileInfo::get_time() const
 }
 
 [[nodiscard]] std::string
-FileInfo::get_size_with_extension() const
+DirectoryItem::get_size_with_extension() const
 {
     double s = static_cast<double>(this->get_size());
     std::string ext;
@@ -137,9 +137,20 @@ FileInfo::get_size_with_extension() const
 }
 
 [[nodiscard]] ftxui::Element
-FileInfo::get_permissions_tui() const
+DirectoryItem::get_permissions_tui() const
 {
     return fima::perms::get_perms_tui(this->get_path());
+}
+
+[[nodiscard]] bool
+DirectoryItem::is_directory() const
+{
+    return std::filesystem::is_directory(this->get_path());
+}
+[[nodiscard]] bool
+DirectoryItem::is_file() const
+{
+    return !std::filesystem::is_directory(this->get_path());
 }
 
 } // namespace fima

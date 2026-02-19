@@ -87,6 +87,12 @@ main(int argc, char** argv)
     ls_subcmd->add_flag("-l,--long", ls_options.long_output, "Display the file metadata")
       ->configurable(true);
 
+    ls_subcmd
+      ->add_flag("-v,--verbose",
+                 ls_options.verbose,
+                 "Displays the number of directories and files (only works with long output)")
+      ->configurable(true);
+
     /*  ================
      *  TREE SUB COMMAND
      */

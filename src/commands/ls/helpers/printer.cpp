@@ -21,7 +21,8 @@
 
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
-#include "utility/FileInfo.h"
+#include "utility/DirectoryItem.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 
@@ -34,11 +35,11 @@ namespace helpers {
 using namespace ftxui;
 
 void
-print_normal(const std::vector<fima::FileInfo>& items, const bool& icons)
+print_normal(const std::vector<fima::DirectoryItem>& items, const bool& icons)
 {
     std::vector<Element> element_vector{};
 
-    for (const fima::FileInfo& item : items) {
+    for (const fima::DirectoryItem& item : items) {
         std::string final_string;
 
         final_string += item.get_name(icons);
@@ -61,7 +62,7 @@ print_normal(const std::vector<fima::FileInfo>& items, const bool& icons)
 }
 
 void
-print_long(const std::vector<fima::FileInfo>& files, const bool& icons)
+print_long(const std::vector<fima::DirectoryItem>& items, const bool& icons, const bool& verbose)
 {
     std::vector<std::vector<Element>> table_data{
         { text("Permissions ") | color(Color::Green) | underlined | bold,
@@ -71,14 +72,14 @@ print_long(const std::vector<fima::FileInfo>& files, const bool& icons)
           text(" Name ") | color(Color::Green) | underlined | bold },
     };
 
-    for (const fima::FileInfo& file : files) {
+    for (const fima::DirectoryItem& item : items) {
         table_data.push_back(
-          { file.get_permissions_tui(),
-            text(" " + file.get_size_with_extension() + " ") | color(Color::Yellow),
-            text(" " + file.get_user() + " ") | color(Color::Red),
-            text(" " + file.get_time() + " ") | color(Color::Blue),
-            text(" " + file.get_name(icons) + " ") |
-              (fs::is_directory(file.get_path()) ? color(Color::Green) : color(Color::White)) });
+          { item.get_permissions_tui(),
+            text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
+            text(" " + item.get_user() + " ") | color(Color::Red),
+            text(" " + item.get_time() + " ") | color(Color::Blue),
+            text(" " + item.get_name(icons) + " ") |
+              (fs::is_directory(item.get_path()) ? color(Color::Green) : color(Color::White)) });
     }
 
     Table table = Table({ table_data });
@@ -91,7 +92,25 @@ print_long(const std::vector<fima::FileInfo>& files, const bool& icons)
     Screen screen = ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_size));
     Render(screen, document);
     screen.Print();
-    std::cout << std::endl;
+
+    std::cout << '\n';
+
+    if (verbose) {
+        int number_of_files       = 0;
+        int number_of_directories = 0;
+
+        for (const fima::DirectoryItem& item : items) {
+            if (item.is_file()) {
+                ++number_of_files;
+            } else if (item.is_directory()) {
+                ++number_of_directories;
+            }
+        }
+
+        std::cout << fima::colors::GREEN << "files: " << fima::colors::RESET << number_of_files
+                  << fima::colors::GREEN << ", ";
+        std::cout << "directories: " << fima::colors::RESET << number_of_directories << '\n';
+    }
 }
 
 } // namespace helpers

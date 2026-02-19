@@ -1,8 +1,8 @@
 /*
- * src/utility/FileInfo.cpp
- * include/utility/FileInfo.h
+ * src/utility/DirectoryItem.cpp
+ * include/utility/DirectoryItem.h
  *
- * The class that represent a file
+ * The class that represent a directory item
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -21,7 +21,7 @@
 
 namespace fima {
 
-class FileInfo
+class DirectoryItem
 {
   private:
     std::string permissions{};
@@ -32,7 +32,7 @@ class FileInfo
     size_t size{};
 
   public:
-    FileInfo(const std::filesystem::path& path)
+    DirectoryItem(const std::filesystem::path& path)
       : name(path.filename().string())
       , path(path)
       , permissions(fima::perms::get_perms(path))
@@ -58,6 +58,9 @@ class FileInfo
 
     [[nodiscard]] std::string get_size_with_extension() const;
     [[nodiscard]] ftxui::Element get_permissions_tui() const;
+
+    [[nodiscard]] bool is_directory() const;
+    [[nodiscard]] bool is_file() const;
 };
 
 } // namespace fima
