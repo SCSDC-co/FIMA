@@ -40,3 +40,5 @@ target_link_libraries(
         ftxui::component
         nlohmann_json::nlohmann_json
 )
+
+include(./cmake/application_files.cmake)

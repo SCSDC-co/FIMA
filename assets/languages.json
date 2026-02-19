@@ -1,0 +1,79 @@
+{
+    "c_like": {
+        "comments": {
+            "single": "//",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
+        }
+    },
+    "lisp_like": {
+        "comments": {
+            "single": ";",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "shell_like": {
+        "comments": {
+            "single": "#",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "markup": {
+        "comments": {
+            "single": "",
+            "multiline_start": "<!--",
+            "multiline_end": "-->"
+        }
+    },
+    "python": {
+        "comments": {
+            "single": "#",
+            "multiline_start": "\"\"\"",
+            "multiline_end": "\"\"\""
+        }
+    },
+    "css": {
+        "comments": {
+            "single": "",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
+        }
+    },
+    "text": {
+        "comments": {
+            "single": "",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "vim": {
+        "comments": {
+            "single": "\"",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "cmd": {
+        "comments": {
+            "single": "::",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "lua": {
+        "comments": {
+            "single": "--",
+            "multiline_start": "--[[",
+            "multiline_end": "--]]"
+        }
+    },
+    "react": {
+        "comments": {
+            "single": "",
+            "multiline_start": "{/*",
+            "multiline_end": "*/}"
+        }
+    }
+}

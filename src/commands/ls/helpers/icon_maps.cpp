@@ -12,7 +12,11 @@
 #include "commands/ls/helpers/icon_maps.h"
 
 #include <filesystem>
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <regex>
+
+#include "helpers/get_data_path.h"
 
 namespace fs = std::filesystem;
 
@@ -25,6 +29,7 @@ namespace helpers {
 [[nodiscard]] std::string
 get_item_icon(const std::filesystem::path& path)
 {
+    using json = nlohmann::json;
     std::string file_name{ path.filename().string() };
 
     if (!fs::is_directory(path)) {
@@ -47,22 +52,28 @@ get_item_icon(const std::filesystem::path& path)
 
         std::string extension = path.extension();
 
-        auto language = extension_icon_map.find(extension);
+        json file;
 
-        if (language == extension_icon_map.end()) {
-            return "";
-        }
+        fs::path data_path          = fima::helpers::get_application_data_path();
+        fs::path fima_data_path     = data_path / "fima";
+        fs::path language_file_path = fima_data_path / "map_language_icon.json";
 
-        return extension_icon_map.at(extension);
+        std::ifstream file_stream(language_file_path);
+        file = json::parse(file_stream);
+
+        return file.value(extension, "");
     }
 
-    auto language = directory_icon_map.find(file_name);
+    json file;
 
-    if (language == directory_icon_map.end()) {
-        return "";
-    }
+    fs::path data_path          = fima::helpers::get_application_data_path();
+    fs::path fima_data_path     = data_path / "fima";
+    fs::path language_file_path = fima_data_path / "map_directory_icon.json";
 
-    return directory_icon_map.at(file_name);
+    std::ifstream file_stream(language_file_path);
+    file = json::parse(file_stream);
+
+    return file.value(file_name, "");
 }
 
 } // namespace helpers

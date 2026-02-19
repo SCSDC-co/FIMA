@@ -12,8 +12,12 @@
 #include "commands/cloc/helpers/language_map.h"
 
 #include <filesystem>
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_set>
+
+#include "helpers/get_data_path.h"
 
 namespace fs = std::filesystem;
 
@@ -22,6 +26,8 @@ namespace fima {
 namespace cloc {
 
 namespace helpers {
+
+using json = nlohmann::json;
 
 [[nodiscard]] std::string
 get_language_family(fs::path path)
@@ -56,13 +62,16 @@ get_language_family(fs::path path)
 
     std::string extension = path.extension();
 
-    auto language = language_map_family.find(extension);
+    json file;
 
-    if (language == language_map_family.end()) {
-        return "text";
-    }
+    fs::path data_path          = fima::helpers::get_application_data_path();
+    fs::path fima_data_path     = data_path / "fima";
+    fs::path language_file_path = fima_data_path / "map_language_family.json";
 
-    return language_map_family.at(extension);
+    std::ifstream file_stream(language_file_path);
+    file = json::parse(file_stream);
+
+    return file.value(extension, "text");
 }
 
 [[nodiscard]] std::string
@@ -87,13 +96,16 @@ get_language_name(fs::path path)
 
     std::string extension = path.extension();
 
-    auto language = language_map_name.find(extension);
+    json file;
 
-    if (language == language_map_name.end()) {
-        return "Text";
-    }
+    fs::path data_path          = fima::helpers::get_application_data_path();
+    fs::path fima_data_path     = data_path / "fima";
+    fs::path language_file_path = fima_data_path / "map_language_name.json";
 
-    return language_map_name.at(extension);
+    std::ifstream file_stream(language_file_path);
+    file = json::parse(file_stream);
+
+    return file.value(extension, "Text");
 }
 
 } // namespace helpers
