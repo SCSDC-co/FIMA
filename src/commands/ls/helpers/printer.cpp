@@ -64,21 +64,21 @@ void
 print_long(const std::vector<fima::FileInfo>& files, const bool& icons)
 {
     std::vector<std::vector<Element>> table_data{
-        { text("Permissions") | color(Color::Green) | underlined | bold,
-          text("  Size") | color(Color::Green) | underlined | bold,
-          text("  User") | color(Color::Green) | underlined | bold,
-          text("  Date Modified") | color(Color::Green) | underlined | bold,
-          text("  Name") | color(Color::Green) | underlined | bold },
+        { text("Permissions ") | color(Color::Green) | underlined | bold,
+          text(" Size ") | color(Color::Yellow) | underlined | bold,
+          text(" User ") | color(Color::Red) | underlined | bold,
+          text(" Date Modified ") | color(Color::Blue) | underlined | bold,
+          text(" Name ") | color(Color::Green) | underlined | bold },
     };
 
     for (const fima::FileInfo& file : files) {
-        table_data.push_back({ file.get_permissions_tui(),
-                               text("  " + file.get_size_with_extension()) | color(Color::Yellow),
-                               text("  " + file.get_user()) | color(Color::Red),
-                               text("  " + file.get_time()) | color(Color::Blue),
-                               text("  " + file.get_name(icons)) |
-                                 (fs::is_directory(file.get_path()) ? color(Color::Green) | bold
-                                                                    : color(Color::White)) });
+        table_data.push_back(
+          { file.get_permissions_tui(),
+            text(" " + file.get_size_with_extension() + " ") | color(Color::Yellow),
+            text(" " + file.get_user() + " ") | color(Color::Red),
+            text(" " + file.get_time() + " ") | color(Color::Blue),
+            text(" " + file.get_name(icons) + " ") |
+              (fs::is_directory(file.get_path()) ? color(Color::Green) : color(Color::White)) });
     }
 
     Table table = Table({ table_data });
