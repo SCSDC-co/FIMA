@@ -1,4 +1,3 @@
-# set the data path
 if(WIN32)
     set(DATA_PATH "$ENV{APPDATA}")
 elseif(UNIX)
@@ -7,13 +6,12 @@ elseif(APPLE)
     set(DATA_PATH "$ENV{HOME}/Library/Application Support")
 endif()
 
-# set the config path
 if(WIN32)
     set(CONFIG_PATH "$ENV{APPDATA}")
 elseif(UNIX)
     set(CONFIG_PATH "$ENV{HOME}/.config")
 elseif(APPLE)
-    set(CONFIG_PATH "$ENV{HOME}/Library/Application Support")
+    set(CONFIG_PATH "$ENV{HOME}/.config")
 endif()
 
 set(FIMA_DATA_PATH "${DATA_PATH}/fima")
