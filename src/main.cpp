@@ -21,12 +21,13 @@
 #include "commands/copy/file.h"
 #include "commands/create/directory.h"
 #include "commands/create/file.h"
-#include "commands/ls.h"
+#include "commands/ls/ls.h"
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
+#include "options.h"
 #include "tui/tui.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
@@ -36,8 +37,14 @@ namespace fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
-    CLI::App app{ "FIMA - Fast, Incredible, Minimal & Awesome File Manager" };
+    CLI::App app;
     argv = app.ensure_utf8(argv);
+
+    app.name("fima");
+    app.description("FIMA - Fast, Incredible, Minimal & Awesome File Manager");
+
+    app.get_formatter()->column_width(25);
+    app.get_formatter()->long_option_alignment_ratio(0.3);
 
     bool tui{ false };
     bool display_version{ false };
@@ -65,12 +72,25 @@ main(int argc, char** argv)
      *  LS SUB COMMAND
      */
 
+    fima::options::ls_options ls_options;
+
     CLI::App* ls_subcmd =
       app.add_subcommand("ls", "Prints the content of the directory like the ls command")
         ->configurable(false);
 
-    ls_subcmd->add_flag("-n,--not-tui", tui, "Disable TUI")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+    ls_subcmd->add_flag("-i,--icons", ls_options.icons, "Puts an icon next to the name of the item")
+      ->configurable(true);
+
+    ls_subcmd->add_flag("-a,--all", ls_options.all, "Will also count the dotfiles")
+      ->configurable(true);
+
+    ls_subcmd->add_flag("-l,--long", ls_options.long_output, "Display the file metadata")
+      ->configurable(true);
+
+    ls_subcmd
+      ->add_flag("-v,--verbose",
+                 ls_options.verbose,
+                 "Displays the number of directories and files (only works with long output)")
       ->configurable(true);
 
     /*  ================
@@ -144,29 +164,29 @@ main(int argc, char** argv)
      *  CLOC SUB COMMAND
      */
 
-    std::vector<fs::path> cloc_paths{ fs::current_path() };
+    fima::options::cloc_options cloc_options;
+
     CLI::App* cloc_subcmd =
       app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
-    cloc_subcmd->add_option("paths", cloc_paths, "The paths to work on (default current directory)")
+    cloc_subcmd
+      ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory)")
       ->configurable(false);
 
-    std::vector<fs::path> cloc_paths_to_ignore{};
-    cloc_subcmd->add_option("--ignore,-i", cloc_paths_to_ignore, "Paths to ignore")
+    std::vector<fs::path> cloc_ignore{};
+    cloc_subcmd->add_option("--ignore,-i", cloc_ignore, "Paths to ignore")->configurable(true);
+
+    cloc_subcmd->add_option("--sort,-S", cloc_options.sorting, "Type of sorting")
       ->configurable(true);
 
-    std::string cloc_sorting{ "total" };
-    cloc_subcmd->add_option("--sort", cloc_sorting, "Type of sorting")->configurable(true);
-
-    bool cloc_quiet{ false };
-    cloc_subcmd->add_flag("-q,--quiet", cloc_quiet, "Enables quiet output")
+    cloc_subcmd->add_flag("--quiet,-q", cloc_options.quiet, "Enables quiet output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    bool cloc_show_languages{ false };
     cloc_subcmd
-      ->add_flag(
-        "--show-languages,-s", cloc_show_languages, "Shows all the languages that cloc supports")
+      ->add_flag("--show-languages,-s",
+                 cloc_options.show_languages,
+                 "Shows all the languages that cloc supports")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
@@ -182,7 +202,7 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*version_subcmd) {
+    if (app.got_subcommand(version_subcmd)) {
         std::cout << fima::colors::GREEN;
 
         std::cout << fima::config::LOGO << '\n';
@@ -195,13 +215,13 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*ls_subcmd) {
-        fima::ls::start(path, tui);
+    if (app.got_subcommand(ls_subcmd)) {
+        fima::ls::start(path, ls_options);
 
         return 0;
     }
 
-    if (*tree_subcmd) {
+    if (app.got_subcommand(tree_subcmd)) {
         fima::tree::start(path, "", tui);
 
         return 0;
@@ -217,13 +237,13 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*remove_subcmd) {
+    if (app.got_subcommand(remove_subcmd)) {
         fima::remove(path_to_create_or_remove);
 
         return 0;
     }
 
-    if (*copy_subcmd) {
+    if (app.got_subcommand(copy_subcmd)) {
         if (fs::is_regular_file(path_to_copy)) {
             fima::copy::file(path_to_copy, destination);
         } else if (fs::is_directory(path_to_copy)) {
@@ -233,26 +253,26 @@ main(int argc, char** argv)
         return 0;
     }
 
-    if (*rename_subcmd) {
+    if (app.got_subcommand(rename_subcmd)) {
         fima::rename(old_name, new_name);
 
         return 0;
     }
 
-    if (*perms_subcmd) {
-        fima::get_perms(perms_path);
+    if (app.got_subcommand(perms_subcmd)) {
+        fima::perms::permissions(perms_path);
 
         return 0;
     }
 
-    if (*cloc_subcmd) {
+    if (app.got_subcommand(cloc_subcmd)) {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : cloc_paths_to_ignore) {
+        for (const fs::path& path : cloc_ignore) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::cloc::main(cloc_paths, cloc_show_languages, regexes, cloc_sorting, cloc_quiet);
+        fima::cloc::main(regexes, cloc_options);
 
         return 0;
     }

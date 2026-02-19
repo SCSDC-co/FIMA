@@ -10,6 +10,9 @@
 
 FIMA (File Manager) is a simple and fast file manager, written in C++.
 
+> [!WARNING]
+> This program is in its early stage of development, so there might be some bugs.
+
 ## Specs
 
 - **C++**: Main language

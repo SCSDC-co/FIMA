@@ -34,7 +34,7 @@ start_tui(fs::path path)
     using namespace ftxui;
 
     std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
-      path) };
+      path, false) };
 
     sort(list_of_the_directory.begin(), list_of_the_directory.end(), [](auto& a, auto& b) {
         if (a.is_directory() && !b.is_directory()) {

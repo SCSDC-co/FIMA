@@ -25,14 +25,14 @@ namespace fima {
 namespace helpers {
 
 std::vector<fs::directory_entry>
-get_directories_entries(const fs::path& path)
+get_directories_entries(const fs::path& path, const bool& dotfiles)
 {
     std::vector<fs::directory_entry> directory_content;
 
     for (const fs::directory_entry& entry : fs::directory_iterator(path)) {
         std::string name{ entry.path().filename().string() };
 
-        if (name[0] == '.') {
+        if (name[0] == '.' && !dotfiles) {
             continue;
         }
 

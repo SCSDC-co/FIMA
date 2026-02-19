@@ -7,10 +7,12 @@ add_library(fima_lib
     src/commands/cloc/helpers/count_lines.cpp
     src/helpers/get_directories_entries.cpp
     src/commands/cloc/helpers/FileStats.cpp
+    src/commands/ls/helpers/icon_maps.cpp
+    src/commands/ls/helpers/printer.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/commands/create/directory.cpp
     src/commands/copy/directory.cpp
-    src/tui/commands/ls/ls_tui.cpp
+    src/utility/DirectoryItem.cpp
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/copy/file.cpp
@@ -18,7 +20,8 @@ add_library(fima_lib
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/helpers/logger.cpp
+    src/commands/ls/ls.cpp
     src/commands/tree.cpp
-    src/commands/ls.cpp
+    src/utility/file.cpp
     src/tui/tui.cpp
 )

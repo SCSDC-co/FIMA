@@ -11,17 +11,23 @@
 
 #include "commands/cloc/helpers/print_languages.h"
 
+#include <filesystem>
+#include <fstream>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
-#include "commands/cloc/helpers/language_map.h"
 #include "ftxui/dom/node.hpp"
+#include "helpers/get_data_path.h"
+
+namespace fs = std::filesystem;
 
 namespace fima {
 
@@ -48,8 +54,27 @@ void
 show_languages()
 {
     using namespace ftxui;
+    using json = nlohmann::json;
 
     std::map<std::string, std::vector<std::string>> lang_to_exts;
+
+    json file;
+
+    fs::path data_path          = fima::helpers::get_application_data_path();
+    fs::path fima_data_path     = data_path / "fima";
+    fs::path language_file_path = fima_data_path / "map_language_name.json";
+
+    std::ifstream file_stream(language_file_path);
+    file = json::parse(file_stream);
+
+    std::unordered_map<std::string, std::string> language_map_name;
+
+    for (auto it = file.begin(); it != file.end(); ++it) {
+        const std::string& ext  = it.key();
+        const std::string& name = it.value();
+
+        lang_to_exts[name].push_back(ext);
+    }
 
     for (const auto& [ext, name] : language_map_name) {
         lang_to_exts[name].push_back(ext);

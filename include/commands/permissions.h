@@ -12,11 +12,22 @@
 #pragma once
 
 #include <filesystem>
+#include <ftxui/dom/node.hpp>
 #include <vector>
 
 namespace fima {
 
-void
-get_perms(const std::vector<std::filesystem::path>& paths);
+namespace perms {
 
-}
+std::string
+get_perms(const std::filesystem::path& item);
+
+ftxui::Element
+get_perms_tui(const std::filesystem::path& item);
+
+void
+permissions(const std::vector<std::filesystem::path>& paths);
+
+} // namespace perms
+
+} // namespace fima
