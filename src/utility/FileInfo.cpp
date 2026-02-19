@@ -101,7 +101,12 @@ FileInfo::get_time() const
     // this way we get the seconds as integer and not as long/double
     auto date_with_rounded_seconds = floor<std::chrono::seconds>(this->date);
 
-    return std::format("{:%d %b %Y %H:%M:%S}", date_with_rounded_seconds);
+    // since std::filesystem::last_write_time returns the time as GMT this convert it to the correct
+    // locale
+    auto sctp  = std::chrono::clock_cast<std::chrono::system_clock>(date_with_rounded_seconds);
+    auto local = std::chrono::zoned_time{ std::chrono::current_zone(), sctp };
+
+    return std::format("{:%d %b %Y %H:%M:%S}", local);
 }
 
 [[nodiscard]] std::string
