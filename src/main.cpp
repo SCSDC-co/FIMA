@@ -46,6 +46,12 @@ main(int argc, char** argv)
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.3);
 
+    app
+      .set_config(
+        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
+      ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
     bool tui{ false };
     bool display_version{ false };
 

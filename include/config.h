@@ -10,9 +10,12 @@
 
 #pragma once
 
+#include <filesystem>
 #include <regex>
 #include <string_view>
 #include <vector>
+
+#include "helpers/get_config_path.h"
 
 namespace fima {
 
@@ -35,6 +38,10 @@ inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
     std::regex{ R"(node_modules)" }, std::regex{ R"(\.next)" },  std::regex{ R"(bin)" },
     std::regex{ R"(obj)" }
 };
+
+inline const std::filesystem::path CONFIG_FILE_NAME = "config.toml";
+inline const std::filesystem::path CONFIG_FILE_PATH =
+  fima::helpers::get_application_config_path() / "fima" / CONFIG_FILE_NAME;
 
 } // namespace config
 
