@@ -32,10 +32,10 @@ get_file_size(const fs::path& path)
     size_t size{};
 
     if (fs::is_directory(path)) {
-        std::vector<fs::directory_entry> entries =
-          fima::helpers::get_directories_entries(path, false);
+        std::vector<fs::path> entries =
+          fima::helpers::get_directories_entries_recursive(path, false, {});
 
-        for (const fs::directory_entry& item : entries) {
+        for (const fs::path& item : entries) {
             if (fs::is_directory(item)) {
                 continue;
             }

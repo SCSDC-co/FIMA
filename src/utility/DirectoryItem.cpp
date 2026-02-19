@@ -101,8 +101,8 @@ DirectoryItem::get_time() const
     // this way we get the seconds as integer and not as long/double
     auto date_with_rounded_seconds = floor<std::chrono::seconds>(this->date);
 
-    // since std::filesystem::last_write_time returns the time as GMT this convert it to the correct
-    // locale
+    // since std::filesystem::last_write_time returns the time as UTC+00:00 this convert it to the
+    // correct locale
     auto sctp  = std::chrono::clock_cast<std::chrono::system_clock>(date_with_rounded_seconds);
     auto local = std::chrono::zoned_time{ std::chrono::current_zone(), sctp };
 
