@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_set>
 
-#include "helpers/get_data_path.h"
+#include "program_files.h"
 
 namespace fs = std::filesystem;
 
@@ -64,11 +64,7 @@ get_language_family(fs::path path)
 
     json file;
 
-    fs::path data_path          = fima::helpers::get_application_data_path();
-    fs::path fima_data_path     = data_path / "fima";
-    fs::path language_file_path = fima_data_path / "map_language_family.json";
-
-    std::ifstream file_stream(language_file_path);
+    std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_FAMILY_PATH);
     file = json::parse(file_stream);
 
     return file.value(extension, "text");
@@ -98,11 +94,7 @@ get_language_name(fs::path path)
 
     json file;
 
-    fs::path data_path          = fima::helpers::get_application_data_path();
-    fs::path fima_data_path     = data_path / "fima";
-    fs::path language_file_path = fima_data_path / "map_language_name.json";
-
-    std::ifstream file_stream(language_file_path);
+    std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_NAME_PATH);
     file = json::parse(file_stream);
 
     return file.value(extension, "Text");

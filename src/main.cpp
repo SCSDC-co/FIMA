@@ -9,7 +9,6 @@
  */
 
 #include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -29,6 +28,7 @@
 #include "commands/tree.h"
 #include "config.h"
 #include "options.h"
+#include "program_files.h"
 #include "tui/tui.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
@@ -47,19 +47,17 @@ main(int argc, char** argv)
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.3);
 
-    if (!fs::exists(fima::config::CONFIG_FILE_PATH)) {
-        std::ofstream outfile{ fima::config::CONFIG_FILE_PATH };
-        outfile.close();
-    }
+    fima::program_files::create_config_files();
 
     app
       .set_config(
-        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
-      ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
+        "--config", fima::program_files::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
+      ->transform(CLI::FileOnDefaultPath(fima::program_files::CONFIG_FILE_PATH))
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
 
     bool tui{ false };
     bool display_version{ false };
+    bool reset_program_files{ false };
 
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
@@ -73,6 +71,9 @@ main(int argc, char** argv)
     CLI::App* version_subcmd =
       app.add_subcommand("version", "Print the current version with some extra information")
         ->configurable(false);
+
+    app.add_flag("--reset-config-files", reset_program_files, "Resets the config files")
+      ->configurable(false);
 
     fs::path path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
@@ -210,6 +211,12 @@ main(int argc, char** argv)
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;
+
+        return 0;
+    }
+
+    if (reset_program_files) {
+        fima::program_files::reset_config_files();
 
         return 0;
     }

@@ -2,7 +2,7 @@
  * src/utility/file.cpp
  * include/utility/file.h
  *
- * A utility for getting some file information
+ * A utility for getting some file information and creating them
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -11,9 +11,12 @@
 
 #include <cstddef>
 #include <filesystem>
+#include <fstream>
 #include <grp.h>
+#include <ios>
 #include <pwd.h>
 #include <string>
+#include <string_view>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <vector>
@@ -71,6 +74,26 @@ get_file_owner(const fs::path& path)
     }
 
     return std::to_string(info.st_uid);
+}
+
+void
+create(const std::filesystem::path& path, const std::string_view& conent)
+{
+    std::ofstream outfile{ path };
+
+    outfile << conent;
+
+    outfile.close();
+}
+
+void
+overwrite(const fs::path& path, const std::string_view& content)
+{
+    std::ofstream file{ path, std::ios::trunc };
+
+    file << content;
+
+    file.close();
 }
 
 } // namespace file

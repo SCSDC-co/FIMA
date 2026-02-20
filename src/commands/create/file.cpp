@@ -13,10 +13,10 @@
 
 #include <exception>
 #include <filesystem>
-#include <fstream>
 #include <vector>
 
 #include "helpers/logger.h"
+#include "utility/file.h"
 
 namespace fs = std::filesystem;
 
@@ -36,8 +36,7 @@ file(const std::vector<fs::path>& paths)
         }
 
         try {
-            std::ofstream outfile{ entry };
-            outfile.close();
+            fima::file::create(entry, "");
 
             fima::helpers::log(
               fima::helpers::logger_type::LOG, "File created at: ", entry.string());

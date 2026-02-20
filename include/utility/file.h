@@ -2,7 +2,7 @@
  * src/utility/file.cpp
  * include/utility/file.h
  *
- * A utility for getting some file information
+ * A utility for getting some file information and creating them
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,6 +12,7 @@
 #pragma once
 
 #include <filesystem>
+#include <string_view>
 
 namespace fima {
 
@@ -25,6 +26,12 @@ get_file_time(const std::filesystem::path& path);
 
 std::string
 get_file_owner(const std::filesystem::path& path);
+
+void
+create(const std::filesystem::path& path, const std::string_view& conent);
+
+void
+overwrite(const std::filesystem::path& path, const std::string_view& content);
 
 } // namespace file
 

@@ -11,7 +11,6 @@
 
 #include "commands/cloc/helpers/print_languages.h"
 
-#include <filesystem>
 #include <fstream>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
@@ -25,9 +24,7 @@
 #include <vector>
 
 #include "ftxui/dom/node.hpp"
-#include "helpers/get_data_path.h"
-
-namespace fs = std::filesystem;
+#include "program_files.h"
 
 namespace fima {
 
@@ -60,11 +57,7 @@ show_languages()
 
     json file;
 
-    fs::path data_path          = fima::helpers::get_application_data_path();
-    fs::path fima_data_path     = data_path / "fima";
-    fs::path language_file_path = fima_data_path / "map_language_name.json";
-
-    std::ifstream file_stream(language_file_path);
+    std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_NAME_PATH);
     file = json::parse(file_stream);
 
     std::unordered_map<std::string, std::string> language_map_name;

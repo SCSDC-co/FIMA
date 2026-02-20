@@ -16,7 +16,7 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 
-#include "helpers/get_data_path.h"
+#include "program_files.h"
 
 namespace fs = std::filesystem;
 
@@ -54,11 +54,7 @@ get_item_icon(const std::filesystem::path& path)
 
         json file;
 
-        fs::path data_path          = fima::helpers::get_application_data_path();
-        fs::path fima_data_path     = data_path / "fima";
-        fs::path language_file_path = fima_data_path / "map_language_icon.json";
-
-        std::ifstream file_stream(language_file_path);
+        std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_ICON_PATH);
         file = json::parse(file_stream);
 
         return file.value(extension, "");
@@ -66,11 +62,7 @@ get_item_icon(const std::filesystem::path& path)
 
     json file;
 
-    fs::path data_path          = fima::helpers::get_application_data_path();
-    fs::path fima_data_path     = data_path / "fima";
-    fs::path language_file_path = fima_data_path / "map_directory_icon.json";
-
-    std::ifstream file_stream(language_file_path);
+    std::ifstream file_stream(fima::program_files::MAP_DIRECTORY_ICON_PATH);
     file = json::parse(file_stream);
 
     return file.value(file_name, "");

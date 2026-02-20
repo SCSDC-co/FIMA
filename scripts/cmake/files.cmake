@@ -21,6 +21,7 @@ add_library(fima_lib
     src/commands/remove.cpp
     src/helpers/logger.cpp
     src/commands/ls/ls.cpp
+    src/program_files.cpp
     src/commands/tree.cpp
     src/utility/file.cpp
     src/tui/tui.cpp
