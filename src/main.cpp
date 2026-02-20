@@ -38,6 +38,8 @@ namespace fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
+    fima::program_files::create_config_files();
+
     CLI::App app;
     argv = app.ensure_utf8(argv);
 
@@ -46,8 +48,6 @@ main(int argc, char** argv)
 
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.3);
-
-    fima::program_files::create_config_files();
 
     app
       .set_config(
