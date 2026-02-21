@@ -2,6 +2,9 @@
 build/
 .cache/
 
+# CMake user staff
+CMakeUserPresets.json
+
 # IDE stuff
 .vscode/
 .idea/

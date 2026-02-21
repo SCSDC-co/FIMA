@@ -1,28 +1,16 @@
 cmake_minimum_required(VERSION 3.31)
-project(FIMA LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(FetchContent)
+project(fima)
 
-FetchContent_Declare(
-    ftxui
-    GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
-    GIT_TAG v6.1.9
-)
-
-FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json
-    GIT_TAG v3.12.0
-)
-
-FetchContent_MakeAvailable(ftxui json)
+find_package(nlohmann_json REQUIRED)
+find_package(ftxui REQUIRED)
 
 include(./scripts/cmake/files.cmake)
 
-add_executable(fima src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_include_directories(
     fima_lib
@@ -32,11 +20,6 @@ target_include_directories(
 )
 
 target_link_libraries(
-    fima
-    PRIVATE
-        fima_lib
-        ftxui::screen
-        ftxui::dom
-        ftxui::component
-        nlohmann_json::nlohmann_json
+    ${PROJECT_NAME}
+    PRIVATE fima_lib ftxui::ftxui nlohmann_json::nlohmann_json
 )
