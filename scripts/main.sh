@@ -22,7 +22,12 @@ awk '{print "\033[32m" $0 "\033[0m"}' utils/ascii-art.txt
 cd ../build || exit 1
 
 build() {
-    cmake --preset default .. || {
+    conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 || {
+        echo "Conan setup failed"
+        exit 1
+    }
+
+    cmake .. --preset default -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release || {
         echo "CMake configuration failed"
         exit 1
     }
