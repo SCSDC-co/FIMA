@@ -14,7 +14,8 @@
 #include <filesystem>
 #include <vector>
 
-#include "helpers/logger.h"
+#include "logger/logger.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 
@@ -25,8 +26,11 @@ remove(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (!fs::exists(entry)) {
-            fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "The path doesn't exists: ", entry.string());
+            fima::logger::log(fima::logger::Type::ERROR,
+                              true,
+                              fima::colors::RED +
+                                "The path doesn't exists: " + fima::colors::RESET + "{}",
+                              entry.string());
 
             continue;
         }
@@ -34,11 +38,17 @@ remove(const std::vector<fs::path>& paths)
         try {
             fs::remove_all(entry);
 
-            fima::helpers::log(fima::helpers::logger_type::LOG, "Item removed: ", entry.string());
+            fima::logger::log(fima::logger::Type::INFO,
+                              true,
+                              fima::colors::GREEN + "Item removed: " + fima::colors::RESET + "{}",
+                              entry.string());
         } catch (const std::exception& ex) {
-            fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "Failed to remove directory: ", entry.string());
-            fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
+            fima::logger::log(fima::logger::Type::ERROR,
+                              true,
+                              fima::colors::RED +
+                                "Failed to remove directory: " + fima::colors::RESET + "{}",
+                              entry.string());
+            fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
         }
     }
 }

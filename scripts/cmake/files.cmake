@@ -19,7 +19,6 @@ add_library(fima_lib
     src/commands/cloc/cloc.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
-    src/helpers/logger.cpp
     src/commands/ls/ls.cpp
     src/program_files.cpp
     src/commands/tree.cpp

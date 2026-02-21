@@ -15,7 +15,8 @@
 #include <filesystem>
 #include <vector>
 
-#include "helpers/logger.h"
+#include "logger/logger.h"
+#include "utility/colors.h"
 #include "utility/file.h"
 
 namespace fs = std::filesystem;
@@ -29,8 +30,11 @@ file(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (fs::is_regular_file(entry)) {
-            fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "This file already exists: ", entry.string());
+            fima::logger::log(fima::logger::Type::ERROR,
+                              true,
+                              fima::colors::RED +
+                                "This file already exists: " + fima::colors::RESET + "{}",
+                              entry.string());
 
             continue;
         }
@@ -38,12 +42,18 @@ file(const std::vector<fs::path>& paths)
         try {
             fima::file::create(entry, "");
 
-            fima::helpers::log(
-              fima::helpers::logger_type::LOG, "File created at: ", entry.string());
+            fima::logger::log(fima::logger::Type::INFO,
+                              true,
+                              fima::colors::GREEN + "File created at: " + fima::colors::RESET +
+                                "{}",
+                              entry.string());
         } catch (const std::exception& ex) {
-            fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "Failed to create the file: ", entry.string());
-            fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
+            fima::logger::log(fima::logger::Type::ERROR,
+                              true,
+                              fima::colors::RED +
+                                "Failed to create the file: " + fima::colors::RESET + "{}",
+                              entry.string());
+            fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
         }
     }
 }

@@ -13,7 +13,8 @@
 
 #include <filesystem>
 
-#include "helpers/logger.h"
+#include "logger/logger.h"
+#include "utility/colors.h"
 #include "utility/file.h"
 
 namespace fs = std::filesystem;
@@ -79,9 +80,11 @@ reset_config_files(const bool& preserve_config_file)
     fima::file::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
     fima::file::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);
 
-    fima::helpers::log(fima::helpers::logger_type::LOG,
-                       "Successfully reset all the config file, config file preserved: ",
-                       (preserve_config_file ? "yes" : "no"));
+    fima::logger::log(fima::logger::Type::INFO,
+                      true,
+                      fima::colors::GREEN +
+                        "Successfully reset all the config file, config file preserved: " +
+                        fima::colors::RESET + (preserve_config_file ? "yes" : "no"));
 }
 
 } // namespace program_files
