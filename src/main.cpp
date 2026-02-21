@@ -58,6 +58,7 @@ main(int argc, char** argv)
     bool tui{ false };
     bool display_version{ false };
     bool reset_program_files{ false };
+    bool preserve_config_file{ false };
 
     // names should be descriptive
     std::vector<fs::path> path_to_create_or_remove;
@@ -74,6 +75,12 @@ main(int argc, char** argv)
 
     app.add_flag("--reset-config-files", reset_program_files, "Resets the config files")
       ->configurable(false);
+
+    app
+      .add_flag("--preserve-config-file",
+                preserve_config_file,
+                "Preserces the config.toml file (only work when using --reset-config-files)")
+      ->configurable(true);
 
     fs::path path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
@@ -216,7 +223,7 @@ main(int argc, char** argv)
     }
 
     if (reset_program_files) {
-        fima::program_files::reset_config_files();
+        fima::program_files::reset_config_files(preserve_config_file);
 
         return 0;
     }

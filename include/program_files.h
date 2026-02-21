@@ -490,7 +490,7 @@ void
 create_config_files();
 
 void
-reset_config_files();
+reset_config_files(const bool& preserve_config_file);
 
 } // namespace program_files
 

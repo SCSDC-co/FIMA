@@ -13,6 +13,7 @@
 
 #include <filesystem>
 
+#include "helpers/logger.h"
 #include "utility/file.h"
 
 namespace fs = std::filesystem;
@@ -64,16 +65,23 @@ create_config_files()
 }
 
 void
-reset_config_files()
+reset_config_files(const bool& preserve_config_file)
 {
     create_config_dirs();
 
-    fima::file::overwrite(CONFIG_FILE_PATH, "");
+    if (!preserve_config_file) {
+        fima::file::overwrite(CONFIG_FILE_PATH, "");
+    }
+
     fima::file::overwrite(LANGUAGES_FILE_PATH, languages_file);
     fima::file::overwrite(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
     fima::file::overwrite(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
     fima::file::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
     fima::file::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);
+
+    fima::helpers::log(fima::helpers::logger_type::LOG,
+                       "Successfully reset all the config file, config file preserved: ",
+                       (preserve_config_file ? "yes" : "no"));
 }
 
 } // namespace program_files
