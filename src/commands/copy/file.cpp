@@ -29,6 +29,7 @@ file(const fs::path source, const fs::path destination)
         fima::logger::log(
           fima::logger::Type::ERROR,
           true,
+          "copy file",
           fima::colors::RED +
             "The source file is a directory or does not exists: " + fima::colors::RESET + "{}",
           source.string());
@@ -39,6 +40,7 @@ file(const fs::path source, const fs::path destination)
 
         fima::logger::log(fima::logger::Type::INFO,
                           true,
+                          "copy file",
                           fima::colors::GREEN + "File " + fima::colors::RESET + "{}" +
                             fima::colors::GREEN + " copied to " + fima::colors::RESET + "{}",
                           source.string(),
@@ -46,17 +48,20 @@ file(const fs::path source, const fs::path destination)
     } catch (const std::exception& ex) {
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy file",
                           fima::colors::RED + "Failed to copy the file" + fima::colors::RESET);
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy file",
                           fima::colors::RED + "  Source directory: " + fima::colors::RESET + "{}",
                           source.string());
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy file",
                           fima::colors::RED + "  Destination: " + fima::colors::RESET + "{}",
                           destination.string());
 
-        fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+        fima::logger::log(fima::logger::Type::ERROR, true, "copy file", ex.what());
     }
 }
 

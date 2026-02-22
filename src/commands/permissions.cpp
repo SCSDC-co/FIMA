@@ -83,10 +83,11 @@ get_perms(const fs::path& item)
     } catch (const std::exception& ex) {
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "perms",
                           fima::colors::RED +
                             "Failed to get permissions for: " + fima::colors::RESET + "{}",
                           item.string());
-        fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+        fima::logger::log(fima::logger::Type::ERROR, true, "perms", ex.what());
     }
 
     return perms;
@@ -154,10 +155,11 @@ get_perms_tui(const std::filesystem::path& item)
     } catch (const std::exception& ex) {
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "perms",
                           fima::colors::RED +
                             "Failed to get permissions for: " + fima::colors::RESET + "{}",
                           item.string());
-        fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+        fima::logger::log(fima::logger::Type::ERROR, true, "perms", ex.what());
     }
 
     Element perms = hbox(element_vector);
@@ -172,6 +174,7 @@ permissions(const std::vector<fs::path>& paths)
         if (!fs::exists(item)) {
             fima::logger::log(fima::logger::Type::ERROR,
                               true,
+                              "perms",
                               fima::colors::RED +
                                 "The path doesn't exists: " + fima::colors::RESET + "{}",
                               item.string());

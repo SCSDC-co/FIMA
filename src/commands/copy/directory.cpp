@@ -28,6 +28,7 @@ directory(fs::path source, fs::path destination)
     if (!fs::is_directory(source)) {
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy dir",
                           fima::colors::RED + "The source file is a file or does not exists: " +
                             fima::colors::RESET + "{}",
                           source.string());
@@ -43,6 +44,7 @@ directory(fs::path source, fs::path destination)
 
         fima::logger::log(fima::logger::Type::INFO,
                           true,
+                          "copy dir",
                           fima::colors::GREEN + "Directory " + fima::colors::RESET + "{}" +
                             fima::colors::GREEN + " copied to " + fima::colors::RESET + "{}",
                           source.string(),
@@ -50,17 +52,20 @@ directory(fs::path source, fs::path destination)
     } catch (const std::exception& ex) {
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy dir",
                           fima::colors::RED + "Failed to copy the directory" + fima::colors::RESET);
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy dir",
                           fima::colors::RED + "  Source directory: " + fima::colors::RESET + "{}",
                           source.string());
         fima::logger::log(fima::logger::Type::ERROR,
                           true,
+                          "copy dir",
                           fima::colors::RED + "  Destination: " + fima::colors::RESET + "{}",
                           destination.string());
 
-        fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+        fima::logger::log(fima::logger::Type::ERROR, true, "copy dir", ex.what());
     }
 }
 

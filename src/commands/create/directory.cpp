@@ -32,6 +32,7 @@ dir(const std::vector<fs::path>& paths)
         if (fs::is_directory(entry)) {
             fima::logger::log(fima::logger::Type::ERROR,
                               true,
+                              "create dir",
                               fima::colors::RED +
                                 "This directory already exists: " + fima::colors::RESET + "{}",
                               entry.string());
@@ -44,16 +45,18 @@ dir(const std::vector<fs::path>& paths)
 
             fima::logger::log(fima::logger::Type::INFO,
                               true,
+                              "create dir",
                               fima::colors::GREEN + "Directory created at: " + fima::colors::RESET +
                                 "{}",
                               entry.string());
         } catch (const std::exception& ex) {
             fima::logger::log(fima::logger::Type::ERROR,
                               true,
+                              "create dir",
                               fima::colors::RED +
                                 "Failed to create the directory: " + fima::colors::RESET + "{}",
                               entry.string());
-            fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+            fima::logger::log(fima::logger::Type::ERROR, true, "create dir", ex.what());
         }
     }
 }

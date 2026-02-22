@@ -82,6 +82,7 @@ reset_config_files(const bool& preserve_config_file)
 
     fima::logger::log(fima::logger::Type::INFO,
                       true,
+                      "reset config files",
                       fima::colors::GREEN +
                         "Successfully reset all the config file, config file preserved: " +
                         fima::colors::RESET + (preserve_config_file ? "yes" : "no"));

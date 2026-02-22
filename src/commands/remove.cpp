@@ -28,6 +28,7 @@ remove(const std::vector<fs::path>& paths)
         if (!fs::exists(entry)) {
             fima::logger::log(fima::logger::Type::ERROR,
                               true,
+                              "remove",
                               fima::colors::RED +
                                 "The path doesn't exists: " + fima::colors::RESET + "{}",
                               entry.string());
@@ -40,15 +41,17 @@ remove(const std::vector<fs::path>& paths)
 
             fima::logger::log(fima::logger::Type::INFO,
                               true,
+                              "remove",
                               fima::colors::GREEN + "Item removed: " + fima::colors::RESET + "{}",
                               entry.string());
         } catch (const std::exception& ex) {
             fima::logger::log(fima::logger::Type::ERROR,
                               true,
+                              "remove",
                               fima::colors::RED +
                                 "Failed to remove directory: " + fima::colors::RESET + "{}",
                               entry.string());
-            fima::logger::log(fima::logger::Type::ERROR, true, ex.what());
+            fima::logger::log(fima::logger::Type::ERROR, true, "remove", ex.what());
         }
     }
 }
