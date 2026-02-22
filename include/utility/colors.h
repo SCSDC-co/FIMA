@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <regex>
 #include <string>
 
 namespace fima {
@@ -25,6 +26,8 @@ inline constexpr std::string YELLOW = "\033[33m";
 
 inline constexpr std::string BOLD      = "\033[1m";
 inline constexpr std::string UNDERLINE = "\033[4m";
+
+inline const std::regex ESCAPE_SEQUENCE_REGEX("\033\[[0-9;]*m");
 
 } // namespace colors
 

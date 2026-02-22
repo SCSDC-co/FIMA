@@ -19,6 +19,7 @@
 #include <regex>
 #include <string>
 
+#include "utility/colors.h"
 #include "utility/get_current_time.h"
 
 namespace fima {
@@ -86,12 +87,11 @@ log(const Type& type,
     const bool& console_output,
     const std::string& command,
     const std::string& format,
-    const Args&&... values)
+    Args const&... values)
 {
-    std::regex color_escape("\033\[[0-9;]*m");
-
-    std::string formatted_string           = std::vformat(format, std::make_format_args(values...));
-    std::string formatted_string_sanitized = std::regex_replace(formatted_string, color_escape, "");
+    std::string formatted_string = std::vformat(format, std::make_format_args(values...));
+    std::string formatted_string_sanitized =
+      std::regex_replace(formatted_string, fima::colors::ESCAPE_SEQUENCE_REGEX, "");
 
     auto current_time = fima::utility::get_current_time();
 
