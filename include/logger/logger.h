@@ -9,6 +9,8 @@
  * See LICENSE file for details.
  */
 
+#pragma once
+
 #include <chrono>
 #include <filesystem>
 #include <format>
