@@ -29,7 +29,7 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "helpers/get_directories_entries.h"
-#include "logger/logger.h"
+#include "logger.h"
 #include "options.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
@@ -184,16 +184,12 @@ main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         paths_sanitized += item.string() + ", ";
     }
 
-    fima::logger::log(fima::logger::Type::INFO, false, "cloc", "Got loc of: {}", paths_sanitized);
-    fima::logger::log(fima::logger::Type::INFO, false, "cloc", "Options:");
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "cloc", "  Quiet: {}", (options.quiet ? "true" : "false"));
-    fima::logger::log(fima::logger::Type::INFO, false, "cloc", "  Sorting: {}", options.sorting);
-    fima::logger::log(fima::logger::Type::INFO,
-                      false,
-                      "cloc",
-                      "  Show langauges: {}",
-                      (options.show_languages ? "true" : "false"));
+    fima::logger::info(false, "cloc", "Got loc of: {}", paths_sanitized);
+    fima::logger::info(false, "cloc", "Options:");
+    fima::logger::info(false, "cloc", "  Quiet: {}", (options.quiet ? "true" : "false"));
+    fima::logger::info(false, "cloc", "  Sorting: {}", options.sorting);
+    fima::logger::info(
+      false, "cloc", "  Show langauges: {}", (options.show_languages ? "true" : "false"));
 }
 
 } // namespace cloc

@@ -15,7 +15,7 @@
 #include <filesystem>
 #include <vector>
 
-#include "logger/logger.h"
+#include "logger.h"
 #include "utility/colors.h"
 #include "utility/file.h"
 
@@ -30,12 +30,11 @@ file(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (fs::is_regular_file(entry)) {
-            fima::logger::log(fima::logger::Type::ERROR,
-                              true,
-                              "create file",
-                              fima::colors::RED +
-                                "This file already exists: " + fima::colors::RESET + "{}",
-                              entry.string());
+            fima::logger::error(true,
+                                "create file",
+                                fima::colors::RED +
+                                  "This file already exists: " + fima::colors::RESET + "{}",
+                                entry.string());
 
             continue;
         }
@@ -43,20 +42,18 @@ file(const std::vector<fs::path>& paths)
         try {
             fima::file::create(entry, "");
 
-            fima::logger::log(fima::logger::Type::INFO,
-                              true,
-                              "create file",
-                              fima::colors::GREEN + "File created at: " + fima::colors::RESET +
-                                "{}",
-                              entry.string());
+            fima::logger::info(true,
+                               "create file",
+                               fima::colors::GREEN + "File created at: " + fima::colors::RESET +
+                                 "{}",
+                               entry.string());
         } catch (const std::exception& ex) {
-            fima::logger::log(fima::logger::Type::ERROR,
-                              true,
-                              "create file",
-                              fima::colors::RED +
-                                "Failed to create the file: " + fima::colors::RESET + "{}",
-                              entry.string());
-            fima::logger::log(fima::logger::Type::ERROR, true, "create file", ex.what());
+            fima::logger::error(true,
+                                "create file",
+                                fima::colors::RED +
+                                  "Failed to create the file: " + fima::colors::RESET + "{}",
+                                entry.string());
+            fima::logger::error(true, "create file", ex.what());
         }
     }
 }

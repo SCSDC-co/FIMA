@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <vector>
 
-#include "logger/logger.h"
+#include "logger.h"
 #include "utility/colors.h"
 
 namespace fs = std::filesystem;
@@ -26,12 +26,11 @@ remove(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
         if (!fs::exists(entry)) {
-            fima::logger::log(fima::logger::Type::ERROR,
-                              true,
-                              "remove",
-                              fima::colors::RED +
-                                "The path doesn't exists: " + fima::colors::RESET + "{}",
-                              entry.string());
+            fima::logger::error(true,
+                                "remove",
+                                fima::colors::RED +
+                                  "The path doesn't exists: " + fima::colors::RESET + "{}",
+                                entry.string());
 
             continue;
         }
@@ -39,19 +38,17 @@ remove(const std::vector<fs::path>& paths)
         try {
             fs::remove_all(entry);
 
-            fima::logger::log(fima::logger::Type::INFO,
-                              true,
-                              "remove",
-                              fima::colors::GREEN + "Item removed: " + fima::colors::RESET + "{}",
-                              entry.string());
+            fima::logger::info(true,
+                               "remove",
+                               fima::colors::GREEN + "Item removed: " + fima::colors::RESET + "{}",
+                               entry.string());
         } catch (const std::exception& ex) {
-            fima::logger::log(fima::logger::Type::ERROR,
-                              true,
-                              "remove",
-                              fima::colors::RED +
-                                "Failed to remove directory: " + fima::colors::RESET + "{}",
-                              entry.string());
-            fima::logger::log(fima::logger::Type::ERROR, true, "remove", ex.what());
+            fima::logger::error(true,
+                                "remove",
+                                fima::colors::RED +
+                                  "Failed to remove directory: " + fima::colors::RESET + "{}",
+                                entry.string());
+            fima::logger::error(true, "remove", ex.what());
         }
     }
 }

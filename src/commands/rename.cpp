@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <string>
 
-#include "logger/logger.h"
+#include "logger.h"
 #include "utility/colors.h"
 
 namespace fs = std::filesystem;
@@ -25,23 +25,21 @@ void
 rename(const fs::path old_name, const fs::path new_name)
 {
     if (!fs::exists(old_name)) {
-        fima::logger::log(fima::logger::Type::ERROR,
-                          true,
-                          "rename",
-                          fima::colors::GREEN + "The item you want to rename does not exist: " +
-                            fima::colors::RESET + "{}",
-                          old_name.string());
+        fima::logger::error(true,
+                            "rename",
+                            fima::colors::GREEN + "The item you want to rename does not exist: " +
+                              fima::colors::RESET + "{}",
+                            old_name.string());
 
         return;
     }
 
     if (fs::exists(new_name)) {
-        fima::logger::log(fima::logger::Type::ERROR,
-                          true,
-                          "rename",
-                          std::string(fima::colors::RED) +
-                            "The item already exists: " + std::string(fima::colors::RESET) + "{}",
-                          new_name.string());
+        fima::logger::error(true,
+                            "rename",
+                            std::string(fima::colors::RED) +
+                              "The item already exists: " + std::string(fima::colors::RESET) + "{}",
+                            new_name.string());
 
         return;
     }
@@ -49,30 +47,26 @@ rename(const fs::path old_name, const fs::path new_name)
     try {
         fs::rename(old_name, new_name);
 
-        fima::logger::log(fima::logger::Type::INFO,
-                          true,
-                          "rename",
-                          "{}" + fima::colors::GREEN + " renamed to: " + fima::colors::RESET + "{}",
-                          old_name.string(),
-                          new_name.string());
+        fima::logger::info(true,
+                           "rename",
+                           "{}" + fima::colors::GREEN + " renamed to: " + fima::colors::RESET +
+                             "{}",
+                           old_name.string(),
+                           new_name.string());
     } catch (const std::exception& ex) {
-        fima::logger::log(fima::logger::Type::ERROR,
-                          true,
-                          "rename",
-                          fima::colors::RED + "Failed to rename the item:" + fima::colors::RESET);
+        fima::logger::error(
+          true, "rename", fima::colors::RED + "Failed to rename the item:" + fima::colors::RESET);
 
-        fima::logger::log(fima::logger::Type::ERROR,
-                          true,
-                          "rename",
-                          fima::colors::RED + "  Old name: " + fima::colors::RESET + "{}",
-                          old_name.string());
-        fima::logger::log(fima::logger::Type::ERROR,
-                          true,
-                          "rename",
-                          fima::colors::RED + "  New name: " + fima::colors::RESET + "{}",
-                          new_name.string());
+        fima::logger::error(true,
+                            "rename",
+                            fima::colors::RED + "  Old name: " + fima::colors::RESET + "{}",
+                            old_name.string());
+        fima::logger::error(true,
+                            "rename",
+                            fima::colors::RED + "  New name: " + fima::colors::RESET + "{}",
+                            new_name.string());
 
-        fima::logger::log(fima::logger::Type::ERROR, true, "rename", ex.what());
+        fima::logger::error(true, "rename", ex.what());
     }
 
     return;

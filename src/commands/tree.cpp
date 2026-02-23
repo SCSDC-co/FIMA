@@ -22,7 +22,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
-#include "logger/logger.h"
+#include "logger.h"
 #include "tui/commands/tree/tree_tui.h"
 #include "utility/colors.h"
 
@@ -126,10 +126,9 @@ start(const fs::path& path, std::string prefix, bool tui)
                   << std::to_string(number_of_files) << '\n';
     }
 
-    fima::logger::log(fima::logger::Type::INFO, false, "tree", "Create tree of: {}", path.string());
-    fima::logger::log(fima::logger::Type::INFO, false, "tree", "Options:");
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "tree", "  Tui: {}", (tui ? "true" : "false"));
+    fima::logger::info(false, "tree", "Create tree of: {}", path.string());
+    fima::logger::info(false, "tree", "Options:");
+    fima::logger::info(false, "tree", "  Tui: {}", (tui ? "true" : "false"));
 }
 
 } // namespace tree

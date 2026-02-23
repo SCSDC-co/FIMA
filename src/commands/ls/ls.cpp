@@ -17,7 +17,7 @@
 
 #include "commands/ls/helpers/printer.h"
 #include "helpers/get_directories_entries.h"
-#include "logger/logger.h"
+#include "logger.h"
 #include "options.h"
 #include "utility/DirectoryItem.h"
 
@@ -60,20 +60,12 @@ start(const fs::path& path, const fima::options::ls_options& options)
         helpers::print_normal(entries, options.icons);
     }
 
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "ls", "Got list of directory: {}", path.string());
-    fima::logger::log(fima::logger::Type::INFO, false, "ls", "Options:");
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "ls", "  All: {}", (options.all ? "true" : "false"));
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "ls", "  Icons: {}", (options.icons ? "true" : "false"));
-    fima::logger::log(fima::logger::Type::INFO,
-                      false,
-                      "ls",
-                      "  Long output: {}",
-                      (options.long_output ? "true" : "false"));
-    fima::logger::log(
-      fima::logger::Type::INFO, false, "ls", "  Verbose: {}", (options.verbose ? "true" : "false"));
+    fima::logger::info(false, "ls", "Got list of directory: {}", path.string());
+    fima::logger::info(false, "ls", "Options:");
+    fima::logger::info(false, "ls", "  All: {}", (options.all ? "true" : "false"));
+    fima::logger::info(false, "ls", "  Icons: {}", (options.icons ? "true" : "false"));
+    fima::logger::info(false, "ls", "  Long output: {}", (options.long_output ? "true" : "false"));
+    fima::logger::info(false, "ls", "  Verbose: {}", (options.verbose ? "true" : "false"));
 }
 
 } // namespace ls

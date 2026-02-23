@@ -26,12 +26,6 @@ namespace fima {
 
 namespace logger {
 
-enum class Type
-{
-    INFO,
-    ERROR
-};
-
 inline std::filesystem::path
 get_log_file()
 {
@@ -79,15 +73,12 @@ get_log_file()
     return temp_path / ("fima_" + current_time + ".log");
 }
 
-// This is the main function of the logger, make sure to pass the correct number of values for the
-// number of placeholders
 template<typename... Args>
 void
-log(const Type& type,
-    const bool& console_output,
-    const std::string& command,
-    const std::string& format,
-    Args const&... values)
+info(const bool& console_output,
+     const std::string& command,
+     const std::string& format,
+     Args const&... values)
 {
     std::string formatted_string = std::vformat(format, std::make_format_args(values...));
     std::string formatted_string_sanitized =
@@ -97,35 +88,54 @@ log(const Type& type,
 
     auto time = std::format("{:%Y/%b/%d %H:%M:%S}", current_time);
 
-    auto log_file_line = [&](std::string type) {
-        return std::format("[{}] [{}] ({}) {}\n", time, type, command, formatted_string_sanitized);
+    auto log_file_line = [&]() {
+        return std::format("[{}] [INFO] ({}) {}\n", time, command, formatted_string_sanitized);
     };
 
     std::filesystem::path log_file_path = get_log_file();
 
     std::ofstream logfile(log_file_path, std::ios::app);
 
-    switch (type) {
-        case Type::INFO:
-            if (console_output) {
-                std::clog << formatted_string << '\n';
-            }
+    if (console_output) {
+        std::clog << formatted_string << '\n';
+    }
 
-            if (logfile.is_open()) {
-                logfile << log_file_line("INFO");
-            }
+    if (logfile.is_open()) {
+        logfile << log_file_line();
+    }
 
-            break;
-        case Type::ERROR:
-            if (console_output) {
-                std::cerr << formatted_string << '\n';
-            }
+    logfile.close();
+}
 
-            if (logfile.is_open()) {
-                logfile << log_file_line("ERROR");
-            }
+template<typename... Args>
+void
+error(const bool& console_output,
+      const std::string& command,
+      const std::string& format,
+      Args const&... values)
+{
+    std::string formatted_string = std::vformat(format, std::make_format_args(values...));
+    std::string formatted_string_sanitized =
+      std::regex_replace(formatted_string, fima::colors::ESCAPE_SEQUENCE_REGEX, "");
 
-            break;
+    auto current_time = fima::utility::get_current_time();
+
+    auto time = std::format("{:%Y/%b/%d %H:%M:%S}", current_time);
+
+    auto log_file_line = [&]() {
+        return std::format("[{}] [ERROR] ({}) {}\n", time, command, formatted_string_sanitized);
+    };
+
+    std::filesystem::path log_file_path = get_log_file();
+
+    std::ofstream logfile(log_file_path, std::ios::app);
+
+    if (console_output) {
+        std::cerr << formatted_string << '\n';
+    }
+
+    if (logfile.is_open()) {
+        logfile << log_file_line();
     }
 
     logfile.close();
