@@ -21,8 +21,19 @@
 #include "commands/ls/helpers/icon_maps.h"
 #include "commands/permissions.h"
 #include "ftxui/dom/elements.hpp"
+#include "utility/file.h"
 
 namespace fima {
+
+DirectoryItem::DirectoryItem(const std::filesystem::path& path)
+  : name(path.filename().string())
+  , path(path)
+  , permissions(fima::perms::get_perms(path))
+  , size(fima::file::get_file_size(path))
+  , date(fima::file::get_file_time(path))
+  , user(fima::file::get_file_owner(path))
+{
+}
 
 [[nodiscard]] std::string
 DirectoryItem::get_permissions() const

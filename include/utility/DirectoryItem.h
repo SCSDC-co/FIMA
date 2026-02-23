@@ -16,9 +16,6 @@
 #include <ftxui/dom/node.hpp>
 #include <string>
 
-#include "commands/permissions.h"
-#include "utility/file.h"
-
 namespace fima {
 
 class DirectoryItem
@@ -32,15 +29,8 @@ class DirectoryItem
     size_t size{};
 
   public:
-    DirectoryItem(const std::filesystem::path& path)
-      : name(path.filename().string())
-      , path(path)
-      , permissions(fima::perms::get_perms(path))
-      , size(fima::file::get_file_size(path))
-      , date(fima::file::get_file_time(path))
-      , user(fima::file::get_file_owner(path))
-    {
-    }
+    DirectoryItem(const std::filesystem::path& path);
+
     [[nodiscard]] std::string get_permissions() const;
     [[nodiscard]] std::string get_user() const;
     [[nodiscard]] std::string get_name(const bool& icons) const;

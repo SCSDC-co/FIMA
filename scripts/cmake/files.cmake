@@ -23,5 +23,7 @@ add_library(fima_lib
     src/program_files.cpp
     src/commands/tree.cpp
     src/utility/file.cpp
+    src/git/GitRepo.cpp
+    src/git/README.md
     src/tui/tui.cpp
 )
