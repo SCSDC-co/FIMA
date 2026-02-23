@@ -88,10 +88,6 @@ info(const bool& console_output,
 
     auto time = std::format("{:%Y/%b/%d %H:%M:%S}", current_time);
 
-    auto log_file_line = [&]() {
-        return std::format("[{}] [INFO] ({}) {}\n", time, command, formatted_string_sanitized);
-    };
-
     std::filesystem::path log_file_path = get_log_file();
 
     std::ofstream logfile(log_file_path, std::ios::app);
@@ -101,7 +97,7 @@ info(const bool& console_output,
     }
 
     if (logfile.is_open()) {
-        logfile << log_file_line();
+        logfile << std::format("[{}] [INFO] ({}) {}\n", time, command, formatted_string_sanitized);
     }
 
     logfile.close();
@@ -122,10 +118,6 @@ error(const bool& console_output,
 
     auto time = std::format("{:%Y/%b/%d %H:%M:%S}", current_time);
 
-    auto log_file_line = [&]() {
-        return std::format("[{}] [ERROR] ({}) {}\n", time, command, formatted_string_sanitized);
-    };
-
     std::filesystem::path log_file_path = get_log_file();
 
     std::ofstream logfile(log_file_path, std::ios::app);
@@ -135,7 +127,8 @@ error(const bool& console_output,
     }
 
     if (logfile.is_open()) {
-        logfile << log_file_line();
+        logfile << std::format("[{}] [ERROR] ({}) {}\n", time, command, formatted_string_sanitized);
+        ;
     }
 
     logfile.close();
