@@ -15,7 +15,8 @@
 #include <filesystem>
 #include <vector>
 
-#include "helpers/logger.h"
+#include "logger.h"
+#include "utility/colors.h"
 
 namespace fs = std::filesystem;
 
@@ -29,8 +30,11 @@ dir(const std::vector<fs::path>& paths)
     for (const auto& entry : paths) {
 
         if (fs::is_directory(entry)) {
-            fima::helpers::log(
-              fima::helpers::logger_type::ERROR, "This directory already exists: ", entry.string());
+            fima::logger::error(true,
+                                "create dir",
+                                fima::colors::RED +
+                                  "This directory already exists: " + fima::colors::RESET + "{}",
+                                entry.string());
 
             continue;
         }
@@ -38,13 +42,18 @@ dir(const std::vector<fs::path>& paths)
         try {
             fs::create_directories(entry);
 
-            fima::helpers::log(
-              fima::helpers::logger_type::LOG, "Directory created at: ", entry.string());
-        } catch (const std::exception& ex) {
-            fima::helpers::log(fima::helpers::logger_type::ERROR,
-                               "Failed to create the directory: ",
+            fima::logger::info(true,
+                               "create dir",
+                               fima::colors::GREEN +
+                                 "Directory created at: " + fima::colors::RESET + "{}",
                                entry.string());
-            fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
+        } catch (const std::exception& ex) {
+            fima::logger::error(true,
+                                "create dir",
+                                fima::colors::RED +
+                                  "Failed to create the directory: " + fima::colors::RESET + "{}",
+                                entry.string());
+            fima::logger::error(true, "create dir", ex.what());
         }
     }
 }

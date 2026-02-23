@@ -29,6 +29,7 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "helpers/get_directories_entries.h"
+#include "logger.h"
 #include "options.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
@@ -175,6 +176,20 @@ main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
     } else {
         cloc(paths_to_ignore, options);
     }
+
+    std::string paths_sanitized{};
+    std::string paths_to_ignore_sanitized{};
+
+    for (const fs::path& item : options.paths) {
+        paths_sanitized += item.string() + ", ";
+    }
+
+    fima::logger::info(false, "cloc", "Got loc of: {}", paths_sanitized);
+    fima::logger::info(false, "cloc", "Options:");
+    fima::logger::info(false, "cloc", "  Quiet: {}", (options.quiet ? "true" : "false"));
+    fima::logger::info(false, "cloc", "  Sorting: {}", options.sorting);
+    fima::logger::info(
+      false, "cloc", "  Show langauges: {}", (options.show_languages ? "true" : "false"));
 }
 
 } // namespace cloc

@@ -12,9 +12,8 @@
 #include "commands/copy/directory.h"
 
 #include <filesystem>
-#include <iostream>
 
-#include "helpers/logger.h"
+#include "logger.h"
 #include "utility/colors.h"
 
 namespace fs = std::filesystem;
@@ -27,9 +26,11 @@ void
 directory(fs::path source, fs::path destination)
 {
     if (!fs::is_directory(source)) {
-        fima::helpers::log(fima::helpers::logger_type::ERROR,
-                           "The source file is a file or does not exists: ",
-                           source.string());
+        fima::logger::error(true,
+                            "copy dir",
+                            fima::colors::RED + "The source file is a file or does not exists: " +
+                              fima::colors::RESET + "{}",
+                            source.string());
     }
 
     if (!fs::is_directory(destination)) {
@@ -40,16 +41,27 @@ directory(fs::path source, fs::path destination)
         fs::copy(
           source, destination, fs::copy_options::overwrite_existing | fs::copy_options::recursive);
 
-        std::clog << fima::colors::GREEN << "Directory " << fima::colors::RESET << source.string()
-                  << fima::colors::GREEN << " copied to " << fima::colors::RESET
-                  << destination.string() << '\n';
+        fima::logger::info(true,
+                           "copy dir",
+                           fima::colors::GREEN + "Directory " + fima::colors::RESET + "{}" +
+                             fima::colors::GREEN + " copied to " + fima::colors::RESET + "{}",
+                           source.string(),
+                           destination.string());
     } catch (const std::exception& ex) {
-        fima::helpers::log(fima::helpers::logger_type::ERROR, "Failed to copy the directory: ", "");
+        fima::logger::error(true,
+                            "copy dir",
+                            fima::colors::RED + "Failed to copy the directory" +
+                              fima::colors::RESET);
+        fima::logger::error(true,
+                            "copy dir",
+                            fima::colors::RED + "  Source directory: " + fima::colors::RESET + "{}",
+                            source.string());
+        fima::logger::error(true,
+                            "copy dir",
+                            fima::colors::RED + "  Destination: " + fima::colors::RESET + "{}",
+                            destination.string());
 
-        fima::helpers::log(fima::helpers::logger_type::ERROR, "  Source directory: ", source);
-        fima::helpers::log(fima::helpers::logger_type::ERROR, "  Destination: ", destination);
-
-        fima::helpers::log(fima::helpers::logger_type::ERROR, "", ex.what());
+        fima::logger::error(true, "copy dir", ex.what());
     }
 }
 
