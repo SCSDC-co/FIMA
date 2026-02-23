@@ -8,3 +8,4 @@ class ExampleRecipe(ConanFile):
     def requirements(self):
         self.requires("nlohmann_json/3.12.0")
         self.requires("ftxui/6.1.9")
+        self.requires("libgit2/1.9.1")
