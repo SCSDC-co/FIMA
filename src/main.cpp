@@ -181,7 +181,7 @@ main(int argc, char** argv)
     perms_subcmd->add_option("path", perms_path, "The file path to read permissions from")
       ->configurable(false);
 
-    /*  =================
+    /*  ================
      *  CLOC SUB COMMAND
      */
 
@@ -211,11 +211,21 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
+    /*  ================
+     *  INFO SUB COMMAND
+     */
+
+    CLI::App* info_subcmd =
+      app.add_subcommand("info", "Displays informations about a file or directory")
+        ->configurable(false);
+
     CLI11_PARSE(app, argc, argv);
 
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
     // get the correct value
     tui = !tui;
+
+    fima::git::GitRepo repo = fima::git::GitRepo(path);
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;
