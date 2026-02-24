@@ -32,7 +32,7 @@ class GitRepo
 
     std::filesystem::directory_entry git_repo_path{ "" };
 
-    git_repository* repo = NULL;
+    git_repository* repo = nullptr;
     git_commit* commit{};
     git_reference* repo_head{};
     git_oid oid{ 0 };
