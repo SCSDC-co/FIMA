@@ -21,6 +21,7 @@
 #include "commands/copy/file.h"
 #include "commands/create/directory.h"
 #include "commands/create/file.h"
+#include "commands/info/info.h"
 #include "commands/ls/ls.h"
 #include "commands/permissions.h"
 #include "commands/remove.h"
@@ -215,9 +216,15 @@ main(int argc, char** argv)
      *  INFO SUB COMMAND
      */
 
+    std::filesystem::directory_entry info_path{ std::filesystem::current_path() };
+
     CLI::App* info_subcmd =
       app.add_subcommand("info", "Displays informations about a file or directory")
         ->configurable(false);
+
+    info_subcmd
+      ->add_option("path", info_path, "The path to get the info from (default current directory)")
+      ->configurable(false);
 
     CLI11_PARSE(app, argc, argv);
 
@@ -290,6 +297,10 @@ main(int argc, char** argv)
         }
 
         fima::cloc::main(regexes, cloc_options);
+
+        return 0;
+    } else if (app.got_subcommand(info_subcmd)) {
+        fima::info::info(info_path);
 
         return 0;
     }

@@ -15,7 +15,7 @@
 #include <fstream>
 #include <string>
 
-#include "commands/cloc/helpers/FileStats.h"
+#include "commands/cloc/helpers/Stats.h"
 #include "utility/trim_string.h"
 
 namespace fs = std::filesystem;
@@ -26,13 +26,13 @@ namespace cloc {
 
 namespace helpers {
 
-fima::cloc::classes::FileStats
+fima::cloc::classes::Stats
 count_lines(const fs::path& file_path,
             const std::string& single_comment,
             const std::string& multiline_start,
             const std::string& multiline_end)
 {
-    fima::cloc::classes::FileStats file_stats;
+    fima::cloc::classes::Stats file_stats;
 
     std::ifstream file(file_path);
 
@@ -97,8 +97,8 @@ count_lines(const fs::path& file_path,
         }
 
         file_stats.set_code(code_lines);
-        file_stats.set_blank(blank_lines);
-        file_stats.set_comment(comment_lines);
+        file_stats.set_blank_lines(blank_lines);
+        file_stats.set_comments(comment_lines);
     }
 
     file_stats.set_total();

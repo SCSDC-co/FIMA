@@ -13,7 +13,7 @@
 
 #include <vector>
 
-#include "utility/DirectoryItem.h"
+#include "fs/DirectoryItem.h"
 
 namespace fima {
 
@@ -22,10 +22,12 @@ namespace ls {
 namespace helpers {
 
 void
-print_normal(const std::vector<fima::DirectoryItem>& items, const bool& icons);
+print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons);
 
 void
-print_long(const std::vector<fima::DirectoryItem>& items, const bool& icons, const bool& verbose);
+print_long(const std::vector<fima::fs::DirectoryItem>& items,
+           const bool& icons,
+           const bool& verbose);
 
 } // namespace helpers
 

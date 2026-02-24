@@ -27,10 +27,10 @@ class GitRepo
 
     int commit_number{};
 
-    std::string commit_message{ "" };
-    std::string branch{ "" };
+    std::string commit_message{};
+    std::string branch{};
 
-    std::filesystem::directory_entry git_repo_path{ "" };
+    std::filesystem::directory_entry git_repo_path{};
 
     git_repository* repo = nullptr;
     git_commit* commit{};

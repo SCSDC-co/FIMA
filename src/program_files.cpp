@@ -13,11 +13,9 @@
 
 #include <filesystem>
 
+#include "fs/filesystem_op.h"
 #include "logger.h"
 #include "utility/colors.h"
-#include "utility/file.h"
-
-namespace fs = std::filesystem;
 
 namespace fima {
 
@@ -26,12 +24,12 @@ namespace program_files {
 void
 create_config_dirs()
 {
-    if (!fs::exists(FIMA_CONFIG_PATH)) {
-        fs::create_directory(FIMA_CONFIG_PATH);
+    if (!std::filesystem::exists(FIMA_CONFIG_PATH)) {
+        std::filesystem::create_directory(FIMA_CONFIG_PATH);
     }
 
-    if (!fs::exists(MAPPINGS_PATH)) {
-        fs::create_directory(MAPPINGS_PATH);
+    if (!std::filesystem::exists(MAPPINGS_PATH)) {
+        std::filesystem::create_directory(MAPPINGS_PATH);
     }
 }
 
@@ -40,28 +38,28 @@ create_config_files()
 {
     create_config_dirs();
 
-    if (!fs::exists(CONFIG_FILE_PATH)) {
-        fima::file::create(CONFIG_FILE_PATH, "");
+    if (!std::filesystem::exists(CONFIG_FILE_PATH)) {
+        fima::fs::operations::create(CONFIG_FILE_PATH, "");
     }
 
-    if (!fs::exists(LANGUAGES_FILE_PATH)) {
-        fima::file::create(LANGUAGES_FILE_PATH, languages_file);
+    if (!std::filesystem::exists(LANGUAGES_FILE_PATH)) {
+        fima::fs::operations::create(LANGUAGES_FILE_PATH, languages_file);
     }
 
-    if (!fs::exists(MAP_LANGUAGES_ICON_PATH)) {
-        fima::file::create(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
+    if (!std::filesystem::exists(MAP_LANGUAGES_ICON_PATH)) {
+        fima::fs::operations::create(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
     }
 
-    if (!fs::exists(MAP_DIRECTORY_ICON_PATH)) {
-        fima::file::create(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
+    if (!std::filesystem::exists(MAP_DIRECTORY_ICON_PATH)) {
+        fima::fs::operations::create(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
     }
 
-    if (!fs::exists(MAP_LANGUAGES_FAMILY_PATH)) {
-        fima::file::create(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
+    if (!std::filesystem::exists(MAP_LANGUAGES_FAMILY_PATH)) {
+        fima::fs::operations::create(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
     }
 
-    if (!fs::exists(MAP_LANGUAGES_NAME_PATH)) {
-        fima::file::create(MAP_LANGUAGES_NAME_PATH, map_languages_name);
+    if (!std::filesystem::exists(MAP_LANGUAGES_NAME_PATH)) {
+        fima::fs::operations::create(MAP_LANGUAGES_NAME_PATH, map_languages_name);
     }
 }
 
@@ -71,20 +69,20 @@ reset_config_files(const bool& preserve_config_file)
     create_config_dirs();
 
     if (!preserve_config_file) {
-        fima::file::overwrite(CONFIG_FILE_PATH, "");
+        fima::fs::operations::overwrite(CONFIG_FILE_PATH, "");
     }
 
-    fima::file::overwrite(LANGUAGES_FILE_PATH, languages_file);
-    fima::file::overwrite(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
-    fima::file::overwrite(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
-    fima::file::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
-    fima::file::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);
+    fima::fs::operations::overwrite(LANGUAGES_FILE_PATH, languages_file);
+    fima::fs::operations::overwrite(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
+    fima::fs::operations::overwrite(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
+    fima::fs::operations::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
+    fima::fs::operations::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);
 
-    fima::logger::info(true,
-                       "reset config files",
-                       fima::colors::GREEN +
-                         "Successfully reset all the config file, config file preserved: " +
-                         fima::colors::RESET + (preserve_config_file ? "true" : "false"));
+    logger::info(true,
+                 "reset config files",
+                 fima::colors::GREEN +
+                   "Successfully reset all the config file, config file preserved: " +
+                   fima::colors::RESET + (preserve_config_file ? "true" : "false"));
 }
 
 } // namespace program_files

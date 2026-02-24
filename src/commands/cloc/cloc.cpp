@@ -20,7 +20,6 @@
 #include <unordered_set>
 #include <vector>
 
-#include "commands/cloc/helpers/FileStats.h"
 #include "commands/cloc/helpers/LanguageStats.h"
 #include "commands/cloc/helpers/count_lines.h"
 #include "commands/cloc/helpers/language_file.h"
@@ -131,14 +130,14 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         std::string multiline_end =
           languages_file[file_language_family]["comments"]["multiline_end"].get<std::string>();
 
-        fima::cloc::classes::FileStats file_stats =
+        fima::cloc::classes::Stats file_stats =
           helpers::count_lines(path, single_comment, multiline_start, multiline_end);
 
         fima::cloc::classes::LanguageStats language_stats;
 
         language_stats.set_code(file_stats.get_code());
-        language_stats.set_blank(file_stats.get_blank());
-        language_stats.set_comment(file_stats.get_comment());
+        language_stats.set_blank_lines(file_stats.get_blank_lines());
+        language_stats.set_comments(file_stats.get_comments());
         language_stats.set_total();
         language_stats.update_files();
 
@@ -152,12 +151,12 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
                         language_stats.get_code());
 
             analyzed_languages.at(file_language_name)
-              .set_blank(analyzed_languages.at(file_language_name).get_blank() +
-                         language_stats.get_blank());
+              .set_blank_lines(analyzed_languages.at(file_language_name).get_blank_lines() +
+                               language_stats.get_blank_lines());
 
             analyzed_languages.at(file_language_name)
-              .set_comment(analyzed_languages.at(file_language_name).get_comment() +
-                           language_stats.get_comment());
+              .set_comments(analyzed_languages.at(file_language_name).get_comments() +
+                            language_stats.get_comments());
 
             analyzed_languages.at(file_language_name).set_total();
 

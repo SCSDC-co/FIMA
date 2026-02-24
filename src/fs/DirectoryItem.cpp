@@ -1,6 +1,6 @@
 /*
- * src/utility/DirectoryItem.cpp
- * include/utility/DirectoryItem.h
+ * src/fs/DirectoryItem.cpp
+ * include/fs/DirectoryItem.h
  *
  * The class that represent a directory item
  *
@@ -9,7 +9,7 @@
  * See LICENSE file for details.
  */
 
-#include "utility/DirectoryItem.h"
+#include "fs/DirectoryItem.h"
 
 #include <chrono>
 #include <cmath>
@@ -20,18 +20,21 @@
 
 #include "commands/ls/helpers/icon_maps.h"
 #include "commands/permissions.h"
+#include "fs/filesystem_op.h"
 #include "ftxui/dom/elements.hpp"
-#include "utility/file.h"
 
 namespace fima {
 
-DirectoryItem::DirectoryItem(const std::filesystem::path& path)
-  : name(path.filename().string())
+namespace fs {
+
+DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
+  : name(path.path().filename().string())
   , path(path)
   , permissions(fima::perms::get_perms(path))
-  , size(fima::file::get_file_size(path))
-  , date(fima::file::get_file_time(path))
-  , user(fima::file::get_file_owner(path))
+  , size(operations::get_file_size(path))
+  , last_modification_date(operations::get_file_time(path))
+  , user(operations::get_file_owner(path))
+  , is_hidden(path.path().filename().native().starts_with('.'))
 {
 }
 
@@ -73,12 +76,12 @@ DirectoryItem::get_size() const
     return this->size;
 }
 [[nodiscard]] std::string
-DirectoryItem::get_time() const
+DirectoryItem::get_last_modification_date() const
 {
     using namespace std::chrono;
 
     // this way we get the seconds as integer and not as long/double
-    auto date_with_rounded_seconds = floor<std::chrono::seconds>(this->date);
+    auto date_with_rounded_seconds = floor<std::chrono::seconds>(this->last_modification_date);
 
     // since std::filesystem::last_write_time returns the time as UTC+00:00 this convert it to the
     // correct locale
@@ -131,5 +134,7 @@ DirectoryItem::is_file() const
 {
     return !std::filesystem::is_directory(this->get_path());
 }
+
+} // namespace fs
 
 } // namespace fima
