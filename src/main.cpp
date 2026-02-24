@@ -284,17 +284,7 @@ main(int argc, char** argv)
         return 0;
     }
 
-    fima::git::GitRepo repo = fima::git::GitRepo(path);
-
-    std::cout << "git path: " << repo.get_repo_path() << '\n';
-    std::cout << "  branch: " << repo.get_repo_branch() << '\n';
-    std::cout << "  commit message: " << repo.get_commit_message()
-              << (repo.get_commit_message().ends_with("\n") ? "" : "\n");
-    std::cout << "  commit author: " << repo.get_commit_author() << '\n';
-    std::cout << "  commit committer: " << repo.get_commit_committer() << '\n';
-    std::cout << "  commit number: " << repo.get_commit_number() << '\n';
-
-    // fima::tui::start_tui(path);
+    fima::tui::start_tui(path);
 
     return 0;
 }
