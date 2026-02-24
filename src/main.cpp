@@ -27,6 +27,7 @@
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
+#include "git/GitRepo.h"
 #include "options.h"
 #include "program_files.h"
 #include "tui/tui.h"
@@ -82,7 +83,7 @@ main(int argc, char** argv)
                 "Preserces the config.toml file (only work when using --reset-config-files)")
       ->configurable(true);
 
-    fs::path path{ fs::current_path() };
+    fs::directory_entry path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
       ->check(CLI::ExistingDirectory)
       ->expected(0, 1)
@@ -283,7 +284,17 @@ main(int argc, char** argv)
         return 0;
     }
 
-    fima::tui::start_tui(path);
+    fima::git::GitRepo repo = fima::git::GitRepo(path);
+
+    std::cout << "git path: " << repo.get_repo_path() << '\n';
+    std::cout << "  branch: " << repo.get_repo_branch() << '\n';
+    std::cout << "  commit message: " << repo.get_commit_message()
+              << (repo.get_commit_message().ends_with("\n") ? "" : "\n");
+    std::cout << "  commit author: " << repo.get_commit_author() << '\n';
+    std::cout << "  commit committer: " << repo.get_commit_committer() << '\n';
+    std::cout << "  commit number: " << repo.get_commit_number() << '\n';
+
+    // fima::tui::start_tui(path);
 
     return 0;
 }

@@ -12,12 +12,18 @@
 #include "git/GitRepo.h"
 
 #include <filesystem>
+#include <git2/branch.h>
 #include <git2/commit.h>
 #include <git2/global.h>
 #include <git2/oid.h>
+#include <git2/refs.h>
 #include <git2/repository.h>
+#include <git2/revwalk.h>
 #include <git2/types.h>
 #include <string>
+#include <vector>
+
+#include "helpers/get_directories_entries.h"
 
 namespace fs = std::filesystem;
 
@@ -29,28 +35,67 @@ GitRepo::GitRepo(const fs::directory_entry& path)
 {
     git_libgit2_init();
 
-    int err = git_repository_open_ext(&this->repo, path.path().c_str(), 0, NULL);
+    this->get_git_path(path);
 
-    if (err < 0) {
-        this->is_in_repo = false;
-    }
+    git_repository_open(&this->repo, this->git_repo_path.path().c_str());
 
-    if (this->is_in_repo) {
-        this->set_git_dir_path();
+    git_repository_head(&this->repo_head, this->repo);
 
-        git_repository_open_bare(&this->repo, this->git_repo_path.c_str());
+    // for getting the HEAD of the repo
+    git_reference_name_to_id(&this->oid, this->repo, git_reference_name(repo_head));
 
-        // for getting the HEAD of the repo
-        git_oid_fromstr(&oid, "HEAD");
+    git_commit_lookup(&this->commit, this->repo, &this->oid);
 
-        git_commit_lookup(&this->commit, this->repo, &this->oid);
-    }
+    this->set_repo_info();
+    this->set_commit_info();
 }
 
 void
-GitRepo::set_git_dir_path()
+GitRepo::get_git_path(const std::filesystem::directory_entry& path)
 {
-    this->git_repo_path = git_repository_path(this->repo);
+    fs::directory_entry _path;
+
+    bool found{ false };
+
+    std::vector<fs::directory_entry> dir_entries{ fima::helpers::get_directories_entries(path,
+                                                                                         true) };
+
+    for (const fs::directory_entry& entry : dir_entries) {
+        if (found) {
+            break;
+        }
+
+        if (entry.path().filename() == ".git") {
+            _path = entry;
+            found = true;
+        }
+    }
+
+    this->is_in_repo    = found;
+    this->git_repo_path = _path;
+}
+
+void
+GitRepo::set_repo_info()
+{
+    const char* _branch;
+
+    int _commit_number{ 0 };
+
+    // all this shit just for getting the fucking commit number
+    git_revwalk* walk;
+    git_revwalk_new(&walk, this->repo);
+    git_revwalk_sorting(walk, GIT_SORT_TOPOLOGICAL | GIT_SORT_TIME);
+    git_revwalk_push_head(walk);
+
+    while (git_revwalk_next(&this->oid, walk) == 0) {
+        _commit_number++;
+    }
+
+    git_branch_name(&_branch, repo_head);
+
+    this->branch        = _branch;
+    this->commit_number = _commit_number;
 }
 void
 GitRepo::set_commit_info()
@@ -59,16 +104,11 @@ GitRepo::set_commit_info()
     this->commit_author    = git_commit_author(this->commit);
     this->commit_committer = git_commit_committer(this->commit);
 }
-void
-GitRepo::set_commit_number()
-{
-    this->commit_number = git_commit_parentcount(commit);
-}
 
 [[nodiscard]] fs::path
 GitRepo::get_repo_path() const
 {
-    return this->git_repo_path;
+    return this->git_repo_path.path().string();
 }
 [[nodiscard]] std::string
 GitRepo::get_repo_branch() const
@@ -99,11 +139,9 @@ GitRepo::get_commit_number() const
 
 GitRepo::~GitRepo()
 {
-    if (is_in_repo) {
-        if (this->repo) {
-            git_repository_free(this->repo);
-            git_commit_free(this->commit);
-        }
+    if (this->repo) {
+        git_repository_free(this->repo);
+        git_commit_free(this->commit);
     }
 
     git_libgit2_shutdown();

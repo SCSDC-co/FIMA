@@ -25,15 +25,16 @@ class GitRepo
   private:
     bool is_in_repo{};
 
-    int commit_number{ 0 };
+    int commit_number{};
 
-    std::string branch{};
-    std::string commit_message{};
+    std::string commit_message{ "" };
+    std::string branch{ "" };
 
-    std::filesystem::path git_repo_path{};
+    std::filesystem::directory_entry git_repo_path{ "" };
 
     git_repository* repo = NULL;
     git_commit* commit{};
+    git_reference* repo_head{};
     git_oid oid{ 0 };
 
     const git_signature* commit_author{};
@@ -42,9 +43,10 @@ class GitRepo
   public:
     GitRepo(const std::filesystem::directory_entry& path);
 
-    void set_git_dir_path();
     void set_commit_info();
-    void set_commit_number();
+    void set_repo_info();
+
+    void get_git_path(const std::filesystem::directory_entry& path);
 
     [[nodiscard]] std::filesystem::path get_repo_path() const;
 
