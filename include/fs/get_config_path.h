@@ -12,7 +12,9 @@
 
 #include <cstdlib>
 #include <filesystem>
-#include <string>
+#include <iostream>
+
+#include "utility/colors.h"
 
 namespace fima {
 
@@ -22,10 +24,27 @@ inline std::filesystem::path
 get_application_config_path()
 {
 #if defined(_WIN32) || defined(_WIN64)
-    return std::filesystem::path(std::getenv("APPDATA"));
+    if (auto home_var = std::getenv("APPDATA")) {
+        return std::filesystem::path(home_var);
+    } else {
+        std::cerr << fima::colors::RED << "FATAL ERROR: " << fima::colors::RESET
+                  << "Environment variable \"APPDATA\" is not set. FIMA can't run without it"
+                  << '\n';
+
+        std::exit(1);
+    }
 #elif defined(__linux__) || defined(__unix) || defined(__unix__) || defined(__FreeBSD__) ||        \
   defined(__APPLE__) || defined(__MACH__)
-    return std::filesystem::path(std::string(std::getenv("HOME")) + "/.config");
+    if (auto home_var = std::getenv("HOME")) {
+        return std::filesystem::path(std::string(home_var) + "/.config");
+    } else {
+        std::cerr << fima::colors::RED << "FATAL ERROR: " << fima::colors::RESET
+                  << "Environment variable \"HOME\" is not set. FIMA can't run without it" << '\n';
+
+        std::exit(1);
+    }
+#else
+#  error "Platform not supported! Supported platforms: Windows, MacOS, Linux, any Unix-like OS"
 #endif
 }
 

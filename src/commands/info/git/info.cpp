@@ -15,10 +15,10 @@
 #include <iostream>
 #include <string>
 
-#include "commands/ls/helpers/icon_maps.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "program_files.h"
 
 namespace fima {
 
@@ -41,7 +41,7 @@ info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& rep
         hbox(text("GINFO: ") | bold | color(Color::Green),
              text(repo.get_repo_path()) | color(Color::White),
              text((repo.get_repo_path().ends_with("/") ? " " : "/ ")) | color(Color::White) | flex,
-             text(fima::ls::helpers::get_item_icon(repo.get_repo_path()) + " "))) |
+             text(fima::program_files::get_item_icon(repo.get_repo_path()) + " "))) |
         color(Color::Green),
 
       window(

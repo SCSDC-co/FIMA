@@ -40,7 +40,7 @@ namespace fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
-    fima::program_files::create_config_files();
+    fima::program_files::setup_variables();
 
     CLI::App app;
     argv = app.ensure_utf8(argv);

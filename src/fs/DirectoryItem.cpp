@@ -18,10 +18,10 @@
 #include <ftxui/dom/node.hpp>
 #include <string>
 
-#include "commands/ls/helpers/icon_maps.h"
 #include "commands/permissions.h"
 #include "fs/filesystem_op.h"
 #include "ftxui/dom/elements.hpp"
+#include "program_files.h"
 
 namespace fima {
 
@@ -35,7 +35,7 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , last_modification_date(operations::get_file_time(path))
   , user(operations::get_file_owner(path))
   , hidden(path.path().filename().native().starts_with('.'))
-  , icon(fima::ls::helpers::get_item_icon(path.path()) + " ")
+  , icon(fima::program_files::get_item_icon(path.path()) + " ")
 {
 }
 
@@ -55,7 +55,7 @@ DirectoryItem::get_name(const bool& icons) const
     std::string name;
 
     if (icons) {
-        name += fima::ls::helpers::get_item_icon(this->get_path()) + " ";
+        name += fima::program_files::get_item_icon(this->get_path()) + " ";
     }
 
     name += this->name;

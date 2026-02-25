@@ -17,10 +17,9 @@
 
 #include "commands/cloc/helpers/Stats.h"
 #include "commands/cloc/helpers/count_lines.h"
-#include "commands/cloc/helpers/language_file.h"
-#include "commands/cloc/helpers/language_map.h"
 #include "config.h"
 #include "fs/get_directories_entries.h"
+#include "program_files.h"
 
 namespace fima {
 
@@ -36,25 +35,24 @@ Directory::Directory(const std::filesystem::directory_entry& path)
 void
 Directory::set_stats()
 {
-    using json = nlohmann::json;
-
     fima::cloc::classes::Stats stats;
-
-    json languages_file = cloc::helpers::get_languages_file();
 
     std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
       this->metadata.get_path(), true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
         if (!std::filesystem::is_directory(item)) {
-            std::string family = cloc::helpers::get_language_family(item);
+            std::string family = fima::program_files::get_language_family(item);
 
             std::string single_comment =
-              languages_file[family]["comments"]["single"].get<std::string>();
+              fima::program_files::language_file_json[family]["comments"]["single"]
+                .get<std::string>();
             std::string multiline_start =
-              languages_file[family]["comments"]["multiline_start"].get<std::string>();
+              fima::program_files::language_file_json[family]["comments"]["multiline_start"]
+                .get<std::string>();
             std::string multiline_end =
-              languages_file[family]["comments"]["multiline_end"].get<std::string>();
+              fima::program_files::language_file_json[family]["comments"]["multiline_end"]
+                .get<std::string>();
 
             stats += fima::cloc::helpers::count_lines(
               item, single_comment, multiline_start, multiline_end);

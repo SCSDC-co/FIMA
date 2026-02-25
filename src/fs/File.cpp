@@ -14,8 +14,7 @@
 #include <nlohmann/json_fwd.hpp>
 
 #include "commands/cloc/helpers/count_lines.h"
-#include "commands/cloc/helpers/language_file.h"
-#include "commands/cloc/helpers/language_map.h"
+#include "program_files.h"
 
 namespace fima {
 
@@ -23,7 +22,7 @@ namespace fs {
 
 File::File(const std::filesystem::directory_entry& path)
   : metadata(path)
-  , file_type(fima::cloc::helpers::get_language_name(path.path()))
+  , file_type(fima::program_files::get_language_name(path.path()))
 {
     set_stats();
 }
@@ -31,17 +30,16 @@ File::File(const std::filesystem::directory_entry& path)
 void
 File::set_stats()
 {
-    using json = nlohmann::json;
+    std::string family = fima::program_files::get_language_family(this->metadata.get_path());
 
-    json languages_file = cloc::helpers::get_languages_file();
-
-    std::string family = cloc::helpers::get_language_family(this->metadata.get_path());
-
-    std::string single_comment = languages_file[family]["comments"]["single"].get<std::string>();
+    std::string single_comment =
+      fima::program_files::language_file_json[family]["comments"]["single"].get<std::string>();
     std::string multiline_start =
-      languages_file[family]["comments"]["multiline_start"].get<std::string>();
+      fima::program_files::language_file_json[family]["comments"]["multiline_start"]
+        .get<std::string>();
     std::string multiline_end =
-      languages_file[family]["comments"]["multiline_end"].get<std::string>();
+      fima::program_files::language_file_json[family]["comments"]["multiline_end"]
+        .get<std::string>();
 
     this->stats = fima::cloc::helpers::count_lines(
       this->metadata.get_path(), single_comment, multiline_start, multiline_end);

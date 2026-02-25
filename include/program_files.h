@@ -9,17 +9,38 @@
  * See LICENSE file for details.
  */
 
-#include <filesystem>
-#include <string_view>
+#pragma once
 
-#include "fs/get_config_path.h"
+#include <filesystem>
+#include <nlohmann/json.hpp>
+#include <string_view>
 
 namespace fima {
 
 namespace program_files {
 
-inline const std::string_view languages_file = R"json(
-{
+void
+create_config_files();
+
+void
+reset_config_files(const bool& preserve_config_file);
+
+[[nodiscard]] nlohmann::json
+parse_file(const std::filesystem::path& path);
+
+[[nodiscard]] std::string
+get_language_name(const std::filesystem::path& path);
+
+[[nodiscard]] std::string
+get_language_family(const std::filesystem::path& path);
+
+[[nodiscard]] std::string
+get_item_icon(const std::filesystem::path& path);
+
+void
+setup_variables();
+
+inline const std::string_view family_spec_file = R"json({
     "c_like": {
         "comments": {
             "single": "//",
@@ -100,8 +121,7 @@ inline const std::string_view languages_file = R"json(
 }
 )json";
 
-inline const std::string_view map_languages_name = R"json(
-{
+inline const std::string_view map_languages_name = R"json({
     ".cpp": "C++",
     ".cxx": "C++",
     ".cc": "C++",
@@ -223,8 +243,7 @@ inline const std::string_view map_languages_name = R"json(
 }
 )json";
 
-inline const std::string_view map_languages_family = R"json(
-{
+inline const std::string_view map_languages_family = R"json({
     ".cpp": "c_like",
     ".cxx": "c_like",
     ".cc": "c_like",
@@ -347,8 +366,7 @@ inline const std::string_view map_languages_family = R"json(
 }
 )json";
 
-inline const std::string_view map_languages_icon = R"json(
-{
+inline const std::string_view map_languages_icon = R"json({
     ".cpp": "",
     ".cxx": "",
     ".cc": "",
@@ -445,8 +463,7 @@ inline const std::string_view map_languages_icon = R"json(
 }
 )json";
 
-inline const std::string_view map_directory_icon = R"json(
-{
+inline const std::string_view map_directory_icon = R"json({
     ".git": "",
     "include": "󱁿",
     "src": "󰣞",
@@ -474,23 +491,22 @@ inline const std::string_view map_directory_icon = R"json(
 }
 )json";
 
-inline const std::filesystem::path CONFIG_PATH      = fima::fs::get_application_config_path();
-inline const std::filesystem::path FIMA_CONFIG_PATH = CONFIG_PATH / "fima";
-inline const std::filesystem::path MAPPINGS_PATH    = FIMA_CONFIG_PATH / "mappings";
+inline std::filesystem::path CONFIG_PATH;
+inline std::filesystem::path FIMA_CONFIG_PATH;
+inline std::filesystem::path MAPPINGS_PATH;
 
-inline const std::filesystem::path MAP_LANGUAGES_NAME_PATH = MAPPINGS_PATH / "language_name.json";
-inline const std::filesystem::path MAP_LANGUAGES_FAMILY_PATH =
-  MAPPINGS_PATH / "language_family.json";
-inline const std::filesystem::path MAP_LANGUAGES_ICON_PATH = MAPPINGS_PATH / "lanugage_icon.json";
-inline const std::filesystem::path MAP_DIRECTORY_ICON_PATH = MAPPINGS_PATH / "directory_icon.json";
-inline const std::filesystem::path LANGUAGES_FILE_PATH = FIMA_CONFIG_PATH / "languages_specs.json";
-inline const std::filesystem::path CONFIG_FILE_PATH    = FIMA_CONFIG_PATH / "config.toml";
+inline std::filesystem::path MAP_LANGUAGES_NAME_PATH;
+inline std::filesystem::path MAP_LANGUAGES_FAMILY_PATH;
+inline std::filesystem::path MAP_LANGUAGES_ICON_PATH;
+inline std::filesystem::path MAP_DIRECTORY_ICON_PATH;
+inline std::filesystem::path FAMILY_SPEC_PATH;
+inline std::filesystem::path CONFIG_FILE_PATH;
 
-void
-create_config_files();
-
-void
-reset_config_files(const bool& preserve_config_file);
+inline nlohmann::json map_language_name_json;
+inline nlohmann::json map_language_icon_json;
+inline nlohmann::json map_languages_family_json;
+inline nlohmann::json map_directory_icon_json;
+inline nlohmann::json language_file_json;
 
 } // namespace program_files
 
