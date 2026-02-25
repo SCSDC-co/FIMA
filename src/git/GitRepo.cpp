@@ -23,15 +23,15 @@
 #include <string>
 #include <vector>
 
-#include "helpers/get_directories_entries.h"
+#include "fs/get_directories_entries.h"
 
-namespace fs = std::filesystem;
+namespace _fs = std::filesystem;
 
 namespace fima {
 
 namespace git {
 
-GitRepo::GitRepo(const fs::directory_entry& path)
+GitRepo::GitRepo(const _fs::directory_entry& path)
 {
     git_libgit2_init();
 
@@ -55,14 +55,13 @@ GitRepo::GitRepo(const fs::directory_entry& path)
 void
 GitRepo::set_repo_path(const std::filesystem::path& path)
 {
-    fs::directory_entry _path;
+    _fs::directory_entry _path;
 
     bool found{ false };
 
-    std::vector<fs::directory_entry> dir_entries{ fima::helpers::get_directories_entries(path,
-                                                                                         true) };
+    std::vector<_fs::directory_entry> dir_entries{ fima::fs::get_directories_entries(path, true) };
 
-    for (const fs::directory_entry& entry : dir_entries) {
+    for (const _fs::directory_entry& entry : dir_entries) {
         if (entry.path().filename() == ".git") {
             _path = entry;
             found = true;

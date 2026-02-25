@@ -27,13 +27,13 @@
 #include "commands/cloc/helpers/print_languages.h"
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
-#include "helpers/get_directories_entries.h"
+#include "fs/get_directories_entries.h"
 #include "logger.h"
 #include "options.h"
 #include "utility/colors.h"
 #include "utility/regex.h"
 
-namespace fs = std::filesystem;
+namespace _fs = std::filesystem;
 
 namespace fima {
 
@@ -66,8 +66,8 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
 
     std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages{};
 
-    std::vector<fs::path> paths_all       = {};
-    std::vector<fs::path> sanitized_paths = {};
+    std::vector<_fs::path> paths_all       = {};
+    std::vector<_fs::path> sanitized_paths = {};
 
     std::vector<std::regex> file_or_directories_to_ignore = fima::config::DEFAULT_DIRS_TO_IGNORE;
 
@@ -75,9 +75,9 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         file_or_directories_to_ignore.push_back(item);
     }
 
-    for (const fs::path& path : options.paths) {
-        if (fs::is_directory(path)) {
-            std::vector<fs::path> items = fima::helpers::get_directories_entries_recursive(
+    for (const _fs::path& path : options.paths) {
+        if (_fs::is_directory(path)) {
+            std::vector<_fs::path> items = fima::fs::get_directories_entries_recursive(
               path, true, file_or_directories_to_ignore);
 
             for (const auto& item : items) {
@@ -100,8 +100,8 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         std::regex{ R"(.*\.dll)" }
     };
 
-    for (const fs::path& path : paths_all) {
-        if (fs::is_directory(path)) {
+    for (const _fs::path& path : paths_all) {
+        if (_fs::is_directory(path)) {
             continue;
         }
 
@@ -119,7 +119,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         sanitized_paths.push_back(path);
     }
 
-    for (const fs::path& path : sanitized_paths) {
+    for (const _fs::path& path : sanitized_paths) {
         std::string file_language_family = helpers::get_language_family(path);
         std::string file_language_name   = helpers::get_language_name(path);
 
@@ -179,7 +179,7 @@ main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
     std::string paths_sanitized{};
     std::string paths_to_ignore_sanitized{};
 
-    for (const fs::path& item : options.paths) {
+    for (const _fs::path& item : options.paths) {
         paths_sanitized += item.string() + ", ";
     }
 

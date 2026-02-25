@@ -20,7 +20,7 @@
 #include "commands/cloc/helpers/language_file.h"
 #include "commands/cloc/helpers/language_map.h"
 #include "config.h"
-#include "helpers/get_directories_entries.h"
+#include "fs/get_directories_entries.h"
 
 namespace fima {
 
@@ -42,7 +42,7 @@ Directory::set_stats()
 
     json languages_file = cloc::helpers::get_languages_file();
 
-    std::vector<std::filesystem::path> entries{ fima::helpers::get_directories_entries_recursive(
+    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
       this->metadata.get_path(), true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
@@ -69,7 +69,7 @@ Directory::set_number_of_files()
 {
     int number{ 0 };
 
-    std::vector<std::filesystem::path> entries{ fima::helpers::get_directories_entries_recursive(
+    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
       this->metadata.get_path(), true, {}) };
 
     for (const std::filesystem::path& item : entries) {

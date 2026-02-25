@@ -29,17 +29,15 @@ rtrim(std::string& s)
 }
 namespace fima {
 
-namespace helpers {
+namespace utility {
 
-inline std::string
+inline void
 trim(std::string& s)
 {
     rtrim(s);
     ltrim(s);
-
-    return s;
 }
 
-} // namespace helpers
+} // namespace utility
 
 } // namespace fima

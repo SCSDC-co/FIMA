@@ -12,7 +12,7 @@
 #include <filesystem>
 #include <string_view>
 
-#include "helpers/get_config_path.h"
+#include "fs/get_config_path.h"
 
 namespace fima {
 
@@ -474,7 +474,7 @@ inline const std::string_view map_directory_icon = R"json(
 }
 )json";
 
-inline const std::filesystem::path CONFIG_PATH      = fima::helpers::get_application_config_path();
+inline const std::filesystem::path CONFIG_PATH      = fima::fs::get_application_config_path();
 inline const std::filesystem::path FIMA_CONFIG_PATH = CONFIG_PATH / "fima";
 inline const std::filesystem::path MAPPINGS_PATH    = FIMA_CONFIG_PATH / "mappings";
 

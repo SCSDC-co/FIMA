@@ -1,6 +1,6 @@
 /*
- * src/helpers/get_directories_entries.cpp
- * include/helpers/get_directories_entries.h
+ * src/fs/get_directories_entries.cpp
+ * include/fs/get_directories_entries.h
  *
  * This file contains the declaration of the helpers for getting the entries of a directory, both
  * recursively and not
@@ -18,7 +18,7 @@
 
 namespace fima {
 
-namespace helpers {
+namespace fs {
 
 std::vector<std::filesystem::directory_entry>
 get_directories_entries(const std::filesystem::path& path, const bool& dotfiles);
@@ -28,6 +28,6 @@ get_directories_entries_recursive(const std::filesystem::path& path,
                                   const bool& ignore_directories,
                                   const std::vector<std::regex>& ignored_files_directories);
 
-} // namespace helpers
+} // namespace fs
 
 } // namespace fima

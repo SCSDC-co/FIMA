@@ -1,5 +1,5 @@
 /*
- * include/helpers/get_config_path.h
+ * include/fs/get_config_path.h
  *
  * This is an helper for getting the config path for applications
  *
@@ -16,7 +16,7 @@
 
 namespace fima {
 
-namespace helpers {
+namespace fs {
 
 inline std::filesystem::path
 get_application_config_path()
@@ -29,6 +29,6 @@ get_application_config_path()
 #endif
 }
 
-} // namespace helpers
+} // namespace fs
 
 } // namespace fima

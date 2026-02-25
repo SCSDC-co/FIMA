@@ -17,7 +17,7 @@
 
 #include "commands/ls/helpers/printer.h"
 #include "fs/DirectoryItem.h"
-#include "helpers/get_directories_entries.h"
+#include "fs/get_directories_entries.h"
 #include "logger.h"
 #include "options.h"
 
@@ -29,7 +29,7 @@ void
 start(const std::filesystem::path& path, const fima::options::ls_options& options)
 {
     std::vector<std::filesystem::directory_entry> list_of_the_directory{
-        fima::helpers::get_directories_entries(path, options.all)
+        fima::fs::get_directories_entries(path, options.all)
     };
 
     std::sort(

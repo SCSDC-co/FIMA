@@ -5,11 +5,11 @@ add_library(fima_lib
     src/commands/cloc/helpers/language_map.cpp
     src/commands/cloc/helpers/print_table.cpp
     src/commands/cloc/helpers/count_lines.cpp
-    src/helpers/get_directories_entries.cpp
     src/commands/ls/helpers/icon_maps.cpp
     src/commands/info/directory/info.cpp
     src/commands/ls/helpers/printer.cpp
     src/tui/commands/tree/tree_tui.cpp
+    src/fs/get_directories_entries.cpp
     src/commands/create/directory.cpp
     src/commands/info/file/info.cpp
     src/commands/copy/directory.cpp

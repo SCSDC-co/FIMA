@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <vector>
 
-#include "helpers/get_directories_entries.h"
+#include "fs/get_directories_entries.h"
 
 namespace fima {
 
@@ -38,7 +38,7 @@ get_file_size(const std::filesystem::path& path)
 
     if (std::filesystem::is_directory(path)) {
         std::vector<std::filesystem::path> entries =
-          fima::helpers::get_directories_entries_recursive(path, false, {});
+          fima::fs::get_directories_entries_recursive(path, false, {});
 
         for (const std::filesystem::path& item : entries) {
             if (std::filesystem::is_directory(item)) {

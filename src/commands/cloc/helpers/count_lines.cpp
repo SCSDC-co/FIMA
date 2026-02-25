@@ -48,35 +48,34 @@ count_lines(const fs::path& file_path,
         bool is_multiline{ false };
 
         while (std::getline(file, line)) {
-            std::string trimmed_line = fima::helpers::trim(line);
+            fima::utility::trim(line);
 
-            if (trimmed_line.empty()) {
+            if (line.empty()) {
                 ++blank_lines;
 
                 continue;
             }
 
-            if (can_have_single_comments && trimmed_line.starts_with(single_comment)) {
+            if (can_have_single_comments && line.starts_with(single_comment)) {
                 ++comment_lines;
 
                 continue;
             }
 
             if (can_have_multiline_comments) {
-                if (trimmed_line.starts_with(multiline_start) &&
-                    trimmed_line.ends_with(multiline_end)) {
+                if (line.starts_with(multiline_start) && line.ends_with(multiline_end)) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (is_multiline && !trimmed_line.ends_with(multiline_end)) {
+                if (is_multiline && !line.ends_with(multiline_end)) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (!is_multiline && trimmed_line.starts_with(multiline_start)) {
+                if (!is_multiline && line.starts_with(multiline_start)) {
                     ++comment_lines;
 
                     is_multiline = true;
@@ -84,7 +83,7 @@ count_lines(const fs::path& file_path,
                     continue;
                 }
 
-                if (is_multiline && trimmed_line.starts_with(multiline_end)) {
+                if (is_multiline && line.starts_with(multiline_end)) {
                     is_multiline = false;
 
                     ++comment_lines;

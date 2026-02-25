@@ -18,7 +18,7 @@
 
 #include "program_files.h"
 
-namespace fs = std::filesystem;
+namespace _fs = std::filesystem;
 
 namespace fima {
 
@@ -32,7 +32,7 @@ get_item_icon(const std::filesystem::path& path)
     using json = nlohmann::json;
     std::string file_name{ path.filename().string() };
 
-    if (!fs::is_directory(path)) {
+    if (!_fs::is_directory(path)) {
         if (file_name == ".editorconfig") {
             return "";
         } else if (std::regex_match(file_name, std::regex(R"(^\.git.*)"))) {

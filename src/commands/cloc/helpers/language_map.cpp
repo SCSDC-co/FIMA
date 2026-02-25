@@ -19,7 +19,7 @@
 
 #include "program_files.h"
 
-namespace fs = std::filesystem;
+namespace _fs = std::filesystem;
 
 namespace fima {
 
@@ -30,7 +30,7 @@ namespace helpers {
 using json = nlohmann::json;
 
 [[nodiscard]] std::string
-get_language_family(fs::path path)
+get_language_family(_fs::path path)
 {
     std::string filename = path.filename().string();
 
@@ -71,7 +71,7 @@ get_language_family(fs::path path)
 }
 
 [[nodiscard]] std::string
-get_language_name(fs::path path)
+get_language_name(_fs::path path)
 {
     std::string filename = path.filename().string();
 
