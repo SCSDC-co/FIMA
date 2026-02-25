@@ -42,7 +42,7 @@ get_info(const std::filesystem::directory_entry& path)
                     text(dir.metadata.get_path()) | color(Color::White),
                     text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
                       color(Color::White),
-                    text((dir.metadata.is_hidden() ? " (hidden)" : "")) | flex,
+                    text((dir.metadata.is_hidden() ? " (hidden) " : " ")) | flex,
                     text(dir.metadata.get_icon()))) |
           color(Color::Green),
 
