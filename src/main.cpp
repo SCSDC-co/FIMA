@@ -232,7 +232,7 @@ main(int argc, char** argv)
     // get the correct value
     tui = !tui;
 
-    fima::git::GitRepo repo = fima::git::GitRepo(path);
+    // fima::git::GitRepo repo = fima::git::GitRepo(path);
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;

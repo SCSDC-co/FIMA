@@ -23,6 +23,7 @@ namespace fs {
 
 File::File(const std::filesystem::directory_entry& path)
   : metadata(path)
+  , file_type(fima::cloc::helpers::get_language_name(path.path()))
 {
     set_stats();
 }
@@ -44,6 +45,12 @@ File::set_stats()
 
     this->stats = fima::cloc::helpers::count_lines(
       this->metadata.get_path(), single_comment, multiline_start, multiline_end);
+}
+
+[[nodiscard]] std::string
+File::get_file_type() const
+{
+    return this->file_type;
 }
 
 } // namespace fs

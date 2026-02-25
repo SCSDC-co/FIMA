@@ -22,14 +22,18 @@ namespace fs {
 
 class File
 {
+  private:
+    std::string file_type{};
+
   public:
     fima::fs::DirectoryItem metadata;
-
     fima::cloc::classes::Stats stats;
 
     File(const std::filesystem::directory_entry& path);
 
     void set_stats();
+
+    [[nodiscard]] std::string get_file_type() const;
 };
 
 } // namespace fs

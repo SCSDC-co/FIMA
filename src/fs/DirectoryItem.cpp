@@ -34,7 +34,8 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , size(operations::get_file_size(path))
   , last_modification_date(operations::get_file_time(path))
   , user(operations::get_file_owner(path))
-  , is_hidden(path.path().filename().native().starts_with('.'))
+  , hidden(path.path().filename().native().starts_with('.'))
+  , icon(fima::ls::helpers::get_item_icon(path.path()) + " ")
 {
 }
 
@@ -90,6 +91,11 @@ DirectoryItem::get_last_modification_date() const
 
     return std::format("{:%d %b %Y %H:%M:%S}", local);
 }
+[[nodiscard]] std::string
+DirectoryItem::get_icon() const
+{
+    return this->icon;
+}
 
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
@@ -133,6 +139,11 @@ DirectoryItem::is_directory() const
 DirectoryItem::is_file() const
 {
     return !std::filesystem::is_directory(this->get_path());
+}
+[[nodiscard]] bool
+DirectoryItem::is_hidden() const
+{
+    return this->hidden;
 }
 
 } // namespace fs

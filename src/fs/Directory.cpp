@@ -30,6 +30,7 @@ Directory::Directory(const std::filesystem::directory_entry& path)
   : metadata(path)
 {
     this->set_stats();
+    this->set_number_of_files();
 }
 
 void
