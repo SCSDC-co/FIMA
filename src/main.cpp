@@ -216,14 +216,19 @@ main(int argc, char** argv)
      *  INFO SUB COMMAND
      */
 
-    std::filesystem::directory_entry info_path{ std::filesystem::current_path() };
+    fima::options::info_options info_options;
 
     CLI::App* info_subcmd =
       app.add_subcommand("info", "Displays informations about a file or directory")
         ->configurable(false);
 
     info_subcmd
-      ->add_option("path", info_path, "The path to get the info from (default current directory)")
+      ->add_option(
+        "path", info_options.path, "The path to get the info from (default current directory)")
+      ->configurable(false);
+
+    info_subcmd
+      ->add_flag("-g,--git", info_options.git, "Displays git information instead of file/directory")
       ->configurable(false);
 
     CLI11_PARSE(app, argc, argv);
@@ -232,7 +237,7 @@ main(int argc, char** argv)
     // get the correct value
     tui = !tui;
 
-    // fima::git::GitRepo repo = fima::git::GitRepo(path);
+    fima::git::GitRepo repo = fima::git::GitRepo(path);
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;
@@ -300,7 +305,7 @@ main(int argc, char** argv)
 
         return 0;
     } else if (app.got_subcommand(info_subcmd)) {
-        fima::info::info(info_path);
+        fima::info::info(info_options, repo);
 
         return 0;
     }

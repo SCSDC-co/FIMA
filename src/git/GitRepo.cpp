@@ -35,23 +35,25 @@ GitRepo::GitRepo(const fs::directory_entry& path)
 {
     git_libgit2_init();
 
-    this->get_git_path(path);
+    this->set_repo_path(path);
 
-    git_repository_open(&this->repo, this->git_repo_path.path().c_str());
+    if (this->is_in_repo) {
+        git_repository_open(&this->repo, this->git_repo_path.path().c_str());
 
-    git_repository_head(&this->repo_head, this->repo);
+        git_repository_head(&this->repo_head, this->repo);
 
-    // for getting the HEAD of the repo
-    git_reference_name_to_id(&this->oid, this->repo, git_reference_name(repo_head));
+        // for getting the HEAD of the repo
+        git_reference_name_to_id(&this->oid, this->repo, git_reference_name(repo_head));
 
-    git_commit_lookup(&this->commit, this->repo, &this->oid);
+        git_commit_lookup(&this->commit, this->repo, &this->oid);
 
-    this->set_repo_info();
-    this->set_commit_info();
+        this->set_repo_info();
+        this->set_commit_info();
+    }
 }
 
 void
-GitRepo::get_git_path(const std::filesystem::directory_entry& path)
+GitRepo::set_repo_path(const std::filesystem::path& path)
 {
     fs::directory_entry _path;
 
@@ -61,18 +63,40 @@ GitRepo::get_git_path(const std::filesystem::directory_entry& path)
                                                                                          true) };
 
     for (const fs::directory_entry& entry : dir_entries) {
-        if (found) {
-            break;
-        }
-
         if (entry.path().filename() == ".git") {
             _path = entry;
             found = true;
+            break;
         }
+    }
+
+    if (!found) {
+        set_repo_path(path.parent_path());
+
+        return;
     }
 
     this->is_in_repo    = found;
     this->git_repo_path = _path;
+}
+void
+GitRepo::change_repo_path(const std::filesystem::path& path)
+{
+    this->set_repo_path(path);
+
+    if (this->is_in_repo) {
+        git_repository_open(&this->repo, this->git_repo_path.path().c_str());
+
+        git_repository_head(&this->repo_head, this->repo);
+
+        // for getting the HEAD of the repo
+        git_reference_name_to_id(&this->oid, this->repo, git_reference_name(repo_head));
+
+        git_commit_lookup(&this->commit, this->repo, &this->oid);
+
+        this->set_repo_info();
+        this->set_commit_info();
+    }
 }
 
 void
@@ -105,7 +129,7 @@ GitRepo::set_commit_info()
     this->commit_committer = git_commit_committer(this->commit);
 }
 
-[[nodiscard]] fs::path
+[[nodiscard]] std::string
 GitRepo::get_repo_path() const
 {
     return this->git_repo_path.path().string();
@@ -118,18 +142,25 @@ GitRepo::get_repo_branch() const
 [[nodiscard]] std::string
 GitRepo::get_commit_author() const
 {
-    return std::string(this->commit_author->name) + " " + std::string(this->commit_author->email);
+    return std::string(this->commit_author->name) + " <" + std::string(this->commit_author->email) +
+           ">";
 }
 [[nodiscard]] std::string
 GitRepo::get_commit_committer() const
 {
-    return std::string(this->commit_committer->name) + " " +
-           std::string(this->commit_committer->email);
+    return std::string(this->commit_committer->name) + " <" +
+           std::string(this->commit_committer->email) + ">";
 }
 [[nodiscard]] std::string
 GitRepo::get_commit_message() const
 {
-    return this->commit_message;
+    std::string message{ this->commit_message };
+
+    if (message.ends_with("\n")) {
+        message.pop_back();
+    }
+
+    return message;
 }
 [[nodiscard]] int
 GitRepo::get_commit_number() const

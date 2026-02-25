@@ -46,10 +46,10 @@ class GitRepo
     void set_commit_info();
     void set_repo_info();
 
-    void get_git_path(const std::filesystem::directory_entry& path);
+    void set_repo_path(const std::filesystem::path& path);
+    void change_repo_path(const std::filesystem::path& path);
 
-    [[nodiscard]] std::filesystem::path get_repo_path() const;
-
+    [[nodiscard]] std::string get_repo_path() const;
     [[nodiscard]] std::string get_repo_branch() const;
     [[nodiscard]] std::string get_commit_message() const;
     [[nodiscard]] std::string get_commit_author() const;

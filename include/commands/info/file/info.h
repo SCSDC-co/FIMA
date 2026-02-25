@@ -1,6 +1,6 @@
 /*
- * src/commands/info/file.cpp
- * include/commands/info/file.h
+ * src/commands/info/file/info.cpp
+ * include/commands/info/file/info.h
  *
  * The logic for getting and printing info about a file
  *
@@ -20,7 +20,7 @@ namespace info {
 namespace file {
 
 void
-get_info(const std::filesystem::directory_entry& path);
+info(const std::filesystem::directory_entry& path);
 
 }
 

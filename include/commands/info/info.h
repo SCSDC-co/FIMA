@@ -11,14 +11,15 @@
 
 #pragma once
 
-#include <filesystem>
+#include "git/GitRepo.h"
+#include "options.h"
 
 namespace fima {
 
 namespace info {
 
 void
-info(const std::filesystem::directory_entry& path);
+info(const fima::options::info_options& options, fima::git::GitRepo repo);
 
 }
 

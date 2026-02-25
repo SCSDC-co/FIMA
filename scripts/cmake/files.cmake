@@ -13,6 +13,7 @@ add_library(fima_lib
     src/commands/create/directory.cpp
     src/commands/info/file/info.cpp
     src/commands/copy/directory.cpp
+    src/commands/info/git/info.cpp
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/info/info.cpp

@@ -15,20 +15,39 @@
 
 #include "commands/info/directory/info.h"
 #include "commands/info/file/info.h"
-
-namespace fs = std::filesystem;
+#include "commands/info/git/info.h"
+#include "logger.h"
+#include "utility/colors.h"
 
 namespace fima {
 
 namespace info {
 
 void
-info(const fs::directory_entry& path)
+info(const fima::options::info_options& options, fima::git::GitRepo repo)
 {
-    if (path.is_directory()) {
-        dir::get_info(path);
+    if (!options.path.exists()) {
+        fima::logger::error(true,
+                            "info",
+                            fima::colors::RED + "The path doesn't exist: " + fima::colors::RESET +
+                              "{}",
+                            options.path.path().string());
+
+        return;
+    }
+
+    if (options.git) {
+        repo.change_repo_path(options.path);
+
+        git::info(options.path, repo);
+
+        return;
+    }
+
+    if (options.path.is_directory()) {
+        dir::info(options.path);
     } else {
-        file::get_info(path);
+        file::info(options.path);
     }
 }
 

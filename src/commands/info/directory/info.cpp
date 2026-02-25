@@ -26,7 +26,7 @@ namespace info {
 namespace dir {
 
 void
-get_info(const std::filesystem::directory_entry& path)
+info(const std::filesystem::directory_entry& path)
 {
     using namespace ftxui;
 
