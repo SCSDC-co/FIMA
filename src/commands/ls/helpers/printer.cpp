@@ -19,12 +19,10 @@
 #include <string>
 #include <vector>
 
+#include "fs/DirectoryItem.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
-#include "utility/DirectoryItem.h"
 #include "utility/colors.h"
-
-namespace fs = std::filesystem;
 
 namespace fima {
 
@@ -35,16 +33,16 @@ namespace helpers {
 using namespace ftxui;
 
 void
-print_normal(const std::vector<fima::DirectoryItem>& items, const bool& icons)
+print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
 {
     std::vector<Element> element_vector{};
 
-    for (const fima::DirectoryItem& item : items) {
+    for (const fima::fs::DirectoryItem& item : items) {
         std::string final_string;
 
         final_string += item.get_name(icons);
 
-        if (fs::is_directory(item.get_path())) {
+        if (std::filesystem::is_directory(item.get_path())) {
             element_vector.push_back(text(final_string + "  ") | color(Color::Green) | bold);
         } else {
             element_vector.push_back(text(final_string + "  "));
@@ -62,7 +60,9 @@ print_normal(const std::vector<fima::DirectoryItem>& items, const bool& icons)
 }
 
 void
-print_long(const std::vector<fima::DirectoryItem>& items, const bool& icons, const bool& verbose)
+print_long(const std::vector<fima::fs::DirectoryItem>& items,
+           const bool& icons,
+           const bool& verbose)
 {
     std::vector<std::vector<Element>> table_data{
         { text("Permissions ") | color(Color::Green) | underlined | bold,
@@ -72,14 +72,15 @@ print_long(const std::vector<fima::DirectoryItem>& items, const bool& icons, con
           text(" Name ") | color(Color::Green) | underlined | bold },
     };
 
-    for (const fima::DirectoryItem& item : items) {
+    for (const fima::fs::DirectoryItem& item : items) {
         table_data.push_back(
           { item.get_permissions_tui(),
             text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
             text(" " + item.get_user() + " ") | color(Color::Red),
-            text(" " + item.get_time() + " ") | color(Color::Blue),
+            text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
             text(" " + item.get_name(icons) + " ") |
-              (fs::is_directory(item.get_path()) ? color(Color::Green) : color(Color::White)) });
+              (std::filesystem::is_directory(item.get_path()) ? color(Color::Green)
+                                                              : color(Color::White)) });
     }
 
     Table table = Table({ table_data });
@@ -99,7 +100,7 @@ print_long(const std::vector<fima::DirectoryItem>& items, const bool& icons, con
         int number_of_files       = 0;
         int number_of_directories = 0;
 
-        for (const fima::DirectoryItem& item : items) {
+        for (const fima::fs::DirectoryItem& item : items) {
             if (item.is_file()) {
                 ++number_of_files;
             } else if (item.is_directory()) {

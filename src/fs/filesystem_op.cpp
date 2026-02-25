@@ -1,13 +1,15 @@
 /*
- * src/utility/file.cpp
- * include/utility/file.h
+ * src/fs/filesystem_op.cpp
+ * include/fs/filesystem_op.h
  *
- * A utility for getting some file information and creating them
+ * A module for doing general file and directory operations
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
  * See LICENSE file for details.
  */
+
+#include "fs/filesystem_op.h"
 
 #include <cstddef>
 #include <filesystem>
@@ -23,43 +25,43 @@
 
 #include "helpers/get_directories_entries.h"
 
-namespace fs = std::filesystem;
-
 namespace fima {
 
-namespace file {
+namespace fs {
+
+namespace operations {
 
 size_t
-get_file_size(const fs::path& path)
+get_file_size(const std::filesystem::path& path)
 {
     size_t size{};
 
-    if (fs::is_directory(path)) {
-        std::vector<fs::path> entries =
+    if (std::filesystem::is_directory(path)) {
+        std::vector<std::filesystem::path> entries =
           fima::helpers::get_directories_entries_recursive(path, false, {});
 
-        for (const fs::path& item : entries) {
-            if (fs::is_directory(item)) {
+        for (const std::filesystem::path& item : entries) {
+            if (std::filesystem::is_directory(item)) {
                 continue;
             }
 
-            size = fs::file_size(item);
+            size += std::filesystem::file_size(item);
         }
     } else {
-        size = fs::file_size(path);
+        size = std::filesystem::file_size(path);
     }
 
     return size;
 }
 
-fs::file_time_type
-get_file_time(const fs::path& path)
+std::filesystem::file_time_type
+get_file_time(const std::filesystem::path& path)
 {
-    return fs::last_write_time(path);
+    return std::filesystem::last_write_time(path);
 }
 
 std::string
-get_file_owner(const fs::path& path)
+get_file_owner(const std::filesystem::path& path)
 {
     struct stat info;
 
@@ -87,7 +89,7 @@ create(const std::filesystem::path& path, const std::string_view& conent)
 }
 
 void
-overwrite(const fs::path& path, const std::string_view& content)
+overwrite(const std::filesystem::path& path, const std::string_view& content)
 {
     std::ofstream file{ path, std::ios::trunc };
 
@@ -96,6 +98,8 @@ overwrite(const fs::path& path, const std::string_view& content)
     file.close();
 }
 
-} // namespace file
+} // namespace operations
+
+} // namespace fs
 
 } // namespace fima

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "commands/cloc/helpers/FileStats.h"
+#include "commands/cloc/helpers/Stats.h"
 
 namespace fima {
 
@@ -19,7 +19,7 @@ namespace cloc {
 
 namespace classes {
 
-class LanguageStats : public FileStats
+class LanguageStats : public Stats
 {
   private:
     int files{ 0 };

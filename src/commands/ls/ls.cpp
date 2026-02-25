@@ -16,40 +16,41 @@
 #include <vector>
 
 #include "commands/ls/helpers/printer.h"
+#include "fs/DirectoryItem.h"
 #include "helpers/get_directories_entries.h"
 #include "logger.h"
 #include "options.h"
-#include "utility/DirectoryItem.h"
-
-namespace fs = std::filesystem;
 
 namespace fima {
 
 namespace ls {
 
 void
-start(const fs::path& path, const fima::options::ls_options& options)
+start(const std::filesystem::path& path, const fima::options::ls_options& options)
 {
-    std::vector<fs::directory_entry> list_of_the_directory{ fima::helpers::get_directories_entries(
-      path, options.all) };
+    std::vector<std::filesystem::directory_entry> list_of_the_directory{
+        fima::helpers::get_directories_entries(path, options.all)
+    };
 
-    std::sort(list_of_the_directory.begin(),
-              list_of_the_directory.end(),
-              [](const fs::directory_entry& a, const fs::directory_entry& b) {
-                  return a.path().filename().string() < b.path().filename().string();
-              });
+    std::sort(
+      list_of_the_directory.begin(),
+      list_of_the_directory.end(),
+      [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
+          return a.path().filename().string() < b.path().filename().string();
+      });
 
     // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
-    std::sort(list_of_the_directory.begin(),
-              list_of_the_directory.end(),
-              [](const fs::directory_entry& a, const fs::directory_entry& b) {
-                  return a.is_directory() && !b.is_directory();
-              });
+    std::sort(
+      list_of_the_directory.begin(),
+      list_of_the_directory.end(),
+      [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
+          return a.is_directory() && !b.is_directory();
+      });
 
-    std::vector<fima::DirectoryItem> entries{};
+    std::vector<fima::fs::DirectoryItem> entries{};
 
-    for (const fs::directory_entry& item : list_of_the_directory) {
-        fima::DirectoryItem file{ item.path() };
+    for (const std::filesystem::directory_entry& item : list_of_the_directory) {
+        fima::fs::DirectoryItem file{ item };
 
         entries.push_back(file);
     }

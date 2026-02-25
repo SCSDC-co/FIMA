@@ -99,7 +99,7 @@ These are the most important ones (so far):
   - [x] `rename`
   - [x] `permissions`
   - [x] `cloc`
-  - [ ] `info`
+  - [x] `info`
 - [x] add config file support (TOML format)
 
 ## License

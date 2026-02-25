@@ -33,6 +33,12 @@ struct ls_options
     bool verbose{ false };
 };
 
+struct info_options
+{
+    std::filesystem::directory_entry path{ std::filesystem::current_path() };
+    bool git{ false };
+};
+
 } // namespace options
 
 } // namespace fima

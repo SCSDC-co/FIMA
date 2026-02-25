@@ -15,21 +15,19 @@
 #include <filesystem>
 #include <vector>
 
+#include "fs/filesystem_op.h"
 #include "logger.h"
 #include "utility/colors.h"
-#include "utility/file.h"
-
-namespace fs = std::filesystem;
 
 namespace fima {
 
 namespace create {
 
 void
-file(const std::vector<fs::path>& paths)
+file(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
-        if (fs::is_regular_file(entry)) {
+        if (std::filesystem::is_regular_file(entry)) {
             fima::logger::error(true,
                                 "create file",
                                 fima::colors::RED +
@@ -40,7 +38,7 @@ file(const std::vector<fs::path>& paths)
         }
 
         try {
-            fima::file::create(entry, "");
+            fima::fs::operations::create(entry, "");
 
             fima::logger::info(true,
                                "create file",

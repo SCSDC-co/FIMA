@@ -21,12 +21,14 @@
 #include "commands/copy/file.h"
 #include "commands/create/directory.h"
 #include "commands/create/file.h"
+#include "commands/info/info.h"
 #include "commands/ls/ls.h"
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
+#include "git/GitRepo.h"
 #include "options.h"
 #include "program_files.h"
 #include "tui/tui.h"
@@ -82,7 +84,7 @@ main(int argc, char** argv)
                 "Preserces the config.toml file (only work when using --reset-config-files)")
       ->configurable(true);
 
-    fs::path path{ fs::current_path() };
+    fs::directory_entry path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
       ->check(CLI::ExistingDirectory)
       ->expected(0, 1)
@@ -180,7 +182,7 @@ main(int argc, char** argv)
     perms_subcmd->add_option("path", perms_path, "The file path to read permissions from")
       ->configurable(false);
 
-    /*  =================
+    /*  ================
      *  CLOC SUB COMMAND
      */
 
@@ -210,11 +212,32 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
+    /*  ================
+     *  INFO SUB COMMAND
+     */
+
+    fima::options::info_options info_options;
+
+    CLI::App* info_subcmd =
+      app.add_subcommand("info", "Displays informations about a file or directory")
+        ->configurable(false);
+
+    info_subcmd
+      ->add_option(
+        "path", info_options.path, "The path to get the info from (default current directory)")
+      ->configurable(false);
+
+    info_subcmd
+      ->add_flag("-g,--git", info_options.git, "Displays git information instead of file/directory")
+      ->configurable(false);
+
     CLI11_PARSE(app, argc, argv);
 
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
     // get the correct value
     tui = !tui;
+
+    fima::git::GitRepo repo = fima::git::GitRepo(path);
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;
@@ -279,6 +302,10 @@ main(int argc, char** argv)
         }
 
         fima::cloc::main(regexes, cloc_options);
+
+        return 0;
+    } else if (app.got_subcommand(info_subcmd)) {
+        fima::info::info(info_options, repo);
 
         return 0;
     }

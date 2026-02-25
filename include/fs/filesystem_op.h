@@ -2,7 +2,7 @@
  * src/utility/file.cpp
  * include/utility/file.h
  *
- * A utility for getting some file information and creating them
+ * A module for doing general file operations
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,11 +12,12 @@
 #pragma once
 
 #include <filesystem>
-#include <string_view>
 
 namespace fima {
 
-namespace file {
+namespace fs {
+
+namespace operations {
 
 size_t
 get_file_size(const std::filesystem::path& path);
@@ -33,6 +34,8 @@ create(const std::filesystem::path& path, const std::string_view& conent);
 void
 overwrite(const std::filesystem::path& path, const std::string_view& content);
 
-} // namespace file
+} // namespace operations
+
+} // namespace fs
 
 } // namespace fima
