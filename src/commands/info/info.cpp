@@ -24,7 +24,7 @@ namespace fima {
 namespace info {
 
 void
-info(const fima::options::info_options& options, fima::git::GitRepo repo)
+info(const fima::options::info_options& options, fima::git::GitRepo& repo)
 {
     if (!options.path.exists()) {
         fima::logger::error(true,

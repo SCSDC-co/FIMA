@@ -156,7 +156,8 @@ GitRepo::get_commit_message() const
 {
     std::string message{ this->commit_message };
 
-    if (message.ends_with("\n")) {
+    while (!message.empty() &&
+           std::string_view("\n\t ").find(message.back()) != std::string_view::npos) {
         message.pop_back();
     }
 
