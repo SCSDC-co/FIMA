@@ -20,7 +20,7 @@ namespace fs {
 namespace operations {
 
 size_t
-get_file_size(const std::filesystem::path& path);
+get_item_size(const std::filesystem::path& path);
 
 std::filesystem::file_time_type
 get_file_time(const std::filesystem::path& path);

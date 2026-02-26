@@ -33,7 +33,6 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   : name(path.path().filename().string())
   , path(path)
   , permissions(fima::perms::get_perms(path))
-  , size(fima::fs::operations::get_file_size(path))
   , last_modification_date(fima::fs::operations::get_file_time(path))
   , user(fima::fs::operations::get_file_owner(path))
   , is_hidden(path.path().filename().native().starts_with('.'))
@@ -72,6 +71,12 @@ DirectoryItem::set_color()
     }
 
     this->color = color;
+}
+
+void
+DirectoryItem::set_size()
+{
+    this->size = fima::fs::operations::get_item_size(this->path);
 }
 
 [[nodiscard]] std::string

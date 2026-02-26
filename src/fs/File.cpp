@@ -25,7 +25,6 @@ File::File(const std::filesystem::directory_entry& path)
   : metadata(path)
   , file_type(fima::program_files::get_language_name(path.path()))
 {
-    set_stats();
 }
 
 void

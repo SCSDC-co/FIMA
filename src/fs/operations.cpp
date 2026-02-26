@@ -22,9 +22,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <unordered_set>
-#include <vector>
-
-#include "fs/get_directories_entries.h"
 
 namespace fima {
 
@@ -33,25 +30,28 @@ namespace fs {
 namespace operations {
 
 size_t
-get_file_size(const std::filesystem::path& path)
+get_item_size(const std::filesystem::path& path)
 {
     size_t size{};
 
     if (std::filesystem::is_directory(path)) {
-        std::vector<std::filesystem::path> entries =
-          fima::fs::get_directories_entries_recursive(path, false, {});
+        for (auto i = std::filesystem::recursive_directory_iterator(path);
+             i != std::filesystem::recursive_directory_iterator();
+             ++i) {
+            if (i.depth() >= 2) {
+                break;
+            }
 
-        for (const std::filesystem::path& item : entries) {
-            if (std::filesystem::is_directory(item)) {
+            if (std::filesystem::is_directory(i->path())) {
                 continue;
             }
 
-            if (!std::filesystem::is_regular_file(item)) {
+            if (!std::filesystem::is_regular_file(i->path())) {
                 continue;
             }
 
             try {
-                size += std::filesystem::file_size(item);
+                size += std::filesystem::file_size(i->path());
             } catch (...) {
                 // ignores inaccessible files
             }
@@ -59,7 +59,11 @@ get_file_size(const std::filesystem::path& path)
     } else if (!std::filesystem::is_regular_file(path)) {
         size = 0;
     } else {
-        size = std::filesystem::file_size(path);
+        try {
+            size = std::filesystem::file_size(path);
+        } catch (...) {
+            // ignores inaccessible files
+        }
     }
 
     return size;

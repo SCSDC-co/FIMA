@@ -12,7 +12,6 @@
 #include "commands/ls/helpers/printer.h"
 
 #include <algorithm>
-#include <cmath>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -101,9 +100,7 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
 }
 
 void
-print_long(const std::vector<fima::fs::DirectoryItem>& items,
-           const bool& icons,
-           const bool& verbose)
+print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const bool& verbose)
 {
     std::vector<std::vector<Element>> table_data{
         { text("Permissions ") | color(Color::Green) | underlined | bold,
@@ -113,10 +110,12 @@ print_long(const std::vector<fima::fs::DirectoryItem>& items,
           text(" Name ") | color(Color::Green) | underlined | bold },
     };
 
-    for (const fima::fs::DirectoryItem& item : items) {
+    for (fima::fs::DirectoryItem& item : items) {
         Color _color;
 
         _color = item.get_color_tui();
+
+        item.set_size();
 
         table_data.push_back(
           { item.get_permissions_tui(),

@@ -32,6 +32,9 @@ info(const std::filesystem::directory_entry& path)
 
     fima::fs::File file(path);
 
+    file.metadata.set_size();
+    file.set_stats();
+
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
         return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
     };
