@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <regex>
 #include <unordered_set>
 
 #include "fs/get_config_path.h"
@@ -107,13 +108,16 @@ get_item_icon(const std::filesystem::path& path)
             return "󱁻";
         } else if (std::regex_match(file_name, std::regex(R"(license.*)", std::regex::icase))) {
             return "";
+        } else if (std::regex_match(file_name,
+                                    std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
+            return "󰂺";
+        } else if (std::regex_match(file_name,
+                                    std::regex(R"(\.(bash|zsh)rc)", std::regex::icase))) {
+            return "󱆃";
         } else if (file_name == "CMakeLists.txt") {
             return "";
         } else if (file_name == "Makefile") {
             return "";
-        } else if (std::regex_match(file_name,
-                                    std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
-            return "󰂺";
         }
 
         std::string extension = path.extension();
@@ -150,7 +154,7 @@ create_config_files()
     }
 
     if (!std::filesystem::exists(MAP_LANGUAGES_ICON_PATH)) {
-        fima::fs::operations::create(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
+        fima::fs::operations::create(MAP_LANGUAGES_ICON_PATH, map_file_icon);
     }
 
     if (!std::filesystem::exists(MAP_DIRECTORY_ICON_PATH)) {
@@ -176,7 +180,7 @@ reset_config_files(const bool& preserve_config_file)
     }
 
     fima::fs::operations::overwrite(FAMILY_SPEC_PATH, family_spec_file);
-    fima::fs::operations::overwrite(MAP_LANGUAGES_ICON_PATH, map_languages_icon);
+    fima::fs::operations::overwrite(MAP_LANGUAGES_ICON_PATH, map_file_icon);
     fima::fs::operations::overwrite(MAP_DIRECTORY_ICON_PATH, map_directory_icon);
     fima::fs::operations::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
     fima::fs::operations::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);

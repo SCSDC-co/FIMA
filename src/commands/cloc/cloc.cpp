@@ -89,16 +89,19 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         }
     }
 
-    static const std::vector<std::regex> ft_to_skip = {
-        std::regex{ R"(.*\.zip)" },   std::regex{ R"(.*\.tar)" },   std::regex{ R"(.*\.png)" },
-        std::regex{ R"(.*\.jpeg)" },  std::regex{ R"(.*\.jpg)" },   std::regex{ R"(.*\.mp3)" },
-        std::regex{ R"(.*\.mp4)" },   std::regex{ R"(.*\.mp2)" },   std::regex{ R"(.*\.mp1)" },
-        std::regex{ R"(.*\.wav)" },   std::regex{ R"(.*\.avi)" },   std::regex{ R"(.*\.webp)" },
-        std::regex{ R"(.*\.undo)" },  std::regex{ R"(.*\.spl)" },   std::regex{ R"(.*\.ico)" },
-        std::regex{ R"(.*\.icns)" },  std::regex{ R"(.*\.mpack)" }, std::regex{ R"(.*\.exe)" },
-        std::regex{ R"(.*\.o)" },     std::regex{ R"(.*\.class)" }, std::regex{ R"(.*\.appimage)" },
-        std::regex{ R"(.*\.woff2)" }, std::regex{ R"(.*\.ttf)" },   std::regex{ R"(.*\.ttf2)" },
-        std::regex{ R"(.*\.dll)" }
+    static const std::unordered_set<std::string> ft_to_skip = {
+        ".zip",  ".tar",    ".png",      ".jpeg",  ".jpg",  ".mp3",  ".mp4",  ".mp2",   ".mp1",
+        ".wav",  ".avi",    ".webp",     ".undo",  ".spl",  ".ico",  ".icns", ".mpack", ".exe",
+        ".o",    ".class",  ".appimage", ".woff2", ".ttf",  ".ttf2", ".dll",  ".rar",   ".7z",
+        ".gz",   ".bz2",    ".xz",       ".z",     ".lz",   ".lzma", ".lzo",  ".zst",   ".tgz",
+        ".tbz2", ".tar.gz", ".tar.xz",   ".gif",   ".bmp",  ".tiff", ".tif",  ".avif",  ".heif",
+        ".heic", ".svg",    ".psd",      ".xcf",   ".raw",  ".cr2",  ".nef",  ".arw",   ".dng",
+        ".mkv",  ".webm",   ".mov",      ".wmv",   ".flv",  ".mpeg", ".mpg",  ".m4v",   ".3gp",
+        ".m2ts", ".mts",    ".vob",      ".ogv",   ".rmvb", ".hevc", ".h264", ".h265",  ".flac",
+        ".aac",  ".m4a",    ".ogg",      ".opus",  ".wma",  ".aiff", ".alac", ".ape",   ".mid",
+        ".midi", ".so",     ".dylib",    ".a",     ".obj",  ".lib",  ".bin",  ".out",   ".elf",
+        ".pdb",  ".deb",    ".rpm",      ".snap",  ".msi",  ".pkg",  ".dmg",  ".apk",   ".jar",
+        ".war",  ".ear",
     };
 
     for (const _fs::path& path : paths_all) {
@@ -109,7 +112,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         std::string ext = path.extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-        if (fima::helpers::regex::matches_any_regex(ext, ft_to_skip)) {
+        if (ft_to_skip.contains(ext)) {
             continue;
         }
 
