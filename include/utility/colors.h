@@ -19,10 +19,12 @@ namespace colors {
 
 inline constexpr std::string RESET = "\033[0m";
 
-inline constexpr std::string GREEN  = "\033[32m";
 inline constexpr std::string RED    = "\033[31m";
-inline constexpr std::string BLUE   = "\033[34m";
+inline constexpr std::string GREEN  = "\033[32m";
 inline constexpr std::string YELLOW = "\033[33m";
+inline constexpr std::string BLUE   = "\033[34m";
+inline constexpr std::string WHITE  = "\033[37m";
+inline constexpr std::string GRAY   = "\033[90m";
 
 inline constexpr std::string BOLD      = "\033[1m";
 inline constexpr std::string UNDERLINE = "\033[4m";

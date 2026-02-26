@@ -16,12 +16,14 @@
 #include <filesystem>
 #include <format>
 #include <ftxui/dom/node.hpp>
+#include <ftxui/screen/color.hpp>
 #include <string>
 
 #include "commands/permissions.h"
-#include "fs/filesystem_op.h"
+#include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
 #include "program_files.h"
+#include "utility/colors.h"
 
 namespace fima {
 
@@ -31,12 +33,31 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   : name(path.path().filename().string())
   , path(path)
   , permissions(fima::perms::get_perms(path))
-  , size(operations::get_file_size(path))
-  , last_modification_date(operations::get_file_time(path))
-  , user(operations::get_file_owner(path))
-  , hidden(path.path().filename().native().starts_with('.'))
+  , size(fima::fs::operations::get_file_size(path))
+  , last_modification_date(fima::fs::operations::get_file_time(path))
+  , user(fima::fs::operations::get_file_owner(path))
+  , is_hidden(path.path().filename().native().starts_with('.'))
   , icon(fima::program_files::get_item_icon(path.path()) + " ")
 {
+    this->set_color(this->is_directory() ? fima::colors::GREEN : fima::colors::WHITE);
+}
+
+void
+DirectoryItem::set_color(const std::string& color)
+{
+    this->color = color;
+
+    if (color == fima::colors::RED) {
+        this->color_tui = ftxui::Color::Red;
+    } else if (color == fima::colors::GREEN) {
+        this->color_tui = ftxui::Color::Green;
+    } else if (color == fima::colors::WHITE) {
+        this->color_tui = ftxui::Color::White;
+    } else if (color == fima::colors::YELLOW) {
+        this->color_tui = ftxui::Color::Yellow;
+    } else if (color == fima::colors::BLUE) {
+        this->color_tui = ftxui::Color::Blue;
+    }
 }
 
 [[nodiscard]] std::string
@@ -96,7 +117,6 @@ DirectoryItem::get_icon() const
 {
     return this->icon;
 }
-
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
@@ -123,11 +143,22 @@ DirectoryItem::get_size_with_extension() const
 
     return std::format("{:.1f}{}", s, ext);
 }
+[[nodiscard]] std::string
+DirectoryItem::get_color() const
+{
+    return this->color;
+}
 
 [[nodiscard]] ftxui::Element
 DirectoryItem::get_permissions_tui() const
 {
     return fima::perms::get_perms_tui(this->get_path());
+}
+
+[[nodiscard]] ftxui::Color
+DirectoryItem::get_color_tui() const
+{
+    return this->color_tui;
 }
 
 [[nodiscard]] bool
@@ -141,9 +172,9 @@ DirectoryItem::is_file() const
     return !std::filesystem::is_directory(this->get_path());
 }
 [[nodiscard]] bool
-DirectoryItem::is_hidden() const
+DirectoryItem::get_is_hidden() const
 {
-    return this->hidden;
+    return this->is_hidden;
 }
 
 } // namespace fs

@@ -1,6 +1,6 @@
 /*
- * src/fs/filesystem_op.cpp
- * include/fs/filesystem_op.h
+ * src/fs/operations.cpp
+ * include/fs/operations.h
  *
  * A module for doing general file and directory operations
  *
@@ -9,7 +9,7 @@
  * See LICENSE file for details.
  */
 
-#include "fs/filesystem_op.h"
+#include "fs/operations.h"
 
 #include <cstddef>
 #include <filesystem>
@@ -76,6 +76,18 @@ get_file_owner(const std::filesystem::path& path)
     }
 
     return std::to_string(info.st_uid);
+}
+
+bool
+is_file_executable(const std::filesystem::path& path)
+{
+    auto st = std::filesystem::status(path);
+
+    std::filesystem::perms permissions{ st.permissions() };
+
+    return (permissions & std::filesystem::perms::owner_exec) != std::filesystem::perms::none ||
+           (permissions & std::filesystem::perms::group_exec) != std::filesystem::perms::none ||
+           (permissions & std::filesystem::perms::others_exec) != std::filesystem::perms::none;
 }
 
 void

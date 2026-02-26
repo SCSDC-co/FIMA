@@ -11,7 +11,6 @@
 
 #include "commands/ls/helpers/printer.h"
 
-#include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -20,6 +19,7 @@
 #include <vector>
 
 #include "fs/DirectoryItem.h"
+#include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "utility/colors.h"
@@ -42,10 +42,12 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
 
         final_string += item.get_name(icons);
 
-        if (std::filesystem::is_directory(item.get_path())) {
+        if (item.is_directory()) {
             element_vector.push_back(text(final_string + "  ") | color(Color::Green) | bold);
+        } else if (fima::fs::operations::is_file_executable(item.get_path())) {
+            element_vector.push_back(text(final_string + "  ") | color(Color::Red) | bold);
         } else {
-            element_vector.push_back(text(final_string + "  "));
+            element_vector.push_back(text(final_string + "  ") | color(Color::White));
         }
     }
 
@@ -73,14 +75,24 @@ print_long(const std::vector<fima::fs::DirectoryItem>& items,
     };
 
     for (const fima::fs::DirectoryItem& item : items) {
+        Color _color;
+
+        if (item.is_directory()) {
+            _color = Color::Green;
+        } else if (fima::fs::operations::is_file_executable(item.get_path())) {
+            _color = Color::Red;
+        } else {
+            _color = item.get_color_tui();
+        }
+
         table_data.push_back(
           { item.get_permissions_tui(),
             text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
             text(" " + item.get_user() + " ") | color(Color::Red),
             text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
-            text(" " + item.get_name(icons) + " ") |
-              (std::filesystem::is_directory(item.get_path()) ? color(Color::Green)
-                                                              : color(Color::White)) });
+            text(" " + item.get_name(icons)) |
+              (fima::fs::operations::is_file_executable(item.get_path()) ? color(_color) | bold
+                                                                         : color(_color)) });
     }
 
     Table table = Table({ table_data });
@@ -101,10 +113,10 @@ print_long(const std::vector<fima::fs::DirectoryItem>& items,
         int number_of_directories = 0;
 
         for (const fima::fs::DirectoryItem& item : items) {
-            if (item.is_file()) {
-                ++number_of_files;
-            } else if (item.is_directory()) {
+            if (item.is_directory()) {
                 ++number_of_directories;
+            } else if (item.is_file()) {
+                ++number_of_files;
             }
         }
 

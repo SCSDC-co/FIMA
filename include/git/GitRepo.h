@@ -41,7 +41,7 @@ class GitRepo
     const git_signature* commit_committer{};
 
   public:
-    GitRepo(const std::filesystem::directory_entry& path);
+    GitRepo(const std::filesystem::path& path);
 
     void set_commit_info();
     void set_repo_info();

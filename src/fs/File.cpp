@@ -11,6 +11,7 @@
 
 #include "fs/File.h"
 
+#include <filesystem>
 #include <nlohmann/json_fwd.hpp>
 
 #include "commands/cloc/helpers/count_lines.h"

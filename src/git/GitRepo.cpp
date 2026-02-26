@@ -31,7 +31,7 @@ namespace fima {
 
 namespace git {
 
-GitRepo::GitRepo(const _fs::directory_entry& path)
+GitRepo::GitRepo(const _fs::path& path)
 {
     git_libgit2_init();
 

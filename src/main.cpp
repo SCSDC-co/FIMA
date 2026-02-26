@@ -237,7 +237,8 @@ main(int argc, char** argv)
     // get the correct value
     tui = !tui;
 
-    fima::git::GitRepo repo = fima::git::GitRepo(path);
+    // for getting the correct .git directory we must pass the full path
+    fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;

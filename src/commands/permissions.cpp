@@ -14,32 +14,33 @@
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/node.hpp>
+#include <ftxui/screen/color.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
 #include "logger.h"
 #include "utility/colors.h"
-
-namespace fs = std::filesystem;
 
 namespace fima {
 
 namespace perms {
 
 std::string
-get_perms(const fs::path& item)
+get_perms(const std::filesystem::path& item)
 {
     std::string perms{};
 
     try {
-        auto st = fs::status(item);
+        auto st = std::filesystem::status(item);
 
-        fs::perms permissions{ st.permissions() };
+        std::filesystem::perms permissions{ st.permissions() };
 
-        auto show = [=](const std::string& color, char op, fs::perms perm) {
-            return color + (fs::perms::none == (perm & permissions) ? '-' : op) +
+        auto show = [=](const std::string& color, char op, std::filesystem::perms perm) {
+            return (std::filesystem::perms::none == (perm & permissions) ? fima::colors::GRAY + "-"
+                                                                         : color + op) +
                    fima::colors::RESET;
         };
 
@@ -47,39 +48,39 @@ get_perms(const fs::path& item)
             return color + fima::colors::BOLD + c + fima::colors::RESET;
         };
 
-        if (fs::is_regular_file(st)) {
+        if (std::filesystem::is_regular_file(st)) {
             perms += print_ft("", '-');
-        } else if (fs::is_directory(st)) {
+        } else if (std::filesystem::is_directory(st)) {
             perms += print_ft(fima::colors::GREEN, 'd');
-        } else if (fs::is_symlink(st)) {
+        } else if (std::filesystem::is_symlink(st)) {
             perms += print_ft(fima::colors::BLUE, 'l');
-        } else if (fs::is_character_file(st)) {
+        } else if (std::filesystem::is_character_file(st)) {
             perms += print_ft("", 'c');
-        } else if (fs::is_block_file(st)) {
+        } else if (std::filesystem::is_block_file(st)) {
             perms += print_ft("", 'b');
-        } else if (fs::is_fifo(st)) {
+        } else if (std::filesystem::is_fifo(st)) {
             perms += print_ft("", 'p');
-        } else if (fs::is_socket(st)) {
+        } else if (std::filesystem::is_socket(st)) {
             perms += print_ft("", 's');
         } else {
             perms += print_ft("", '?'); // unknown type
         }
 
-        perms += show(fima::colors::RED + fima::colors::BOLD + fima::colors::UNDERLINE,
+        perms += show(fima::colors::GREEN + fima::colors::BOLD + fima::colors::UNDERLINE,
                       'r',
-                      fs::perms::owner_read);
+                      std::filesystem::perms::owner_read);
         perms += show(fima::colors::YELLOW + fima::colors::BOLD + fima::colors::UNDERLINE,
                       'w',
-                      fs::perms::owner_write);
-        perms += show(fima::colors::GREEN + fima::colors::BOLD + fima::colors::UNDERLINE,
+                      std::filesystem::perms::owner_write);
+        perms += show(fima::colors::RED + fima::colors::BOLD + fima::colors::UNDERLINE,
                       'x',
-                      fs::perms::owner_exec);
-        perms += show(fima::colors::RED, 'r', fs::perms::group_read);
-        perms += show(fima::colors::YELLOW, 'w', fs::perms::group_write);
-        perms += show(fima::colors::GREEN, 'x', fs::perms::group_exec);
-        perms += show(fima::colors::RED, 'r', fs::perms::others_read);
-        perms += show(fima::colors::YELLOW, 'w', fs::perms::others_write);
-        perms += show(fima::colors::GREEN, 'x', fs::perms::others_exec);
+                      std::filesystem::perms::owner_exec);
+        perms += show(fima::colors::GREEN, 'r', std::filesystem::perms::group_read);
+        perms += show(fima::colors::YELLOW, 'w', std::filesystem::perms::group_write);
+        perms += show(fima::colors::RED, 'x', std::filesystem::perms::group_exec);
+        perms += show(fima::colors::GREEN, 'r', std::filesystem::perms::others_read);
+        perms += show(fima::colors::YELLOW, 'w', std::filesystem::perms::others_write);
+        perms += show(fima::colors::RED, 'x', std::filesystem::perms::others_exec);
     } catch (const std::exception& ex) {
         fima::logger::error(true,
                             "perms",
@@ -93,10 +94,14 @@ get_perms(const fs::path& item)
 }
 
 void
-print_perms(const std::string& permissions, const fs::path& entry)
+print_perms(const std::string& permissions, const std::filesystem::path& entry)
 {
-    std::cout << permissions << "  " << entry.filename().string()
-              << (fs::is_directory(entry) ? "/" : "") << '\n';
+    std::cout << permissions << "  "
+              << (std::filesystem::is_directory(entry)              ? fima::colors::GREEN
+                  : fima::fs::operations::is_file_executable(entry) ? fima::colors::RED
+                                                                    : "")
+              << entry.filename().string() << (std::filesystem::is_directory(entry) ? "/" : "")
+              << fima::colors::RESET << '\n';
 }
 
 ftxui::Element
@@ -107,50 +112,53 @@ get_perms_tui(const std::filesystem::path& item)
     std::vector<Element> element_vector{};
 
     try {
-        auto st = fs::status(item);
+        auto st = std::filesystem::status(item);
 
-        fs::perms permissions{ st.permissions() };
+        std::filesystem::perms permissions{ st.permissions() };
 
-        auto show = [=](char op, fs::perms perm) {
-            return (fs::perms::none == (perm & permissions) ? '-' : op);
+        auto show = [=](char op, std::filesystem::perms perm, Color _color) {
+            Element element;
+
+            if (std::filesystem::perms::none == (perm & permissions)) {
+                element = text("-") | color(Color::GrayDark);
+            } else if (perm == std::filesystem::perms::owner_read ||
+                       perm == std::filesystem::perms::owner_exec ||
+                       perm == std::filesystem::perms::owner_write) {
+                element = text(std::string(1, op)) | color(_color) | bold | underlined;
+            } else {
+                element = text(std::string(1, op)) | color(_color);
+            }
+
+            return element;
         };
 
-        if (fs::is_regular_file(st)) {
-            element_vector.push_back(text("-"));
-        } else if (fs::is_directory(st)) {
+        if (std::filesystem::is_regular_file(st)) {
+            element_vector.push_back(text("-") | bold);
+        } else if (std::filesystem::is_directory(st)) {
             element_vector.push_back(text("d") | color(Color::Green));
-        } else if (fs::is_symlink(st)) {
+        } else if (std::filesystem::is_symlink(st)) {
             element_vector.push_back(text("l") | color(Color::Blue));
-        } else if (fs::is_character_file(st)) {
-            element_vector.push_back(text("c"));
-        } else if (fs::is_block_file(st)) {
-            element_vector.push_back(text("b"));
-        } else if (fs::is_fifo(st)) {
-            element_vector.push_back(text("p"));
-        } else if (fs::is_socket(st)) {
-            element_vector.push_back(text("s"));
+        } else if (std::filesystem::is_character_file(st)) {
+            element_vector.push_back(text("c") | bold);
+        } else if (std::filesystem::is_block_file(st)) {
+            element_vector.push_back(text("b") | bold);
+        } else if (std::filesystem::is_fifo(st)) {
+            element_vector.push_back(text("p") | bold);
+        } else if (std::filesystem::is_socket(st)) {
+            element_vector.push_back(text("s") | bold);
         } else {
-            element_vector.push_back(text("?")); // unknown type
+            element_vector.push_back(text("?") | bold); // unknown type
         }
 
-        element_vector.push_back(text(std::string(1, show('r', fs::perms::owner_read))) |
-                                 color(Color::Red) | bold | underlined);
-        element_vector.push_back(text(std::string(1, show('w', fs::perms::owner_write))) |
-                                 color(Color::Yellow) | bold | underlined);
-        element_vector.push_back(text(std::string(1, show('x', fs::perms::owner_exec))) |
-                                 color(Color::Green) | bold | underlined);
-        element_vector.push_back(text(std::string(1, show('r', fs::perms::group_read))) |
-                                 color(Color::Red));
-        element_vector.push_back(text(std::string(1, show('w', fs::perms::group_write))) |
-                                 color(Color::Yellow));
-        element_vector.push_back(text(std::string(1, show('x', fs::perms::group_exec))) |
-                                 color(Color::Green));
-        element_vector.push_back(text(std::string(1, show('r', fs::perms::others_read))) |
-                                 color(Color::Red));
-        element_vector.push_back(text(std::string(1, show('w', fs::perms::others_write))) |
-                                 color(Color::Yellow));
-        element_vector.push_back(text(std::string(1, show('x', fs::perms::others_exec))) |
-                                 color(Color::Green));
+        element_vector.push_back(show('r', std::filesystem::perms::owner_read, Color::Green));
+        element_vector.push_back(show('w', std::filesystem::perms::owner_write, Color::Yellow));
+        element_vector.push_back(show('x', std::filesystem::perms::owner_exec, Color::Red));
+        element_vector.push_back(show('r', std::filesystem::perms::group_read, Color::Green));
+        element_vector.push_back(show('w', std::filesystem::perms::group_write, Color::Yellow));
+        element_vector.push_back(show('x', std::filesystem::perms::group_exec, Color::Red));
+        element_vector.push_back(show('r', std::filesystem::perms::others_read, Color::Green));
+        element_vector.push_back(show('w', std::filesystem::perms::others_write, Color::Yellow));
+        element_vector.push_back(show('x', std::filesystem::perms::others_exec, Color::Red));
     } catch (const std::exception& ex) {
         fima::logger::error(true,
                             "perms",
@@ -166,10 +174,10 @@ get_perms_tui(const std::filesystem::path& item)
 }
 
 void
-permissions(const std::vector<fs::path>& paths)
+permissions(const std::vector<std::filesystem::path>& paths)
 {
-    for (const fs::path& item : paths) {
-        if (!fs::exists(item)) {
+    for (const std::filesystem::path& item : paths) {
+        if (!std::filesystem::exists(item)) {
             fima::logger::error(true,
                                 "perms",
                                 fima::colors::RED +

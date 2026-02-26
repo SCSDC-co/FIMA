@@ -16,12 +16,12 @@ add_library(fima_lib
     src/commands/info/info.cpp
     src/commands/copy/file.cpp
     src/commands/cloc/cloc.cpp
-    src/fs/filesystem_op.cpp
     src/fs/DirectoryItem.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/commands/ls/ls.cpp
     src/program_files.cpp
+    src/fs/operations.cpp
     src/commands/tree.cpp
     src/fs/Directory.cpp
     src/git/GitRepo.cpp

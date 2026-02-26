@@ -28,6 +28,9 @@ get_file_time(const std::filesystem::path& path);
 std::string
 get_file_owner(const std::filesystem::path& path);
 
+bool
+is_file_executable(const std::filesystem::path& path);
+
 void
 create(const std::filesystem::path& path, const std::string_view& conent);
 

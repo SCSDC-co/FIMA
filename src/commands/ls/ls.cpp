@@ -16,7 +16,6 @@
 #include <vector>
 
 #include "commands/ls/helpers/printer.h"
-#include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
 #include "logger.h"
 #include "options.h"
@@ -47,18 +46,16 @@ start(const std::filesystem::path& path, const fima::options::ls_options& option
           return a.is_directory() && !b.is_directory();
       });
 
-    std::vector<fima::fs::DirectoryItem> entries{};
+    std::vector<fima::fs::DirectoryItem> items{};
 
     for (const std::filesystem::directory_entry& item : list_of_the_directory) {
-        fima::fs::DirectoryItem file{ item };
-
-        entries.push_back(file);
+        items.emplace_back(item);
     }
 
     if (options.long_output) {
-        helpers::print_long(entries, options.icons, options.verbose);
+        helpers::print_long(items, options.icons, options.verbose);
     } else {
-        helpers::print_normal(entries, options.icons);
+        helpers::print_normal(items, options.icons);
     }
 
     fima::logger::info(false, "ls", "Got list of directory: {}", path.string());
