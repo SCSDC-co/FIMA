@@ -76,8 +76,14 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
               path, true, file_or_directories_to_ignore);
 
             for (const auto& item : items) {
+                if (!_fs::is_regular_file(path)) {
+                    continue;
+                }
+
                 paths_all.push_back(item);
             }
+        } else if (!_fs::is_regular_file(path)) {
+            continue;
         } else {
             paths_all.push_back(path);
         }

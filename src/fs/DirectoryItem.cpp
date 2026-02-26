@@ -120,28 +120,28 @@ DirectoryItem::get_icon() const
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
-    double s = static_cast<double>(this->get_size());
+    double dimension = static_cast<double>(this->get_size());
     std::string ext;
 
-    if (s >= 1024 * 1024 * 1024) {
+    if (dimension >= 1024 * 1024 * 1024) {
         ext = "GB";
-        s /= 1024 * 1024 * 1024;
-    } else if (s >= 1024 * 1024) {
+        dimension /= 1024 * 1024 * 1024;
+    } else if (dimension >= 1024 * 1024) {
         ext = "MB";
-        s /= 1024 * 1024;
-    } else if (s >= 1024) {
+        dimension /= 1024 * 1024;
+    } else if (dimension >= 1024) {
         ext = "KB";
-        s /= 1024;
+        dimension /= 1024;
     } else {
         ext = "B";
     }
 
     // if the number is already rounded there's no need to display the decimal digits
-    if (std::round(s) == s) {
-        return std::format("{:.0f}{}", s, ext);
+    if (std::round(dimension) == static_cast<int>(dimension)) {
+        return std::format("{:.0f}{}", dimension, ext);
     }
 
-    return std::format("{:.1f}{}", s, ext);
+    return std::format("{:.2f}{}", dimension, ext);
 }
 [[nodiscard]] std::string
 DirectoryItem::get_color() const

@@ -15,8 +15,8 @@
 #include <nlohmann/json.hpp>
 #include <unordered_set>
 
-#include "fs/operations.h"
 #include "fs/get_config_path.h"
+#include "fs/operations.h"
 #include "logger.h"
 #include "utility/colors.h"
 

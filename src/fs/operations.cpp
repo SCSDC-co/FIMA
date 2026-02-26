@@ -45,8 +45,18 @@ get_file_size(const std::filesystem::path& path)
                 continue;
             }
 
-            size += std::filesystem::file_size(item);
+            if (!std::filesystem::is_regular_file(item)) {
+                continue;
+            }
+
+            try {
+                size += std::filesystem::file_size(item);
+            } catch (...) {
+                // ignores inaccessible files
+            }
         }
+    } else if (!std::filesystem::is_regular_file(path)) {
+        size = 0;
     } else {
         size = std::filesystem::file_size(path);
     }
