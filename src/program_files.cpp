@@ -112,7 +112,7 @@ get_item_icon(const std::filesystem::path& path)
                                     std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
             return "󰂺";
         } else if (std::regex_match(file_name,
-                                    std::regex(R"(\.(bash|zsh)rc)", std::regex::icase))) {
+                                    std::regex(R"((\.)?(bash|zsh)rc)", std::regex::icase))) {
             return "󱆃";
         } else if (file_name == "CMakeLists.txt") {
             return "";

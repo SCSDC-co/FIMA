@@ -39,13 +39,25 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , is_hidden(path.path().filename().native().starts_with('.'))
   , icon(fima::program_files::get_item_icon(path.path()) + " ")
 {
-    this->set_color(this->is_directory() ? fima::colors::GREEN : fima::colors::WHITE);
+    this->set_color();
 }
 
 void
-DirectoryItem::set_color(const std::string& color)
+DirectoryItem::set_color()
 {
-    this->color = color;
+    std::string color;
+
+    if (this->is_directory()) {
+        color = fima::colors::GREEN;
+    } else if (fima::fs::operations::is_file_executable(this->path)) {
+        color = fima::colors::RED;
+    } else if (fima::fs::operations::is_compressed_archive(this->path)) {
+        color = fima::colors::BLUE;
+    } else if (fima::fs::operations::is_media(this->path)) {
+        color = fima::colors::YELLOW;
+    } else {
+        color = fima::colors::WHITE;
+    }
 
     if (color == fima::colors::RED) {
         this->color_tui = ftxui::Color::Red;
@@ -58,6 +70,8 @@ DirectoryItem::set_color(const std::string& color)
     } else if (color == fima::colors::BLUE) {
         this->color_tui = ftxui::Color::Blue;
     }
+
+    this->color = color;
 }
 
 [[nodiscard]] std::string

@@ -42,7 +42,7 @@ class DirectoryItem
   public:
     DirectoryItem(const std::filesystem::directory_entry& path);
 
-    void set_color(const std::string& color);
+    void set_color();
 
     [[nodiscard]] std::string get_permissions() const;
     [[nodiscard]] std::string get_user() const;

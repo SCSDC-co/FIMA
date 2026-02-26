@@ -26,6 +26,7 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "fs/get_directories_entries.h"
+#include "fs/operations.h"
 #include "logger.h"
 #include "options.h"
 #include "program_files.h"
@@ -76,7 +77,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
               path, true, file_or_directories_to_ignore);
 
             for (const auto& item : items) {
-                if (!_fs::is_regular_file(path)) {
+                if (!_fs::is_regular_file(item)) {
                     continue;
                 }
 
@@ -101,7 +102,8 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         ".aac",  ".m4a",    ".ogg",      ".opus",  ".wma",  ".aiff", ".alac", ".ape",   ".mid",
         ".midi", ".so",     ".dylib",    ".a",     ".obj",  ".lib",  ".bin",  ".out",   ".elf",
         ".pdb",  ".deb",    ".rpm",      ".snap",  ".msi",  ".pkg",  ".dmg",  ".apk",   ".jar",
-        ".war",  ".ear",
+        ".war",  ".ear",    ".iso",      ".md5",   ".pdf",  ".gtk",  ".gtk1", ".gtk2",  ".gtk3",
+        ".gtk4", ".gtk5",   ".gtk6"
     };
 
     for (const _fs::path& path : paths_all) {
@@ -117,6 +119,10 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
         }
 
         if (fima::helpers::regex::matches_any_regex(path.string(), file_or_directories_to_ignore)) {
+            continue;
+        }
+
+        if (fima::fs::operations::is_file_executable(path)) {
             continue;
         }
 

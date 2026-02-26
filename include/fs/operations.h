@@ -31,6 +31,12 @@ get_file_owner(const std::filesystem::path& path);
 bool
 is_file_executable(const std::filesystem::path& path);
 
+bool
+is_compressed_archive(const std::filesystem::path& path);
+
+bool
+is_media(const std::filesystem::path& path);
+
 void
 create(const std::filesystem::path& path, const std::string_view& conent);
 

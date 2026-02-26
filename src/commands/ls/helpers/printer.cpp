@@ -11,9 +11,12 @@
 
 #include "commands/ls/helpers/printer.h"
 
+#include <algorithm>
+#include <cmath>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/screen.hpp>
+#include <ftxui/screen/terminal.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,29 +38,65 @@ using namespace ftxui;
 void
 print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
 {
-    std::vector<Element> element_vector{};
+    int max_width = 0;
 
-    for (const fima::fs::DirectoryItem& item : items) {
-        std::string final_string;
-
-        final_string += item.get_name(icons);
-
-        if (item.is_directory()) {
-            element_vector.push_back(text(final_string + "  ") | color(Color::Green) | bold);
-        } else if (fima::fs::operations::is_file_executable(item.get_path())) {
-            element_vector.push_back(text(final_string + "  ") | color(Color::Red) | bold);
-        } else {
-            element_vector.push_back(text(final_string + "  ") | color(Color::White));
-        }
+    for (const auto& item : items) {
+        max_width = std::max(max_width, static_cast<int>(item.get_name(icons).size()));
     }
 
-    auto document = hflow({ element_vector });
+    int term_width = Terminal::Size().dimx;
+    int cols       = std::max(2, term_width / max_width);
+    int rows       = (items.size() + cols - 1) / cols;
 
-    auto screen = Screen::Create(Dimension::Fit(document));
+    std::vector<std::vector<std::string>> grid_string(rows);
+    std::vector<std::vector<Element>> grid(rows);
 
+    for (size_t i = 0; i < items.size(); ++i) {
+        size_t row = i % rows;
+
+        std::string element_string = items[i].get_name(icons);
+
+        grid_string[row].push_back(element_string);
+    }
+
+    auto get_max_of_column = [&](int column) {
+        int max_length = 0;
+
+        for (size_t row = 0; row < grid_string.size(); ++row) {
+            if (column < grid_string[row].size()) {
+                max_length =
+                  std::max(max_length, static_cast<int>(grid_string[row][column].size()));
+            }
+        }
+
+        return max_length;
+    };
+
+    for (size_t i = 0; i < items.size(); ++i) {
+        size_t row = i % rows;
+        size_t col = i / rows;
+
+        std::string element_string = items[i].get_name(icons);
+
+        element_string +=
+          std::string(std::max(static_cast<int>(element_string.size()), get_max_of_column(col)) -
+                        element_string.size() + 2,
+                      ' ');
+
+        Element element = text(element_string) | color(items[i].get_color_tui());
+
+        if (items[i].is_directory() ||
+            fima::fs::operations::is_file_executable(items[i].get_path())) {
+            element = element | bold;
+        }
+
+        grid[row].push_back(element);
+    }
+
+    auto document = gridbox(grid);
+    auto screen   = Screen::Create(Dimension::Full(), Dimension::Fixed(rows));
     Render(screen, document);
     screen.Print();
-
     std::cout << '\n';
 }
 
@@ -77,13 +116,7 @@ print_long(const std::vector<fima::fs::DirectoryItem>& items,
     for (const fima::fs::DirectoryItem& item : items) {
         Color _color;
 
-        if (item.is_directory()) {
-            _color = Color::Green;
-        } else if (fima::fs::operations::is_file_executable(item.get_path())) {
-            _color = Color::Red;
-        } else {
-            _color = item.get_color_tui();
-        }
+        _color = item.get_color_tui();
 
         table_data.push_back(
           { item.get_permissions_tui(),
