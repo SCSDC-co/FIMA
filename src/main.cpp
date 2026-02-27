@@ -147,7 +147,8 @@ main(int argc, char** argv)
       app.add_subcommand("remove", "Removes a file or a directory")->configurable(false);
 
     remove_subcmd->add_option("path", path_to_create_or_remove, "File or directory to remove")
-      ->configurable(false);
+      ->configurable(false)
+      ->expected(1, -1);
 
     /*  ================
      *  COPY SUB COMMAND
@@ -278,7 +279,13 @@ main(int argc, char** argv)
 
         return 0;
     } else if (app.got_subcommand(remove_subcmd)) {
-        fima::remove(path_to_create_or_remove);
+        std::vector<std::regex> regexes;
+
+        for (const fs::path& path : path_to_create_or_remove) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
+        }
+
+        fima::remove(regexes);
 
         return 0;
     } else if (app.got_subcommand(copy_subcmd)) {

@@ -11,12 +11,12 @@
 
 #pragma once
 
-#include <filesystem>
+#include <regex>
 #include <vector>
 
 namespace fima {
 
 void
-remove(const std::vector<std::filesystem::path>& paths);
+remove(const std::vector<std::regex>& paths);
 
 } // namespace fima
