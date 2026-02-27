@@ -48,6 +48,8 @@ DirectoryItem::set_color()
 
     if (this->is_directory()) {
         color = fima::colors::GREEN;
+    } else if (this->is_symlink()) {
+        color = fima::colors::CYAN;
     } else if (fima::fs::operations::is_file_executable(this->path)) {
         color = fima::colors::RED;
     } else if (fima::fs::operations::is_compressed_archive(this->path)) {
@@ -68,6 +70,8 @@ DirectoryItem::set_color()
         this->color_tui = ftxui::Color::Yellow;
     } else if (color == fima::colors::BLUE) {
         this->color_tui = ftxui::Color::Blue;
+    } else if (color == fima::colors::CYAN) {
+        this->color_tui = ftxui::Color::Cyan;
     }
 
     this->color = color;
@@ -95,12 +99,16 @@ DirectoryItem::get_name(const bool& icons) const
     std::string name;
 
     if (icons) {
-        name += fima::program_files::get_item_icon(this->get_path()) + " ";
+        if (this->is_symlink()) {
+            name += " ";
+        } else {
+            name += fima::program_files::get_item_icon(this->get_path()) + " ";
+        }
     }
 
     name += this->name;
 
-    if (std::filesystem::is_directory(this->get_path())) {
+    if (this->is_directory()) {
         name += "/";
     }
 
@@ -110,6 +118,11 @@ DirectoryItem::get_name(const bool& icons) const
 DirectoryItem::get_path() const
 {
     return this->path;
+}
+[[nodiscard]] std::filesystem::path
+DirectoryItem::get_symlink_target() const
+{
+    return std::filesystem::read_symlink(this->get_path());
 }
 [[nodiscard]] size_t
 DirectoryItem::get_size() const
@@ -139,6 +152,10 @@ DirectoryItem::get_icon() const
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
+    if (this->get_size() == 0) {
+        return "-";
+    }
+
     double dimension = static_cast<double>(this->get_size());
     std::string ext;
 
@@ -188,7 +205,13 @@ DirectoryItem::is_directory() const
 [[nodiscard]] bool
 DirectoryItem::is_file() const
 {
-    return !std::filesystem::is_directory(this->get_path());
+    return !std::filesystem::is_directory(this->get_path()) &&
+           !std::filesystem::is_symlink(this->get_path());
+}
+[[nodiscard]] bool
+DirectoryItem::is_symlink() const
+{
+    return std::filesystem::is_symlink(this->get_path());
 }
 [[nodiscard]] bool
 DirectoryItem::get_is_hidden() const

@@ -57,9 +57,11 @@ class DirectoryItem
 
     [[nodiscard]] bool is_directory() const;
     [[nodiscard]] bool is_file() const;
+    [[nodiscard]] bool is_symlink() const;
     [[nodiscard]] bool get_is_hidden() const;
 
     [[nodiscard]] std::filesystem::path get_path() const;
+    [[nodiscard]] std::filesystem::path get_symlink_target() const;
 
     [[nodiscard]] ftxui::Element get_permissions_tui() const;
     [[nodiscard]] ftxui::Color get_color_tui() const;

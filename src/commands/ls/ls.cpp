@@ -12,6 +12,7 @@
 #include "commands/ls/ls.h"
 
 #include <algorithm>
+#include <cctype>
 #include <filesystem>
 #include <vector>
 
@@ -31,20 +32,24 @@ start(const std::filesystem::path& path, const fima::options::ls_options& option
         fima::fs::get_directories_entries(path, options.all)
     };
 
-    std::sort(
-      list_of_the_directory.begin(),
-      list_of_the_directory.end(),
-      [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
-          return a.path().filename().string() < b.path().filename().string();
-      });
+    auto to_lower = [=](std::string s) {
+        std::transform(
+          s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        return s;
+    };
 
     // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
-    std::sort(
-      list_of_the_directory.begin(),
-      list_of_the_directory.end(),
-      [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
-          return a.is_directory() && !b.is_directory();
-      });
+    std::sort(list_of_the_directory.begin(),
+              list_of_the_directory.end(),
+              [to_lower](const std::filesystem::directory_entry& a,
+                         const std::filesystem::directory_entry& b) {
+                  if (a.is_directory() != b.is_directory()) {
+                      return a.is_directory();
+                  }
+
+                  return to_lower(a.path().filename().string()) <
+                         to_lower(b.path().filename().string());
+              });
 
     std::vector<fima::fs::DirectoryItem> items{};
 

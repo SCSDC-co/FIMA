@@ -574,18 +574,19 @@ inline const std::string_view map_file_icon = R"json({
     ".dff": "",
     ".caf": "",
     ".pcm": "",
-    "ttf": "",
-    "otf": "",
-    "woff": "",
-    "woff2": "",
-    "fon": "",
-    "fnt": "",
-    "pfb": "",
-    "pfm": "",
-    "bdf": "",
-    "pcf": "",
-    "cff": "",
-    "sfd": ""
+    ".ttf": "",
+    ".otf": "",
+    ".woff": "",
+    ".woff2": "",
+    ".fon": "",
+    ".fnt": "",
+    ".pfb": "",
+    ".pfm": "",
+    ".bdf": "",
+    ".pcf": "",
+    ".cff": "",
+    ".sfd": "",
+    ".ninja": "󰝴"
 }
 )json";
 

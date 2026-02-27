@@ -118,10 +118,6 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
             continue;
         }
 
-        if (fima::helpers::regex::matches_any_regex(path.string(), file_or_directories_to_ignore)) {
-            continue;
-        }
-
         if (fima::fs::operations::is_file_executable(path)) {
             continue;
         }

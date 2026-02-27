@@ -23,6 +23,7 @@ inline constexpr std::string RED    = "\033[31m";
 inline constexpr std::string GREEN  = "\033[32m";
 inline constexpr std::string YELLOW = "\033[33m";
 inline constexpr std::string BLUE   = "\033[34m";
+inline constexpr std::string CYAN   = "\033[36m";
 inline constexpr std::string WHITE  = "\033[37m";
 inline constexpr std::string GRAY   = "\033[90m";
 

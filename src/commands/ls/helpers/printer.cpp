@@ -96,6 +96,7 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
     auto screen   = Screen::Create(Dimension::Full(), Dimension::Fixed(rows));
     Render(screen, document);
     screen.Print();
+
     std::cout << '\n';
 }
 
@@ -122,9 +123,11 @@ print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const
             text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
             text(" " + item.get_user() + " ") | color(Color::Red),
             text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
-            text(" " + item.get_name(icons)) |
-              (fima::fs::operations::is_file_executable(item.get_path()) ? color(_color) | bold
-                                                                         : color(_color)) });
+            hbox(text(" " + item.get_name(icons)) |
+                   (fima::fs::operations::is_file_executable(item.get_path()) ? color(_color) | bold
+                                                                              : color(_color)),
+                 text((item.is_symlink() ? " -> " + std::string(item.get_symlink_target()) : "")) |
+                   color(_color)) });
     }
 
     Table table = Table({ table_data });

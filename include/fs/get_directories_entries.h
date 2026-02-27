@@ -25,8 +25,8 @@ get_directories_entries(const std::filesystem::path& path, const bool& dotfiles)
 
 std::vector<std::filesystem::path>
 get_directories_entries_recursive(const std::filesystem::path& path,
-                                  const bool& ignore_directories,
-                                  const std::vector<std::regex>& ignored_files_directories);
+                                  const bool& ignore_directories_or_files,
+                                  const std::vector<std::regex>& ignored_files_or_directories);
 
 } // namespace fs
 
