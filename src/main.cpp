@@ -148,7 +148,14 @@ main(int argc, char** argv)
 
     remove_subcmd->add_option("path", path_to_create_or_remove, "File or directory to remove")
       ->configurable(false)
-      ->expected(1, -1);
+      ->required(true);
+
+    bool remove_subcmd_recursive{ false };
+    remove_subcmd
+      ->add_flag("-r,--recursive",
+                 remove_subcmd_recursive,
+                 "Remove directories and their contents recursively")
+      ->configurable(true);
 
     /*  ================
      *  COPY SUB COMMAND
@@ -285,7 +292,7 @@ main(int argc, char** argv)
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::remove(regexes);
+        fima::remove(regexes, remove_subcmd_recursive);
 
         return 0;
     } else if (app.got_subcommand(copy_subcmd)) {
