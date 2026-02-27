@@ -23,6 +23,8 @@
 #include <unistd.h>
 #include <unordered_set>
 
+#include "config.h"
+
 namespace fima {
 
 namespace fs {
@@ -38,7 +40,7 @@ get_item_size(const std::filesystem::path& path)
         for (auto i = std::filesystem::recursive_directory_iterator(path);
              i != std::filesystem::recursive_directory_iterator();
              ++i) {
-            if (i.depth() >= 2) {
+            if (i.depth() >= fima::config::depth) {
                 break;
             }
 

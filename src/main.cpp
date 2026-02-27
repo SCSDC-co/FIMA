@@ -41,6 +41,7 @@ int
 main(int argc, char** argv)
 {
     fima::program_files::setup_variables();
+    fima::config::parse_config_file();
 
     CLI::App app;
     argv = app.ensure_utf8(argv);
@@ -56,6 +57,7 @@ main(int argc, char** argv)
         "--config", fima::program_files::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
       ->transform(CLI::FileOnDefaultPath(fima::program_files::CONFIG_FILE_PATH))
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+    app.allow_config_extras(CLI::config_extras_mode::ignore);
 
     bool tui{ false };
     bool display_version{ false };

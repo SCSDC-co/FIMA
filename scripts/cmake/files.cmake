@@ -28,4 +28,5 @@ add_library(fima_lib
     src/git/README.md
     src/tui/tui.cpp
     src/fs/File.cpp
+    src/config.cpp
 )
