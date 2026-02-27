@@ -196,7 +196,9 @@ main(int argc, char** argv)
       ->configurable(false);
 
     std::vector<fs::path> cloc_ignore{};
-    cloc_subcmd->add_option("--ignore,-i", cloc_ignore, "Paths to ignore")->configurable(true);
+    cloc_subcmd->add_option("--ignore,-i", cloc_ignore, "Paths to ignore")
+      ->configurable(true)
+      ->expected(0, -1);
 
     cloc_subcmd->add_option("--sort,-S", cloc_options.sorting, "Type of sorting")
       ->configurable(true);
