@@ -27,11 +27,11 @@ void
 file(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
-        if (std::filesystem::is_regular_file(entry)) {
+        if (std::filesystem::exists(entry)) {
             fima::logger::error(true,
                                 "create file",
                                 fima::colors::RED +
-                                  "This file already exists: " + fima::colors::RESET + "{}",
+                                  "This item already exists: " + fima::colors::RESET + "{}",
                                 entry.string());
 
             continue;

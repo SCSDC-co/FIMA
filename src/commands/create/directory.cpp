@@ -28,12 +28,11 @@ void
 dir(const std::vector<fs::path>& paths)
 {
     for (const auto& entry : paths) {
-
-        if (fs::is_directory(entry)) {
+        if (fs::exists(entry)) {
             fima::logger::error(true,
                                 "create dir",
                                 fima::colors::RED +
-                                  "This directory already exists: " + fima::colors::RESET + "{}",
+                                  "This item already exists: " + fima::colors::RESET + "{}",
                                 entry.string());
 
             continue;

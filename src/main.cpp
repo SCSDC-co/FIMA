@@ -63,7 +63,7 @@ main(int argc, char** argv)
     bool preserve_config_file{ false };
 
     // names should be descriptive
-    std::vector<fs::path> path_to_create_or_remove;
+    std::vector<fs::path> path_to_remove;
     std::vector<fs::path> perms_path;
     fs::path path_to_copy;
     fs::path destination;
@@ -134,10 +134,13 @@ main(int argc, char** argv)
     CLI::App* create_subcmd =
       app.add_subcommand("create", "Create a directory or a file")->configurable(false);
 
-    create_subcmd->add_option("path", path_to_create_or_remove, "File or dir to create")
+    std::vector<fs::path> create_file_paths;
+    create_subcmd->add_option("-f,--file", create_file_paths, "Files to create")
       ->configurable(false);
-    create_subcmd->add_subcommand("dir", "Creates a directory")->configurable(false);
-    create_subcmd->add_subcommand("file", "Creates a file")->configurable(false);
+
+    std::vector<fs::path> create_dir_paths;
+    create_subcmd->add_option("-d,--dir", create_dir_paths, "Directory to create")
+      ->configurable(false);
 
     /*  ==================
      *  REMOVE SUB COMMAND
@@ -146,7 +149,7 @@ main(int argc, char** argv)
     CLI::App* remove_subcmd =
       app.add_subcommand("remove", "Removes a file or a directory")->configurable(false);
 
-    remove_subcmd->add_option("path", path_to_create_or_remove, "File or directory to remove")
+    remove_subcmd->add_option("path", path_to_remove, "File or directory to remove")
       ->configurable(false)
       ->required(true);
 
@@ -277,18 +280,15 @@ main(int argc, char** argv)
         fima::tree::start(path, "", tui);
 
         return 0;
-    } else if (create_subcmd->got_subcommand("dir")) {
-        fima::create::dir(path_to_create_or_remove);
-
-        return 0;
-    } else if (create_subcmd->got_subcommand("file")) {
-        fima::create::file(path_to_create_or_remove);
+    } else if (app.got_subcommand(create_subcmd)) {
+        fima::create::dir(create_dir_paths);
+        fima::create::file(create_file_paths);
 
         return 0;
     } else if (app.got_subcommand(remove_subcmd)) {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : path_to_create_or_remove) {
+        for (const fs::path& path : path_to_remove) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
