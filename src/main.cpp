@@ -78,12 +78,14 @@ main(int argc, char** argv)
         ->configurable(false);
 
     app.add_flag("--reset-config-files", reset_program_files, "Resets the config files")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
     app
       .add_flag("--preserve-config-file",
                 preserve_config_file,
                 "Preserces the config.toml file (only work when using --reset-config-files)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     fs::directory_entry path{ fs::current_path() };
@@ -103,21 +105,26 @@ main(int argc, char** argv)
         ->configurable(false);
 
     ls_subcmd->add_flag("-i,--icons", ls_options.icons, "Puts an icon next to the name of the item")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     ls_subcmd->add_flag("-a,--all", ls_options.all, "Will also count the dotfiles")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     ls_subcmd->add_flag("-l,--long", ls_options.long_output, "Display the file metadata")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     ls_subcmd->add_flag("-G,--no-gitignore", ls_options.gitignore, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     ls_subcmd
       ->add_flag("-v,--verbose",
                  ls_options.verbose,
                  "Displays the number of directories and files (only works with long output)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     /*  ================
@@ -163,6 +170,7 @@ main(int argc, char** argv)
       ->add_flag("-r,--recursive",
                  remove_subcmd_recursive,
                  "Remove directories and their contents recursively")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     /*  ================
@@ -173,8 +181,11 @@ main(int argc, char** argv)
       app.add_subcommand("copy", "Copy a file or a directory")->configurable(false);
 
     copy_subcmd->add_option("source-file", path_to_copy, "File or directory copy")
-      ->configurable(false);
-    copy_subcmd->add_option("destination", destination, "Destination")->configurable(false);
+      ->configurable(false)
+      ->required(true);
+    copy_subcmd->add_option("destination", destination, "Destination")
+      ->configurable(false)
+      ->required(true);
 
     /*  ==================
      *  RENAME SUB COMMAND
@@ -184,9 +195,11 @@ main(int argc, char** argv)
       app.add_subcommand("rename", "Rename/move a file or a directory")->configurable(false);
 
     rename_subcmd->add_option("old-name", old_name, "File or directory to move or rename")
-      ->configurable(false);
+      ->configurable(false)
+      ->required(true);
     rename_subcmd->add_option("new-name", new_name, "The new name for the directory or file")
-      ->configurable(false);
+      ->configurable(false)
+      ->required(true);
 
     /*  =================
      *  PERMS SUB COMMAND
@@ -196,7 +209,8 @@ main(int argc, char** argv)
       app.add_subcommand("perms", "Shows a directory/file permissions")->configurable(false);
 
     perms_subcmd->add_option("path", perms_path, "The file path to read permissions from")
-      ->configurable(false);
+      ->configurable(false)
+      ->required(true);
 
     /*  ================
      *  CLOC SUB COMMAND
@@ -217,7 +231,8 @@ main(int argc, char** argv)
       ->expected(0, -1);
 
     cloc_subcmd->add_option("--sort,-S", cloc_options.sorting, "Type of sorting")
-      ->configurable(true);
+      ->configurable(true)
+      ->expected(0, 1);
 
     cloc_subcmd->add_flag("--quiet,-q", cloc_options.quiet, "Enables quiet output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
@@ -251,6 +266,7 @@ main(int argc, char** argv)
 
     info_subcmd
       ->add_flag("-g,--git", info_options.git, "Displays git information instead of file/directory")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
     CLI11_PARSE(app, argc, argv);
