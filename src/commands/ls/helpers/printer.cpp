@@ -121,7 +121,7 @@ print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const
         table_data.push_back(
           { item.get_permissions_tui(),
             text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
-            text(" " + item.get_user() + " ") | color(Color::Red),
+            text(" " + item.get_owner() + " ") | color(Color::Red),
             text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
             hbox(text(" " + item.get_name(icons)) |
                    (fima::fs::operations::is_file_executable(item.get_path()) ? color(_color) | bold

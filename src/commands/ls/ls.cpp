@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "commands/ls/helpers/printer.h"
+#include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
 #include "git/GitRepo.h"
 #include "logger.h"
@@ -63,6 +64,12 @@ start(const std::filesystem::path& path,
 
         items.emplace_back(item);
     }
+
+    // remove items that are invalid
+    items.erase(std::remove_if(items.begin(),
+                               items.end(),
+                               [](const fima::fs::DirectoryItem& item) { return item.is_valid(); }),
+                items.end());
 
     if (options.long_output) {
         helpers::print_long(items, options.icons, options.verbose);

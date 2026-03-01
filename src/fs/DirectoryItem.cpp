@@ -34,7 +34,7 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , path(path)
   , permissions(fima::perms::get_perms(path))
   , last_modification_date(fima::fs::operations::get_file_time(path))
-  , user(fima::fs::operations::get_file_owner(path))
+  , owner(fima::fs::operations::get_file_owner(path))
   , is_hidden(path.path().filename().native().starts_with('.'))
   , icon(fima::program_files::get_item_icon(path.path()) + " ")
 {
@@ -89,9 +89,9 @@ DirectoryItem::get_permissions() const
     return this->permissions;
 }
 [[nodiscard]] std::string
-DirectoryItem::get_user() const
+DirectoryItem::get_owner() const
 {
-    return this->user;
+    return this->owner;
 }
 [[nodiscard]] std::string
 DirectoryItem::get_name(const bool& icons) const
@@ -132,6 +132,10 @@ DirectoryItem::get_size() const
 [[nodiscard]] std::string
 DirectoryItem::get_last_modification_date() const
 {
+    if (this->last_modification_date == std::filesystem::file_time_type()) {
+        return "unknown";
+    }
+
     using namespace std::chrono;
 
     // this way we get the seconds as integer and not as long/double
@@ -212,6 +216,12 @@ DirectoryItem::is_file() const
 DirectoryItem::is_symlink() const
 {
     return std::filesystem::is_symlink(this->get_path());
+}
+[[nodiscard]] bool
+DirectoryItem::is_valid() const
+{
+    return this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
+           this->get_owner() == "unknown";
 }
 [[nodiscard]] bool
 DirectoryItem::get_is_hidden() const

@@ -29,7 +29,8 @@ get_directories_entries(const _fs::path& path, const bool& dotfiles)
 {
     std::vector<_fs::directory_entry> directory_content;
 
-    for (const _fs::directory_entry& entry : _fs::directory_iterator(path)) {
+    for (const _fs::directory_entry& entry : _fs::directory_iterator(
+           path, std::filesystem::directory_options::skip_permission_denied)) {
         std::string name{ entry.path().filename().string() };
 
         if (name[0] == '.' && !dotfiles) {

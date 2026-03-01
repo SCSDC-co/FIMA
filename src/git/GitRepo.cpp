@@ -39,7 +39,7 @@ GitRepo::GitRepo(const _fs::path& path)
     this->set_repo_path(path);
 
     if (this->is_in_repo) {
-        git_repository_open(&this->repo, this->git_repo_path.path().c_str());
+        git_repository_open(&this->repo, this->git_repo_path.c_str());
 
         git_repository_head(&this->repo_head, this->repo);
 
@@ -56,7 +56,7 @@ GitRepo::GitRepo(const _fs::path& path)
 void
 GitRepo::set_repo_path(const std::filesystem::path& path)
 {
-    _fs::directory_entry _path;
+    _fs::path _path;
 
     bool found{ false };
 
@@ -64,7 +64,7 @@ GitRepo::set_repo_path(const std::filesystem::path& path)
 
     for (const _fs::directory_entry& entry : dir_entries) {
         if (entry.path().filename() == ".git") {
-            _path = entry;
+            _path = _fs::canonical(entry);
             found = true;
             break;
         }
@@ -85,7 +85,7 @@ GitRepo::change_repo_path(const std::filesystem::path& path)
     this->set_repo_path(path);
 
     if (this->is_in_repo) {
-        git_repository_open(&this->repo, this->git_repo_path.path().c_str());
+        git_repository_open(&this->repo, this->git_repo_path.c_str());
 
         git_repository_head(&this->repo_head, this->repo);
 
@@ -132,7 +132,7 @@ GitRepo::set_commit_info()
 [[nodiscard]] std::string
 GitRepo::get_repo_path() const
 {
-    return this->git_repo_path.path().string();
+    return this->git_repo_path.string();
 }
 [[nodiscard]] std::string
 GitRepo::get_repo_branch() const
@@ -174,7 +174,7 @@ GitRepo::is_file_ignored(const std::filesystem::path& path) const
 {
     int is_ignored;
 
-    git_ignore_path_is_ignored(&is_ignored, this->repo, path.c_str());
+    git_ignore_path_is_ignored(&is_ignored, this->repo, path.filename().c_str());
 
     return is_ignored;
 }

@@ -27,7 +27,7 @@ class DirectoryItem
     bool is_hidden{};
 
     std::string permissions{};
-    std::string user{};
+    std::string owner{};
     std::string name{};
     std::string icon{};
     std::string color{};
@@ -46,7 +46,7 @@ class DirectoryItem
     void set_size();
 
     [[nodiscard]] std::string get_permissions() const;
-    [[nodiscard]] std::string get_user() const;
+    [[nodiscard]] std::string get_owner() const;
     [[nodiscard]] std::string get_name(const bool& icons) const;
     [[nodiscard]] std::string get_last_modification_date() const;
     [[nodiscard]] std::string get_icon() const;
@@ -58,6 +58,7 @@ class DirectoryItem
     [[nodiscard]] bool is_directory() const;
     [[nodiscard]] bool is_file() const;
     [[nodiscard]] bool is_symlink() const;
+    [[nodiscard]] bool is_valid() const;
     [[nodiscard]] bool get_is_hidden() const;
 
     [[nodiscard]] std::filesystem::path get_path() const;

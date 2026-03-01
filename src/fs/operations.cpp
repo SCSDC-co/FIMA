@@ -74,7 +74,11 @@ get_item_size(const std::filesystem::path& path)
 std::filesystem::file_time_type
 get_file_time(const std::filesystem::path& path)
 {
-    return std::filesystem::last_write_time(path);
+    try {
+        return std::filesystem::last_write_time(path);
+    } catch (...) {
+        return std::filesystem::file_time_type();
+    }
 }
 
 std::string
@@ -98,9 +102,9 @@ get_file_owner(const std::filesystem::path& path)
 bool
 is_file_executable(const std::filesystem::path& path)
 {
-    static const std::unordered_set<std::string> ft = {
-        ".exe", ".dll", ".sys", ".cpl", ".ocx", ".scr", ".efi", ".msi", ".app", ".apk", ".ipa",
-    };
+    static const std::unordered_set<std::string> ft = { ".exe", ".dll", ".sys", ".cpl",
+                                                        ".ocx", ".scr", ".efi", ".msi",
+                                                        ".app", ".apk", ".ipa", ".elf" };
 
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
