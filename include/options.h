@@ -41,6 +41,15 @@ struct info_options
     bool git{ false };
 };
 
+struct tree_options
+{
+    std::string prefix{ "" };
+    bool tui{ false };
+    bool all{ false };
+    bool gitignore{ false };
+    bool verbose{ false };
+};
+
 } // namespace options
 
 } // namespace fima

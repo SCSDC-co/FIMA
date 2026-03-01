@@ -1,6 +1,6 @@
 /*
- * src/commands/tui.cpp
- * include/commands/tui.h
+ * src/commands/tree.cpp
+ * include/commands/tree.h
  *
  * The implementation of the `tree` subcommand
  *
@@ -19,35 +19,36 @@
 #include <string>
 #include <vector>
 
+#include "config.h"
+#include "fs/get_directories_entries.h"
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
+#include "git/GitRepo.h"
 #include "logger.h"
+#include "options.h"
 #include "tui/commands/tree/tree_tui.h"
 #include "utility/colors.h"
-
-namespace fs = std::filesystem;
+#include "utility/regex.h"
 
 std::vector<Element> tree_vector_tui;
-
-size_t number_of_files = 0;
-size_t number_of_dirs  = 0;
 
 std::vector<std::string> inner_pointers = { "├── ", "│   " };
 std::vector<std::string> final_pointers = { "╰── ", "    " };
 
+size_t number_of_files = 0;
+size_t number_of_dirs  = 0;
+
 void
-create_tree(std::string path, std::string prefix, bool tui)
+create_tree(const std::filesystem::directory_entry& path,
+            const fima::git::GitRepo& repo,
+            const fima::options::tree_options& options,
+            const std::string& prefix)
 {
     using namespace ftxui;
 
-    std::vector<fs::directory_entry> entries;
-
-    for (const auto& entry : fs::directory_iterator(path)) {
-        if (entry.path().filename().string()[0] != '.') {
-            entries.push_back(entry);
-        }
-    }
+    std::vector<std::filesystem::directory_entry> entries =
+      fima::fs::get_directories_entries(path, options.all);
 
     sort(entries.begin(), entries.end(), [](auto& a, auto& b) {
         if (a.is_directory() && !b.is_directory()) {
@@ -61,12 +62,27 @@ create_tree(std::string path, std::string prefix, bool tui)
         return a.path().filename() < b.path().filename();
     });
 
-    for (size_t index = 0; index < entries.size(); index++) {
-        fs::directory_entry entry = entries[index];
-        std::vector<std::string> pointers =
-          (index == entries.size() - 1 ? final_pointers : inner_pointers);
+    std::vector<std::filesystem::directory_entry> paths_sanitized;
 
-        if (!tui) {
+    for (const auto& entry : entries) {
+        if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(),
+                                                    fima::config::DEFAULT_DIRS_TO_IGNORE)) {
+            continue;
+        }
+
+        if (options.gitignore && repo.is_file_ignored(entry.path())) {
+            continue;
+        }
+
+        paths_sanitized.push_back(entry);
+    }
+
+    for (size_t index = 0; index < paths_sanitized.size(); index++) {
+        std::filesystem::directory_entry entry = paths_sanitized[index];
+        std::vector<std::string> pointers =
+          (index == paths_sanitized.size() - 1 ? final_pointers : inner_pointers);
+
+        if (!options.tui) {
             if (entry.is_directory()) {
                 std::cout << fima::colors::GREEN << prefix << pointers[0]
                           << entry.path().filename().string() << "/" << fima::colors::RESET
@@ -75,7 +91,7 @@ create_tree(std::string path, std::string prefix, bool tui)
                 std::cout << fima::colors::GREEN << prefix << pointers[0] << fima::colors::RESET
                           << entry.path().filename().string() << std::endl;
             }
-        } else if (tui) {
+        } else if (options.tui) {
             Element prefix_elem = text(prefix) | color(Color::Green);
             Element name_elem =
               text(entry.path().filename().string() + (entry.is_directory() ? "/ " : " "));
@@ -96,7 +112,8 @@ create_tree(std::string path, std::string prefix, bool tui)
             number_of_files++;
         } else if (entry.is_directory()) {
             number_of_dirs++;
-            create_tree(entry.path(), prefix + pointers[1], tui);
+
+            create_tree(entry, repo, options, prefix + pointers[1]);
         }
     }
 }
@@ -106,18 +123,20 @@ namespace fima {
 namespace tree {
 
 void
-start(const fs::path& path, std::string prefix, bool tui)
+start(const std::filesystem::directory_entry& path,
+      const fima::git::GitRepo& repo,
+      const fima::options::tree_options& options)
 {
-    if (!tui) {
-        std::cout << fima::colors::GREEN << path.string()
-                  << (path.string().back() == '/' ? "" : "/") << fima::colors::RESET << '\n';
+    if (!options.tui) {
+        std::cout << fima::colors::GREEN << path.path().string()
+                  << (path.path().string().back() == '/' ? "" : "/") << fima::colors::RESET << '\n';
     }
 
-    create_tree(path.string(), prefix, tui);
+    create_tree(path, repo, options, options.prefix);
 
-    if (tui) {
+    if (options.tui) {
         fima::tree::tui(path, tree_vector_tui, number_of_dirs, number_of_files);
-    } else {
+    } else if (options.verbose) {
         std::cout << '\n';
 
         std::cout << fima::colors::GREEN << "Number of directories: " << fima::colors::RESET
@@ -126,9 +145,9 @@ start(const fs::path& path, std::string prefix, bool tui)
                   << std::to_string(number_of_files) << '\n';
     }
 
-    fima::logger::info(false, "tree", "Create tree of: {}", path.string());
+    fima::logger::info(false, "tree", "Create tree of: {}", path.path().string());
     fima::logger::info(false, "tree", "Options:");
-    fima::logger::info(false, "tree", "  Tui: {}", (tui ? "true" : "false"));
+    fima::logger::info(false, "tree", "  Tui: {}", (options.tui ? "true" : "false"));
 }
 
 } // namespace tree

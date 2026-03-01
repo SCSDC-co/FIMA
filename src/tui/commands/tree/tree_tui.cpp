@@ -11,6 +11,7 @@
 
 #include "tui/commands/tree/tree_tui.h"
 
+#include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
@@ -26,31 +27,32 @@ namespace fima {
 
 namespace tree {
 void
-tui(std::string path_name,
-    std::vector<ftxui::Element> tree_vector_tui,
-    size_t number_of_dirs,
-    size_t number_of_files)
+tui(const std::filesystem::directory_entry& path,
+    const std::vector<ftxui::Element>& tree_vector_tui,
+    const size_t& number_of_dirs,
+    const size_t& number_of_files)
 {
-    Element main_box =
-      window(text(" Tree: " + path_name + (path_name.back() == '/' ? " " : "/ ")) | bold,
-             vbox(
+    Element main_box = window(text(" Tree: " + path.path().filename().string() +
+                                   (path.path().filename().string().back() == '/' ? " " : "/ ")) |
+                                bold,
+                              vbox(
 
-               hbox(text(" "), vbox(tree_vector_tui)),
+                                hbox(text(" "), vbox(tree_vector_tui)),
 
-               filler(),
+                                filler(),
 
-               separator(),
+                                separator(),
 
-               vbox(
+                                vbox(
 
-                 hbox(text(" Number of directories: ") | color(Color::Green),
-                      text(std::to_string(number_of_dirs)) | color(Color::White)),
+                                  hbox(text(" Number of directories: ") | color(Color::Green),
+                                       text(std::to_string(number_of_dirs)) | color(Color::White)),
 
-                 hbox(text(" Number of files: ") | color(Color::Green),
-                      text(std::to_string(number_of_files)) | color(Color::White))
+                                  hbox(text(" Number of files: ") | color(Color::Green),
+                                       text(std::to_string(number_of_files)) | color(Color::White))
 
-                   ))) |
-      color(Color::Green);
+                                    ))) |
+                       color(Color::Green);
 
     auto document = main_box;
     auto screen   = Screen::Create(Dimension::Fit(document), Dimension::Full());

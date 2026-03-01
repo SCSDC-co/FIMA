@@ -131,11 +131,21 @@ main(int argc, char** argv)
      *  TREE SUB COMMAND
      */
 
+    fima::options::tree_options tree_options;
+
     CLI::App* tree_subcmd =
       app.add_subcommand("tree", "Prints the tree of the directory like the tree command")
         ->configurable(false);
 
-    tree_subcmd->add_flag("-n,--no-tui", tui, "Disable TUI")
+    tree_subcmd->add_flag("-a,--all", tree_options.all, "Shows dotfiles")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    tree_subcmd->add_flag("-G,--no-gitignore", tree_options.gitignore, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    tree_subcmd->add_flag("-v,--verbose", tree_options.verbose, "Verbose output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -274,8 +284,12 @@ main(int argc, char** argv)
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
     // get the correct value
     tui                    = !tui;
-    cloc_options.gitignore = !cloc_options.gitignore;
     ls_options.gitignore   = !ls_options.gitignore;
+    cloc_options.gitignore = !cloc_options.gitignore;
+    tree_options.gitignore = !tree_options.gitignore;
+
+    // when calling like this: `fima tree` it shouldn't be a TUI
+    tree_options.tui = false;
 
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
@@ -304,7 +318,7 @@ main(int argc, char** argv)
 
         return 0;
     } else if (app.got_subcommand(tree_subcmd)) {
-        fima::tree::start(path, "", tui);
+        fima::tree::start(path, repo, tree_options);
 
         return 0;
     } else if (app.got_subcommand(create_subcmd)) {

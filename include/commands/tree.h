@@ -12,14 +12,18 @@
 #pragma once
 
 #include <filesystem>
-#include <string>
+
+#include "git/GitRepo.h"
+#include "options.h"
 
 namespace fima {
 
 namespace tree {
 
 void
-start(const std::filesystem::path& path, std::string prefix, bool tui);
+start(const std::filesystem::directory_entry& path,
+      const fima::git::GitRepo& repo,
+      const fima::options::tree_options& options);
 
 }
 
