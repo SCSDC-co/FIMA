@@ -14,6 +14,7 @@
 #include <regex>
 #include <vector>
 
+#include "git/GitRepo.h"
 #include "options.h"
 
 namespace fima {
@@ -21,7 +22,9 @@ namespace fima {
 namespace cloc {
 
 void
-main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options options);
+main(const std::vector<std::regex>& paths_to_ignore,
+     const fima::git::GitRepo& repo,
+     const fima::options::cloc_options options);
 
 }
 

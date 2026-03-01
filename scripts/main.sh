@@ -54,7 +54,7 @@ get-files-cli11-latest() {
 }
 
 format() {
-    HEADERS=$(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" -print)
+    HEADERS=$(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" ! -name "toml.hpp" -print)
     SOURCES=$(find ../src/ -type f -name "*.cpp")
 
     for file in $SOURCES; do

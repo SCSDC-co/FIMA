@@ -27,6 +27,7 @@
 #include "config.h"
 #include "fs/get_directories_entries.h"
 #include "fs/operations.h"
+#include "git/GitRepo.h"
 #include "logger.h"
 #include "options.h"
 #include "program_files.h"
@@ -40,7 +41,9 @@ namespace fima {
 namespace cloc {
 
 void
-cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options& options)
+cloc(const std::vector<std::regex>& paths_to_ignore,
+     const fima::git::GitRepo& repo,
+     const fima::options::cloc_options& options)
 {
     const std::unordered_set<std::string> sorting_options = {
         "files", "total", "code", "comments", "blank"
@@ -107,6 +110,10 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
     };
 
     for (const _fs::path& path : paths_all) {
+        if (options.gitignore && repo.is_file_ignored(path)) {
+            continue;
+        }
+
         if (_fs::is_directory(path)) {
             continue;
         }
@@ -178,12 +185,14 @@ cloc(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_o
 }
 
 void
-main(const std::vector<std::regex>& paths_to_ignore, const fima::options::cloc_options options)
+main(const std::vector<std::regex>& paths_to_ignore,
+     const fima::git::GitRepo& repo,
+     const fima::options::cloc_options options)
 {
     if (options.show_languages) {
         fima::cloc::helpers::show_languages();
     } else {
-        cloc(paths_to_ignore, options);
+        cloc(paths_to_ignore, repo, options);
     }
 
     std::string paths_sanitized{};

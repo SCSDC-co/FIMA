@@ -18,6 +18,7 @@
 
 #include "commands/ls/helpers/printer.h"
 #include "fs/get_directories_entries.h"
+#include "git/GitRepo.h"
 #include "logger.h"
 #include "options.h"
 
@@ -26,7 +27,9 @@ namespace fima {
 namespace ls {
 
 void
-start(const std::filesystem::path& path, const fima::options::ls_options& options)
+start(const std::filesystem::path& path,
+      const fima::git::GitRepo& repo,
+      const fima::options::ls_options& options)
 {
     std::vector<std::filesystem::directory_entry> list_of_the_directory{
         fima::fs::get_directories_entries(path, options.all)
@@ -54,6 +57,10 @@ start(const std::filesystem::path& path, const fima::options::ls_options& option
     std::vector<fima::fs::DirectoryItem> items{};
 
     for (const std::filesystem::directory_entry& item : list_of_the_directory) {
+        if (options.gitignore && repo.is_file_ignored(item.path())) {
+            continue;
+        }
+
         items.emplace_back(item);
     }
 

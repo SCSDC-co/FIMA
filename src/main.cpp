@@ -111,6 +111,9 @@ main(int argc, char** argv)
     ls_subcmd->add_flag("-l,--long", ls_options.long_output, "Display the file metadata")
       ->configurable(true);
 
+    ls_subcmd->add_flag("-G,--no-gitignore", ls_options.gitignore, "Ignore .gitignore")
+      ->configurable(true);
+
     ls_subcmd
       ->add_flag("-v,--verbose",
                  ls_options.verbose,
@@ -220,6 +223,10 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
+    cloc_subcmd->add_flag("--no-gitignore,-G", cloc_options.gitignore, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
     cloc_subcmd
       ->add_flag("--show-languages,-s",
                  cloc_options.show_languages,
@@ -250,7 +257,9 @@ main(int argc, char** argv)
 
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
     // get the correct value
-    tui = !tui;
+    tui                    = !tui;
+    cloc_options.gitignore = !cloc_options.gitignore;
+    ls_options.gitignore   = !ls_options.gitignore;
 
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
@@ -275,7 +284,7 @@ main(int argc, char** argv)
 
         return 0;
     } else if (app.got_subcommand(ls_subcmd)) {
-        fima::ls::start(path, ls_options);
+        fima::ls::start(path, repo, ls_options);
 
         return 0;
     } else if (app.got_subcommand(tree_subcmd)) {
@@ -320,7 +329,7 @@ main(int argc, char** argv)
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::cloc::main(regexes, cloc_options);
+        fima::cloc::main(regexes, repo, cloc_options);
 
         return 0;
     } else if (app.got_subcommand(info_subcmd)) {

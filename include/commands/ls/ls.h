@@ -13,6 +13,7 @@
 
 #include <filesystem>
 
+#include "git/GitRepo.h"
 #include "options.h"
 
 namespace fima {
@@ -20,7 +21,9 @@ namespace fima {
 namespace ls {
 
 void
-start(const std::filesystem::path& path, const fima::options::ls_options& options);
+start(const std::filesystem::path& path,
+      const fima::git::GitRepo& repo,
+      const fima::options::ls_options& options);
 
 } // namespace ls
 

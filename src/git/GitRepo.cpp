@@ -15,6 +15,7 @@
 #include <git2/branch.h>
 #include <git2/commit.h>
 #include <git2/global.h>
+#include <git2/ignore.h>
 #include <git2/oid.h>
 #include <git2/refs.h>
 #include <git2/repository.h>
@@ -166,6 +167,16 @@ GitRepo::get_commit_message() const
 GitRepo::get_commit_number() const
 {
     return this->commit_number;
+}
+
+[[nodiscard]] bool
+GitRepo::is_file_ignored(const std::filesystem::path& path) const
+{
+    int is_ignored;
+
+    git_ignore_path_is_ignored(&is_ignored, this->repo, path.c_str());
+
+    return is_ignored;
 }
 
 GitRepo::~GitRepo()

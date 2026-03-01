@@ -23,6 +23,7 @@ struct cloc_options
     std::string sorting{ "total" };
     bool quiet{ false };
     bool show_languages{ false };
+    bool gitignore{ false };
 };
 
 struct ls_options
@@ -31,6 +32,7 @@ struct ls_options
     bool all{ false };
     bool long_output{ false };
     bool verbose{ false };
+    bool gitignore{ false };
 };
 
 struct info_options
