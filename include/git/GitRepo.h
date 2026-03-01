@@ -58,6 +58,7 @@ class GitRepo
     [[nodiscard]] int get_commit_number() const;
 
     [[nodiscard]] bool is_file_ignored(const std::filesystem::path& path) const;
+    [[nodiscard]] bool get_is_in_repo() const;
 
     ~GitRepo();
 };

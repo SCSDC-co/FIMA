@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "fs/get_directories_entries.h"
+#include "fs/operations.h"
 
 namespace _fs = std::filesystem;
 
@@ -56,6 +57,12 @@ GitRepo::GitRepo(const _fs::path& path)
 void
 GitRepo::set_repo_path(const std::filesystem::path& path)
 {
+    if (fima::fs::operations::is_root(path)) {
+        this->is_in_repo = false;
+
+        return;
+    }
+
     _fs::path _path;
 
     bool found{ false };
@@ -177,6 +184,11 @@ GitRepo::is_file_ignored(const std::filesystem::path& path) const
     git_ignore_path_is_ignored(&is_ignored, this->repo, path.filename().c_str());
 
     return is_ignored;
+}
+[[nodiscard]] bool
+GitRepo::get_is_in_repo() const
+{
+    return this->is_in_repo;
 }
 
 GitRepo::~GitRepo()

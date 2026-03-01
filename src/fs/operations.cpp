@@ -165,6 +165,14 @@ is_media(const std::filesystem::path& path)
     }
 }
 
+bool
+is_root(const std::filesystem::path& path)
+{
+    std::filesystem::path canonical_path = std::filesystem::canonical(path);
+
+    return !canonical_path.has_relative_path();
+}
+
 void
 create(const std::filesystem::path& path, const std::string_view& conent)
 {

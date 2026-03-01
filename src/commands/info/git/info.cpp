@@ -31,6 +31,19 @@ info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& rep
 {
     using namespace ftxui;
 
+    if (!repo.get_is_in_repo()) {
+        Element document =
+          text(" NOT IN A REPO ") | color(Color::Red) | borderStyled(ROUNDED, Color::Red);
+
+        auto screen = Screen::Create(Dimension::Fit(document));
+        Render(screen, document);
+        screen.Print();
+
+        std::cout << '\n';
+
+        return;
+    }
+
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
         return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
     };
