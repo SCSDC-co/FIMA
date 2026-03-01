@@ -13,8 +13,10 @@
 
 #include <filesystem>
 #include <git2/oid.h>
+#include <git2/strarray.h>
 #include <git2/types.h>
 #include <string>
+#include <vector>
 
 namespace fima {
 
@@ -29,31 +31,45 @@ class GitRepo
 
     std::string commit_message{};
     std::string branch{};
+    std::string tag_name{};
+    std::string tag_message{};
+
+    std::vector<std::string> tag_list{};
 
     std::filesystem::path git_repo_path{};
 
     git_repository* repo = nullptr;
     git_commit* commit{};
     git_reference* repo_head{};
+    git_tag* tag{};
+    git_strarray str_array{};
     git_oid oid{ 0 };
 
     const git_signature* commit_author{};
     const git_signature* commit_committer{};
+    const git_signature* tag_tagger{};
 
   public:
     GitRepo(const std::filesystem::path& path);
 
-    void set_commit_info();
-    void set_repo_info();
-
     void set_repo_path(const std::filesystem::path& path);
     void change_repo_path(const std::filesystem::path& path);
 
-    [[nodiscard]] std::string get_repo_path() const;
+    void set_repo_info();
+    void set_commit_info();
+    void set_tag_info();
+
+    [[nodiscard]] std::filesystem::path get_repo_path() const;
+
+    [[nodiscard]] std::vector<std::string> get_tag_list() const;
+
     [[nodiscard]] std::string get_repo_branch() const;
     [[nodiscard]] std::string get_commit_message() const;
     [[nodiscard]] std::string get_commit_author() const;
     [[nodiscard]] std::string get_commit_committer() const;
+    [[nodiscard]] std::string get_tag_name() const;
+    [[nodiscard]] std::string get_tag_message() const;
+    [[nodiscard]] std::string get_tag_tagger() const;
 
     [[nodiscard]] int get_commit_number() const;
 

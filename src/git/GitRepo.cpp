@@ -11,6 +11,7 @@
 
 #include "git/GitRepo.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <git2/branch.h>
 #include <git2/commit.h>
@@ -20,6 +21,8 @@
 #include <git2/refs.h>
 #include <git2/repository.h>
 #include <git2/revwalk.h>
+#include <git2/strarray.h>
+#include <git2/tag.h>
 #include <git2/types.h>
 #include <string>
 #include <vector>
@@ -51,6 +54,7 @@ GitRepo::GitRepo(const _fs::path& path)
 
         this->set_repo_info();
         this->set_commit_info();
+        this->set_tag_info();
     }
 }
 
@@ -97,12 +101,10 @@ GitRepo::change_repo_path(const std::filesystem::path& path)
         git_repository_head(&this->repo_head, this->repo);
 
         // for getting the HEAD of the repo
-        git_reference_name_to_id(&this->oid, this->repo, git_reference_name(repo_head));
+        git_reference_name_to_id(&this->oid, this->repo, git_reference_name(this->repo_head));
 
-        git_commit_lookup(&this->commit, this->repo, &this->oid);
-
-        this->set_repo_info();
         this->set_commit_info();
+        this->set_tag_info();
     }
 }
 
@@ -131,15 +133,71 @@ GitRepo::set_repo_info()
 void
 GitRepo::set_commit_info()
 {
-    this->commit_message   = git_commit_message(this->commit);
-    this->commit_author    = git_commit_author(this->commit);
-    this->commit_committer = git_commit_committer(this->commit);
+    if (this->commit) {
+        git_commit_free(this->commit);
+
+        this->commit = nullptr;
+    }
+
+    int err = git_commit_lookup(&this->commit, this->repo, &this->oid);
+
+    if (err == 0) {
+        this->commit_message   = git_commit_message(this->commit);
+        this->commit_author    = git_commit_author(this->commit);
+        this->commit_committer = git_commit_committer(this->commit);
+    } else {
+        this->commit_message   = "";
+        this->commit_author    = {};
+        this->commit_committer = {};
+    }
+}
+void
+GitRepo::set_tag_info()
+{
+    int err;
+
+    if (this->tag) {
+        git_tag_free(this->tag);
+
+        this->tag = nullptr;
+    }
+
+    err = git_tag_lookup(&this->tag, this->repo, &this->oid);
+
+    if (err == 0) {
+        this->tag_name    = git_tag_name(this->tag);
+        this->tag_message = git_tag_message(this->tag);
+        this->tag_tagger  = git_tag_tagger(this->tag);
+    } else {
+        this->tag_name    = "-";
+        this->tag_message = "-";
+        this->tag_tagger  = {};
+    }
+
+    err = git_tag_list(&this->str_array, this->repo);
+
+    if (err == 0) {
+        for (int i = 0; i < this->str_array.count; ++i) {
+            tag_list.push_back(str_array.strings[i]);
+        }
+
+        std::sort(this->tag_list.begin(),
+                  this->tag_list.end(),
+                  [](const std::string& a, const std::string& b) { return a > b; });
+    } else {
+        tag_list.push_back("-");
+    }
 }
 
-[[nodiscard]] std::string
+[[nodiscard]] std::filesystem::path
 GitRepo::get_repo_path() const
 {
-    return this->git_repo_path.string();
+    return this->git_repo_path;
+}
+[[nodiscard]] std::vector<std::string>
+GitRepo::get_tag_list() const
+{
+    return this->tag_list;
 }
 [[nodiscard]] std::string
 GitRepo::get_repo_branch() const
@@ -149,14 +207,22 @@ GitRepo::get_repo_branch() const
 [[nodiscard]] std::string
 GitRepo::get_commit_author() const
 {
-    return std::string(this->commit_author->name) + " <" + std::string(this->commit_author->email) +
-           ">";
+    if (this->commit_author) {
+        return std::string(this->commit_author->name) + " <" +
+               std::string(this->commit_author->email) + ">";
+    } else {
+        return "-";
+    }
 }
 [[nodiscard]] std::string
 GitRepo::get_commit_committer() const
 {
-    return std::string(this->commit_committer->name) + " <" +
-           std::string(this->commit_committer->email) + ">";
+    if (this->commit_committer) {
+        return std::string(this->commit_committer->name) + " <" +
+               std::string(this->commit_committer->email) + ">";
+    } else {
+        return "-";
+    }
 }
 [[nodiscard]] std::string
 GitRepo::get_commit_message() const
@@ -169,6 +235,26 @@ GitRepo::get_commit_message() const
     }
 
     return message;
+}
+[[nodiscard]] std::string
+GitRepo::get_tag_name() const
+{
+    return this->tag_name;
+}
+[[nodiscard]] std::string
+GitRepo::get_tag_message() const
+{
+    return this->tag_message;
+}
+[[nodiscard]] std::string
+GitRepo::get_tag_tagger() const
+{
+    if (this->tag_tagger) {
+        return std::string(this->tag_tagger->name) + " <" + std::string(this->tag_tagger->email) +
+               ">";
+    } else {
+        return "-";
+    }
 }
 [[nodiscard]] int
 GitRepo::get_commit_number() const
@@ -196,6 +282,8 @@ GitRepo::~GitRepo()
     if (this->repo) {
         git_repository_free(this->repo);
         git_commit_free(this->commit);
+        git_tag_free(this->tag);
+        git_strarray_dispose(&this->str_array);
     }
 
     git_libgit2_shutdown();

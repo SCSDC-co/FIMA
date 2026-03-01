@@ -14,7 +14,9 @@
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 
+#include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
@@ -48,26 +50,57 @@ info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& rep
         return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
     };
 
-    Element document = vbox({
-      // header
-      border(
-        hbox(text("GINFO: ") | bold | color(Color::Green),
-             text(repo.get_repo_path()) | color(Color::White),
-             text((repo.get_repo_path().ends_with("/") ? " " : "/ ")) | color(Color::White) | flex,
-             text(fima::program_files::get_item_icon(repo.get_repo_path()) + " "))) |
-        color(Color::Green),
+    std::vector<std::string> tag_list = repo.get_tag_list();
 
-      window(
-        text(" INFO ") | bold,
-        vbox(draw_window_entry("Branch: ", text(repo.get_repo_branch())),
-             draw_window_entry("Commit number: ", text(std::to_string(repo.get_commit_number()))),
-             draw_window_entry("Message: ", text(repo.get_commit_message())),
-             draw_window_entry("Commit author: ", text(repo.get_commit_author())),
-             draw_window_entry("Committer: ", text(repo.get_commit_committer())))) |
-        color(Color::Green) | flex,
-    });
+    std::vector<Element> tag_list_element;
 
-    auto screen = Screen::Create(Dimension::Fit(document));
+    for (size_t i = 0; i < tag_list.size(); i++) {
+        std::string out{};
+
+        out += tag_list[i];
+        if (i + 1 < tag_list.size()) {
+            out += ", ";
+        }
+
+        tag_list_element.push_back(text(out));
+    }
+
+    Element document = vbox(
+      { // header
+        border(hbox(text("GINFO: ") | bold | color(Color::Green),
+                    text(repo.get_repo_path()) | color(Color::White),
+                    text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
+                      color(Color::White) | flex,
+                    text(fima::program_files::get_item_icon(repo.get_repo_path()) + " "))) |
+          color(Color::Green),
+
+        hbox(window(text(" INFO ") | bold,
+                    vbox(draw_window_entry("Branch: ", text(repo.get_repo_branch())),
+
+                         separator(),
+
+                         draw_window_entry("Tag: ", text(repo.get_tag_name())),
+                         draw_window_entry("Tag message: ", text(repo.get_tag_message())),
+                         draw_window_entry("Tag tagger: ", text(repo.get_tag_tagger())))) |
+               color(Color::Green) | flex,
+
+             window(text(" COMMITS ") | bold,
+                    vbox(draw_window_entry("Commit number: ",
+                                           text(std::to_string(repo.get_commit_number()))),
+
+                         separator(),
+
+                         draw_window_entry("Message: ", text(repo.get_commit_message())),
+                         draw_window_entry("Commit author: ", text(repo.get_commit_author())),
+                         draw_window_entry("Committer: ", text(repo.get_commit_committer())))) |
+               color(Color::Green)),
+
+        window(text(" TAGS ") | bold,
+               (!tag_list.empty() ? hflow(tag_list_element) | color(Color::White)
+                                  : text("This repo doesn't have tags") | color(Color::White))) |
+          color(Color::Green) | flex });
+
+    auto screen = Screen::Create(Dimension::Fit(document), Dimension::Fit(document));
     Render(screen, document);
     screen.Print();
 
