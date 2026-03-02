@@ -39,7 +39,7 @@ info(const fima::options::info_options& options, fima::git::GitRepo& repo)
     if (options.git) {
         repo.change_repo_path(options.path);
 
-        git::info(options.path, repo);
+        git::info(options, repo);
 
         return;
     }

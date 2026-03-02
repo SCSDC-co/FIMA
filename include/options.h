@@ -39,6 +39,8 @@ struct info_options
 {
     std::filesystem::directory_entry path{ std::filesystem::current_path() };
     bool git{ false };
+    bool tags{ false };
+    bool remote{ false };
 };
 
 struct tree_options

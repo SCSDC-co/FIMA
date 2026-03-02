@@ -22,6 +22,7 @@
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "options.h"
 #include "program_files.h"
 #include "utility/join.h"
 
@@ -32,7 +33,7 @@ namespace info {
 namespace git {
 
 void
-info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& repo)
+info(const fima::options::info_options& options, const fima::git::GitRepo& repo)
 {
     using namespace ftxui;
 
@@ -80,8 +81,8 @@ info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& rep
             text((!remote_push_refspec.empty() ? " (push)" : "")) | color(Color::White) });
     }
 
-    Element document = vbox(
-      { // header
+    std::vector<Element> document_data = {
+        // header
         border(hbox(text("GINFO: ") | bold | color(Color::Green),
                     text(repo.get_repo_path()) | color(Color::White),
                     text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
@@ -110,13 +111,22 @@ info(const std::filesystem::directory_entry& path, const fima::git::GitRepo& rep
                          draw_window_entry("Committer: ", text(repo.get_commit_committer())))) |
                color(Color::Green) | flex),
 
-        window(text(" TAGS ") | bold,
-               (!tag_list.empty() ? paragraph(tag_list_elements) | color(Color::White)
-                                  : text("This repo doesn't have tags") | color(Color::White))) |
-          color(Color::Green) | flex,
+    };
 
-        window(text(" REMOTES ") | bold, Table(remote_table_data).Render()) | color(Color::Green) |
-          flex });
+    if (options.tags && !tag_list.empty()) {
+        document_data.push_back(
+          window(text(" TAGS ") | bold,
+                 paragraph(tag_list_elements) | color(Color::White) | color(Color::White)) |
+          color(Color::Green) | flex);
+    }
+
+    if (options.remote && !remote_list.empty()) {
+        document_data.push_back(
+          window(text(" REMOTES ") | bold, Table(remote_table_data).Render()) |
+          color(Color::Green) | flex);
+    }
+
+    Element document = vbox(document_data);
 
     Screen screen = Screen::Create(Dimension::Fit(document), Dimension::Fit(document));
     Render(screen, document);

@@ -279,6 +279,16 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
+    info_subcmd->add_flag("-t,--tags", info_options.tags, "Shows tags (only works with -g, --git)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    info_subcmd
+      ->add_flag(
+        "-r,--remotes", info_options.remote, "Shows the remotes (only works with -g, --git)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
     CLI11_PARSE(app, argc, argv);
 
     // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
