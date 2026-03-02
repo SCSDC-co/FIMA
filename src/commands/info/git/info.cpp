@@ -54,31 +54,39 @@ info(const fima::options::info_options& options, const fima::git::GitRepo& repo)
         return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
     };
 
-    std::vector<std::string> tag_list = repo.get_tag_list();
+    std::vector<std::string> tag_list;
+    std::string tag_list_elements;
 
-    std::string tag_list_elements{ fima::utility::join(tag_list, ", ") };
+    if (options.tags) {
+        tag_list = repo.get_tag_list();
 
-    std::vector<fima::git::GitRepo::Remote> remote_list{ repo.get_remote_list() };
+        tag_list_elements = fima::utility::join(tag_list, ", ");
+    }
 
+    std::vector<fima::git::GitRepo::Remote> remote_list;
     std::vector<std::vector<Element>> remote_table_data;
 
-    std::sort(remote_list.begin(),
-              remote_list.end(),
-              [](const fima::git::GitRepo::Remote& a, const fima::git::GitRepo::Remote& b) {
-                  return a.get_name() < b.get_name();
-              });
+    if (options.remote) {
+        remote_list = repo.get_remote_list();
 
-    for (int i = 0; i < remote_list.size(); ++i) {
-        fima::git::GitRepo::Remote remote{ remote_list[i] };
+        std::sort(remote_list.begin(),
+                  remote_list.end(),
+                  [](const fima::git::GitRepo::Remote& a, const fima::git::GitRepo::Remote& b) {
+                      return a.get_name() < b.get_name();
+                  });
 
-        std::vector<std::string> remote_fetch_refspec{ remote.get_fetch_refspec() };
-        std::vector<std::string> remote_push_refspec{ remote.get_push_refspec() };
+        for (int i = 0; i < remote_list.size(); ++i) {
+            fima::git::GitRepo::Remote remote{ remote_list[i] };
 
-        remote_table_data.push_back(
-          { text(remote.get_name()) | color(Color::White),
-            text(" " + remote.get_url()) | color(Color::White),
-            text((!remote_fetch_refspec.empty() ? " (fetch)" : "")) | color(Color::White),
-            text((!remote_push_refspec.empty() ? " (push)" : "")) | color(Color::White) });
+            std::vector<std::string> remote_fetch_refspec{ remote.get_fetch_refspec() };
+            std::vector<std::string> remote_push_refspec{ remote.get_push_refspec() };
+
+            remote_table_data.push_back(
+              { text(remote.get_name()) | color(Color::White),
+                text(" " + remote.get_url()) | color(Color::White),
+                text((!remote_fetch_refspec.empty() ? " (fetch)" : "")) | color(Color::White),
+                text((!remote_push_refspec.empty() ? " (push)" : "")) | color(Color::White) });
+        }
     }
 
     std::vector<Element> document_data = {
