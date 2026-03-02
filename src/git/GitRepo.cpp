@@ -19,6 +19,7 @@
 #include <git2/ignore.h>
 #include <git2/oid.h>
 #include <git2/refs.h>
+#include <git2/remote.h>
 #include <git2/repository.h>
 #include <git2/revwalk.h>
 #include <git2/strarray.h>
@@ -55,6 +56,7 @@ GitRepo::GitRepo(const _fs::path& path)
         this->set_repo_info();
         this->set_commit_info();
         this->set_tag_info();
+        this->set_remote_info();
     }
 }
 
@@ -105,6 +107,7 @@ GitRepo::change_repo_path(const std::filesystem::path& path)
 
         this->set_commit_info();
         this->set_tag_info();
+        this->set_remote_info();
     }
 }
 
@@ -174,11 +177,11 @@ GitRepo::set_tag_info()
         this->tag_tagger  = {};
     }
 
-    err = git_tag_list(&this->str_array, this->repo);
+    err = git_tag_list(&this->tag_array, this->repo);
 
     if (err == 0) {
-        for (int i = 0; i < this->str_array.count; ++i) {
-            tag_list.push_back(str_array.strings[i]);
+        for (int i = 0; i < this->tag_array.count; ++i) {
+            tag_list.push_back(this->tag_array.strings[i]);
         }
 
         std::sort(this->tag_list.begin(),
@@ -186,6 +189,58 @@ GitRepo::set_tag_info()
                   [](const std::string& a, const std::string& b) { return a > b; });
     } else {
         tag_list.push_back("-");
+    }
+}
+void
+GitRepo::set_remote_info()
+{
+    int err;
+
+    err = git_remote_list(&this->remote_array, this->repo);
+
+    if (err == 0) {
+        git_remote* remote{};
+
+        for (int i = 0; i < this->remote_array.count; ++i) {
+            GitRepo::Remote _remote{ "-", "", {}, {} };
+
+            int err = git_remote_lookup(&remote, this->repo, this->remote_array.strings[i]);
+
+            if (err == 0) {
+                _remote.set_name(git_remote_name(remote));
+                _remote.set_url(git_remote_url(remote));
+
+                git_strarray str_array_fetch;
+
+                int err;
+
+                err = git_remote_get_fetch_refspecs(&str_array_fetch, remote);
+
+                // sorry code aesthetic for all this nesting, I hate it too
+                if (err == 0) {
+                    for (int i = 0; i < str_array_fetch.count; ++i) {
+                        _remote.add_fetch_refspec(str_array_fetch.strings[i]);
+                    }
+                }
+
+                git_strarray str_array_push;
+
+                err = git_remote_get_push_refspecs(&str_array_push, remote);
+
+                if (err == 0) {
+                    for (int i = 0; i < str_array_push.count; ++i) {
+                        _remote.add_push_refspec(str_array_push.strings[i]);
+                    }
+                }
+
+                git_strarray_dispose(&str_array_fetch);
+                git_strarray_dispose(&str_array_push);
+            }
+
+            remote_list.push_back(_remote);
+        }
+    } else {
+        remote_list.push_back({ "-", "", {}, {} });
     }
 }
 
@@ -198,6 +253,11 @@ GitRepo::get_repo_path() const
 GitRepo::get_tag_list() const
 {
     return this->tag_list;
+}
+[[nodiscard]] std::vector<GitRepo::Remote>
+GitRepo::get_remote_list() const
+{
+    return this->remote_list;
 }
 [[nodiscard]] std::string
 GitRepo::get_repo_branch() const
@@ -229,10 +289,10 @@ GitRepo::get_commit_message() const
 {
     std::string message{ this->commit_message };
 
-    while (!message.empty() &&
-           std::string_view("\n\t ").find(message.back()) != std::string_view::npos) {
-        message.pop_back();
-    }
+    message.erase(std::remove_if(message.begin(),
+                                 message.end(),
+                                 [](const char& c) { return c == '\n' || c == '\r'; }),
+                  message.end());
 
     return message;
 }
@@ -283,7 +343,8 @@ GitRepo::~GitRepo()
         git_repository_free(this->repo);
         git_commit_free(this->commit);
         git_tag_free(this->tag);
-        git_strarray_dispose(&this->str_array);
+        git_strarray_dispose(&this->tag_array);
+        git_strarray_dispose(&this->remote_array);
     }
 
     git_libgit2_shutdown();
