@@ -35,7 +35,7 @@ Directory::set_stats()
 {
     fima::cloc::classes::Stats stats;
 
-    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
+    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive_no_git(
       this->metadata.get_path(), true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
@@ -66,7 +66,7 @@ Directory::set_number_of_files()
     int number{ 0 };
 
     std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
-      this->metadata.get_path(), true, {}) };
+      this->metadata.get_path(), { "." }, true, {}) };
 
     for (const std::filesystem::path& item : entries) {
         if (!std::filesystem::is_directory(item)) {

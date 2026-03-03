@@ -73,7 +73,8 @@ GitRepo::set_repo_path(const std::filesystem::path& path)
 
     bool found{ false };
 
-    std::vector<_fs::directory_entry> dir_entries{ fima::fs::get_directories_entries(path, true) };
+    std::vector<_fs::directory_entry> dir_entries{ fima::fs::get_directories_entries_no_git(path,
+                                                                                            true) };
 
     for (const _fs::directory_entry& entry : dir_entries) {
         if (entry.path().filename() == ".git") {
@@ -327,8 +328,8 @@ GitRepo::is_file_ignored(const std::filesystem::path& path) const
 {
     int is_ignored;
 
-    std::filesystem::path relative_path =
-      std::filesystem::relative(path, this->git_repo_path.parent_path());
+    std::filesystem::path relative_path = std::filesystem::relative(
+      std::filesystem::weakly_canonical(path), this->git_repo_path.parent_path());
 
     git_ignore_path_is_ignored(&is_ignored, this->repo, relative_path.c_str());
 

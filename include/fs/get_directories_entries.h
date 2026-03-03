@@ -16,17 +16,31 @@
 #include <regex>
 #include <vector>
 
+#include "git/GitRepo.h"
+
 namespace fima {
 
 namespace fs {
 
 std::vector<std::filesystem::directory_entry>
-get_directories_entries(const std::filesystem::path& path, const bool& dotfiles);
+get_directories_entries(const std::filesystem::path& path,
+                        const fima::git::GitRepo& repo,
+                        const bool& dotfiles);
+
+std::vector<std::filesystem::directory_entry>
+get_directories_entries_no_git(const std::filesystem::path& path, const bool& dotfiles);
 
 std::vector<std::filesystem::path>
 get_directories_entries_recursive(const std::filesystem::path& path,
+                                  const fima::git::GitRepo& repo,
                                   const bool& ignore_directories_or_files,
                                   const std::vector<std::regex>& ignored_files_or_directories);
+
+std::vector<std::filesystem::path>
+get_directories_entries_recursive_no_git(
+  const std::filesystem::path& path,
+  const bool& ignore_directories_or_files,
+  const std::vector<std::regex>& ignored_files_or_directories);
 
 } // namespace fs
 

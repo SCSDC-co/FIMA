@@ -30,10 +30,10 @@ constexpr std::string_view LOGO    = R"(
 
 // since these are useless to analyze we put them as default to ignore
 inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
-    std::regex{ R"(\.git)" },        std::regex{ R"(\.cache)" }, std::regex{ R"(\.vscode)" },
-    std::regex{ R"(build)" },        std::regex{ R"(dist)" },    std::regex{ R"(target)" },
-    std::regex{ R"(node_modules)" }, std::regex{ R"(\.next)" },  std::regex{ R"(bin)" },
-    std::regex{ R"(obj)" }
+    std::regex{ R"(\.git)" },        std::regex{ R"(\.cache)" },    std::regex{ R"(\.vscode)" },
+    std::regex{ R"(build)" },        std::regex{ R"(dist)" },       std::regex{ R"(target)" },
+    std::regex{ R"(node_modules)" }, std::regex{ R"(\.next)" },     std::regex{ R"(bin)" },
+    std::regex{ R"(obj)" },          std::regex{ R"(__pycache__)" }
 };
 
 inline int depth{};

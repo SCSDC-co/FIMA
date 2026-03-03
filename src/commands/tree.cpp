@@ -47,8 +47,13 @@ create_tree(const std::filesystem::directory_entry& path,
 {
     using namespace ftxui;
 
-    std::vector<std::filesystem::directory_entry> entries =
-      fima::fs::get_directories_entries(path, options.all);
+    std::vector<std::filesystem::directory_entry> entries;
+
+    if (options.gitignore) {
+        entries = fima::fs::get_directories_entries(path, repo, options.all);
+    } else {
+        entries = fima::fs::get_directories_entries_no_git(path, options.all);
+    }
 
     sort(entries.begin(), entries.end(), [](auto& a, auto& b) {
         if (a.is_directory() && !b.is_directory()) {
@@ -67,10 +72,6 @@ create_tree(const std::filesystem::directory_entry& path,
     for (const auto& entry : entries) {
         if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(),
                                                     fima::config::DEFAULT_DIRS_TO_IGNORE)) {
-            continue;
-        }
-
-        if (options.gitignore && repo.is_file_ignored(entry.path())) {
             continue;
         }
 

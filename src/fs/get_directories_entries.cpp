@@ -25,7 +25,30 @@ namespace fima {
 namespace fs {
 
 std::vector<_fs::directory_entry>
-get_directories_entries(const _fs::path& path, const bool& dotfiles)
+get_directories_entries(const _fs::path& path, const fima::git::GitRepo& repo, const bool& dotfiles)
+{
+    std::vector<_fs::directory_entry> directory_content;
+
+    for (const _fs::directory_entry& entry : _fs::directory_iterator(
+           path, std::filesystem::directory_options::skip_permission_denied)) {
+        std::string name{ entry.path().filename().string() };
+
+        if (repo.is_file_ignored(entry.path())) {
+            continue;
+        }
+
+        if (name[0] == '.' && !dotfiles) {
+            continue;
+        }
+
+        directory_content.push_back(entry);
+    }
+
+    return directory_content;
+}
+
+std::vector<_fs::directory_entry>
+get_directories_entries_no_git(const _fs::path& path, const bool& dotfiles)
 {
     std::vector<_fs::directory_entry> directory_content;
 
@@ -44,9 +67,41 @@ get_directories_entries(const _fs::path& path, const bool& dotfiles)
 }
 
 std::vector<_fs::path>
-get_directories_entries_recursive(const _fs::path& path,
+get_directories_entries_recursive(const std::filesystem::path& path,
+                                  const fima::git::GitRepo& repo,
                                   const bool& ignore_directories_or_files,
                                   const std::vector<std::regex>& ignored_files_or_directories)
+{
+    std::vector<_fs::path> directory_content;
+
+    auto it =
+      _fs::recursive_directory_iterator(path, _fs::directory_options::skip_permission_denied);
+
+    for (const auto& entry : it) {
+        std::string name = entry.path().filename().string();
+
+        if (repo.is_file_ignored(entry.path())) {
+            it.disable_recursion_pending();
+            continue;
+        }
+
+        if (ignore_directories_or_files &&
+            fima::helpers::regex::matches_any_regex(name, ignored_files_or_directories)) {
+            it.disable_recursion_pending();
+            continue;
+        }
+
+        directory_content.push_back(entry.path());
+    }
+
+    return directory_content;
+}
+
+std::vector<_fs::path>
+get_directories_entries_recursive_no_git(
+  const std::filesystem::path& path,
+  const bool& ignore_directories_or_files,
+  const std::vector<std::regex>& ignored_files_or_directories)
 {
     std::vector<_fs::path> directory_content;
 

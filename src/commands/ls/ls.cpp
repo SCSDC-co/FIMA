@@ -32,9 +32,13 @@ start(const std::filesystem::path& path,
       const fima::git::GitRepo& repo,
       const fima::options::ls_options& options)
 {
-    std::vector<std::filesystem::directory_entry> list_of_the_directory{
-        fima::fs::get_directories_entries(path, options.all)
-    };
+    std::vector<std::filesystem::directory_entry> list_of_the_directory;
+
+    if (options.gitignore) {
+        list_of_the_directory = fima::fs::get_directories_entries(path, repo, options.all);
+    } else {
+        list_of_the_directory = fima::fs::get_directories_entries_no_git(path, options.all);
+    }
 
     auto to_lower = [=](std::string s) {
         std::transform(
@@ -58,10 +62,6 @@ start(const std::filesystem::path& path,
     std::vector<fima::fs::DirectoryItem> items{};
 
     for (const std::filesystem::directory_entry& item : list_of_the_directory) {
-        if (options.gitignore && repo.is_file_ignored(item.path())) {
-            continue;
-        }
-
         items.emplace_back(item);
     }
 

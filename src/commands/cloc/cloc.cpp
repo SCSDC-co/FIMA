@@ -76,8 +76,14 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
 
     for (const _fs::path& path : options.paths) {
         if (_fs::is_directory(path)) {
-            std::vector<_fs::path> items = fima::fs::get_directories_entries_recursive(
-              path, true, file_or_directories_to_ignore);
+            std::vector<_fs::path> items;
+            if (options.gitignore) {
+                items = fima::fs::get_directories_entries_recursive(
+                  path, repo, true, file_or_directories_to_ignore);
+            } else {
+                items = fima::fs::get_directories_entries_recursive_no_git(
+                  path, true, file_or_directories_to_ignore);
+            }
 
             for (const auto& item : items) {
                 if (!_fs::is_regular_file(item)) {
@@ -110,10 +116,6 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     };
 
     for (const _fs::path& path : paths_all) {
-        if (options.gitignore && repo.is_file_ignored(path)) {
-            continue;
-        }
-
         if (_fs::is_directory(path)) {
             continue;
         }
