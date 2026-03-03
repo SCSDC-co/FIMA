@@ -327,7 +327,10 @@ GitRepo::is_file_ignored(const std::filesystem::path& path) const
 {
     int is_ignored;
 
-    git_ignore_path_is_ignored(&is_ignored, this->repo, path.filename().c_str());
+    std::filesystem::path relative_path =
+      std::filesystem::relative(path, this->git_repo_path.parent_path());
+
+    git_ignore_path_is_ignored(&is_ignored, this->repo, relative_path.c_str());
 
     return is_ignored;
 }

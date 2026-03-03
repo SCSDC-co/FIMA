@@ -125,6 +125,9 @@ get_item_icon(const std::filesystem::path& path)
         return map_language_icon_json.value(extension, "");
     }
 
+    if (std::filesystem::is_empty(path)) {
+        return "";
+    }
     return map_directory_icon_json.value(file_name, "");
 }
 
