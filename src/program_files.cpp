@@ -97,6 +97,10 @@ get_language_family(const std::filesystem::path& path)
 [[nodiscard]] std::string
 get_item_icon(const std::filesystem::path& path)
 {
+    if (std::filesystem::is_symlink(path)) {
+        return " ";
+    }
+
     std::string file_name{ path.filename().string() };
 
     if (!std::filesystem::is_directory(path)) {
@@ -128,6 +132,7 @@ get_item_icon(const std::filesystem::path& path)
     if (std::filesystem::is_empty(path)) {
         return "";
     }
+
     return map_directory_icon_json.value(file_name, "");
 }
 

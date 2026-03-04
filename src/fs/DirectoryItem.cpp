@@ -99,11 +99,7 @@ DirectoryItem::get_name(const bool& icons) const
     std::string name;
 
     if (icons) {
-        if (this->is_symlink()) {
-            name += " ";
-        } else {
-            name += fima::program_files::get_item_icon(this->get_path()) + " ";
-        }
+        name += fima::program_files::get_item_icon(this->get_path()) + " ";
     }
 
     name += this->name;
