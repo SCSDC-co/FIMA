@@ -9,6 +9,8 @@
  * See LICENSE file for details.
  */
 
+#include "commands/info/git.h"
+
 #include <algorithm>
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
@@ -30,10 +32,8 @@ namespace fima {
 
 namespace info {
 
-namespace git {
-
 void
-info(const fima::options::info_options& options, const fima::git::GitRepo& repo)
+git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
 {
     using namespace ftxui;
 
@@ -141,8 +141,6 @@ info(const fima::options::info_options& options, const fima::git::GitRepo& repo)
     screen.Print();
     std::cout << '\n';
 }
-
-} // namespace git
 
 } // namespace info
 

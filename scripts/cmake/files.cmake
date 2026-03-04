@@ -3,19 +3,19 @@ add_library(fima_lib
     src/commands/cloc/helpers/LanguageStats.cpp
     src/commands/cloc/helpers/print_table.cpp
     src/commands/cloc/helpers/count_lines.cpp
-    src/commands/info/directory/info.cpp
     src/commands/ls/helpers/printer.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/fs/get_directories_entries.cpp
     src/commands/create/directory.cpp
-    src/commands/info/file/info.cpp
+    src/commands/info/directory.cpp
     src/commands/copy/directory.cpp
-    src/commands/info/git/info.cpp
     src/commands/permissions.cpp
     src/commands/create/file.cpp
     src/commands/info/info.cpp
+    src/commands/info/file.cpp
     src/commands/copy/file.cpp
     src/commands/cloc/cloc.cpp
+    src/commands/info/git.cpp
     src/fs/DirectoryItem.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp

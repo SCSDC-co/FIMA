@@ -13,9 +13,9 @@
 
 #include <filesystem>
 
-#include "commands/info/directory/info.h"
-#include "commands/info/file/info.h"
-#include "commands/info/git/info.h"
+#include "commands/info/directory.h"
+#include "commands/info/file.h"
+#include "commands/info/git.h"
 #include "logger.h"
 #include "utility/colors.h"
 
@@ -39,15 +39,15 @@ info(const fima::options::info_options& options, fima::git::GitRepo& repo)
     if (options.git) {
         repo.change_repo_path(options.path);
 
-        git::info(options, repo);
+        fima::info::git(options, repo);
 
         return;
     }
 
     if (options.path.is_directory()) {
-        dir::info(options.path);
+        fima::info::dir(options.path);
     } else {
-        file::info(options.path);
+        fima::info::file(options.path);
     }
 }
 

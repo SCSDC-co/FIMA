@@ -18,12 +18,8 @@ namespace fima {
 
 namespace info {
 
-namespace git {
-
 void
-info(const fima::options::info_options& options, const fima::git::GitRepo& repo);
-
-}
+git(const fima::options::info_options& options, const fima::git::GitRepo& repo);
 
 } // namespace info
 

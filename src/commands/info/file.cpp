@@ -9,6 +9,8 @@
  * See LICENSE file for details.
  */
 
+#include "commands/info/file.h"
+
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -23,10 +25,8 @@ namespace fima {
 
 namespace info {
 
-namespace file {
-
 void
-info(const std::filesystem::directory_entry& path)
+file(const std::filesystem::directory_entry& path)
 {
     using namespace ftxui;
 
@@ -71,8 +71,6 @@ info(const std::filesystem::directory_entry& path)
 
     std::cout << '\n';
 }
-
-} // namespace file
 
 } // namespace info
 
