@@ -54,10 +54,12 @@ main(int argc, char** argv)
 
     app
       .set_config(
-        "--config", fima::program_files::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
+        "--config", fima::program_files::CONFIG_FILE_PATH, "Specify the config file (TOML format) ")
       ->transform(CLI::FileOnDefaultPath(fima::program_files::CONFIG_FILE_PATH))
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
     app.allow_config_extras(CLI::config_extras_mode::ignore);
+
+    app.require_subcommand(0, 1);
 
     bool tui{ false };
     bool display_version{ false };
@@ -71,11 +73,16 @@ main(int argc, char** argv)
     fs::path destination;
     fs::path old_name;
     fs::path new_name;
+    fs::directory_entry path{ fs::current_path() };
+
+    // for getting the correct .git directory we must pass the full path
+    fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
+
+    // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
+    // get the correct value
+    tui = !tui;
 
     app.add_flag("-v,--version", display_version, "Shows the program version")->configurable(false);
-    CLI::App* version_subcmd =
-      app.add_subcommand("version", "Print the current version with some extra information")
-        ->configurable(false);
 
     app.add_flag("--reset-config-files", reset_program_files, "Resets the config files")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
@@ -88,11 +95,25 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    fs::directory_entry path{ fs::current_path() };
     app.add_option("directory", path, "Directory to work on (default current directory)")
       ->check(CLI::ExistingDirectory)
       ->expected(0, 1)
       ->configurable(false);
+
+    CLI::App* version_subcmd =
+      app.add_subcommand("version", "Print the current version with some extra information")
+        ->configurable(false);
+
+    version_subcmd->callback([&]() {
+        std::cout << fima::colors::GREEN;
+
+        std::cout << fima::config::LOGO << '\n';
+
+        std::cout << "Fast, Incredible, Minimal and Awesome File Manager" << '\n' << '\n';
+        std::cout << "Version: " << fima::colors::RESET << fima::config::VERSION << '\n';
+
+        std::cout << '\n';
+    });
 
     /*  ==============
      *  LS SUB COMMAND
@@ -127,6 +148,10 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
+    ls_options.gitignore = !ls_options.gitignore;
+
+    ls_subcmd->callback([&]() { fima::ls::start(path, repo, ls_options); });
+
     /*  ================
      *  TREE SUB COMMAND
      */
@@ -149,6 +174,13 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
+    tree_options.gitignore = !tree_options.gitignore;
+
+    // when calling through the CLI it shouldn't be use a TUI
+    tree_options.tui = false;
+
+    tree_subcmd->callback([&]() { fima::tree::start(path, repo, tree_options); });
+
     /*  ==================
      *  CREATE SUB COMMAND
      */
@@ -163,6 +195,11 @@ main(int argc, char** argv)
     std::vector<fs::path> create_dir_paths;
     create_subcmd->add_option("-d,--dir", create_dir_paths, "Directory to create")
       ->configurable(false);
+
+    create_subcmd->callback([&]() {
+        fima::create::dir(create_dir_paths);
+        fima::create::file(create_file_paths);
+    });
 
     /*  ==================
      *  REMOVE SUB COMMAND
@@ -183,6 +220,16 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
+    remove_subcmd->callback([&]() {
+        std::vector<std::regex> regexes;
+
+        for (const fs::path& path : path_to_remove) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
+        }
+
+        fima::remove(regexes, remove_subcmd_recursive);
+    });
+
     /*  ================
      *  COPY SUB COMMAND
      */
@@ -196,6 +243,14 @@ main(int argc, char** argv)
     copy_subcmd->add_option("destination", destination, "Destination")
       ->configurable(false)
       ->required(true);
+
+    copy_subcmd->callback([&]() {
+        if (fs::is_regular_file(path_to_copy)) {
+            fima::copy::file(path_to_copy, destination);
+        } else if (fs::is_directory(path_to_copy)) {
+            fima::copy::directory(path_to_copy, destination);
+        }
+    });
 
     /*  ==================
      *  RENAME SUB COMMAND
@@ -211,6 +266,8 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
+    rename_subcmd->callback([&]() { fima::rename(old_name, new_name); });
+
     /*  =================
      *  PERMS SUB COMMAND
      */
@@ -222,6 +279,8 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
+    perms_subcmd->callback([&]() { fima::perms::permissions(perms_path); });
+
     /*  ================
      *  CLOC SUB COMMAND
      */
@@ -232,7 +291,7 @@ main(int argc, char** argv)
       app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
 
     cloc_subcmd
-      ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory)")
+      ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory) ")
       ->configurable(false);
 
     std::vector<fs::path> cloc_ignore{};
@@ -259,6 +318,18 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
+    cloc_options.gitignore = !cloc_options.gitignore;
+
+    cloc_subcmd->callback([&]() {
+        std::vector<std::regex> regexes;
+
+        for (const fs::path& path : cloc_ignore) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
+        }
+
+        fima::cloc::main(regexes, repo, cloc_options);
+    });
+
     /*  ================
      *  INFO SUB COMMAND
      */
@@ -279,7 +350,7 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
-    info_subcmd->add_flag("-t,--tags", info_options.tags, "Shows tags (only works with -g, --git)")
+    info_subcmd->add_flag("-t,--tags", info_options.tags, "Shows tags (only works with -g,--git)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -289,20 +360,9 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
+    info_subcmd->callback([&]() { fima::info::info(info_options, repo); });
+
     CLI11_PARSE(app, argc, argv);
-
-    // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
-    // get the correct value
-    tui                    = !tui;
-    ls_options.gitignore   = !ls_options.gitignore;
-    cloc_options.gitignore = !cloc_options.gitignore;
-    tree_options.gitignore = !tree_options.gitignore;
-
-    // when calling like this: `fima tree` it shouldn't be a TUI
-    tree_options.tui = false;
-
-    // for getting the correct .git directory we must pass the full path
-    fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
 
     if (display_version) {
         std::cout << fima::config::VERSION << std::endl;
@@ -312,73 +372,11 @@ main(int argc, char** argv)
         fima::program_files::reset_config_files(preserve_config_file);
 
         return 0;
-    } else if (app.got_subcommand(version_subcmd)) {
-        std::cout << fima::colors::GREEN;
-
-        std::cout << fima::config::LOGO << '\n';
-
-        std::cout << "Fast, Incredible, Minimal and Awesome File Manager" << '\n' << '\n';
-        std::cout << "Version: " << fima::colors::RESET << fima::config::VERSION << '\n';
-
-        std::cout << '\n';
-
-        return 0;
-    } else if (app.got_subcommand(ls_subcmd)) {
-        fima::ls::start(path, repo, ls_options);
-
-        return 0;
-    } else if (app.got_subcommand(tree_subcmd)) {
-        fima::tree::start(path, repo, tree_options);
-
-        return 0;
-    } else if (app.got_subcommand(create_subcmd)) {
-        fima::create::dir(create_dir_paths);
-        fima::create::file(create_file_paths);
-
-        return 0;
-    } else if (app.got_subcommand(remove_subcmd)) {
-        std::vector<std::regex> regexes;
-
-        for (const fs::path& path : path_to_remove) {
-            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
-        }
-
-        fima::remove(regexes, remove_subcmd_recursive);
-
-        return 0;
-    } else if (app.got_subcommand(copy_subcmd)) {
-        if (fs::is_regular_file(path_to_copy)) {
-            fima::copy::file(path_to_copy, destination);
-        } else if (fs::is_directory(path_to_copy)) {
-            fima::copy::directory(path_to_copy, destination);
-        }
-
-        return 0;
-    } else if (app.got_subcommand(rename_subcmd)) {
-        fima::rename(old_name, new_name);
-
-        return 0;
-    } else if (app.got_subcommand(perms_subcmd)) {
-        fima::perms::permissions(perms_path);
-
-        return 0;
-    } else if (app.got_subcommand(cloc_subcmd)) {
-        std::vector<std::regex> regexes;
-
-        for (const fs::path& path : cloc_ignore) {
-            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
-        }
-
-        fima::cloc::main(regexes, repo, cloc_options);
-
-        return 0;
-    } else if (app.got_subcommand(info_subcmd)) {
-        fima::info::info(info_options, repo);
+    } else if (app.get_subcommands().empty()) {
+        fima::tui::start_tui(path);
 
         return 0;
     }
-
-    fima::tui::start_tui(path);
 
     return 0;
 }
