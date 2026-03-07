@@ -61,6 +61,22 @@ FIMA has a set of coding styles, make sure to follow them.
 
 - Use `.h` for FIMA headers and `.hpp` for headers from dependencies
 
+## Commit messages style
+
+- Use the present tense ("Add feature" not "Added feature")
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+- Limit the first line to 72 characters or less
+- Use the correct naming conventions for commit messages:
+  - `feat:` For adding features
+  - `fix:` For fixing bugs
+  - `docs:` For updating the docs
+  - `chore:` When making changes that don't change the code behavior
+  - `refactor:` When refactoring the code
+  - `perf:` For changes that upgrade the performance
+  - `ci:` When changing the CI/CD workflow
+  - `style:` When changing the code style
+  - `revert:` When reverting to the previous commit
+
 ## Code of conduct
 
 By contributing to FIMA, you agree to follow the [Code of Conduct](/CODE_OF_CONDUCT.md).
