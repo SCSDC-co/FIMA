@@ -77,6 +77,21 @@ FIMA has a set of coding styles, make sure to follow them.
   - `style:` When changing the code style
   - `revert:` When reverting to the previous commit
 
+## Branches name style
+
+If you have the permission you can create a branch,
+but make sure to follow this naming conventions:
+
+- `feat/` For adding features
+- `fix/` For fixing bugs
+- `docs/` For updating the docs
+- `chore/` When making changes that don't change the code behavior
+- `refactor/` When refactoring the code
+- `perf/` For changes that upgrade the performance
+- `ci/` When changing the CI/CD workflow
+- `style/` When changing the code style
+- `revert/` When reverting to the previous commit
+
 ## Code of conduct
 
 By contributing to FIMA, you agree to follow the [Code of Conduct](/CODE_OF_CONDUCT.md).
