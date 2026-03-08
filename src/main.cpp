@@ -35,7 +35,7 @@
 #include "utility/colors.h"
 #include "utility/regex.h"
 
-namespace fs = std::filesystem;
+namespace _fs = std::filesystem;
 
 int
 main(int argc, char** argv)
@@ -66,13 +66,13 @@ main(int argc, char** argv)
     bool preserve_config_file{ false };
 
     // names should be descriptive
-    std::vector<fs::path> path_to_remove;
-    std::vector<fs::path> perms_path;
-    fs::path path_to_copy;
-    fs::path destination;
-    fs::path old_name;
-    fs::path new_name;
-    fs::directory_entry path{ fs::current_path() };
+    std::vector<_fs::path> path_to_remove;
+    std::vector<_fs::path> perms_path;
+    _fs::path path_to_copy;
+    _fs::path destination;
+    _fs::path old_name;
+    _fs::path new_name;
+    _fs::directory_entry path{ _fs::current_path() };
 
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
@@ -183,11 +183,11 @@ main(int argc, char** argv)
     CLI::App* create_subcmd =
       app.add_subcommand("create", "Create a directory or a file")->configurable(false);
 
-    std::vector<fs::path> create_file_paths;
+    std::vector<_fs::path> create_file_paths;
     create_subcmd->add_option("-f,--file", create_file_paths, "Files to create")
       ->configurable(false);
 
-    std::vector<fs::path> create_dir_paths;
+    std::vector<_fs::path> create_dir_paths;
     create_subcmd->add_option("-d,--dir", create_dir_paths, "Directory to create")
       ->configurable(false);
 
@@ -218,7 +218,7 @@ main(int argc, char** argv)
     remove_subcmd->callback([&]() {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : path_to_remove) {
+        for (const _fs::path& path : path_to_remove) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
@@ -240,9 +240,9 @@ main(int argc, char** argv)
       ->required(true);
 
     copy_subcmd->callback([&]() {
-        if (fs::is_regular_file(path_to_copy)) {
+        if (_fs::is_regular_file(path_to_copy)) {
             fima::copy::file(path_to_copy, destination);
-        } else if (fs::is_directory(path_to_copy)) {
+        } else if (_fs::is_directory(path_to_copy)) {
             fima::copy::directory(path_to_copy, destination);
         }
     });
@@ -289,7 +289,7 @@ main(int argc, char** argv)
       ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory) ")
       ->configurable(false);
 
-    std::vector<fs::path> cloc_ignore{};
+    std::vector<_fs::path> cloc_ignore{};
     cloc_subcmd->add_option("--ignore,-i", cloc_ignore, "Paths to ignore")
       ->configurable(true)
       ->expected(0, -1);
@@ -318,7 +318,7 @@ main(int argc, char** argv)
     cloc_subcmd->callback([&]() {
         std::vector<std::regex> regexes;
 
-        for (const fs::path& path : cloc_ignore) {
+        for (const _fs::path& path : cloc_ignore) {
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 

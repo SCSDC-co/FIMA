@@ -21,12 +21,9 @@ target_include_directories(
         $<INSTALL_INTERFACE:include/>
 )
 
+target_link_libraries(fima_lib PUBLIC gzip-hpp::gzip-hpp)
+
 target_link_libraries(
     ${PROJECT_NAME}
-    PRIVATE
-        fima_lib
-        ftxui::ftxui
-        nlohmann_json::nlohmann_json
-        libgit2::libgit2
-        gzip-hpp::gzip-hpp
+    PRIVATE fima_lib ftxui::ftxui nlohmann_json::nlohmann_json libgit2::libgit2
 )

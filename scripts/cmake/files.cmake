@@ -25,6 +25,7 @@ add_library(fima_lib
     src/commands/tree.cpp
     src/fs/Directory.cpp
     src/git/GitRepo.cpp
+    src/fs/archive.cpp
     src/git/README.md
     src/tui/tui.cpp
     src/fs/File.cpp
