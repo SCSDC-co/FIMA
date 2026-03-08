@@ -61,7 +61,6 @@ main(int argc, char** argv)
 
     app.require_subcommand(0, 1);
 
-    bool tui{ false };
     bool display_version{ false };
     bool reset_program_files{ false };
     bool preserve_config_file{ false };
@@ -77,10 +76,6 @@ main(int argc, char** argv)
 
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
-
-    // since in CLI11 we can't do true -> false we need to do false -> true and then negate it to
-    // get the correct value
-    tui = !tui;
 
     app.add_flag("-v,--version", display_version, "Shows the program version")->configurable(false);
 
@@ -137,7 +132,9 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    ls_subcmd->add_flag("-G,--no-gitignore", ls_options.gitignore, "Ignore .gitignore")
+    ls_subcmd
+      ->add_flag(
+        "-G,--no-gitignore", [&](int) { ls_options.gitignore = false; }, "Ignore .gitignore")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -147,8 +144,6 @@ main(int argc, char** argv)
                  "Displays the number of directories and files (only works with long output)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
-
-    ls_options.gitignore = !ls_options.gitignore;
 
     ls_subcmd->callback([&]() { fima::ls::start(path, repo, ls_options); });
 
@@ -166,15 +161,15 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    tree_subcmd->add_flag("-G,--no-gitignore", tree_options.gitignore, "Ignore .gitignore")
+    tree_subcmd
+      ->add_flag(
+        "-G,--no-gitignore", [&](int) { tree_options.gitignore = false; }, "Ignore .gitignore")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     tree_subcmd->add_flag("-v,--verbose", tree_options.verbose, "Verbose output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
-
-    tree_options.gitignore = !tree_options.gitignore;
 
     // when calling through the CLI it shouldn't be use a TUI
     tree_options.tui = false;
@@ -307,7 +302,9 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    cloc_subcmd->add_flag("--no-gitignore,-G", cloc_options.gitignore, "Ignore .gitignore")
+    cloc_subcmd
+      ->add_flag(
+        "--no-gitignore,-G", [&](int) { cloc_options.gitignore = false; }, "Ignore .gitignore")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -317,8 +314,6 @@ main(int argc, char** argv)
                  "Shows all the languages that cloc supports")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
-
-    cloc_options.gitignore = !cloc_options.gitignore;
 
     cloc_subcmd->callback([&]() {
         std::vector<std::regex> regexes;
