@@ -75,17 +75,13 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
                       return a.get_name() < b.get_name();
                   });
 
+        remote_list.erase(unique(remote_list.begin(), remote_list.end()), remote_list.end());
+
         for (int i = 0; i < remote_list.size(); ++i) {
             fima::git::GitRepo::Remote remote{ remote_list[i] };
 
-            std::vector<std::string> remote_fetch_refspec{ remote.get_fetch_refspec() };
-            std::vector<std::string> remote_push_refspec{ remote.get_push_refspec() };
-
-            remote_table_data.push_back(
-              { text(remote.get_name()) | color(Color::White),
-                text(" " + remote.get_url()) | color(Color::White),
-                text((!remote_fetch_refspec.empty() ? " (fetch)" : "")) | color(Color::White),
-                text((!remote_push_refspec.empty() ? " (push)" : "")) | color(Color::White) });
+            remote_table_data.push_back({ text(remote.get_name()) | color(Color::White),
+                                          text(" " + remote.get_url()) | color(Color::White) });
         }
     }
 

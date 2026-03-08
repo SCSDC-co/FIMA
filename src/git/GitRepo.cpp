@@ -17,8 +17,10 @@
 #include <git2/commit.h>
 #include <git2/global.h>
 #include <git2/ignore.h>
+#include <git2/net.h>
 #include <git2/oid.h>
 #include <git2/refs.h>
+#include <git2/refspec.h>
 #include <git2/remote.h>
 #include <git2/repository.h>
 #include <git2/revwalk.h>
@@ -199,49 +201,23 @@ GitRepo::set_remote_info()
 
     err = git_remote_list(&this->remote_array, this->repo);
 
-    if (err == 0) {
-        git_remote* remote{};
+    if (err != 0) {
+        remote_list.push_back({ "-", "" });
+    }
 
-        for (int i = 0; i < this->remote_array.count; ++i) {
-            GitRepo::Remote _remote{ "-", "", {}, {} };
+    git_remote* remote{};
 
-            int err = git_remote_lookup(&remote, this->repo, this->remote_array.strings[i]);
+    for (int i = 0; i < this->remote_array.count; ++i) {
+        GitRepo::Remote _remote{ "-", "" };
 
-            if (err == 0) {
-                _remote.set_name(git_remote_name(remote));
-                _remote.set_url(git_remote_url(remote));
+        int err = git_remote_lookup(&remote, this->repo, this->remote_array.strings[i]);
 
-                git_strarray str_array_fetch;
-
-                int err;
-
-                err = git_remote_get_fetch_refspecs(&str_array_fetch, remote);
-
-                // sorry code aesthetic for all this nesting, I hate it too
-                if (err == 0) {
-                    for (int i = 0; i < str_array_fetch.count; ++i) {
-                        _remote.add_fetch_refspec(str_array_fetch.strings[i]);
-                    }
-                }
-
-                git_strarray str_array_push;
-
-                err = git_remote_get_push_refspecs(&str_array_push, remote);
-
-                if (err == 0) {
-                    for (int i = 0; i < str_array_push.count; ++i) {
-                        _remote.add_push_refspec(str_array_push.strings[i]);
-                    }
-                }
-
-                git_strarray_dispose(&str_array_fetch);
-                git_strarray_dispose(&str_array_push);
-            }
-
-            remote_list.push_back(_remote);
+        if (err == 0) {
+            _remote.set_name(git_remote_name(remote));
+            _remote.set_url(git_remote_url(remote));
         }
-    } else {
-        remote_list.push_back({ "-", "", {}, {} });
+
+        remote_list.push_back(_remote);
     }
 }
 

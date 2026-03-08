@@ -28,49 +28,27 @@ class GitRepo
     class Remote
     {
       public:
-        Remote(const std::string& _name,
-               const std::string& _url,
-               const std::vector<std::string>& _fetch_refspec,
-               const std::vector<std::string>& _push_refspec)
+        Remote(const std::string& _name, const std::string& _url)
           : name(_name)
           , url(_url)
-          , fetch_refspec(_fetch_refspec)
-          , push_refspec(_push_refspec)
         {
         }
 
         void set_name(const std::string& name) { this->name = name; }
         void set_url(const std::string& url) { this->url = url; }
-        void set_fetch_refspec(const std::vector<std::string>& refspec)
-        {
-            this->fetch_refspec = refspec;
-        }
-        void set_push_refspec(const std::vector<std::string>& refspec)
-        {
-            this->push_refspec = refspec;
-        }
-        void add_fetch_refspec(const std::string& refspec)
-        {
-            this->fetch_refspec.push_back(refspec);
-        }
-        void add_push_refspec(const std::string& refspec) { this->push_refspec.push_back(refspec); }
 
         [[nodiscard]] std::string get_name() const { return this->name; }
+        [[nodiscard]] std::string get_url_bare() const { return this->url; }
         [[nodiscard]] std::string get_url() const { return "<" + this->url + ">"; }
-        [[nodiscard]] std::vector<std::string> get_fetch_refspec() const
+
+        bool operator==(const Remote& other) const
         {
-            return this->fetch_refspec;
-        }
-        [[nodiscard]] std::vector<std::string> get_push_refspec() const
-        {
-            return this->push_refspec;
+            return this->get_name() == other.get_name() && this->url == other.url;
         }
 
       private:
         std::string name{};
         std::string url{};
-        std::vector<std::string> fetch_refspec{};
-        std::vector<std::string> push_refspec{};
     };
 
     GitRepo(const std::filesystem::path& path);
