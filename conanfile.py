@@ -9,4 +9,4 @@ class ExampleRecipe(ConanFile):
         self.requires("nlohmann_json/3.12.0")
         self.requires("ftxui/6.1.9")
         self.requires("libgit2/1.9.1")
-        self.requires("gzip-hpp/0.1.0")
+        self.requires("libzippp/7.1-1.10.1")

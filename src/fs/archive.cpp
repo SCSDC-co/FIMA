@@ -9,15 +9,11 @@
  * See LICENSE file for details.
  */
 
-#include <cstddef>
 #include <filesystem>
 #include <fstream>
-#include <gzip/compress.hpp>
-#include <gzip/decompress.hpp>
-#include <gzip/utils.hpp>
-#include <iostream>
-#include <sstream>
 #include <vector>
+
+#include "libzippp/libzippp.h"
 
 namespace fima {
 
@@ -25,71 +21,56 @@ namespace fs {
 
 namespace archive {
 
+using namespace libzippp;
+
 void
-zip(const std::vector<std::filesystem::path>& files_to_zip, const std::filesystem::path& output)
+zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output)
 {
-    std::string data{};
+    ZipArchive archive(output.string());
 
-    std::ostringstream ss;
+    archive.open(ZipArchive::New);
 
-    for (const std::filesystem::path& item : files_to_zip) {
-        std::ifstream file(item);
-
-        ss << file.rdbuf();
+    for (const auto& item : items_to_zip) {
+        if (std::filesystem::is_directory(item)) {
+            for (auto& entry : std::filesystem::recursive_directory_iterator(item)) {
+                if (entry.is_regular_file()) {
+                    std::filesystem::path relative =
+                      std::filesystem::relative(entry.path(), item.parent_path());
+                    archive.addFile(relative.string(), entry.path().string());
+                }
+            }
+        } else if (std::filesystem::is_regular_file(item)) {
+            archive.addFile(item.filename().string(), item.string());
+        }
     }
 
-    data = ss.str();
-
-    const char* data_pointer{ data.data() };
-    std::size_t data_size{ data.size() };
-
-    if (gzip::is_compressed(data_pointer, data_size)) {
-        std::cout << "the data is already compressed" << '\n';
-        return;
-    }
-
-    std::string compressed_data{ gzip::compress(data_pointer, data_size) };
-
-    std::ofstream output_file(output);
-
-    output_file << compressed_data;
-
-    output_file.close();
-
-    std::cout << "compressed data to: " << output.string() << '\n';
+    archive.close();
 }
 
 void
-unzip(const std::filesystem::path& file_to_unzip, const std::filesystem::path& output)
+unzip(const std::filesystem::path& archive_to_unzip, const std::filesystem::path& output)
 {
-    std::string data{};
+    ZipArchive archive(archive_to_unzip.string());
+    archive.open(ZipArchive::ReadOnly);
 
-    std::ostringstream ss;
+    auto entries = archive.getEntries();
 
-    std::ifstream file(file_to_unzip);
+    for (auto& entry : entries) {
+        std::filesystem::path out_path = output / entry.getName();
 
-    ss << file.rdbuf();
+        if (entry.isDirectory()) {
+            std::filesystem::create_directories(out_path);
+        } else {
+            if (out_path.has_parent_path()) {
+                std::filesystem::create_directories(out_path.parent_path());
+            }
 
-    data = ss.str();
-
-    const char* compressed_file{ data.data() };
-    std::size_t compressed_file_size{ data.size() };
-
-    if (!gzip::is_compressed(compressed_file, compressed_file_size)) {
-        std::cout << "the file isn't compressed: " << file_to_unzip.string() << '\n';
-
-        return;
+            std::ofstream out_file(out_path, std::ios::binary);
+            out_file << entry.readAsBinary();
+        }
     }
 
-    std::string decompressed_data{ gzip::decompress(compressed_file, compressed_file_size) };
-
-    std::ofstream output_file(output);
-
-    output_file << decompressed_data;
-
-    output_file.close();
-
-    std::cout << "decompressed data to: " << output.string() << '\n';
+    archive.close();
 }
 
 } // namespace archive

@@ -9,6 +9,7 @@ find_package(nlohmann_json REQUIRED)
 find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
 find_package(gzip-hpp REQUIRED)
+find_package(libzippp REQUIRED)
 
 include(./scripts/cmake/files.cmake)
 
@@ -21,7 +22,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:include/>
 )
 
-target_link_libraries(fima_lib PUBLIC gzip-hpp::gzip-hpp)
+target_link_libraries(fima_lib PUBLIC libzippp::libzippp)
 
 target_link_libraries(
     ${PROJECT_NAME}
