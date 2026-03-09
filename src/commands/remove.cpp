@@ -21,6 +21,8 @@
 
 namespace fima {
 
+namespace commands {
+
 void
 remove(const std::vector<std::regex>& paths, const bool& recursive)
 {
@@ -58,5 +60,7 @@ remove(const std::vector<std::regex>& paths, const bool& recursive)
         }
     }
 }
+
+} // namespace commands
 
 } // namespace fima

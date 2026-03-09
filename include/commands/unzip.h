@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/commands/unzip.cpp
+ * include/commands/unzip.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * A command to unzip .zip archives
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -17,13 +17,9 @@ namespace fima {
 
 namespace commands {
 
-namespace copy {
-
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
+unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path& output);
 
 }
-
-} // namespace commands
 
 } // namespace fima

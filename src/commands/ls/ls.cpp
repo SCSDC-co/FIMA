@@ -25,12 +25,12 @@
 
 namespace fima {
 
-namespace ls {
+namespace commands {
 
 void
-start(const std::filesystem::path& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::ls_options& options)
+ls(const std::filesystem::path& path,
+   const fima::git::GitRepo& repo,
+   const fima::options::ls_options& options)
 {
     std::vector<std::filesystem::directory_entry> list_of_the_directory;
 
@@ -72,9 +72,9 @@ start(const std::filesystem::path& path,
                 items.end());
 
     if (options.long_output) {
-        helpers::print_long(items, options.icons, options.verbose);
+        ls::helpers::print_long(items, options.icons, options.verbose);
     } else {
-        helpers::print_normal(items, options.icons);
+        ls::helpers::print_normal(items, options.icons);
     }
 
     fima::logger::info(false, "ls", "Got list of directory: {}", path.string());
@@ -85,6 +85,6 @@ start(const std::filesystem::path& path,
     fima::logger::info(false, "ls", "  Verbose: {}", (options.verbose ? "true" : "false"));
 }
 
-} // namespace ls
+} // namespace commands
 
 } // namespace fima

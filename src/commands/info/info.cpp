@@ -21,7 +21,7 @@
 
 namespace fima {
 
-namespace info {
+namespace commands {
 
 void
 info(const fima::options::info_options& options, fima::git::GitRepo& repo)
@@ -51,6 +51,6 @@ info(const fima::options::info_options& options, fima::git::GitRepo& repo)
     }
 }
 
-} // namespace info
+} // namespace commands
 
 } // namespace fima

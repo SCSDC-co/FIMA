@@ -22,6 +22,8 @@ namespace fs = std::filesystem;
 
 namespace fima {
 
+namespace commands {
+
 namespace create {
 
 void
@@ -58,5 +60,7 @@ dir(const std::vector<fs::path>& paths)
 }
 
 } // namespace create
+
+} // namespace commands
 
 } // namespace fima

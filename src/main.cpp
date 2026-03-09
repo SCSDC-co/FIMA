@@ -27,6 +27,8 @@
 #include "commands/remove.h"
 #include "commands/rename.h"
 #include "commands/tree.h"
+#include "commands/unzip.h"
+#include "commands/zip.h"
 #include "config.h"
 #include "git/GitRepo.h"
 #include "options.h"
@@ -145,7 +147,7 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    ls_subcmd->callback([&]() { fima::ls::start(path, repo, ls_options); });
+    ls_subcmd->callback([&]() { fima::commands::ls(path, repo, ls_options); });
 
     /*  ================
      *  TREE SUB COMMAND
@@ -174,7 +176,7 @@ main(int argc, char** argv)
     // when calling through the CLI it shouldn't be use a TUI
     tree_options.tui = false;
 
-    tree_subcmd->callback([&]() { fima::tree::start(path, repo, tree_options); });
+    tree_subcmd->callback([&]() { fima::commands::tree(path, repo, tree_options); });
 
     /*  ==================
      *  CREATE SUB COMMAND
@@ -192,8 +194,8 @@ main(int argc, char** argv)
       ->configurable(false);
 
     create_subcmd->callback([&]() {
-        fima::create::dir(create_dir_paths);
-        fima::create::file(create_file_paths);
+        fima::commands::create::dir(create_dir_paths);
+        fima::commands::create::file(create_file_paths);
     });
 
     /*  ==================
@@ -222,7 +224,7 @@ main(int argc, char** argv)
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::remove(regexes, remove_subcmd_recursive);
+        fima::commands::remove(regexes, remove_subcmd_recursive);
     });
 
     /*  ================
@@ -241,9 +243,9 @@ main(int argc, char** argv)
 
     copy_subcmd->callback([&]() {
         if (_fs::is_regular_file(path_to_copy)) {
-            fima::copy::file(path_to_copy, destination);
+            fima::commands::copy::file(path_to_copy, destination);
         } else if (_fs::is_directory(path_to_copy)) {
-            fima::copy::directory(path_to_copy, destination);
+            fima::commands::copy::directory(path_to_copy, destination);
         }
     });
 
@@ -261,7 +263,7 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
-    rename_subcmd->callback([&]() { fima::rename(old_name, new_name); });
+    rename_subcmd->callback([&]() { fima::commands::rename(old_name, new_name); });
 
     /*  =================
      *  PERMS SUB COMMAND
@@ -274,7 +276,7 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
-    perms_subcmd->callback([&]() { fima::perms::permissions(perms_path); });
+    perms_subcmd->callback([&]() { fima::commands::permissions(perms_path); });
 
     /*  ================
      *  CLOC SUB COMMAND
@@ -322,7 +324,7 @@ main(int argc, char** argv)
             regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
         }
 
-        fima::cloc::main(regexes, repo, cloc_options);
+        fima::commands::cloc(regexes, repo, cloc_options);
     });
 
     /*  ================
@@ -355,7 +357,43 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    info_subcmd->callback([&]() { fima::info::info(info_options, repo); });
+    info_subcmd->callback([&]() { fima::commands::info(info_options, repo); });
+
+    /*  ===============
+     *  ZIP SUB COMMAND
+     */
+
+    std::vector<_fs::path> zip_paths{};
+    _fs::path zip_output_path{};
+
+    CLI::App* zip_subcmd =
+      app.add_subcommand("zip", "Zip files into a .zip archive")->configurable(false);
+
+    zip_subcmd->add_option("paths", zip_paths, "File to zip")->required(true)->configurable(false);
+    zip_subcmd->add_option("-o,--output", zip_output_path, "The output archive")
+      ->required(true)
+      ->configurable(false);
+
+    zip_subcmd->callback([&]() { fima::commands::zip(zip_paths, zip_output_path); });
+
+    /*  =================
+     *  UNZIP SUB COMMAND
+     */
+
+    _fs::path unzip_archive{};
+    _fs::path unzip_output_path{};
+
+    CLI::App* unzip_subcmd =
+      app.add_subcommand("unzip", "Unzip .zip archives")->configurable(false);
+
+    unzip_subcmd->add_option("archive", unzip_archive, "The archive to unzip")
+      ->required(true)
+      ->configurable(false);
+    unzip_subcmd->add_option("-o,--output", unzip_output_path, "The output of the unzipped archive")
+      ->required(true)
+      ->configurable(false);
+
+    unzip_subcmd->callback([&]() { fima::commands::unzip(unzip_archive, unzip_output_path); });
 
     CLI11_PARSE(app, argc, argv);
 

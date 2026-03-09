@@ -15,11 +15,15 @@
 
 namespace fima {
 
+namespace commands {
+
 namespace copy {
 
 void
 file(std::filesystem::path source, std::filesystem::path destination);
 
 }
+
+} // namespace commands
 
 } // namespace fima

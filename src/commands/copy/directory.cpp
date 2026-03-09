@@ -20,6 +20,8 @@ namespace fs = std::filesystem;
 
 namespace fima {
 
+namespace commands {
+
 namespace copy {
 
 void
@@ -66,5 +68,7 @@ directory(fs::path source, fs::path destination)
 }
 
 } // namespace copy
+
+} // namespace commands
 
 } // namespace fima

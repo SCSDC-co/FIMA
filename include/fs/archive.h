@@ -24,7 +24,7 @@ void
 zip(const std::vector<std::filesystem::path>& files_to_zip, const std::filesystem::path& output);
 
 void
-unzip(const std::filesystem::path& file_to_unzip, const std::filesystem::path& output);
+unzip(const std::filesystem::path& archive_to_unzip, const std::filesystem::path& output);
 
 } // namespace archive
 

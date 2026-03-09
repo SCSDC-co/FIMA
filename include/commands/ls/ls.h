@@ -18,13 +18,13 @@
 
 namespace fima {
 
-namespace ls {
+namespace commands {
 
 void
-start(const std::filesystem::path& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::ls_options& options);
+ls(const std::filesystem::path& path,
+   const fima::git::GitRepo& repo,
+   const fima::options::ls_options& options);
 
-} // namespace ls
+} // namespace commands
 
 } // namespace fima

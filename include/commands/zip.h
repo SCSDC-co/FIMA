@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/commands/zip.cpp
+ * include/commands/zip.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * A command to create .zip archives
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,18 +12,15 @@
 #pragma once
 
 #include <filesystem>
+#include <vector>
 
 namespace fima {
 
 namespace commands {
 
-namespace copy {
-
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
+zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output);
 
 }
-
-} // namespace commands
 
 } // namespace fima

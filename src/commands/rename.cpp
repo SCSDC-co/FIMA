@@ -21,6 +21,8 @@ namespace fs = std::filesystem;
 
 namespace fima {
 
+namespace commands {
+
 void
 rename(const fs::path old_name, const fs::path new_name)
 {
@@ -71,5 +73,7 @@ rename(const fs::path old_name, const fs::path new_name)
 
     return;
 }
+
+} // namespace commands
 
 } // namespace fima

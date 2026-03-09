@@ -1,6 +1,6 @@
 /*
- * src/commands/tui.cpp
- * include/commands/tui.h
+ * src/commands/tree.cpp
+ * include/commands/tree.h
  *
  * The declaration of the `tree` subcommand
  *
@@ -18,12 +18,12 @@
 
 namespace fima {
 
-namespace tree {
+namespace commands {
 
 void
-start(const std::filesystem::directory_entry& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::tree_options& options);
+tree(const std::filesystem::directory_entry& path,
+     const fima::git::GitRepo& repo,
+     const fima::options::tree_options& options);
 
 }
 

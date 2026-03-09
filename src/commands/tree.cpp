@@ -121,12 +121,12 @@ create_tree(const std::filesystem::directory_entry& path,
 
 namespace fima {
 
-namespace tree {
+namespace commands {
 
 void
-start(const std::filesystem::directory_entry& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::tree_options& options)
+tree(const std::filesystem::directory_entry& path,
+     const fima::git::GitRepo& repo,
+     const fima::options::tree_options& options)
 {
     if (!options.tui) {
         std::cout << fima::colors::GREEN << path.path().string()
@@ -151,6 +151,6 @@ start(const std::filesystem::directory_entry& path,
     fima::logger::info(false, "tree", "  Tui: {}", (options.tui ? "true" : "false"));
 }
 
-} // namespace tree
+} // namespace commands
 
 } // namespace fima

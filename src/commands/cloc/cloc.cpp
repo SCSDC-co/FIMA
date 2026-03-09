@@ -36,10 +36,6 @@
 
 namespace _fs = std::filesystem;
 
-namespace fima {
-
-namespace cloc {
-
 void
 cloc(const std::vector<std::regex>& paths_to_ignore,
      const fima::git::GitRepo& repo,
@@ -150,7 +146,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
             .get<std::string>();
 
         fima::cloc::classes::Stats file_stats =
-          helpers::count_lines(path, single_comment, multiline_start, multiline_end);
+          fima::cloc::helpers::count_lines(path, single_comment, multiline_start, multiline_end);
 
         fima::cloc::classes::LanguageStats language_stats;
 
@@ -186,8 +182,12 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     fima::cloc::helpers::print_table(analyzed_languages, options.sorting, options.quiet);
 }
 
+namespace fima {
+
+namespace commands {
+
 void
-main(const std::vector<std::regex>& paths_to_ignore,
+cloc(const std::vector<std::regex>& paths_to_ignore,
      const fima::git::GitRepo& repo,
      const fima::options::cloc_options options)
 {
@@ -212,6 +212,6 @@ main(const std::vector<std::regex>& paths_to_ignore,
       false, "cloc", "  Show langauges: {}", (options.show_languages ? "true" : "false"));
 }
 
-} // namespace cloc
+} // namespace commands
 
 } // namespace fima

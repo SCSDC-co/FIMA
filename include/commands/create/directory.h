@@ -16,11 +16,15 @@
 
 namespace fima {
 
+namespace commands {
+
 namespace create {
 
 void
 dir(const std::vector<std::filesystem::path>& paths);
 
 }
+
+} // namespace commands
 
 } // namespace fima

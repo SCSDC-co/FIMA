@@ -19,11 +19,13 @@ add_library(fima_lib
     src/fs/DirectoryItem.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
+    src/commands/unzip.cpp
     src/commands/ls/ls.cpp
     src/program_files.cpp
     src/fs/operations.cpp
     src/commands/tree.cpp
     src/fs/Directory.cpp
+    src/commands/zip.cpp
     src/git/GitRepo.cpp
     src/fs/archive.cpp
     src/git/README.md

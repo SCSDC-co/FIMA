@@ -36,6 +36,7 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
                 if (entry.is_regular_file()) {
                     std::filesystem::path relative =
                       std::filesystem::relative(entry.path(), item.parent_path());
+
                     archive.addFile(relative.string(), entry.path().string());
                 }
             }
