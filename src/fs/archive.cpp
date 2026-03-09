@@ -10,9 +10,9 @@
  */
 
 #include <filesystem>
-#include <fstream>
 #include <vector>
 
+#include "fs/operations.h"
 #include "libzippp/libzippp.h"
 
 namespace fima {
@@ -65,8 +65,7 @@ unzip(const std::filesystem::path& archive_to_unzip, const std::filesystem::path
                 std::filesystem::create_directories(out_path.parent_path());
             }
 
-            std::ofstream out_file(out_path, std::ios::binary);
-            out_file << entry.readAsBinary();
+            fima::fs::operations::create(out_path, entry.readAsText());
         }
     }
 

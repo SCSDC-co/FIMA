@@ -28,7 +28,6 @@
 #include "commands/rename.h"
 #include "commands/tree.h"
 #include "config.h"
-#include "fs/archive.h"
 #include "git/GitRepo.h"
 #include "options.h"
 #include "program_files.h"
@@ -74,9 +73,6 @@ main(int argc, char** argv)
     _fs::path old_name;
     _fs::path new_name;
     _fs::directory_entry path{ _fs::current_path() };
-
-    fima::fs::archive::zip({ path.path() / "src" }, path.path() / "test.zip");
-    fima::fs::archive::unzip({ path.path() / "test.zip" }, path.path() / "test");
 
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
