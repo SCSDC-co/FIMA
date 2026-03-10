@@ -50,9 +50,12 @@ main(int argc, char** argv)
 
     app.name("fima");
     app.description("FIMA - Fast, Incredible, Minimal & Awesome File Manager");
+    app.usage("fima [TARGET] [OPTIONS] [SUBCOMMANDS]");
+    app.footer("\nMade with love by SCSDC 󰋑 ");
 
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.3);
+    app.get_formatter()->label("POSITIONALS", "TARGET");
 
     app
       .set_config(
@@ -334,7 +337,7 @@ main(int argc, char** argv)
     fima::options::info_options info_options;
 
     CLI::App* info_subcmd =
-      app.add_subcommand("info", "Displays informations about a file or directory")
+      app.add_subcommand("info", "Displays information about a file or directory")
         ->configurable(false);
 
     info_subcmd
