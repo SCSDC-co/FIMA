@@ -54,7 +54,7 @@ main(int argc, char** argv)
     app.footer("\nMade with love by SCSDC 󰋑 ");
 
     app.get_formatter()->column_width(25);
-    app.get_formatter()->long_option_alignment_ratio(0.3);
+    app.get_formatter()->long_option_alignment_ratio(0.25);
     app.get_formatter()->label("POSITIONALS", "TARGET");
 
     app
@@ -82,16 +82,16 @@ main(int argc, char** argv)
     // for getting the correct .git directory we must pass the full path
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
 
-    app.add_flag("-v,--version", display_version, "Shows the program version")->configurable(false);
+    app.add_flag("-v,--version", display_version, "Show the program version")->configurable(false);
 
-    app.add_flag("--reset-config-files", reset_program_files, "Resets the config files")
+    app.add_flag("--reset-config-files", reset_program_files, "Reset the config files")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
     app
       .add_flag("--preserve-config-file",
                 preserve_config_file,
-                "Preserces the config.toml file (only work when using --reset-config-files)")
+                "Preserve the config.toml file (only work when using --reset-config-files)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -122,10 +122,10 @@ main(int argc, char** argv)
     fima::options::ls_options ls_options;
 
     CLI::App* ls_subcmd =
-      app.add_subcommand("ls", "Prints the content of the directory like the ls command")
+      app.add_subcommand("ls", "Print the content of the directory like the ls command")
         ->configurable(false);
 
-    ls_subcmd->add_flag("-i,--icons", ls_options.icons, "Puts an icon next to the name of the item")
+    ls_subcmd->add_flag("-i,--icons", ls_options.icons, "Put an icon next to the name of the item")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -146,9 +146,11 @@ main(int argc, char** argv)
     ls_subcmd
       ->add_flag("-v,--verbose",
                  ls_options.verbose,
-                 "Displays the number of directories and files (only works with long output)")
+                 "Display the number of directories and files (only works with long output)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
+
+    ls_subcmd->usage("fima ls [OPTIONS]");
 
     ls_subcmd->callback([&]() { fima::commands::ls(path, repo, ls_options); });
 
@@ -159,10 +161,10 @@ main(int argc, char** argv)
     fima::options::tree_options tree_options;
 
     CLI::App* tree_subcmd =
-      app.add_subcommand("tree", "Prints the tree of the directory like the tree command")
+      app.add_subcommand("tree", "Print the tree of the directory like the tree command")
         ->configurable(false);
 
-    tree_subcmd->add_flag("-a,--all", tree_options.all, "Shows dotfiles")
+    tree_subcmd->add_flag("-a,--all", tree_options.all, "Show dotfiles")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
@@ -175,6 +177,8 @@ main(int argc, char** argv)
     tree_subcmd->add_flag("-v,--verbose", tree_options.verbose, "Verbose output")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
+
+    tree_subcmd->usage("fima tree [OPTIONS]");
 
     // when calling through the CLI it shouldn't be use a TUI
     tree_options.tui = false;
@@ -193,8 +197,10 @@ main(int argc, char** argv)
       ->configurable(false);
 
     std::vector<_fs::path> create_dir_paths;
-    create_subcmd->add_option("-d,--dir", create_dir_paths, "Directory to create")
+    create_subcmd->add_option("-d,--dir", create_dir_paths, "Directories to create")
       ->configurable(false);
+
+    create_subcmd->usage("fima create -d [DIRECTORIES] -f [FILES]");
 
     create_subcmd->callback([&]() {
         fima::commands::create::dir(create_dir_paths);
@@ -206,7 +212,8 @@ main(int argc, char** argv)
      */
 
     CLI::App* remove_subcmd =
-      app.add_subcommand("remove", "Removes a file or a directory")->configurable(false);
+      app.add_subcommand("remove", "Remove files and direcories (supports regex)")
+        ->configurable(false);
 
     remove_subcmd->add_option("path", path_to_remove, "File or directory to remove")
       ->configurable(false)
@@ -219,6 +226,8 @@ main(int argc, char** argv)
                  "Remove directories and their contents recursively")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
+
+    remove_subcmd->usage("fima remove [PATHS] [OPTIONS]");
 
     remove_subcmd->callback([&]() {
         std::vector<std::regex> regexes;
@@ -244,6 +253,8 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
+    copy_subcmd->usage("fima copy [SOURCE] [DESTINATION]");
+
     copy_subcmd->callback([&]() {
         if (_fs::is_regular_file(path_to_copy)) {
             fima::commands::copy::file(path_to_copy, destination);
@@ -266,6 +277,8 @@ main(int argc, char** argv)
       ->configurable(false)
       ->required(true);
 
+    rename_subcmd->usage("fima rename [OLD NAME] [NEW NAME]");
+
     rename_subcmd->callback([&]() { fima::commands::rename(old_name, new_name); });
 
     /*  =================
@@ -273,11 +286,13 @@ main(int argc, char** argv)
      */
 
     CLI::App* perms_subcmd =
-      app.add_subcommand("perms", "Shows a directory/file permissions")->configurable(false);
+      app.add_subcommand("perms", "Show a directory/file permissions")->configurable(false);
 
     perms_subcmd->add_option("path", perms_path, "The file path to read permissions from")
       ->configurable(false)
       ->required(true);
+
+    perms_subcmd->usage("fima perms [PATHS]");
 
     perms_subcmd->callback([&]() { fima::commands::permissions(perms_path); });
 
@@ -287,8 +302,7 @@ main(int argc, char** argv)
 
     fima::options::cloc_options cloc_options;
 
-    CLI::App* cloc_subcmd =
-      app.add_subcommand("cloc", "Count lines of code of a file")->configurable(false);
+    CLI::App* cloc_subcmd = app.add_subcommand("cloc", "Count lines of code")->configurable(false);
 
     cloc_subcmd
       ->add_option("paths", cloc_options.paths, "The paths to work on (default current directory) ")
@@ -320,6 +334,8 @@ main(int argc, char** argv)
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
+    cloc_subcmd->usage("fima cloc [PATHS] [OPTIONS]");
+
     cloc_subcmd->callback([&]() {
         std::vector<std::regex> regexes;
 
@@ -337,7 +353,7 @@ main(int argc, char** argv)
     fima::options::info_options info_options;
 
     CLI::App* info_subcmd =
-      app.add_subcommand("info", "Displays information about a file or directory")
+      app.add_subcommand("info", "Display information about a file or directory")
         ->configurable(false);
 
     info_subcmd
@@ -346,19 +362,21 @@ main(int argc, char** argv)
       ->configurable(false);
 
     info_subcmd
-      ->add_flag("-g,--git", info_options.git, "Displays git information instead of file/directory")
+      ->add_flag("-g,--git", info_options.git, "Display git information instead of file/directory")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
 
-    info_subcmd->add_flag("-t,--tags", info_options.tags, "Shows tags (only works with -g,--git)")
+    info_subcmd->add_flag("-t,--tags", info_options.tags, "Show tags (only works with -g,--git)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     info_subcmd
       ->add_flag(
-        "-r,--remotes", info_options.remote, "Shows the remotes (only works with -g, --git)")
+        "-r,--remotes", info_options.remote, "Show the remotes (only works with -g, --git)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
+
+    info_subcmd->usage("fima info [PATH] [OPTIONS]");
 
     info_subcmd->callback([&]() { fima::commands::info(info_options, repo); });
 
@@ -376,6 +394,8 @@ main(int argc, char** argv)
     zip_subcmd->add_option("-o,--output", zip_output_path, "The output archive")
       ->required(true)
       ->configurable(false);
+
+    zip_subcmd->usage("fima zip [PATHS] -o [OUTPUT]");
 
     zip_subcmd->callback([&]() { fima::commands::zip(zip_paths, zip_output_path); });
 
@@ -395,6 +415,8 @@ main(int argc, char** argv)
     unzip_subcmd->add_option("-o,--output", unzip_output_path, "The output of the unzipped archive")
       ->required(true)
       ->configurable(false);
+
+    unzip_subcmd->usage("fima unzip [ARCHIVE] -o [OUTPUT]");
 
     unzip_subcmd->callback([&]() { fima::commands::unzip(unzip_archive, unzip_output_path); });
 
