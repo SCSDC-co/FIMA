@@ -13,6 +13,7 @@
 
 #include <filesystem>
 
+#include "cli/CLI11.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
 
@@ -21,10 +22,11 @@ namespace fima {
 namespace commands {
 
 void
-tree(const std::filesystem::directory_entry& path,
-     const fima::git::GitRepo& repo,
-     const fima::options::tree_options& options);
+setup_tree(CLI::App& app,
+           const std::filesystem::directory_entry& path,
+           const fima::git::GitRepo& repo,
+           fima::options::tree_options& options);
 
-}
+} // namespace commands
 
 } // namespace fima

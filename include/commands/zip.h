@@ -11,15 +11,16 @@
 
 #pragma once
 
-#include <filesystem>
-#include <vector>
+#include "cli/CLI11.hpp"
 
 namespace fima {
 
 namespace commands {
 
 void
-zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output);
+setup_zip(CLI::App& app,
+          std::vector<std::filesystem::path>& paths,
+          std::filesystem::path& output_path);
 
 }
 

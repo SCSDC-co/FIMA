@@ -1,8 +1,8 @@
 /*
- * src/commands/copy/directory.cpp
- * include/commands/copy/directory.h
+ * src/commands/copy.cpp
+ * include/commands/copy.h
  *
- * The declaration of the `copy` subcommand when copying directories
+ * The declaration of the `copy` subcommand when copying files
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -11,18 +11,14 @@
 
 #pragma once
 
-#include <filesystem>
+#include "cli/CLI11.hpp"
 
 namespace fima {
 
 namespace commands {
 
-namespace copy {
-
 void
-directory(std::filesystem::path source, std::filesystem::path destination);
-
-}
+setup_copy(CLI::App& app, std::filesystem::path& source, std::filesystem::path& destination);
 
 } // namespace commands
 

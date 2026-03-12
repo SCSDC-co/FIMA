@@ -15,6 +15,8 @@
 #include <ftxui/dom/node.hpp>
 #include <vector>
 
+#include "cli/CLI11.hpp"
+
 namespace fima {
 
 namespace perms {
@@ -25,12 +27,15 @@ get_perms(const std::filesystem::path& item);
 ftxui::Element
 get_perms_tui(const std::filesystem::path& item);
 
+void
+permissions(const std::vector<std::filesystem::path>& paths);
+
 } // namespace perms
 
 namespace commands {
 
 void
-permissions(const std::vector<std::filesystem::path>& paths);
+setup_permissions(CLI::App& app, std::vector<std::filesystem::path>& paths);
 
 }
 

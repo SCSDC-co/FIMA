@@ -19,10 +19,6 @@
 #include "logger.h"
 #include "utility/colors.h"
 
-namespace fima {
-
-namespace commands {
-
 void
 zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output)
 {
@@ -40,6 +36,28 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
 
     std::cout << fima::colors::GREEN + "Zipped files to: " + fima::colors::RESET << output.string()
               << '\n';
+}
+
+namespace fima {
+
+namespace commands {
+
+void
+setup_zip(CLI::App& app,
+          std::vector<std::filesystem::path>& paths,
+          std::filesystem::path& output_path)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("zip", "Zip files into a .zip archive")->configurable(false);
+
+    subcmd->add_option("paths", paths, "File to zip")->required(true)->configurable(false);
+    subcmd->add_option("-o,--output", output_path, "The output archive")
+      ->required(true)
+      ->configurable(false);
+
+    subcmd->usage("fima zip [PATHS] -o [OUTPUT]");
+
+    subcmd->callback([&]() { zip(paths, output_path); });
 }
 
 } // namespace commands

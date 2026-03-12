@@ -20,6 +20,7 @@ namespace options {
 struct cloc_options
 {
     std::vector<std::filesystem::path> paths{ std::filesystem::current_path() };
+    std::vector<std::filesystem::path> paths_to_ignore{};
     std::string sorting{ "total" };
     bool quiet{ false };
     bool show_languages{ false };

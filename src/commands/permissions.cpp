@@ -16,6 +16,7 @@
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -175,8 +176,6 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
 
 } // namespace perms
 
-namespace commands {
-
 void
 permissions(const std::vector<std::filesystem::path>& paths)
 {
@@ -197,6 +196,23 @@ permissions(const std::vector<std::filesystem::path>& paths)
 
         fima::logger::info(false, "perms", "Got perms for: {}", item.string());
     }
+}
+
+namespace commands {
+
+void
+setup_permissions(CLI::App& app, std::vector<std::filesystem::path>& paths)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("perms", "Show a directory/file permissions")->configurable(false);
+
+    subcmd->add_option("path", paths, "The file path to read permissions from")
+      ->configurable(false)
+      ->required(true);
+
+    subcmd->usage("fima perms [PATHS]");
+
+    subcmd->callback([&]() { fima::permissions(paths); });
 }
 
 } // namespace commands

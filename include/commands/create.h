@@ -1,8 +1,8 @@
 /*
- * src/commands/remove.cpp
- * include/commands/remove.h
+ * src/commands/create.cpp
+ * include/commands/create.h
  *
- * The declaration of the `remove` subcommand
+ * The declaration of the `create` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -18,7 +18,9 @@ namespace fima {
 namespace commands {
 
 void
-setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths);
+setup_create(CLI::App& app,
+             std::vector<std::filesystem::path>& file_paths,
+             std::vector<std::filesystem::path>& dir_paths);
 
 }
 

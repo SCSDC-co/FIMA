@@ -11,14 +11,14 @@
 
 #pragma once
 
-#include <filesystem>
+#include "cli/CLI11.hpp"
 
 namespace fima {
 
 namespace commands {
 
 void
-unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path& output);
+setup_unzip(CLI::App& app, std::filesystem::path& archive, std::filesystem::path& output_path);
 
 }
 
