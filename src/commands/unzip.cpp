@@ -9,11 +9,12 @@
  * See LICENSE file for details.
  */
 
+#include "fs/archives/unzip.h"
+
 #include <filesystem>
 #include <iostream>
 
 #include "cli/CLI11.hpp"
-#include "fs/archive.h"
 #include "utility/colors.h"
 
 void
@@ -34,7 +35,7 @@ unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path
         return;
     }
 
-    fima::fs::archive::unzip(arhcive_to_unzip, output);
+    fima::fs::archives::unzip(arhcive_to_unzip, output);
 
     std::cout << fima::colors::GREEN << "Archive " << fima::colors::RESET
               << arhcive_to_unzip.string() << fima::colors::GREEN

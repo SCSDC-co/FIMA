@@ -63,7 +63,6 @@ main(int argc, char** argv)
 
     app.require_subcommand(0, 1);
 
-    bool display_version{ false };
     bool reset_program_files{ false };
     bool preserve_config_file{ false };
 

@@ -9,10 +9,11 @@
  * See LICENSE file for details.
  */
 
+#include "fs/archives/zip.h"
+
 #include <filesystem>
 #include <vector>
 
-#include "fs/operations.h"
 #include "libzippp/libzippp.h"
 
 namespace fima {
@@ -21,10 +22,13 @@ namespace fs {
 
 namespace archive {
 
+namespace zip {
+
 using namespace libzippp;
 
 void
-zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output)
+create_archive(const std::vector<std::filesystem::path>& items_to_zip,
+               const std::filesystem::path& output)
 {
     ZipArchive archive(output.string());
 
@@ -48,30 +52,7 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
     archive.close();
 }
 
-void
-unzip(const std::filesystem::path& archive_to_unzip, const std::filesystem::path& output)
-{
-    ZipArchive archive(archive_to_unzip.string());
-    archive.open(ZipArchive::ReadOnly);
-
-    auto entries = archive.getEntries();
-
-    for (auto& entry : entries) {
-        std::filesystem::path out_path = output / entry.getName();
-
-        if (entry.isDirectory()) {
-            std::filesystem::create_directories(out_path);
-        } else {
-            if (out_path.has_parent_path()) {
-                std::filesystem::create_directories(out_path.parent_path());
-            }
-
-            fima::fs::operations::create(out_path, entry.readAsText());
-        }
-    }
-
-    archive.close();
-}
+} // namespace zip
 
 } // namespace archive
 

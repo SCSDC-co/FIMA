@@ -1,8 +1,9 @@
 /*
- * scr/fs/archive.cpp
- * include/fs/archive.h
+ * scr/fs/archives/unzip.cpp
+ * include/fs/archives/unzip.h
  *
- * A module that contains some useful functions for working with archives
+ * A utility to extract archives. It is a separate module because it needs to support many archive
+ * formats.
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,21 +13,17 @@
 #pragma once
 
 #include <filesystem>
-#include <vector>
 
 namespace fima {
 
 namespace fs {
 
-namespace archive {
-
-void
-zip(const std::vector<std::filesystem::path>& files_to_zip, const std::filesystem::path& output);
+namespace archives {
 
 void
 unzip(const std::filesystem::path& archive_to_unzip, const std::filesystem::path& output);
 
-} // namespace archive
+} // namespace archives
 
 } // namespace fs
 

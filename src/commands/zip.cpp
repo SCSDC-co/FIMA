@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 
-#include "fs/archive.h"
+#include "fs/archives/zip.h"
 #include "logger.h"
 #include "utility/colors.h"
 
@@ -32,7 +32,7 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
         return;
     }
 
-    fima::fs::archive::zip(items_to_zip, output);
+    fima::fs::archives::zip::create_archive(items_to_zip, output);
 
     std::cout << fima::colors::GREEN + "Zipped files to: " + fima::colors::RESET << output.string()
               << '\n';
