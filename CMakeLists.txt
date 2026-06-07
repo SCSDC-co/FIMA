@@ -10,6 +10,7 @@ find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
 find_package(libzippp REQUIRED)
 find_package(LibArchive REQUIRED)
+find_package(CLI11 REQUIRED)
 
 include(./scripts/cmake/files.cmake)
 
@@ -32,4 +33,5 @@ target_link_libraries(
         nlohmann_json::nlohmann_json
         libgit2::libgit2
         LibArchive::LibArchive
+        CLI11::CLI11
 )

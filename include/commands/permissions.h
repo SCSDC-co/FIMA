@@ -15,7 +15,7 @@
 #include <ftxui/dom/node.hpp>
 #include <vector>
 
-#include "cli/CLI11.hpp"
+#include "CLI/App.hpp"
 
 namespace fima {
 

@@ -13,7 +13,7 @@
 
 #include <filesystem>
 
-#include "cli/CLI11.hpp"
+#include "CLI/App.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
 

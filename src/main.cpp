@@ -14,7 +14,9 @@
 #include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
-#include "cli/CLI11.hpp"
+#include "CLI/App.hpp"
+#include "CLI/Config.hpp"
+#include "CLI/Formatter.hpp"
 #include "commands/cloc/cloc.h"
 #include "commands/copy.h"
 #include "commands/create.h"

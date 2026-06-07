@@ -49,12 +49,11 @@ run() {
 
 get-files-cli11-latest() {
     ../scripts/utils/get-source-files.sh >/dev/null
-    ../scripts/utils/get-cli11-latest.sh >/dev/null
-    echo "Updated sources + downloaded CLI11 latest"
+    echo "Updated sources"
 }
 
 format() {
-    HEADERS=$(find ../include/ -type d -name "cli" -prune -o -type f -name "*.h*" ! -name "toml.hpp" -print)
+    HEADERS=$(find ../include/ -prune -o -type f -name "*.h*" ! -name "toml.hpp" -print)
     SOURCES=$(find ../src/ -type f -name "*.cpp")
 
     for file in $SOURCES; do

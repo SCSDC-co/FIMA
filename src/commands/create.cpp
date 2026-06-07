@@ -14,7 +14,6 @@
 #include <filesystem>
 #include <vector>
 
-#include "cli/CLI11.hpp"
 #include "fs/operations.h"
 #include "logger.h"
 

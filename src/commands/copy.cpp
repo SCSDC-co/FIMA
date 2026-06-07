@@ -13,7 +13,6 @@
 
 #include <filesystem>
 
-#include "cli/CLI11.hpp"
 #include "logger.h"
 #include "utility/colors.h"
 

@@ -8,13 +8,12 @@
  * This software is licensed under the GPL-3.0-or-later.
  * See LICENSE file for details.
  */
-
-#include "fs/archives/unzip.h"
+#include "commands/unzip.h"
 
 #include <filesystem>
 #include <iostream>
 
-#include "cli/CLI11.hpp"
+#include "fs/archives/unzip.h"
 #include "utility/colors.h"
 
 void
