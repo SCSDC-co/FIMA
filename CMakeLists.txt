@@ -8,8 +8,8 @@ project(fima)
 find_package(nlohmann_json REQUIRED)
 find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
-find_package(gzip-hpp REQUIRED)
 find_package(libzippp REQUIRED)
+find_package(LibArchive REQUIRED)
 
 include(./scripts/cmake/files.cmake)
 
@@ -26,5 +26,10 @@ target_link_libraries(fima_lib PUBLIC libzippp::libzippp)
 
 target_link_libraries(
     ${PROJECT_NAME}
-    PRIVATE fima_lib ftxui::ftxui nlohmann_json::nlohmann_json libgit2::libgit2
+    PRIVATE
+        fima_lib
+        ftxui::ftxui
+        nlohmann_json::nlohmann_json
+        libgit2::libgit2
+        LibArchive::LibArchive
 )

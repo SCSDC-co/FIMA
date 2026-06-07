@@ -7,6 +7,7 @@
  *
  * Parts of this implementation are derived from:
  * https://github.com/lindenb/cclindenb/
+ * Thanks guys ❤
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.

@@ -32,7 +32,7 @@ build() {
         exit 1
     }
 
-    ninja || {
+    cmake --build . || {
         echo "Build failed"
         exit 1
     }

@@ -18,7 +18,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths);
+setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths, bool& recursive);
 
 }
 

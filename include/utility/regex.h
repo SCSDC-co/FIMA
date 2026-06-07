@@ -32,6 +32,9 @@ inline std::regex
 glob_to_regex(const std::string& glob)
 {
     std::string regex_str;
+
+    regex_str += "^";
+
     for (char c : glob) {
         switch (c) {
             case '*':
@@ -48,6 +51,9 @@ glob_to_regex(const std::string& glob)
                 break;
         }
     }
+
+    regex_str += "$";
+
     return std::regex(regex_str);
 }
 

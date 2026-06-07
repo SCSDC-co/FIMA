@@ -20,7 +20,7 @@ namespace fima {
 
 namespace fs {
 
-namespace archive {
+namespace archives {
 
 namespace zip {
 
@@ -54,7 +54,7 @@ create_archive(const std::vector<std::filesystem::path>& items_to_zip,
 
 } // namespace zip
 
-} // namespace archive
+} // namespace archives
 
 } // namespace fs
 

@@ -11,8 +11,10 @@ add_library(fima_lib
     src/commands/info/info.cpp
     src/commands/info/file.cpp
     src/commands/cloc/cloc.cpp
+    src/fs/archives/unzip.cpp
     src/commands/info/git.cpp
     src/fs/DirectoryItem.cpp
+    src/fs/archives/zip.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
     src/commands/create.cpp
@@ -25,7 +27,6 @@ add_library(fima_lib
     src/fs/Directory.cpp
     src/commands/zip.cpp
     src/git/GitRepo.cpp
-    src/fs/archive.cpp
     src/git/README.md
     src/tui/tui.cpp
     src/fs/File.cpp
