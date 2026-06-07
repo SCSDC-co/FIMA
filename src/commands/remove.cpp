@@ -23,42 +23,47 @@
 void
 remove(const std::vector<std::regex>& paths, const bool& recursive)
 {
-    auto it = std::filesystem::recursive_directory_iterator(
+    auto it = std::filesystem::directory_iterator(
       std::filesystem::current_path(), std::filesystem::directory_options::skip_permission_denied);
 
     for (const auto& entry : it) {
         if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(), paths)) {
-            if (!recursive && entry.is_directory()) {
-                fima::logger::info(true,
-                                   "remove",
-                                   fima::colors::RED + "Cannot remove directory " +
-                                     fima::colors::RESET + "\"{}\"" + fima::colors::RED +
-                                     ". Becuase is not empty.",
-                                   entry.path().relative_path().string());
+            try {
+                if (!recursive && entry.is_directory()) {
+                    fima::logger::info(true,
+                                       "remove",
+                                       fima::colors::RED + "Cannot remove directory " +
+                                         fima::colors::RESET + "{}" + fima::colors::RED +
+                                         ". Becuase is not empty.",
+                                       entry.path().relative_path().string());
 
-                continue;
-            }
-
-            if (entry.is_directory()) {
-                for (auto& item : std::filesystem::directory_iterator(
-                       entry, std::filesystem::directory_options::skip_permission_denied)) {
-                    std::cout << fima::colors::GREEN << "Removed item: " << fima::colors::RESET
-                              << item.path().relative_path() << std::endl;
+                    continue;
                 }
-            }
 
-            std::filesystem::remove_all(entry.path());
+                if (entry.is_directory()) {
+                    for (auto& item : std::filesystem::directory_iterator(
+                           entry, std::filesystem::directory_options::skip_permission_denied)) {
+                        std::cout << fima::colors::GREEN << "Removed item: " << fima::colors::RESET
+                                  << std::filesystem::relative(item.path()).string() << std::endl;
+                    }
+                }
 
-            fima::logger::info(true,
-                               "remove",
-                               fima::colors::GREEN + (entry.is_directory() ? "Directory" : "File") +
-                                 " removed: " + fima::colors::RESET + "\"{}\"",
-                               entry.path().filename().string() +
-                                 (entry.is_directory() ? "/" : ""));
+                fima::logger::info(
+                  true,
+                  "remove",
+                  fima::colors::GREEN + (entry.is_directory() ? "Directory" : "File") +
+                    " removed: " + fima::colors::RESET + "{}",
+                  entry.path().filename().string() + (entry.is_directory() ? "/" : ""));
 
-            if (entry.is_directory()) {
-                it.disable_recursion_pending();
-                continue;
+                std::filesystem::remove_all(entry.path());
+            } catch (const std::exception& ex) {
+                fima::logger::error(true,
+                                    "remove",
+                                    fima::colors::RED +
+                                      "Failed to remove item: " + fima::colors::RESET + "{}",
+                                    entry.path().string());
+
+                fima::logger::error(true, "remove", ex.what());
             }
         }
     }
