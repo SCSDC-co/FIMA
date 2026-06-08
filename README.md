@@ -63,7 +63,7 @@ no-tui = true
   - [x] `cloc`
   - [x] `info`
 - [x] add config file support (TOML format)
-- [ ] add zip and unzip functionality
+- [x] add `zip` and `unzip` functionality
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) if you want to contribute!
 
