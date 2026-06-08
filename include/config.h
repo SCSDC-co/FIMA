@@ -18,7 +18,7 @@ namespace fima {
 
 namespace config {
 
-constexpr std::string_view VERSION = "1.0.0";
+constexpr std::string_view VERSION = "0.1.0";
 constexpr std::string_view LOGO    = R"(
 .----.______       _____ ___ __  __    _
 |           |     |  ___|_ _|  \/  |  / \
