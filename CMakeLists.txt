@@ -23,7 +23,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:include/>
 )
 
-target_link_libraries(fima_lib PUBLIC libzippp::libzippp)
+target_link_libraries(fima_lib PUBLIC libzippp::libzippp termcolor::termcolor)
 
 target_link_libraries(
     ${PROJECT_NAME}
@@ -32,6 +32,5 @@ target_link_libraries(
         ftxui::ftxui
         nlohmann_json::nlohmann_json
         libgit2::libgit2
-        termcolor::termcolor
         CLI11::CLI11
 )

@@ -12,23 +12,22 @@
 
 #include <filesystem>
 #include <iostream>
+#include <termcolor/termcolor.hpp>
 
 #include "fs/archives/unzip.h"
-#include "utility/colors.h"
 
 void
 unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path& output)
 {
     if (!std::filesystem::exists(arhcive_to_unzip)) {
-        std::cerr << fima::colors::RED << "The archive doesn't exists: " << fima::colors::RESET
+        std::cerr << termcolor::red << "The archive doesn't exists: " << termcolor::reset
                   << arhcive_to_unzip.string() << '\n';
 
         return;
     }
 
     if (std::filesystem::exists(output)) {
-        std::cerr << fima::colors::RED
-                  << "The output directory already exists: " << fima::colors::RESET
+        std::cerr << termcolor::red << "The output directory already exists: " << termcolor::reset
                   << output.string() << '\n';
 
         return;
@@ -36,9 +35,9 @@ unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path
 
     fima::fs::archives::unzip(arhcive_to_unzip, output);
 
-    std::cout << fima::colors::GREEN << "Archive " << fima::colors::RESET
-              << arhcive_to_unzip.string() << fima::colors::GREEN
-              << " unzipped to: " << fima::colors::RESET << output.string() << '\n';
+    std::cout << termcolor::green << "Archive " << termcolor::reset << arhcive_to_unzip.string()
+              << termcolor::green << " unzipped to: " << termcolor::reset << output.string()
+              << '\n';
 }
 
 namespace fima {

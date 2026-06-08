@@ -14,10 +14,9 @@
 #include <filesystem>
 #include <iostream>
 #include <regex>
+#include <termcolor/termcolor.hpp>
 #include <vector>
 
-#include "logger.h"
-#include "utility/colors.h"
 #include "utility/regex.h"
 
 void
@@ -30,12 +29,9 @@ remove(const std::vector<std::regex>& paths, const bool& recursive)
         if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(), paths)) {
             try {
                 if (!recursive && entry.is_directory()) {
-                    fima::logger::info(true,
-                                       "remove",
-                                       fima::colors::RED + "Cannot remove directory " +
-                                         fima::colors::RESET + "{}" + fima::colors::RED +
-                                         ". Becuase is not empty.",
-                                       entry.path().relative_path().string());
+                    std::cerr << termcolor::red << "Cannot remove directory " << termcolor::reset
+                              << entry.path().relative_path().string() << termcolor::red
+                              << ". Becuase is not empty." << '\n';
 
                     continue;
                 }
@@ -43,27 +39,21 @@ remove(const std::vector<std::regex>& paths, const bool& recursive)
                 if (entry.is_directory()) {
                     for (auto& item : std::filesystem::directory_iterator(
                            entry, std::filesystem::directory_options::skip_permission_denied)) {
-                        std::cout << fima::colors::GREEN << "Removed item: " << fima::colors::RESET
-                                  << std::filesystem::relative(item.path()).string() << std::endl;
+                        std::cout << termcolor::green << "Removed item: " << termcolor::reset
+                                  << std::filesystem::relative(item.path()).string() << '\n';
                     }
                 }
 
-                fima::logger::info(
-                  true,
-                  "remove",
-                  fima::colors::GREEN + (entry.is_directory() ? "Directory" : "File") +
-                    " removed: " + fima::colors::RESET + "{}",
-                  entry.path().filename().string() + (entry.is_directory() ? "/" : ""));
+                std::cout << termcolor::green << (entry.is_directory() ? "Directory" : "File")
+                          << " removed: " << termcolor::reset << entry.path().filename().string()
+                          << (entry.is_directory() ? "/" : "") << '\n';
 
                 std::filesystem::remove_all(entry.path());
             } catch (const std::exception& ex) {
-                fima::logger::error(true,
-                                    "remove",
-                                    fima::colors::RED +
-                                      "Failed to remove item: " + fima::colors::RESET + "{}",
-                                    entry.path().string());
+                std::cerr << termcolor::red << "Failed to remove item: " << termcolor::reset
+                          << entry.path().string() << '\n';
 
-                fima::logger::error(true, "remove", ex.what());
+                std::cerr << ex.what();
             }
         }
     }

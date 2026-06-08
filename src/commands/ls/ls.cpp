@@ -20,7 +20,6 @@
 #include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
 #include "git/GitRepo.h"
-#include "logger.h"
 #include "options.h"
 
 namespace fima {
@@ -76,13 +75,6 @@ ls(const std::filesystem::path& path,
     } else {
         ls::helpers::print_normal(items, options.icons);
     }
-
-    fima::logger::info(false, "ls", "Got list of directory: {}", path.string());
-    fima::logger::info(false, "ls", "Options:");
-    fima::logger::info(false, "ls", "  All: {}", (options.all ? "true" : "false"));
-    fima::logger::info(false, "ls", "  Icons: {}", (options.icons ? "true" : "false"));
-    fima::logger::info(false, "ls", "  Long output: {}", (options.long_output ? "true" : "false"));
-    fima::logger::info(false, "ls", "  Verbose: {}", (options.verbose ? "true" : "false"));
 }
 
 void

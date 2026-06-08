@@ -12,10 +12,9 @@
 #include "commands/rename.h"
 
 #include <filesystem>
+#include <iostream>
 #include <string>
-
-#include "logger.h"
-#include "utility/colors.h"
+#include <termcolor/termcolor.hpp>
 
 namespace fs = std::filesystem;
 
@@ -23,21 +22,16 @@ void
 _rename(const fs::path old_name, const fs::path new_name)
 {
     if (!fs::exists(old_name)) {
-        fima::logger::error(true,
-                            "rename",
-                            fima::colors::GREEN + "The item you want to rename does not exist: " +
-                              fima::colors::RESET + "{}",
-                            old_name.string());
+        std::cerr << termcolor::red
+                  << "The item you want to rename does not exist: " << termcolor::reset
+                  << old_name.string() << '\n';
 
         return;
     }
 
     if (fs::exists(new_name)) {
-        fima::logger::error(true,
-                            "rename",
-                            std::string(fima::colors::RED) +
-                              "The item already exists: " + std::string(fima::colors::RESET) + "{}",
-                            new_name.string());
+        std::cerr << termcolor::red << "The item already exists: " << termcolor::reset
+                  << new_name.string() << '\n';
 
         return;
     }
@@ -45,26 +39,13 @@ _rename(const fs::path old_name, const fs::path new_name)
     try {
         fs::rename(old_name, new_name);
 
-        fima::logger::info(true,
-                           "rename",
-                           "{}" + fima::colors::GREEN + " renamed to: " + fima::colors::RESET +
-                             "{}",
-                           old_name.string(),
-                           new_name.string());
+        std::cout << old_name.string() << termcolor::green << " renamed to: " << termcolor::reset
+                  << new_name.string() << '\n';
     } catch (const std::exception& ex) {
-        fima::logger::error(
-          true, "rename", fima::colors::RED + "Failed to rename the item:" + fima::colors::RESET);
+        std::cerr << termcolor::red << "Failed to rename: " << termcolor::reset << old_name.string()
+                  << termcolor::red << " to " << termcolor::reset << new_name.string() << '\n';
 
-        fima::logger::error(true,
-                            "rename",
-                            fima::colors::RED + "  Old name: " + fima::colors::RESET + "{}",
-                            old_name.string());
-        fima::logger::error(true,
-                            "rename",
-                            fima::colors::RED + "  New name: " + fima::colors::RESET + "{}",
-                            new_name.string());
-
-        fima::logger::error(true, "rename", ex.what());
+        std::cerr << ex.what();
     }
 
     return;

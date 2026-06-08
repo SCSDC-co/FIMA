@@ -17,6 +17,7 @@
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <string>
+#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "config.h"
@@ -25,10 +26,8 @@
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
-#include "logger.h"
 #include "options.h"
 #include "tui/commands/tree/tree_tui.h"
-#include "utility/colors.h"
 #include "utility/regex.h"
 
 std::vector<Element> tree_vector_tui;
@@ -85,11 +84,11 @@ create_tree(const std::filesystem::directory_entry& path,
 
         if (!options.tui) {
             if (entry.is_directory()) {
-                std::cout << fima::colors::GREEN << prefix << pointers[0]
-                          << entry.path().filename().string() << "/" << fima::colors::RESET
+                std::cout << termcolor::green << prefix << pointers[0]
+                          << entry.path().filename().string() << "/" << termcolor::reset
                           << std::endl;
             } else {
-                std::cout << fima::colors::GREEN << prefix << pointers[0] << fima::colors::RESET
+                std::cout << termcolor::green << prefix << pointers[0] << termcolor::reset
                           << entry.path().filename().string() << std::endl;
             }
         } else if (options.tui) {
@@ -125,8 +124,8 @@ create_tree(const std::filesystem::directory_entry& path,
             const fima::options::tree_options& options)
 {
     if (!options.tui) {
-        std::cout << fima::colors::GREEN << path.path().string()
-                  << (path.path().string().back() == '/' ? "" : "/") << fima::colors::RESET << '\n';
+        std::cout << termcolor::green << path.path().string()
+                  << (path.path().string().back() == '/' ? "" : "/") << termcolor::reset << '\n';
     }
 
     create_tree(path, repo, options, options.prefix);
@@ -136,15 +135,11 @@ create_tree(const std::filesystem::directory_entry& path,
     } else if (options.verbose) {
         std::cout << '\n';
 
-        std::cout << fima::colors::GREEN << "Number of directories: " << fima::colors::RESET
+        std::cout << termcolor::green << "Number of directories: " << termcolor::reset
                   << std::to_string(number_of_dirs) << '\n';
-        std::cout << fima::colors::GREEN << "Number of files: " << fima::colors::RESET
+        std::cout << termcolor::green << "Number of files: " << termcolor::reset
                   << std::to_string(number_of_files) << '\n';
     }
-
-    fima::logger::info(false, "tree", "Create tree of: {}", path.path().string());
-    fima::logger::info(false, "tree", "Options:");
-    fima::logger::info(false, "tree", "  Tui: {}", (options.tui ? "true" : "false"));
 }
 
 namespace fima {

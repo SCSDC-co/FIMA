@@ -32,8 +32,8 @@
 #include "git/GitRepo.h"
 #include "options.h"
 #include "program_files.h"
+#include "termcolor/termcolor.hpp"
 #include "tui/tui.h"
-#include "utility/colors.h"
 #include "utility/regex.h"
 
 namespace _fs = std::filesystem;
@@ -96,12 +96,12 @@ main(int argc, char** argv)
         ->configurable(false);
 
     version_subcmd->callback([&]() {
-        std::cout << fima::colors::GREEN;
+        std::cout << termcolor::green;
 
         std::cout << fima::config::LOGO << '\n';
 
         std::cout << "Fast, Incredible, Minimal and Awesome File Manager" << '\n' << '\n';
-        std::cout << "Version: " << fima::colors::RESET << fima::config::VERSION << '\n';
+        std::cout << "Version: " << termcolor::reset << fima::config::VERSION << '\n';
 
         std::cout << '\n';
     });

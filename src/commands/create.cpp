@@ -12,21 +12,19 @@
 #include "commands/create.h"
 
 #include <filesystem>
+#include <iostream>
+#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/operations.h"
-#include "logger.h"
 
 void
 file(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
         if (std::filesystem::exists(entry)) {
-            fima::logger::error(true,
-                                "create file",
-                                fima::colors::RED +
-                                  "This item already exists: " + fima::colors::RESET + "{}",
-                                entry.string());
+            std::cerr << termcolor::red << "This file already exists: " << termcolor::reset
+                      << entry.string() << '\n';
 
             continue;
         }
@@ -34,18 +32,13 @@ file(const std::vector<std::filesystem::path>& paths)
         try {
             fima::fs::operations::create(entry, "");
 
-            fima::logger::info(true,
-                               "create file",
-                               fima::colors::GREEN + "File created at: " + fima::colors::RESET +
-                                 "{}",
-                               entry.string());
+            std::cout << termcolor::green << "File created at: " << termcolor::reset
+                      << entry.string() << '\n';
         } catch (const std::exception& ex) {
-            fima::logger::error(true,
-                                "create file",
-                                fima::colors::RED +
-                                  "Failed to create the file: " + fima::colors::RESET + "{}",
-                                entry.string());
-            fima::logger::error(true, "create file", ex.what());
+            std::cerr << termcolor::red << "Failed to create the file: " << termcolor::reset
+                      << entry.string() << '\n';
+
+            std::cerr << ex.what();
         }
     }
 }
@@ -55,11 +48,8 @@ dir(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
         if (std::filesystem::exists(entry)) {
-            fima::logger::error(true,
-                                "create dir",
-                                fima::colors::RED +
-                                  "This item already exists: " + fima::colors::RESET + "{}",
-                                entry.string());
+            std::cerr << termcolor::red << "This directory already exists: " << termcolor::reset
+                      << entry.string() << '\n';
 
             continue;
         }
@@ -67,18 +57,13 @@ dir(const std::vector<std::filesystem::path>& paths)
         try {
             std::filesystem::create_directories(entry);
 
-            fima::logger::info(true,
-                               "create dir",
-                               fima::colors::GREEN +
-                                 "Directory created at: " + fima::colors::RESET + "{}",
-                               entry.string());
+            std::cout << termcolor::green << "Directory created at: " << termcolor::reset
+                      << entry.string() << '\n';
         } catch (const std::exception& ex) {
-            fima::logger::error(true,
-                                "create dir",
-                                fima::colors::RED +
-                                  "Failed to create the directory: " + fima::colors::RESET + "{}",
-                                entry.string());
-            fima::logger::error(true, "create dir", ex.what());
+            std::cerr << termcolor::red << "Failed to create the directory: " << termcolor::reset
+                      << entry.string() << '\n';
+
+            std::cerr << ex.what();
         }
     }
 }

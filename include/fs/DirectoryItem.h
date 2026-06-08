@@ -23,23 +23,17 @@ namespace fs {
 
 class DirectoryItem
 {
-  private:
-    bool is_hidden{};
-
-    std::string permissions{};
-    std::string owner{};
-    std::string name{};
-    std::string icon{};
-    std::string color{};
-
-    std::filesystem::path path{};
-    std::filesystem::file_time_type last_modification_date{};
-
-    size_t size{};
-
-    ftxui::Color color_tui{};
-
   public:
+    enum class ItemColor
+    {
+        RED,
+        GREEN,
+        WHITE,
+        YELLOW,
+        BLUE,
+        CYAN,
+    };
+
     DirectoryItem(const std::filesystem::directory_entry& path);
 
     void set_color();
@@ -51,7 +45,6 @@ class DirectoryItem
     [[nodiscard]] std::string get_last_modification_date() const;
     [[nodiscard]] std::string get_icon() const;
     [[nodiscard]] std::string get_size_with_extension() const;
-    [[nodiscard]] std::string get_color() const;
 
     [[nodiscard]] size_t get_size() const;
 
@@ -66,6 +59,24 @@ class DirectoryItem
 
     [[nodiscard]] ftxui::Element get_permissions_tui() const;
     [[nodiscard]] ftxui::Color get_color_tui() const;
+
+    [[nodiscard]] DirectoryItem::ItemColor get_color() const;
+
+  private:
+    bool is_hidden{};
+
+    std::string permissions{};
+    std::string owner{};
+    std::string name{};
+    std::string icon{};
+    ItemColor color{};
+
+    std::filesystem::path path{};
+    std::filesystem::file_time_type last_modification_date{};
+
+    size_t size{};
+
+    ftxui::Color color_tui{};
 };
 
 } // namespace fs

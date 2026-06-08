@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <iostream>
 
-#include "utility/colors.h"
+#include "termcolor/termcolor.hpp"
 
 namespace fima {
 
@@ -27,7 +27,7 @@ get_application_config_path()
     if (auto home_var = std::getenv("APPDATA")) {
         return std::filesystem::path(home_var);
     } else {
-        std::cerr << fima::colors::RED << "FATAL ERROR: " << fima::colors::RESET
+        std::cerr << termcolor::red << "FATAL ERROR: " << termcolor::reset
                   << "Environment variable \"APPDATA\" is not set. FIMA can't run without it"
                   << '\n';
 
@@ -38,7 +38,7 @@ get_application_config_path()
     if (auto home_var = std::getenv("HOME")) {
         return std::filesystem::path(std::string(home_var) + "/.config");
     } else {
-        std::cerr << fima::colors::RED << "FATAL ERROR: " << fima::colors::RESET
+        std::cerr << termcolor::red << "FATAL ERROR: " << termcolor::reset
                   << "Environment variable \"HOME\" is not set. FIMA can't run without it" << '\n';
 
         std::exit(1);

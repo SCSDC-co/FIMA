@@ -12,22 +12,19 @@
 #include "commands/info/info.h"
 
 #include <filesystem>
+#include <iostream>
+#include <termcolor/termcolor.hpp>
 
 #include "commands/info/directory.h"
 #include "commands/info/file.h"
 #include "commands/info/git.h"
-#include "logger.h"
-#include "utility/colors.h"
 
 void
 _info(const fima::options::info_options& options, fima::git::GitRepo& repo)
 {
     if (!options.path.exists()) {
-        fima::logger::error(true,
-                            "info",
-                            fima::colors::RED + "The path doesn't exist: " + fima::colors::RESET +
-                              "{}",
-                            options.path.path().string());
+        std::cerr << termcolor::red << "The path doesn't exist: " << termcolor::reset
+                  << options.path.path().string() << '\n';
 
         return;
     }
