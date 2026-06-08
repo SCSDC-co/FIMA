@@ -38,9 +38,12 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
         case 'l':
             std::cout << termcolor::blue;
             break;
+        case '-':
+            std::cout << termcolor::bold;
+            break;
     }
 
-    std::cout << termcolor::bold << permissions[0] << termcolor::reset;
+    std::cout << permissions[0] << termcolor::reset;
 
     i++;
 
