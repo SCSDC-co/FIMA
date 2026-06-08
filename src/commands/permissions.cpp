@@ -92,7 +92,7 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
         std::cout << termcolor::red;
     }
 
-    std::cout << entry.filename().string() << (std::filesystem::is_directory(entry) ? "/" : "")
+    std::cout << entry.string() << (std::filesystem::is_directory(entry) ? "/" : "")
               << termcolor::reset << '\n';
 }
 
