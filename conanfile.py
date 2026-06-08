@@ -11,4 +11,5 @@ class Fima(ConanFile):
         "libgit2/1.9.1",
         "libarchive/3.8.7",
         "cli11/2.6.2",
+        "termcolor/2.1.0",
     )
