@@ -38,7 +38,7 @@ _info(const fima::options::info_options& options, fima::git::GitRepo& repo)
     }
 
     if (options.path.is_directory()) {
-        fima::info::dir(options.path);
+        fima::info::dir(options.path, options.verbose, repo);
     } else {
         fima::info::file(options.path);
     }
@@ -58,6 +58,13 @@ setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options&
       ->add_option(
         "path", options.path, "The path to get the info from (default current directory)")
       ->configurable(false);
+
+    subcmd
+      ->add_flag("-v,--verbose",
+                 options.verbose,
+                 "Display additional information (only works on directories)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
 
     subcmd->add_flag("-g,--git", options.git, "Display git information instead of file/directory")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
