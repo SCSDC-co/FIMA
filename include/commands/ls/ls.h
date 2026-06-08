@@ -13,18 +13,20 @@
 
 #include <filesystem>
 
+#include "CLI/App.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
 
 namespace fima {
 
-namespace ls {
+namespace commands {
 
 void
-start(const std::filesystem::path& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::ls_options& options);
+setup_ls(CLI::App& app,
+         const std::filesystem::directory_entry& path,
+         const fima::git::GitRepo& repo,
+         fima::options::ls_options& options);
 
-} // namespace ls
+} // namespace commands
 
 } // namespace fima

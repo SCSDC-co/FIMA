@@ -19,10 +19,8 @@
 
 namespace fs = std::filesystem;
 
-namespace fima {
-
 void
-rename(const fs::path old_name, const fs::path new_name)
+_rename(const fs::path old_name, const fs::path new_name)
 {
     if (!fs::exists(old_name)) {
         fima::logger::error(true,
@@ -71,5 +69,29 @@ rename(const fs::path old_name, const fs::path new_name)
 
     return;
 }
+
+namespace fima {
+
+namespace commands {
+
+void
+setup_rename(CLI::App& app, fs::path& old_name, fs::path& new_name)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("rename", "Rename/move a file or a directory")->configurable(false);
+
+    subcmd->add_option("old-name", old_name, "File or directory to move or rename")
+      ->configurable(false)
+      ->required(true);
+    subcmd->add_option("new-name", new_name, "The new name for the directory or file")
+      ->configurable(false)
+      ->required(true);
+
+    subcmd->usage("fima rename [OLD NAME] [NEW NAME]");
+
+    subcmd->callback([&]() { _rename(old_name, new_name); });
+}
+
+} // namespace commands
 
 } // namespace fima

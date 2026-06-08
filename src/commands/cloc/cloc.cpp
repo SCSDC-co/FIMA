@@ -36,10 +36,6 @@
 
 namespace _fs = std::filesystem;
 
-namespace fima {
-
-namespace cloc {
-
 void
 cloc(const std::vector<std::regex>& paths_to_ignore,
      const fima::git::GitRepo& repo,
@@ -150,7 +146,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
             .get<std::string>();
 
         fima::cloc::classes::Stats file_stats =
-          helpers::count_lines(path, single_comment, multiline_start, multiline_end);
+          fima::cloc::helpers::count_lines(path, single_comment, multiline_start, multiline_end);
 
         fima::cloc::classes::LanguageStats language_stats;
 
@@ -187,9 +183,9 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
 }
 
 void
-main(const std::vector<std::regex>& paths_to_ignore,
-     const fima::git::GitRepo& repo,
-     const fima::options::cloc_options options)
+_cloc(const std::vector<std::regex>& paths_to_ignore,
+      const fima::git::GitRepo& repo,
+      const fima::options::cloc_options options)
 {
     if (options.show_languages) {
         fima::cloc::helpers::show_languages();
@@ -212,6 +208,55 @@ main(const std::vector<std::regex>& paths_to_ignore,
       false, "cloc", "  Show langauges: {}", (options.show_languages ? "true" : "false"));
 }
 
-} // namespace cloc
+namespace fima {
+
+namespace commands {
+
+void
+setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_options& options)
+{
+    CLI::App* subcmd = app.add_subcommand("cloc", "Count lines of code")->configurable(false);
+
+    subcmd->add_option("paths", options.paths, "The paths to work on (default current directory) ")
+      ->configurable(false);
+
+    subcmd->add_option("--ignore,-i", options.paths_to_ignore, "Paths to ignore")
+      ->configurable(true)
+      ->expected(0, -1);
+
+    subcmd->add_option("--sort,-S", options.sorting, "Type of sorting")
+      ->configurable(true)
+      ->expected(0, 1);
+
+    subcmd->add_flag("--quiet,-q", options.quiet, "Enables quiet output")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag(
+        "--no-gitignore,-G", [&](int) { options.gitignore = false; }, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag(
+        "--show-languages,-s", options.show_languages, "Shows all the languages that cloc supports")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(false);
+
+    subcmd->usage("fima cloc [PATHS] [OPTIONS]");
+
+    subcmd->callback([&]() {
+        std::vector<std::regex> regexes;
+
+        for (const _fs::path& path : options.paths_to_ignore) {
+            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
+        }
+
+        _cloc(regexes, repo, options);
+    });
+}
+
+} // namespace commands
 
 } // namespace fima

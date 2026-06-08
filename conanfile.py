@@ -1,11 +1,14 @@
 from conan import ConanFile
 
 
-class ExampleRecipe(ConanFile):
+class Fima(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
 
-    def requirements(self):
-        self.requires("nlohmann_json/3.12.0")
-        self.requires("ftxui/6.1.9")
-        self.requires("libgit2/1.9.1")
+    requires = (
+        "nlohmann_json/3.12.0",
+        "ftxui/6.1.9",
+        "libgit2/1.9.1",
+        "libarchive/3.8.7",
+        "cli11/2.6.2",
+    )

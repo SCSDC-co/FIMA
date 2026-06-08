@@ -11,12 +11,15 @@
 
 #pragma once
 
-#include <regex>
-#include <vector>
+#include "CLI/App.hpp"
 
 namespace fima {
 
+namespace commands {
+
 void
-remove(const std::vector<std::regex>& paths, const bool& recursive);
+setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths, bool& recursive);
+
+}
 
 } // namespace fima

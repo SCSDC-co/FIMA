@@ -11,21 +11,17 @@
 
 #pragma once
 
-#include <regex>
-#include <vector>
-
+#include "CLI/App.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
 
 namespace fima {
 
-namespace cloc {
+namespace commands {
 
 void
-main(const std::vector<std::regex>& paths_to_ignore,
-     const fima::git::GitRepo& repo,
-     const fima::options::cloc_options options);
+setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_options& options);
 
-}
+} // namespace commands
 
 } // namespace fima

@@ -25,12 +25,12 @@
 
 namespace fima {
 
-namespace ls {
+namespace commands {
 
 void
-start(const std::filesystem::path& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::ls_options& options)
+ls(const std::filesystem::path& path,
+   const fima::git::GitRepo& repo,
+   const fima::options::ls_options& options)
 {
     std::vector<std::filesystem::directory_entry> list_of_the_directory;
 
@@ -72,9 +72,9 @@ start(const std::filesystem::path& path,
                 items.end());
 
     if (options.long_output) {
-        helpers::print_long(items, options.icons, options.verbose);
+        ls::helpers::print_long(items, options.icons, options.verbose);
     } else {
-        helpers::print_normal(items, options.icons);
+        ls::helpers::print_normal(items, options.icons);
     }
 
     fima::logger::info(false, "ls", "Got list of directory: {}", path.string());
@@ -85,6 +85,46 @@ start(const std::filesystem::path& path,
     fima::logger::info(false, "ls", "  Verbose: {}", (options.verbose ? "true" : "false"));
 }
 
-} // namespace ls
+void
+setup_ls(CLI::App& app,
+         const std::filesystem::directory_entry& path,
+         const fima::git::GitRepo& repo,
+         fima::options::ls_options& options)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("ls", "Print the content of the directory like the ls command")
+        ->configurable(false);
+
+    subcmd->add_flag("-i,--icons", options.icons, "Put an icon next to the name of the item")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->add_flag("-a,--all", options.all, "Will also count the dotfiles")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->add_flag("-l,--long", options.long_output, "Display the file metadata")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag(
+        "-G,--no-gitignore", [&](int) { options.gitignore = false; }, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag("-v,--verbose",
+                 options.verbose,
+                 "Display the number of directories and files (only works with long output)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->usage("fima ls [OPTIONS]");
+
+    subcmd->callback([&]() { fima::commands::ls(path, repo, options); });
+}
+
+} // namespace commands
 
 } // namespace fima

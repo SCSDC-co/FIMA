@@ -1,8 +1,8 @@
 /*
- * src/commands/info.cpp
- * include/commands/info.h
+ * src/commands/unzip.cpp
+ * include/commands/unzip.h
  *
- * A command that gives information about a file/directory
+ * A command to unzip .zip archives
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,15 +12,13 @@
 #pragma once
 
 #include "CLI/App.hpp"
-#include "git/GitRepo.h"
-#include "options.h"
 
 namespace fima {
 
 namespace commands {
 
 void
-setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options& options);
+setup_unzip(CLI::App& app, std::filesystem::path& archive, std::filesystem::path& output_path);
 
 }
 

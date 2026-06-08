@@ -11,11 +11,15 @@
 
 #pragma once
 
-#include <filesystem>
+#include "CLI/App.hpp"
 
 namespace fima {
 
+namespace commands {
+
 void
-rename(std::filesystem::path old_name, std::filesystem::path new_name);
+setup_rename(CLI::App& app, std::filesystem::path& old_name, std::filesystem::path& new_name);
 
 }
+
+} // namespace fima

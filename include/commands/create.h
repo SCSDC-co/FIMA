@@ -1,8 +1,8 @@
 /*
- * src/commands/info.cpp
- * include/commands/info.h
+ * src/commands/create.cpp
+ * include/commands/create.h
  *
- * A command that gives information about a file/directory
+ * The declaration of the `create` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -12,15 +12,15 @@
 #pragma once
 
 #include "CLI/App.hpp"
-#include "git/GitRepo.h"
-#include "options.h"
 
 namespace fima {
 
 namespace commands {
 
 void
-setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options& options);
+setup_create(CLI::App& app,
+             std::vector<std::filesystem::path>& file_paths,
+             std::vector<std::filesystem::path>& dir_paths);
 
 }
 

@@ -6,24 +6,26 @@ add_library(fima_lib
     src/commands/ls/helpers/printer.cpp
     src/tui/commands/tree/tree_tui.cpp
     src/fs/get_directories_entries.cpp
-    src/commands/create/directory.cpp
     src/commands/info/directory.cpp
-    src/commands/copy/directory.cpp
     src/commands/permissions.cpp
-    src/commands/create/file.cpp
     src/commands/info/info.cpp
     src/commands/info/file.cpp
-    src/commands/copy/file.cpp
     src/commands/cloc/cloc.cpp
+    src/fs/archives/unzip.cpp
     src/commands/info/git.cpp
     src/fs/DirectoryItem.cpp
+    src/fs/archives/zip.cpp
     src/commands/rename.cpp
     src/commands/remove.cpp
+    src/commands/create.cpp
+    src/commands/unzip.cpp
     src/commands/ls/ls.cpp
     src/program_files.cpp
     src/fs/operations.cpp
     src/commands/tree.cpp
+    src/commands/copy.cpp
     src/fs/Directory.cpp
+    src/commands/zip.cpp
     src/git/GitRepo.cpp
     src/git/README.md
     src/tui/tui.cpp

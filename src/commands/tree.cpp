@@ -119,14 +119,10 @@ create_tree(const std::filesystem::directory_entry& path,
     }
 }
 
-namespace fima {
-
-namespace tree {
-
 void
-start(const std::filesystem::directory_entry& path,
-      const fima::git::GitRepo& repo,
-      const fima::options::tree_options& options)
+create_tree(const std::filesystem::directory_entry& path,
+            const fima::git::GitRepo& repo,
+            const fima::options::tree_options& options)
 {
     if (!options.tui) {
         std::cout << fima::colors::GREEN << path.path().string()
@@ -151,6 +147,42 @@ start(const std::filesystem::directory_entry& path,
     fima::logger::info(false, "tree", "  Tui: {}", (options.tui ? "true" : "false"));
 }
 
-} // namespace tree
+namespace fima {
+
+namespace commands {
+
+void
+setup_tree(CLI::App& app,
+           const std::filesystem::directory_entry& path,
+           const fima::git::GitRepo& repo,
+           fima::options::tree_options& options)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("tree", "Print the tree of the directory like the tree command")
+        ->configurable(false);
+
+    subcmd->add_flag("-a,--all", options.all, "Show dotfiles")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag(
+        "-G,--no-gitignore", [&](int) { options.gitignore = false; }, "Ignore .gitignore")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->add_flag("-v,--verbose", options.verbose, "Verbose output")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->usage("fima tree [OPTIONS]");
+
+    // when calling through the CLI it shouldn't be use a TUI
+    options.tui = false;
+
+    subcmd->callback([&]() { create_tree(path, repo, options); });
+}
+
+} // namespace commands
 
 } // namespace fima

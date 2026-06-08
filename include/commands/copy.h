@@ -1,6 +1,6 @@
 /*
- * src/commands/copy/file.cpp
- * include/commands/copy/file.h
+ * src/commands/copy.cpp
+ * include/commands/copy.h
  *
  * The declaration of the `copy` subcommand when copying files
  *
@@ -11,15 +11,15 @@
 
 #pragma once
 
-#include <filesystem>
+#include "CLI/App.hpp"
 
 namespace fima {
 
-namespace copy {
+namespace commands {
 
 void
-file(std::filesystem::path source, std::filesystem::path destination);
+setup_copy(CLI::App& app, std::filesystem::path& source, std::filesystem::path& destination);
 
-}
+} // namespace commands
 
 } // namespace fima

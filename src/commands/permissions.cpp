@@ -16,6 +16,7 @@
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -93,17 +94,6 @@ get_perms(const std::filesystem::path& item)
     return perms;
 }
 
-void
-print_perms(const std::string& permissions, const std::filesystem::path& entry)
-{
-    std::cout << permissions << "  "
-              << (std::filesystem::is_directory(entry)              ? fima::colors::GREEN
-                  : fima::fs::operations::is_file_executable(entry) ? fima::colors::RED
-                                                                    : "")
-              << entry.filename().string() << (std::filesystem::is_directory(entry) ? "/" : "")
-              << fima::colors::RESET << '\n';
-}
-
 ftxui::Element
 get_perms_tui(const std::filesystem::path& item)
 {
@@ -174,6 +164,19 @@ get_perms_tui(const std::filesystem::path& item)
 }
 
 void
+print_perms(const std::string& permissions, const std::filesystem::path& entry)
+{
+    std::cout << permissions << "  "
+              << (std::filesystem::is_directory(entry)              ? fima::colors::GREEN
+                  : fima::fs::operations::is_file_executable(entry) ? fima::colors::RED
+                                                                    : "")
+              << entry.filename().string() << (std::filesystem::is_directory(entry) ? "/" : "")
+              << fima::colors::RESET << '\n';
+}
+
+} // namespace perms
+
+void
 permissions(const std::vector<std::filesystem::path>& paths)
 {
     for (const std::filesystem::path& item : paths) {
@@ -187,14 +190,31 @@ permissions(const std::vector<std::filesystem::path>& paths)
             continue;
         }
 
-        std::string perms = get_perms(item);
+        std::string perms = fima::perms::get_perms(item);
 
-        print_perms(perms, item);
+        fima::perms::print_perms(perms, item);
 
         fima::logger::info(false, "perms", "Got perms for: {}", item.string());
     }
 }
 
-} // namespace perms
+namespace commands {
+
+void
+setup_permissions(CLI::App& app, std::vector<std::filesystem::path>& paths)
+{
+    CLI::App* subcmd =
+      app.add_subcommand("perms", "Show a directory/file permissions")->configurable(false);
+
+    subcmd->add_option("path", paths, "The file path to read permissions from")
+      ->configurable(false)
+      ->required(true);
+
+    subcmd->usage("fima perms [PATHS]");
+
+    subcmd->callback([&]() { fima::permissions(paths); });
+}
+
+} // namespace commands
 
 } // namespace fima
