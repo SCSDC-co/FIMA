@@ -47,9 +47,6 @@ verbose = true
 
 [cloc]
 ignore = ["CLI11.hpp"]
-
-[tree]
-no-tui = true
 ```
 
 ## Road Map
