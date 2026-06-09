@@ -44,4 +44,4 @@ jobs:
 
     steps:
       - name: Test the program
-        run: pwd && ls
+        run: ls
