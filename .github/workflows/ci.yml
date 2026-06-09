@@ -1,0 +1,34 @@
+name: build the program
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+env:
+  CMAKE_GENERATOR: Ninja
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.0.x'
+
+      - name: Setup C++
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: llvm
+          ninja: true
+
+      - name: Build the project
+        run: ./scripts/main.sh -b
