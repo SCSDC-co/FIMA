@@ -61,10 +61,10 @@ ignore = ["CLI11.hpp"]
   - [x] `info`
 - [x] add config file support (TOML format)
 - [x] add `zip` and `unzip` functionality
-- [ ] version 0.1.0:
-  - [ ] general improvement
-  - [ ] polish
-  - [ ] add verbose mode to `info`
+- [x] version 0.1.0:
+  - [x] general improvement
+  - [x] polish
+  - [x] add verbose mode to `info`
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) if you want to contribute!
 
