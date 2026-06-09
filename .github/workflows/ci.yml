@@ -30,5 +30,10 @@ jobs:
           compiler: llvm
           ninja: true
 
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
+        with:
+          audit_token: ${{ secrets.CONAN_AUDIT_TOKEN }}
+
       - name: Build the project
         run: ./scripts/main.sh -b
