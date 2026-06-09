@@ -13,28 +13,24 @@
 
 #include <filesystem>
 #include <iostream>
+#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/archives/zip.h"
-#include "logger.h"
-#include "utility/colors.h"
 
 void
 zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output)
 {
     if (std::filesystem::exists(output)) {
-        fima::logger::error(true,
-                            "zip",
-                            fima::colors::RED +
-                              "The archive already exists: " + fima::colors::RESET + "{}",
-                            output.string());
+        std::cerr << termcolor::red << "The archive already exists: " << termcolor::reset
+                  << output.string() << '\n';
 
         return;
     }
 
     fima::fs::archives::zip::create_archive(items_to_zip, output);
 
-    std::cout << fima::colors::GREEN + "Zipped files to: " + fima::colors::RESET << output.string()
+    std::cout << termcolor::green << "Zipped files to: " << termcolor::reset << output.string()
               << '\n';
 }
 

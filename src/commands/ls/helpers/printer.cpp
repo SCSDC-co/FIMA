@@ -18,13 +18,13 @@
 #include <ftxui/screen/terminal.hpp>
 #include <iostream>
 #include <string>
+#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/DirectoryItem.h"
 #include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
-#include "utility/colors.h"
 
 namespace fima {
 
@@ -155,9 +155,9 @@ print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const
             }
         }
 
-        std::cout << fima::colors::GREEN << "files: " << fima::colors::RESET << number_of_files
-                  << fima::colors::GREEN << ", ";
-        std::cout << "directories: " << fima::colors::RESET << number_of_directories << '\n';
+        std::cout << termcolor::green << "files: " << termcolor::reset << number_of_files
+                  << termcolor::green << ", ";
+        std::cout << "directories: " << termcolor::reset << number_of_directories << '\n';
     }
 }
 

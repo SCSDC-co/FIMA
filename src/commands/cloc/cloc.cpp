@@ -16,6 +16,7 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <string>
+#include <termcolor/termcolor.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -28,10 +29,8 @@
 #include "fs/get_directories_entries.h"
 #include "fs/operations.h"
 #include "git/GitRepo.h"
-#include "logger.h"
 #include "options.h"
 #include "program_files.h"
-#include "utility/colors.h"
 #include "utility/regex.h"
 
 namespace _fs = std::filesystem;
@@ -46,11 +45,11 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     };
 
     if (!sorting_options.contains(options.sorting)) {
-        std::cout << fima::colors::RED << "This sorting option: " << fima::colors::RESET
-                  << options.sorting << fima::colors::RED << " doesn't exists."
-                  << fima::colors::RESET << '\n';
+        std::cout << termcolor::red << "This sorting option: " << termcolor::reset
+                  << options.sorting << termcolor::red << " doesn't exists." << termcolor::reset
+                  << '\n';
 
-        std::cout << fima::colors::RED << "Available options:" << fima::colors::RESET << '\n';
+        std::cout << termcolor::red << "Available options:" << termcolor::reset << '\n';
 
         for (const std::string& item : sorting_options) {
             std::cout << "  " << item << (item == "total" ? " (default)" : "") << '\n';
@@ -199,13 +198,6 @@ _cloc(const std::vector<std::regex>& paths_to_ignore,
     for (const _fs::path& item : options.paths) {
         paths_sanitized += item.string() + ", ";
     }
-
-    fima::logger::info(false, "cloc", "Got loc of: {}", paths_sanitized);
-    fima::logger::info(false, "cloc", "Options:");
-    fima::logger::info(false, "cloc", "  Quiet: {}", (options.quiet ? "true" : "false"));
-    fima::logger::info(false, "cloc", "  Sorting: {}", options.sorting);
-    fima::logger::info(
-      false, "cloc", "  Show langauges: {}", (options.show_languages ? "true" : "false"));
 }
 
 namespace fima {

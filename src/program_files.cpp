@@ -12,14 +12,15 @@
 #include "program_files.h"
 
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <unordered_set>
 
 #include "fs/get_config_path.h"
 #include "fs/operations.h"
-#include "logger.h"
-#include "utility/colors.h"
+#include "termcolor/termcolor.hpp"
 
 namespace fima {
 
@@ -193,11 +194,9 @@ reset_config_files(const bool& preserve_config_file)
     fima::fs::operations::overwrite(MAP_LANGUAGES_FAMILY_PATH, map_languages_family);
     fima::fs::operations::overwrite(MAP_LANGUAGES_NAME_PATH, map_languages_name);
 
-    logger::info(true,
-                 "reset config files",
-                 fima::colors::GREEN +
-                   "Successfully reset all the config file, config file preserved: " +
-                   fima::colors::RESET + (preserve_config_file ? "true" : "false"));
+    std::cout << termcolor::green
+              << "Successfully reset all the config file, config file preserved: "
+              << termcolor::reset << (preserve_config_file ? "true" : "false");
 }
 
 void

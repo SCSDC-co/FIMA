@@ -11,12 +11,16 @@
 
 #include <filesystem>
 
+#include "git/GitRepo.h"
+
 namespace fima {
 
 namespace info {
 
 void
-dir(const std::filesystem::directory_entry& path);
+dir(const std::filesystem::directory_entry& path,
+    const bool& verbose,
+    const fima::git::GitRepo& repo);
 
 } // namespace info
 

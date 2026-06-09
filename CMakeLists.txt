@@ -3,12 +3,18 @@ cmake_minimum_required(VERSION 3.31)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(fima)
+project(
+    fima
+    LANGUAGES CXX
+    VERSION 0.1.0
+    DESCRIPTION "FIMA - Fast, Incredible, Minimal & Awesome File Manager"
+)
 
 find_package(nlohmann_json REQUIRED)
 find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
 find_package(libzippp REQUIRED)
+find_package(termcolor REQUIRED)
 find_package(CLI11 REQUIRED)
 
 include(./scripts/cmake/files.cmake)
@@ -22,7 +28,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:include/>
 )
 
-target_link_libraries(fima_lib PUBLIC libzippp::libzippp)
+target_link_libraries(fima_lib PUBLIC libzippp::libzippp termcolor::termcolor)
 
 target_link_libraries(
     ${PROJECT_NAME}

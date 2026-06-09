@@ -11,14 +11,16 @@
 #pragma once
 
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace fima {
 
 namespace utility {
 
+template<typename T>
 inline std::string
-join(const std::vector<std::string>& vector, const std::string& sep)
+join(const std::vector<T>& vector, const std::string& sep)
 {
     std::string out{};
 
@@ -29,6 +31,21 @@ join(const std::vector<std::string>& vector, const std::string& sep)
             out += sep;
         }
     }
+
+    return out;
+}
+
+template<typename T>
+inline std::string
+join(const std::unordered_set<T>& set, const std::string& sep)
+{
+    std::string out{};
+
+    for (auto& item : set) {
+        out += item + sep;
+    }
+
+    out.erase(out.length() - 2, out.length());
 
     return out;
 }

@@ -18,12 +18,11 @@
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <string>
+#include <termcolor/termcolor.hpp>
 
-#include "commands/permissions.h"
 #include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
 #include "program_files.h"
-#include "utility/colors.h"
 
 namespace fima {
 
@@ -32,7 +31,7 @@ namespace fs {
 DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   : name(path.path().filename().string())
   , path(path)
-  , permissions(fima::perms::get_perms(path))
+  , permissions(fima::fs::operations::get_perms(path))
   , last_modification_date(fima::fs::operations::get_file_time(path))
   , owner(fima::fs::operations::get_file_owner(path))
   , is_hidden(path.path().filename().native().starts_with('.'))
@@ -44,34 +43,41 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
 void
 DirectoryItem::set_color()
 {
-    std::string color;
+    ItemColor color{};
 
     if (this->is_directory()) {
-        color = fima::colors::GREEN;
+        color = ItemColor::GREEN;
     } else if (this->is_symlink()) {
-        color = fima::colors::CYAN;
+        color = ItemColor::CYAN;
     } else if (fima::fs::operations::is_file_executable(this->path)) {
-        color = fima::colors::RED;
+        color = ItemColor::RED;
     } else if (fima::fs::operations::is_compressed_archive(this->path)) {
-        color = fima::colors::BLUE;
+        color = ItemColor::BLUE;
     } else if (fima::fs::operations::is_media(this->path)) {
-        color = fima::colors::YELLOW;
+        color = ItemColor::YELLOW;
     } else {
-        color = fima::colors::WHITE;
+        color = ItemColor::WHITE;
     }
 
-    if (color == fima::colors::RED) {
-        this->color_tui = ftxui::Color::Red;
-    } else if (color == fima::colors::GREEN) {
-        this->color_tui = ftxui::Color::Green;
-    } else if (color == fima::colors::WHITE) {
-        this->color_tui = ftxui::Color::White;
-    } else if (color == fima::colors::YELLOW) {
-        this->color_tui = ftxui::Color::Yellow;
-    } else if (color == fima::colors::BLUE) {
-        this->color_tui = ftxui::Color::Blue;
-    } else if (color == fima::colors::CYAN) {
-        this->color_tui = ftxui::Color::Cyan;
+    switch (color) {
+        case ItemColor::RED:
+            this->color_tui = ftxui::Color::Red;
+            break;
+        case ItemColor::GREEN:
+            this->color_tui = ftxui::Color::Green;
+            break;
+        case ItemColor::WHITE:
+            this->color_tui = ftxui::Color::White;
+            break;
+        case ItemColor::YELLOW:
+            this->color_tui = ftxui::Color::Yellow;
+            break;
+        case ItemColor::BLUE:
+            this->color_tui = ftxui::Color::Blue;
+            break;
+        case ItemColor::CYAN:
+            this->color_tui = ftxui::Color::Cyan;
+            break;
     }
 
     this->color = color;
@@ -179,7 +185,7 @@ DirectoryItem::get_size_with_extension() const
 
     return std::format("{:.2f}{}", dimension, ext);
 }
-[[nodiscard]] std::string
+[[nodiscard]] DirectoryItem::ItemColor
 DirectoryItem::get_color() const
 {
     return this->color;
@@ -188,7 +194,7 @@ DirectoryItem::get_color() const
 [[nodiscard]] ftxui::Element
 DirectoryItem::get_permissions_tui() const
 {
-    return fima::perms::get_perms_tui(this->get_path());
+    return fima::fs::operations::get_perms_tui(this->get_path());
 }
 
 [[nodiscard]] ftxui::Color

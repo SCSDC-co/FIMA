@@ -42,6 +42,7 @@ struct info_options
     bool git{ false };
     bool tags{ false };
     bool remote{ false };
+    bool verbose{ false };
 };
 
 struct tree_options

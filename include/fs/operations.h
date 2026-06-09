@@ -12,6 +12,7 @@
 #pragma once
 
 #include <filesystem>
+#include <ftxui/dom/node.hpp>
 
 namespace fima {
 
@@ -45,6 +46,12 @@ create(const std::filesystem::path& path, const std::string_view& conent);
 
 void
 overwrite(const std::filesystem::path& path, const std::string_view& content);
+
+std::string
+get_perms(const std::filesystem::path& item);
+
+ftxui::Element
+get_perms_tui(const std::filesystem::path& item);
 
 } // namespace operations
 
