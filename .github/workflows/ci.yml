@@ -1,4 +1,4 @@
-name: build the program
+name: build and test the program
 
 on:
   push:
@@ -12,7 +12,7 @@ env:
   CMAKE_GENERATOR: Ninja
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,10 +38,5 @@ jobs:
       - name: Build the program
         run: ./scripts/main.sh -b
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Test the program
-        run: ../build/fima -v
+        run: ./build/fima -v
