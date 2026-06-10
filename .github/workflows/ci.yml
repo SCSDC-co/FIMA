@@ -44,4 +44,4 @@ jobs:
 
     steps:
       - name: Test the program
-        run: ./build/fima -v
+        run: ./scripts/main.sh -r
