@@ -6,30 +6,24 @@
 
 set -eo pipefail
 
+./build/fima version
+
 echo
-
-cd "$(dirname "$0")" || exit 1
-
-[ ! -d ../build ] && mkdir ../build
-
-cd ../build || exit 1
-
-echo "Fima version:"
-
-./fima -v
-
 echo "Fima ls:"
 
-./fima ls
+./build/fima ls
 
+echo
 echo "Fima info:"
 
-./fima info
+./build/fima info
 
+echo
 echo "Fima cloc:"
 
-./fima cloc
+./build/fima cloc
 
+echo
 echo "Fima help:"
 
-./fima --help
+./build/fima --help
