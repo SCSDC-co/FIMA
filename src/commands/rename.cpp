@@ -47,8 +47,6 @@ _rename(const fs::path old_name, const fs::path new_name)
 
         std::cerr << ex.what();
     }
-
-    return;
 }
 
 namespace fima {
@@ -59,7 +57,7 @@ void
 setup_rename(CLI::App& app, fs::path& old_name, fs::path& new_name)
 {
     CLI::App* subcmd =
-      app.add_subcommand("rename", "Rename/move a file or a directory")->configurable(false);
+      app.add_subcommand("mv", "Move/rename a file or a directory")->configurable(false);
 
     subcmd->add_option("old-name", old_name, "File or directory to move or rename")
       ->configurable(false)

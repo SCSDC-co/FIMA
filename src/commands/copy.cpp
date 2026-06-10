@@ -74,8 +74,7 @@ namespace commands {
 void
 setup_copy(CLI::App& app, std::filesystem::path& source, std::filesystem::path& destination)
 {
-    CLI::App* subcmd =
-      app.add_subcommand("copy", "Copy a file or a directory")->configurable(false);
+    CLI::App* subcmd = app.add_subcommand("cp", "Copy a file or a directory")->configurable(false);
 
     subcmd->add_option("source-file", source, "File or directory copy")
       ->configurable(false)

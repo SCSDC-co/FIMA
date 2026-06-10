@@ -78,7 +78,7 @@ setup_create(CLI::App& app,
              std::vector<std::filesystem::path>& dir_paths)
 {
     CLI::App* subcmd =
-      app.add_subcommand("create", "Create a directory or a file")->configurable(false);
+      app.add_subcommand("mk", "Create files and/or directories")->configurable(false);
 
     subcmd->add_option("-f,--file", file_paths, "Files to create")->configurable(false);
 

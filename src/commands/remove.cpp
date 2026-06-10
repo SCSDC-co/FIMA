@@ -39,7 +39,9 @@ remove(const std::vector<std::regex>& paths, const bool& recursive)
                 if (entry.is_directory()) {
                     for (auto& item : std::filesystem::directory_iterator(
                            entry, std::filesystem::directory_options::skip_permission_denied)) {
-                        std::cout << termcolor::green << "Removed item: " << termcolor::reset
+                        std::cout << termcolor::green << "Removed "
+                                  << (item.is_directory() ? "directory" : "file") << ": "
+                                  << termcolor::reset
                                   << std::filesystem::relative(item.path()).string() << '\n';
                     }
                 }
@@ -66,8 +68,8 @@ namespace commands {
 void
 setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths, bool& recursive)
 {
-    CLI::App* subcmd = app.add_subcommand("remove", "Remove files and direcories (supports regex)")
-                         ->configurable(false);
+    CLI::App* subcmd =
+      app.add_subcommand("rm", "Remove files and direcories (supports regex)")->configurable(false);
 
     subcmd->add_option("path", paths, "File or directory to remove")
       ->configurable(false)
