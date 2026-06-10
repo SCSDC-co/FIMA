@@ -113,6 +113,10 @@ is_file_executable(const std::filesystem::path& path)
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
+    if (ext == ".sh" || ext == ".zsh") {
+        return false;
+    }
+
     if (ft.contains(ext)) {
         return true;
     }

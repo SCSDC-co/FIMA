@@ -19,6 +19,7 @@
 #include "commands/cloc/helpers/count_lines.h"
 #include "config.h"
 #include "fs/get_directories_entries.h"
+#include "git/GitRepo.h"
 #include "program_files.h"
 
 namespace fima {
@@ -31,12 +32,12 @@ Directory::Directory(const std::filesystem::directory_entry& path)
 }
 
 void
-Directory::set_stats()
+Directory::set_stats(const fima::git::GitRepo& repo)
 {
     fima::cloc::classes::Stats stats;
 
-    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive_no_git(
-      this->metadata.get_path(), true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
+    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_for_cloc(
+      this->metadata.get_path(), repo, true, true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
         if (!std::filesystem::is_directory(item)) {

@@ -27,7 +27,6 @@
 #include "commands/cloc/helpers/print_table.h"
 #include "config.h"
 #include "fs/get_directories_entries.h"
-#include "fs/operations.h"
 #include "git/GitRepo.h"
 #include "options.h"
 #include "program_files.h"
@@ -60,76 +59,18 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
 
     std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages{};
 
-    std::vector<_fs::path> paths_all       = {};
-    std::vector<_fs::path> sanitized_paths = {};
+    std::vector<_fs::path> paths = {};
 
     std::vector<std::regex> file_or_directories_to_ignore = fima::config::DEFAULT_DIRS_TO_IGNORE;
 
-    for (const std::regex& item : paths_to_ignore) {
-        file_or_directories_to_ignore.push_back(item);
-    }
+    file_or_directories_to_ignore.append_range(paths_to_ignore);
 
     for (const _fs::path& path : options.paths) {
-        if (_fs::is_directory(path)) {
-            std::vector<_fs::path> items;
-            if (options.gitignore) {
-                items = fima::fs::get_directories_entries_recursive(
-                  path, repo, true, file_or_directories_to_ignore);
-            } else {
-                items = fima::fs::get_directories_entries_recursive_no_git(
-                  path, true, file_or_directories_to_ignore);
-            }
-
-            for (const auto& item : items) {
-                if (!_fs::is_regular_file(item)) {
-                    continue;
-                }
-
-                paths_all.push_back(item);
-            }
-        } else if (!_fs::is_regular_file(path)) {
-            continue;
-        } else {
-            paths_all.push_back(path);
-        }
+        paths.append_range(fima::fs::get_directories_for_cloc(
+          path, repo, options.gitignore, true, file_or_directories_to_ignore));
     }
 
-    static const std::unordered_set<std::string> ft_to_skip = {
-        ".zip",  ".tar",    ".png",      ".jpeg",  ".jpg",  ".mp3",  ".mp4",  ".mp2",   ".mp1",
-        ".wav",  ".avi",    ".webp",     ".undo",  ".spl",  ".ico",  ".icns", ".mpack", ".exe",
-        ".o",    ".class",  ".appimage", ".woff2", ".ttf",  ".ttf2", ".dll",  ".rar",   ".7z",
-        ".gz",   ".bz2",    ".xz",       ".z",     ".lz",   ".lzma", ".lzo",  ".zst",   ".tgz",
-        ".tbz2", ".tar.gz", ".tar.xz",   ".gif",   ".bmp",  ".tiff", ".tif",  ".avif",  ".heif",
-        ".heic", ".svg",    ".psd",      ".xcf",   ".raw",  ".cr2",  ".nef",  ".arw",   ".dng",
-        ".mkv",  ".webm",   ".mov",      ".wmv",   ".flv",  ".mpeg", ".mpg",  ".m4v",   ".3gp",
-        ".m2ts", ".mts",    ".vob",      ".ogv",   ".rmvb", ".hevc", ".h264", ".h265",  ".flac",
-        ".aac",  ".m4a",    ".ogg",      ".opus",  ".wma",  ".aiff", ".alac", ".ape",   ".mid",
-        ".midi", ".so",     ".dylib",    ".a",     ".obj",  ".lib",  ".bin",  ".out",   ".elf",
-        ".pdb",  ".deb",    ".rpm",      ".snap",  ".msi",  ".pkg",  ".dmg",  ".apk",   ".jar",
-        ".war",  ".ear",    ".iso",      ".md5",   ".pdf",  ".gtk",  ".gtk1", ".gtk2",  ".gtk3",
-        ".gtk4", ".gtk5",   ".gtk6"
-    };
-
-    for (const _fs::path& path : paths_all) {
-        if (_fs::is_directory(path)) {
-            continue;
-        }
-
-        std::string ext = path.extension().string();
-        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-        if (ft_to_skip.contains(ext)) {
-            continue;
-        }
-
-        if (fima::fs::operations::is_file_executable(path)) {
-            continue;
-        }
-
-        sanitized_paths.push_back(path);
-    }
-
-    for (const _fs::path& path : sanitized_paths) {
+    for (const _fs::path& path : paths) {
         std::string file_language_family = fima::program_files::get_language_family(path);
         std::string file_language_name   = fima::program_files::get_language_name(path);
 

@@ -43,7 +43,7 @@ dir(const std::filesystem::directory_entry& path,
     fima::fs::Directory dir(path);
 
     dir.metadata.set_size();
-    dir.set_stats();
+    dir.set_stats(repo);
     dir.set_number_of_files();
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {

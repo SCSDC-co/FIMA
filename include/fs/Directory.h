@@ -15,6 +15,7 @@
 
 #include "commands/cloc/helpers/Stats.h"
 #include "fs/DirectoryItem.h"
+#include "git/GitRepo.h"
 
 namespace fima {
 
@@ -33,7 +34,7 @@ class Directory
     Directory(const std::filesystem::directory_entry& path);
 
     void set_number_of_files();
-    void set_stats();
+    void set_stats(const fima::git::GitRepo& repo);
 
     [[nodiscard]] int get_number_of_files() const;
 };
