@@ -19,17 +19,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: '4.0.x'
-
       - name: Setup C++
         uses: aminya/setup-cpp@v1
         with:
           compiler: llvm
           ninja: true
           conan: true
+          cmake: "3.31.0"
 
       - name: Build the program
         run: ./scripts/main.sh -b
