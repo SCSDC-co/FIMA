@@ -34,4 +34,4 @@ jobs:
         run: ./scripts/build.sh tests
 
       - name: Test the program
-        run: cd build && ninja test
+        run: cd build && ninja test && ./fima ls
