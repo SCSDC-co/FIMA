@@ -26,7 +26,7 @@ jobs:
           ninja: true
           conan: true
           cmake: "3.31.0"
-          gcc: "15.0.0"
+          gcc: "15.2"
 
       - name: Setup conan profile
         run: conan profile detect
