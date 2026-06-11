@@ -22,11 +22,10 @@ jobs:
       - name: Setup C++
         uses: aminya/setup-cpp@v1
         with:
-          compiler: llvm
+          compiler: gcc-15.2
           ninja: true
           conan: true
           cmake: "3.31.0"
-          gcc: "15.2"
 
       - name: Setup conan profile
         run: conan profile detect
