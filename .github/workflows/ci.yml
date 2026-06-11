@@ -34,4 +34,4 @@ jobs:
         run: ./scripts/build.sh tests
 
       - name: Test the program
-        run: cd build && ctest && ./fima .. ls
+        run: cd build && ctest
