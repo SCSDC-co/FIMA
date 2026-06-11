@@ -13,7 +13,7 @@
 
 namespace fima {
 
-namespace helpers {
+namespace utility {
 
 namespace regex {
 
@@ -33,8 +33,6 @@ glob_to_regex(const std::string& glob)
 {
     std::string regex_str;
 
-    regex_str += "^";
-
     for (char c : glob) {
         switch (c) {
             case '*':
@@ -52,13 +50,11 @@ glob_to_regex(const std::string& glob)
         }
     }
 
-    regex_str += "$";
-
     return std::regex(regex_str);
 }
 
 } // namespace regex
 
-} // namespace helpers
+} // namespace utility
 
 } // namespace fima

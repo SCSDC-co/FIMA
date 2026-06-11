@@ -69,7 +69,7 @@ create_tree(const std::filesystem::directory_entry& path,
     std::vector<std::filesystem::directory_entry> paths_sanitized;
 
     for (const auto& entry : entries) {
-        if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(),
+        if (fima::utility::regex::matches_any_regex(entry.path().filename().string(),
                                                     fima::config::DEFAULT_DIRS_TO_IGNORE)) {
             continue;
         }

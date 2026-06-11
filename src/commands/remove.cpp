@@ -26,7 +26,7 @@ remove(const std::vector<std::regex>& paths, const bool& recursive)
       std::filesystem::current_path(), std::filesystem::directory_options::skip_permission_denied);
 
     for (const auto& entry : it) {
-        if (fima::helpers::regex::matches_any_regex(entry.path().filename().string(), paths)) {
+        if (fima::utility::regex::matches_any_regex(entry.path().filename().string(), paths)) {
             try {
                 if (!recursive && entry.is_directory()) {
                     std::cerr << termcolor::red << "Cannot remove directory " << termcolor::reset
@@ -86,7 +86,7 @@ setup_remove(CLI::App& app, std::vector<std::filesystem::path>& paths, bool& rec
         std::vector<std::regex> regexes;
 
         for (const std::filesystem::path& path : paths) {
-            regexes.push_back(fima::helpers::regex::glob_to_regex(path.string()));
+            regexes.push_back(fima::utility::regex::glob_to_regex(path.string()));
         }
 
         remove(regexes, recursive);

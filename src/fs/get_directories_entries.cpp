@@ -88,7 +88,7 @@ get_directories_entries_recursive(const std::filesystem::path& path,
         }
 
         if (ignore_directories_or_files &&
-            fima::helpers::regex::matches_any_regex(name, ignored_files_or_directories)) {
+            fima::utility::regex::matches_any_regex(name, ignored_files_or_directories)) {
             it.disable_recursion_pending();
             continue;
         }
@@ -114,7 +114,7 @@ get_directories_entries_recursive_no_git(
         std::string name = entry.path().filename().string();
 
         if (ignore_directories_or_files &&
-            fima::helpers::regex::matches_any_regex(name, ignored_files_or_directories)) {
+            fima::utility::regex::matches_any_regex(name, ignored_files_or_directories)) {
             it.disable_recursion_pending();
             continue;
         }
@@ -135,7 +135,7 @@ get_directories_for_cloc(const _fs::path& path,
     std::vector<_fs::path> paths{};
 
     auto file_is_ignored = [&](std::filesystem::path path) {
-        return ignore && fima::helpers::regex::matches_any_regex(path.filename().string(),
+        return ignore && fima::utility::regex::matches_any_regex(path.filename().string(),
                                                                  ignored_files_or_directories);
     };
 

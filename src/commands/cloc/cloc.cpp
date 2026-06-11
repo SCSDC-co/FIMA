@@ -183,7 +183,7 @@ setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_op
         std::vector<std::regex> regexes;
 
         for (const _fs::path& path : options.paths_to_ignore) {
-            regexes.push_back(fima::helpers::regex::glob_to_regex(path.filename().string()));
+            regexes.push_back(fima::utility::regex::glob_to_regex(path.filename().string()));
         }
 
         _cloc(regexes, repo, options);
