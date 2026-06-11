@@ -2,8 +2,7 @@ option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 
 if(FIMA_BUILD_TESTS)
     add_test(NAME test_version COMMAND ${PROJECT_NAME} -v)
-    add_test(NAME test_ls COMMAND ${PROJECT_NAME} ls)
-    add_test(NAME test_tree COMMAND ${PROJECT_NAME} tree)
+    add_test(NAME test_tree COMMAND ${PROJECT_NAME} .. tree)
     add_test(
         NAME test_mk
         COMMAND ${PROJECT_NAME} mk -d tests -f tests/test1.txt tests/test2.txt
@@ -18,7 +17,7 @@ if(FIMA_BUILD_TESTS)
         COMMAND ${PROJECT_NAME} rm tests/test2.txt tests ./test.txt -r
     )
     add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms ../conanfile.py)
-    add_test(NAME test_cloc COMMAND ${PROJECT_NAME} cloc)
+    add_test(NAME test_cloc COMMAND ${PROJECT_NAME} cloc ..)
     add_test(NAME test_info COMMAND ${PROJECT_NAME} info ../conanfile.py)
     add_test(
         NAME test_mk_for_zip
@@ -33,4 +32,8 @@ if(FIMA_BUILD_TESTS)
         COMMAND ${PROJECT_NAME} unzip tests.zip -o tests
     )
     add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
+    message(
+        STATUS
+        "Cannot test 'ls' using ctest. It needs to be tested by calling directly fima"
+    )
 endif()
