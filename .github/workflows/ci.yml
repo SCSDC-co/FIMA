@@ -31,7 +31,7 @@ jobs:
         run: conan profile detect
 
       - name: Build the program
-        run: ./scripts/main.sh -b
+        run: ./scripts/build.sh tests
 
       - name: Test the program
-        run: ./scripts/test.sh
+        run: cd build && ninja test
