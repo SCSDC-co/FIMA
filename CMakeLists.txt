@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.31)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(
     fima
@@ -9,6 +10,8 @@ project(
     VERSION 0.1.0
     DESCRIPTION "FIMA - Fast, Incredible, Minimal & Awesome File Manager"
 )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
 
 find_package(nlohmann_json REQUIRED)
 find_package(ftxui REQUIRED)
