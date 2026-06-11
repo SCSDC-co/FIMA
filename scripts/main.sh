@@ -47,11 +47,6 @@ run() {
     ./fima
 }
 
-get-files-cli11-latest() {
-    ../scripts/utils/get-source-files.sh >/dev/null
-    echo "Updated sources"
-}
-
 format() {
     HEADERS=$(find ../include/ -prune -o -type f -name "*.h*" ! -name "toml.hpp" -print)
     SOURCES=$(find ../src/ -type f -name "*.cpp")
@@ -95,8 +90,6 @@ else
     case "$1" in
     "-b" | "--build")
         echo
-        get-files-cli11-latest
-        echo
 
         build
 
@@ -108,8 +101,6 @@ else
         exit 0
         ;;
     "-br" | "--build-run")
-        echo
-        get-files-cli11-latest
         echo
 
         build
@@ -155,7 +146,6 @@ if command -v gum >/dev/null 2>&1; then
     "Build")
         echo
 
-        get-files-cli11-latest
         build
         ;;
     "Run")
@@ -166,7 +156,6 @@ if command -v gum >/dev/null 2>&1; then
     "Build and Run")
         echo
 
-        get-files-cli11-latest
         build
         run
         ;;
@@ -179,7 +168,7 @@ if command -v gum >/dev/null 2>&1; then
         echo
 
         format
-        get-files-cli11-latest
+
         build
         run
         ;;
@@ -201,7 +190,6 @@ else
         "Build")
             echo
 
-            get-files-cli11-latest
             build
 
             break
@@ -216,7 +204,6 @@ else
         "Build and Run")
             echo
 
-            get-files-cli11-latest
             build
             run
 
@@ -234,7 +221,6 @@ else
             echo
 
             format
-            get-files-cli11-latest
             build
             run
 

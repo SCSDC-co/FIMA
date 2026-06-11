@@ -18,7 +18,7 @@ find_package(libzippp REQUIRED)
 find_package(termcolor REQUIRED)
 find_package(CLI11 REQUIRED)
 
-include(./scripts/cmake/files.cmake)
+add_subdirectory(./src/)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
