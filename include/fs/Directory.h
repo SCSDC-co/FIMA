@@ -33,7 +33,7 @@ class Directory
 
     Directory(const std::filesystem::directory_entry& path);
 
-    void set_number_of_files();
+    void set_number_of_files(const fima::git::GitRepo& repo);
     void set_stats(const fima::git::GitRepo& repo);
 
     [[nodiscard]] int get_number_of_files() const;

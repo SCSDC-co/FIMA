@@ -177,7 +177,7 @@ get_directories_for_cloc(const _fs::path& path,
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
         if (!ft_to_skip.contains(ext) && !fima::fs::operations::is_file_executable(path) &&
-            file_is_ignored(path)) {
+            !file_is_ignored(path)) {
             paths.push_back(path);
         }
     }

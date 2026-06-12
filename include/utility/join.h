@@ -45,7 +45,9 @@ join(const std::unordered_set<T>& set, const std::string& sep)
         out += item + sep;
     }
 
-    out.erase(out.length() - 2, out.length());
+    if (out.ends_with(", ")) {
+        out.erase(out.length() - 2, out.length());
+    }
 
     return out;
 }

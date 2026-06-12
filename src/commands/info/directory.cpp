@@ -44,7 +44,7 @@ dir(const std::filesystem::directory_entry& path,
 
     dir.metadata.set_size();
     dir.set_stats(repo);
-    dir.set_number_of_files();
+    dir.set_number_of_files(repo);
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
         return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));

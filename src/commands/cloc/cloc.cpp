@@ -146,7 +146,10 @@ namespace fima {
 namespace commands {
 
 void
-setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_options& options)
+setup_cloc(CLI::App& app,
+           const std::filesystem::path& path,
+           const fima::git::GitRepo& repo,
+           fima::options::cloc_options& options)
 {
     CLI::App* subcmd = app.add_subcommand("cloc", "Count lines of code")->configurable(false);
 
@@ -176,6 +179,8 @@ setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_op
         "--show-languages,-s", options.show_languages, "Shows all the languages that cloc supports")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(false);
+
+    options.paths.push_back(path);
 
     subcmd->usage("fima cloc [PATHS] [OPTIONS]");
 

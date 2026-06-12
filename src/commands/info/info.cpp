@@ -15,32 +15,37 @@
 #include <iostream>
 #include <termcolor/termcolor.hpp>
 
+#include "CLI/CLI.hpp"
 #include "commands/info/directory.h"
 #include "commands/info/file.h"
 #include "commands/info/git.h"
 
 void
-_info(const fima::options::info_options& options, fima::git::GitRepo& repo)
+_info(const fima::options::info_options& options,
+      const std::filesystem::directory_entry& path,
+      fima::git::GitRepo& repo)
 {
-    if (!options.path.exists()) {
+    if (!std::filesystem::exists(path)) {
         std::cerr << termcolor::red << "The path doesn't exist: " << termcolor::reset
-                  << options.path.path().string() << '\n';
+                  << path.path().string() << '\n';
 
         return;
     }
 
+    std::filesystem::directory_entry can_path(std::filesystem::canonical(path));
+
     if (options.git) {
-        repo.change_repo_path(options.path);
+        repo.change_repo_path(can_path);
 
         fima::info::git(options, repo);
 
         return;
     }
 
-    if (options.path.is_directory()) {
-        fima::info::dir(options.path, options.verbose, repo);
+    if (options.file_path.path().empty()) {
+        fima::info::dir(can_path, options.verbose, repo);
     } else {
-        fima::info::file(options.path);
+        fima::info::file(options.file_path);
     }
 }
 
@@ -49,15 +54,18 @@ namespace fima {
 namespace commands {
 
 void
-setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options& options)
+setup_info(CLI::App& app,
+           const std::filesystem::directory_entry& path,
+           fima::git::GitRepo& repo,
+           fima::options::info_options& options)
 {
     CLI::App* subcmd = app.add_subcommand("info", "Display information about a file or directory")
                          ->configurable(false);
 
     subcmd
-      ->add_option(
-        "path", options.path, "The path to get the info from (default current directory)")
-      ->configurable(false);
+      ->add_option("file", options.file_path, "The path of the file you want to get the info on")
+      ->configurable(false)
+      ->check(CLI::ExistingFile);
 
     subcmd
       ->add_flag("-v,--verbose",
@@ -74,13 +82,13 @@ setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options&
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->add_flag("-r,--remotes", options.remote, "Show the remotes (only works with -g, --git)")
+    subcmd->add_flag("-r,--remotes", options.remote, "Show the remotes (only works with -g,--git)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     subcmd->usage("fima info [PATH] [OPTIONS]");
 
-    subcmd->callback([&]() { _info(options, repo); });
+    subcmd->callback([&]() { _info(options, path, repo); });
 }
 
 } // namespace commands

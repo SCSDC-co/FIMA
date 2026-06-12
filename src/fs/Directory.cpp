@@ -62,12 +62,12 @@ Directory::set_stats(const fima::git::GitRepo& repo)
 }
 
 void
-Directory::set_number_of_files()
+Directory::set_number_of_files(const fima::git::GitRepo& repo)
 {
     int number{ 0 };
 
     std::vector<std::filesystem::path> entries{ fima::fs::get_directories_entries_recursive(
-      this->metadata.get_path(), { "." }, true, {}) };
+      this->metadata.get_path(), repo, true, {}) };
 
     for (const std::filesystem::path& item : entries) {
         if (!std::filesystem::is_directory(item)) {

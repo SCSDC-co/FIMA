@@ -43,7 +43,7 @@ GitRepo::GitRepo(const _fs::path& path)
 {
     git_libgit2_init();
 
-    this->set_repo_path(path);
+    this->set_repo_path(_fs::canonical(path));
 
     if (this->is_in_repo) {
         git_repository_open(&this->repo, this->git_repo_path.c_str());
@@ -63,7 +63,7 @@ GitRepo::GitRepo(const _fs::path& path)
 }
 
 void
-GitRepo::set_repo_path(const std::filesystem::path& path)
+GitRepo::set_repo_path(const _fs::path& path)
 {
     if (fima::fs::operations::is_root(path)) {
         this->is_in_repo = false;
@@ -96,9 +96,9 @@ GitRepo::set_repo_path(const std::filesystem::path& path)
     this->git_repo_path = _path;
 }
 void
-GitRepo::change_repo_path(const std::filesystem::path& path)
+GitRepo::change_repo_path(const _fs::path& path)
 {
-    this->set_repo_path(path);
+    this->set_repo_path(_fs::canonical(path));
 
     if (this->is_in_repo) {
         git_repository_open(&this->repo, this->git_repo_path.c_str());
@@ -221,7 +221,7 @@ GitRepo::set_remote_info()
     }
 }
 
-[[nodiscard]] std::filesystem::path
+[[nodiscard]] _fs::path
 GitRepo::get_repo_path() const
 {
     return this->git_repo_path;
@@ -300,12 +300,12 @@ GitRepo::get_commit_number() const
 }
 
 [[nodiscard]] bool
-GitRepo::is_file_ignored(const std::filesystem::path& path) const
+GitRepo::is_file_ignored(const _fs::path& path) const
 {
     int is_ignored;
 
-    std::filesystem::path relative_path = std::filesystem::relative(
-      std::filesystem::weakly_canonical(path), this->git_repo_path.parent_path());
+    _fs::path relative_path =
+      _fs::relative(_fs::canonical(path), this->git_repo_path.parent_path());
 
     git_ignore_path_is_ignored(&is_ignored, this->repo, relative_path.c_str());
 

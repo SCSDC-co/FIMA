@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include "CLI/App.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
@@ -20,7 +22,10 @@ namespace fima {
 namespace commands {
 
 void
-setup_info(CLI::App& app, fima::git::GitRepo& repo, fima::options::info_options& options);
+setup_info(CLI::App& app,
+           const std::filesystem::directory_entry& path,
+           fima::git::GitRepo& repo,
+           fima::options::info_options& options);
 
 }
 
