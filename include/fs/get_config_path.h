@@ -13,8 +13,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
-
-#include "termcolor/termcolor.hpp"
+#include <termcolor/termcolor.hpp>
 
 namespace fima {
 

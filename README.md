@@ -24,16 +24,15 @@ The same applies for languages specifications.
 
 They are located here:
 
-- `FIMA_CONFIG_PATH/langauges_spec.json`
-- `FIMA_CONFIG_PATH/mappings/directory_icon.json`
-- `FIMA_CONFIG_PATH/mappings/language_family.json`
-- `FIMA_CONFIG_PATH/mappings/language_name.json`
-- `FIMA_CONFIG_PATH/mappings/language_icon.json`
+- linux: `$HOME/.config/fima`
+- windows: `$APPDATA/fima`
 
 ### Config file
 
-FIMA supports a config file in TOML format, it will be located here in
-`FIMA_CONFIG_PATH/config.toml`.
+FIMA supports a config file in TOML format, it's located here:
+
+- linux: `$HOME/.config/fima/config.toml`
+- windows: `$APPDATA/fima/config.toml`
 
 If the file doesn't exists it will create it
 
