@@ -15,27 +15,23 @@ FIMA development dependencies are divided into two categories:
 These dependencies are required to build FIMA and must be installed on your system.
 
 - `CMake` – build system generator
-- `Ninja` – build system
+- A build system
 - `Conan` – dependency manager
 
 ### Recommended
 
 These dependencies are optional but recommended.
 
-- `Bash` – required to run the scripts in `scripts/`
+- `Bash` or `PowerShell` – required to run the scripts in `scripts/`
 - `clang-format` – C++ code formatter
 
 ### Scripts
 
-The `scripts/` directory contains helper scripts that are useful for building,
-running, and formatting the FIMA source code.
+There are helper scripts (located in `scripts/`) that help you build the program,
+there are 2 versions:
 
-> Run `./scripts/main.sh -h` to see all available commands.
-
-These scripts also require some dependencies:
-
-- `curl` – used to make requests to GitHub for the latest version of CLI11
-- `jq` – used to parse the JSON response returned by GitHub
+- `scripts/build.sh` – If you have bash
+- `scripts/build.ps1` – If you have powershell
 
 ## Coding style
 
@@ -60,6 +56,7 @@ FIMA has a set of coding styles, make sure to follow them.
 ```
 
 - Use `.h` for FIMA headers and `.hpp` for headers from dependencies
+- And maintain general consistency in the codebase
 
 ## Commit messages style
 
