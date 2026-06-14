@@ -37,4 +37,4 @@ try {
 Write-Host ""
 
 $jobs = [Environment]::ProcessorCount
-ctest -j $jobs --output-on-failure
+ctest -j $jobs --output-on-failure -T Test -T Coverage
