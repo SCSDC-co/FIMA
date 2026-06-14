@@ -24,8 +24,6 @@ add_subdirectory(./src/)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
-
 target_include_directories(
     fima_lib
     PUBLIC
@@ -45,5 +43,9 @@ target_link_libraries(
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
+
+if(NOT MSVC)
+    target_compile_options(example PUBLIC -Wall -pedantic)
+endif()
 
 include(./cmake/tests.cmake)

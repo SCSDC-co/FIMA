@@ -16,6 +16,8 @@ if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     )
 
     target_link_options(coverage_config INTERFACE --coverage)
+
+    target_link_libraries(${PROJECT_NAME} PUBLIC coverage_config)
 endif()
 
 option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
