@@ -64,4 +64,6 @@ if(FIMA_BUILD_TESTS)
         COMMAND ${PROJECT_NAME} unzip tests.zip -o tests
     )
     add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
+
+    add_test(NAME test_tui COMMAND ${PROJECT_NAME})
 endif()

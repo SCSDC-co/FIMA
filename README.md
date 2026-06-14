@@ -4,7 +4,10 @@
 
 <img src="https://skillicons.dev/icons?i=bash,cpp,cmake" >
 
+---
+
 [![build and test the program](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml/badge.svg)](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/SCSDC-co/FIMA/graph/badge.svg?token=ZO0IOFUOJD)](https://codecov.io/github/SCSDC-co/FIMA)
 
 </div>
 

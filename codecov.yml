@@ -1,2 +1,5 @@
 ignore:
-    - "include/parsers/toml.hpp"
+    - "include/parsers/toml.hpp" # duh
+
+    # pretty much useless to get the coverage, it isn't used in actual program
+    - "src/tui/commands/tree/tree_tui.cpp"
