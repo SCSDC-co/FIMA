@@ -26,6 +26,7 @@ option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 if(FIMA_BUILD_TESTS)
     add_test(NAME test_version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME test_ls COMMAND ${PROJECT_NAME} .. ls)
+    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialGv)
     add_test(NAME test_tree COMMAND ${PROJECT_NAME} .. tree)
     add_test(
         NAME test_mk
@@ -42,6 +43,11 @@ if(FIMA_BUILD_TESTS)
     )
     add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms ../conanfile.py)
     add_test(NAME test_cloc COMMAND ${PROJECT_NAME} .. cloc)
+    add_test(
+        NAME test_cloc_all_options
+        COMMAND ${PROJECT_NAME} .. cloc -i "*.hpp" -S files -qG
+    )
+    add_test(NAME test_cloc_show_languages COMMAND ${PROJECT_NAME} .. cloc -s)
     add_test(NAME test_info COMMAND ${PROJECT_NAME} .. info -v)
     add_test(NAME test_info_file COMMAND ${PROJECT_NAME} info ../conanfile.py)
     add_test(NAME test_info_git COMMAND ${PROJECT_NAME} info -grt)
