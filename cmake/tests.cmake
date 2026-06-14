@@ -17,6 +17,7 @@ if(FIMA_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
     target_link_options(coverage_config INTERFACE --coverage)
 
+    target_link_libraries(fima_lib PUBLIC coverage_config)
     target_link_libraries(${PROJECT_NAME} PUBLIC coverage_config)
 endif()
 
