@@ -31,7 +31,7 @@ jobs:
         run: conan profile detect
 
       - name: Build the program
-        run: ./scripts/build_tests.sh
+        run: ./scripts/tests/build.sh
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
