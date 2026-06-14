@@ -48,7 +48,7 @@ if(FIMA_BUILD_TESTS)
         COMMAND ${PROJECT_NAME} .. cloc -i "*.hpp" -S files -qG
     )
     add_test(NAME test_cloc_show_languages COMMAND ${PROJECT_NAME} .. cloc -s)
-    add_test(NAME test_info COMMAND ${PROJECT_NAME} .. info -v)
+    add_test(NAME test_info COMMAND ${PROJECT_NAME} ../src info -v)
     add_test(NAME test_info_file COMMAND ${PROJECT_NAME} info ../conanfile.py)
     add_test(NAME test_info_git COMMAND ${PROJECT_NAME} info -grt)
     add_test(
