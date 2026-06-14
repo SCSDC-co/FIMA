@@ -21,6 +21,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "config.h"
 #include "fs/Directory.h"
 #include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
@@ -28,6 +29,7 @@
 #include "git/GitRepo.h"
 #include "utility/join.h"
 #include "utility/most_common.h"
+#include "utility/regex.h"
 
 namespace fima {
 
@@ -62,18 +64,27 @@ dir(const std::filesystem::directory_entry& path,
         std::map<size_t, std::filesystem::path> size_path_map{};
 
         for (auto& item : it) {
-            if (!item.is_directory() && !repo.is_file_ignored(item)) {
-                std::filesystem::path path = item.path();
-                std::string extension      = path.extension().string();
+            if (item.is_directory()) {
+                continue;
+            }
 
-                size_t size = fima::fs::operations::get_item_size(path);
+            if (repo.is_file_ignored(item) &&
+                fima::utility::regex::matches_any_regex(item.path().filename().string(),
+                                                        fima::config::DEFAULT_DIRS_TO_IGNORE)) {
+                it.disable_recursion_pending();
+                continue;
+            }
 
-                size_path_map[size] = path;
+            std::filesystem::path path = item.path();
+            std::string extension      = path.extension().string();
 
-                if (extension != "") {
-                    extensions_set.insert(extension);
-                    extensions_vec.push_back(extension);
-                }
+            size_t size = fima::fs::operations::get_item_size(path);
+
+            size_path_map[size] = path;
+
+            if (extension != "") {
+                extensions_set.insert(extension);
+                extensions_vec.push_back(extension);
             }
         }
 
