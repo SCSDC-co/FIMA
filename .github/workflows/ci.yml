@@ -31,7 +31,9 @@ jobs:
         run: conan profile detect
 
       - name: Build the program
-        run: ./scripts/build.sh tests
+        run: ./scripts/build_tests.sh
 
-      - name: Test the program
-        run: cd build && ctest
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,3 +1,23 @@
+enable_testing()
+
+# code doverage config
+add_library(coverage_config INTERFACE)
+
+option(FIMA_CODE_COVERAGE "Enable coverage reporting" OFF)
+
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # Add required flags (GCC & LLVM/Clang)
+    target_compile_options(
+        coverage_config
+        INTERFACE
+            -O0 # no optimization
+            -g # generate debug info
+            --coverage # sets all required flags
+    )
+
+    target_link_options(coverage_config INTERFACE --coverage)
+endif()
+
 option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 
 if(FIMA_BUILD_TESTS)
