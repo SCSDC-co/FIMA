@@ -1,3 +1,7 @@
+coverage:
+    round: nearest
+    range: "75..100"
+
 ignore:
     - "include/parsers/toml.hpp" # duh
 
