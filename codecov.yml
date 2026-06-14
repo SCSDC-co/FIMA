@@ -1,0 +1,2 @@
+ignore:
+    - "include/parsers/toml.hpp"
