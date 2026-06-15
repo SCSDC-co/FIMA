@@ -125,14 +125,14 @@ get_directories_entries_recursive_no_git(
     return directory_content;
 }
 
-std::vector<_fs::path>
-get_directories_for_cloc(const _fs::path& path,
-                         const fima::git::GitRepo& repo,
-                         const bool& gitignore,
-                         const bool& ignore,
-                         const std::vector<std::regex>& ignored_files_or_directories)
+std::vector<_fs::directory_entry>
+get_files_for_cloc(const _fs::directory_entry& path,
+                   const fima::git::GitRepo& repo,
+                   const bool& gitignore,
+                   const bool& ignore,
+                   const std::vector<std::regex>& ignored_files_or_directories)
 {
-    std::vector<_fs::path> paths{};
+    std::vector<_fs::directory_entry> paths{};
 
     auto file_is_ignored = [&](std::filesystem::path path) {
         return ignore && fima::utility::regex::matches_any_regex(path.filename().string(),
@@ -156,24 +156,26 @@ get_directories_for_cloc(const _fs::path& path,
     };
 
     if (_fs::is_directory(path)) {
-        for (const _fs::path& item : _fs::recursive_directory_iterator(
-               path, _fs::directory_options::skip_permission_denied)) {
+        auto it =
+          _fs::recursive_directory_iterator(path, _fs::directory_options::skip_permission_denied);
+
+        for (const _fs::directory_entry& item : it) {
             if (file_is_ignored(item)) {
+                it.disable_recursion_pending();
                 continue;
             }
 
             if (gitignore && repo.is_file_ignored(item)) {
+                it.disable_recursion_pending();
                 continue;
             }
 
-            if (!_fs::is_regular_file(item)) {
-                continue;
+            if (_fs::is_regular_file(item)) {
+                paths.push_back(item);
             }
-
-            paths.push_back(item);
         }
     } else if (_fs::is_regular_file(path)) {
-        std::string ext = path.extension().string();
+        std::string ext = path.path().extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
         if (!ft_to_skip.contains(ext) && !fima::fs::operations::is_file_executable(path) &&

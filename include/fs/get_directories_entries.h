@@ -42,12 +42,12 @@ get_directories_entries_recursive_no_git(
   const bool& ignore_directories_or_files,
   const std::vector<std::regex>& ignored_files_or_directories);
 
-std::vector<std::filesystem::path>
-get_directories_for_cloc(const std::filesystem::path& path,
-                         const fima::git::GitRepo& repo,
-                         const bool& gitignore,
-                         const bool& ignore,
-                         const std::vector<std::regex>& ignored_files_or_directories);
+std::vector<std::filesystem::directory_entry>
+get_files_for_cloc(const std::filesystem::directory_entry& path,
+                   const fima::git::GitRepo& repo,
+                   const bool& gitignore,
+                   const bool& ignore,
+                   const std::vector<std::regex>& ignored_files_or_directories);
 
 } // namespace fs
 

@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "fs/Directory.h"
+#include "fs/get_directories_entries.h"
 #include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
@@ -55,26 +56,15 @@ dir(const std::filesystem::directory_entry& path,
     Element document{};
 
     if (verbose) {
-        auto it{ std::filesystem::recursive_directory_iterator(
-          path, std::filesystem::directory_options::skip_permission_denied) };
+        std::vector<std::filesystem::directory_entry> files{ fima::fs::get_files_for_cloc(
+          path, repo, true, true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
         std::unordered_set<std::string> extensions_set{};
         std::vector<std::string> extensions_vec{};
 
         std::map<size_t, std::filesystem::path> size_path_map{};
 
-        for (auto& item : it) {
-            if (item.is_directory()) {
-                continue;
-            }
-
-            if (repo.is_file_ignored(item) &&
-                fima::utility::regex::matches_any_regex(item.path().filename().string(),
-                                                        fima::config::DEFAULT_DIRS_TO_IGNORE)) {
-                it.disable_recursion_pending();
-                continue;
-            }
-
+        for (const std::filesystem::directory_entry& item : files) {
             std::filesystem::path path = item.path();
             std::string extension      = path.extension().string();
 

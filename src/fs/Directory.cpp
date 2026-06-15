@@ -36,26 +36,27 @@ Directory::set_stats(const fima::git::GitRepo& repo)
 {
     fima::cloc::classes::Stats stats;
 
-    std::vector<std::filesystem::path> entries{ fima::fs::get_directories_for_cloc(
-      this->metadata.get_path(), repo, true, true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
+    std::vector<std::filesystem::directory_entry> entries{ fima::fs::get_files_for_cloc(
+      std::filesystem::directory_entry(this->metadata.get_path()),
+      repo,
+      true,
+      true,
+      fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
-        if (!std::filesystem::is_directory(item)) {
-            std::string family = fima::program_files::get_language_family(item);
+        std::string family = fima::program_files::get_language_family(item);
 
-            std::string single_comment =
-              fima::program_files::language_file_json[family]["comments"]["single"]
-                .get<std::string>();
-            std::string multiline_start =
-              fima::program_files::language_file_json[family]["comments"]["multiline_start"]
-                .get<std::string>();
-            std::string multiline_end =
-              fima::program_files::language_file_json[family]["comments"]["multiline_end"]
-                .get<std::string>();
+        std::string single_comment =
+          fima::program_files::language_file_json[family]["comments"]["single"].get<std::string>();
+        std::string multiline_start =
+          fima::program_files::language_file_json[family]["comments"]["multiline_start"]
+            .get<std::string>();
+        std::string multiline_end =
+          fima::program_files::language_file_json[family]["comments"]["multiline_end"]
+            .get<std::string>();
 
-            stats += fima::cloc::helpers::count_lines(
-              item, single_comment, multiline_start, multiline_end);
-        }
+        stats +=
+          fima::cloc::helpers::count_lines(item, single_comment, multiline_start, multiline_end);
     }
 
     this->stats = stats;

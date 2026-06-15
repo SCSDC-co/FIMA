@@ -59,15 +59,18 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
 
     std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages{};
 
-    std::vector<_fs::path> paths = {};
+    std::vector<_fs::directory_entry> paths = {};
 
     std::vector<std::regex> file_or_directories_to_ignore = fima::config::DEFAULT_DIRS_TO_IGNORE;
 
     file_or_directories_to_ignore.append_range(paths_to_ignore);
 
     for (const _fs::path& path : options.paths) {
-        paths.append_range(fima::fs::get_directories_for_cloc(
-          path, repo, options.gitignore, true, file_or_directories_to_ignore));
+        paths.append_range(fima::fs::get_files_for_cloc(_fs::directory_entry(path),
+                                                        repo,
+                                                        options.gitignore,
+                                                        true,
+                                                        file_or_directories_to_ignore));
     }
 
     for (const _fs::path& path : paths) {
