@@ -132,13 +132,6 @@ _cloc(const std::vector<std::regex>& paths_to_ignore,
     } else {
         cloc(paths_to_ignore, repo, options);
     }
-
-    std::string paths_sanitized{};
-    std::string paths_to_ignore_sanitized{};
-
-    for (const _fs::path& item : options.paths) {
-        paths_sanitized += item.string() + ", ";
-    }
 }
 
 namespace fima {
