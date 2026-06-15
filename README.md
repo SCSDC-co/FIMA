@@ -8,6 +8,7 @@
 
 [![build and test the program](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml/badge.svg)](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/SCSDC-co/FIMA/graph/badge.svg?token=ZO0IOFUOJD)](https://codecov.io/github/SCSDC-co/FIMA)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1a9d219ee673455a9a953d475843bdbb)](https://app.codacy.com/gh/SCSDC-co/FIMA/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 </div>
 

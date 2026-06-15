@@ -91,7 +91,7 @@ create_tree(const std::filesystem::directory_entry& path,
                 std::cout << termcolor::green << prefix << pointers[0] << termcolor::reset
                           << entry.path().filename().string() << std::endl;
             }
-        } else if (options.tui) {
+        } else {
             Element prefix_elem = text(prefix) | color(Color::Green);
             Element name_elem =
               text(entry.path().filename().string() + (entry.is_directory() ? "/ " : " "));
