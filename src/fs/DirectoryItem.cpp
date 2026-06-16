@@ -222,8 +222,9 @@ DirectoryItem::is_symlink() const
 [[nodiscard]] bool
 DirectoryItem::is_valid() const
 {
-    return this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
-           this->get_owner() == "unknown";
+    return (this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
+            this->get_owner() == "unknown") ||
+           (this->is_symlink() && !std::filesystem::exists(this->get_symlink_target()));
 }
 [[nodiscard]] bool
 DirectoryItem::get_is_hidden() const

@@ -56,6 +56,11 @@ get_item_size(const std::filesystem::path& path)
                 continue;
             }
 
+            if (std::filesystem::is_symlink(i->path()) &&
+                !std::filesystem::exists(std::filesystem::read_symlink(i->path()))) {
+                continue;
+            }
+
             try {
                 size += std::filesystem::file_size(i->path());
             } catch (...) {

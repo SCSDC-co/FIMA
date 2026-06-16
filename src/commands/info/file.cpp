@@ -41,11 +41,14 @@ file(const std::filesystem::directory_entry& path)
 
     Element document = vbox(
       { // header
-        border(hbox(text("FINFO: ") | bold | color(Color::Green),
-                    text(file.metadata.get_path()) | color(Color::White),
-                    text((file.metadata.get_is_hidden() ? " (hidden)" : "")),
-                    text((file.metadata.is_symlink() ? " (symlink) " : " ")) | flex,
-                    text(file.metadata.get_icon()))) |
+        border(hbox(
+          text("FINFO: ") | bold | color(Color::Green),
+          text(file.metadata.get_path()) | color(Color::White),
+          text((file.metadata.is_symlink() ? " -> " : "")),
+          text((file.metadata.is_symlink() ? file.metadata.get_symlink_target().string() : "")) |
+            color(Color::White),
+          text((file.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+          text("  " + file.metadata.get_icon()))) |
           color(Color::Green),
 
         hbox(

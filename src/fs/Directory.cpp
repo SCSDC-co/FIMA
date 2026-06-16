@@ -71,9 +71,16 @@ Directory::set_number_of_files(const fima::git::GitRepo& repo)
       this->metadata.get_path(), repo, true, {}) };
 
     for (const std::filesystem::path& item : entries) {
-        if (!std::filesystem::is_directory(item)) {
-            ++number;
+        if (std::filesystem::is_directory(item)) {
+            continue;
         }
+
+        if (std::filesystem::is_symlink(item) &&
+            !std::filesystem::exists(std::filesystem::read_symlink(item))) {
+            continue;
+        }
+
+        ++number;
     }
 
     this->number_of_files = number;
