@@ -12,9 +12,8 @@
 #include "fs/archives/zip.h"
 
 #include <filesystem>
+#include <libzippp/libzippp.h>
 #include <vector>
-
-#include "libzippp/libzippp.h"
 
 namespace fima {
 
@@ -47,7 +46,7 @@ create_archive(const std::vector<std::filesystem::path>& items_to_zip,
                 }
             }
         } else if (std::filesystem::is_regular_file(item)) {
-            archive.addFile(item.filename().string(), item.string());
+            archive.addFile(item.string(), item.string());
         }
     }
 
