@@ -76,48 +76,24 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     for (const _fs::path& path : paths) {
         std::string file_language_family = fima::program_files::get_language_family(path);
         std::string file_language_name   = fima::program_files::get_language_name(path);
-
-        std::string single_comment =
-          fima::program_files::language_file_json[file_language_family]["comments"]["single"]
-            .get<std::string>();
-        std::string multiline_start =
-          fima::program_files::language_file_json[file_language_family]["comments"]
-                                                 ["multiline_start"]
-                                                   .get<std::string>();
-        std::string multiline_end =
-          fima::program_files::language_file_json[file_language_family]["comments"]["multiline_end"]
-            .get<std::string>();
+        auto comment = fima::program_files::language_file_json[file_language_family]["comments"];
 
         fima::cloc::classes::Stats file_stats =
-          fima::cloc::helpers::count_lines(path, single_comment, multiline_start, multiline_end);
+          fima::cloc::helpers::count_lines(path,
+                                           comment["single"].get<std::string>(),
+                                           comment["multiline_start"].get<std::string>(),
+                                           comment["multiline_end"].get<std::string>());
 
-        fima::cloc::classes::LanguageStats language_stats;
-
-        language_stats.set_code(file_stats.get_code());
-        language_stats.set_blank_lines(file_stats.get_blank_lines());
-        language_stats.set_comments(file_stats.get_comments());
-        language_stats.set_total();
-        language_stats.update_files();
+        fima::cloc::classes::LanguageStats language_stats{ file_stats.get_code(),
+                                                           file_stats.get_blank_lines(),
+                                                           file_stats.get_comments() };
 
         auto language = analyzed_languages.find(file_language_name);
 
         if (language == analyzed_languages.end()) {
             analyzed_languages.insert({ file_language_name, language_stats });
         } else {
-            analyzed_languages.at(file_language_name)
-              .set_code(analyzed_languages.at(file_language_name).get_code() +
-                        language_stats.get_code());
-
-            analyzed_languages.at(file_language_name)
-              .set_blank_lines(analyzed_languages.at(file_language_name).get_blank_lines() +
-                               language_stats.get_blank_lines());
-
-            analyzed_languages.at(file_language_name)
-              .set_comments(analyzed_languages.at(file_language_name).get_comments() +
-                            language_stats.get_comments());
-
-            analyzed_languages.at(file_language_name).set_total();
-
+            analyzed_languages.at(file_language_name).stats += file_stats;
             analyzed_languages.at(file_language_name).update_files();
         }
     }

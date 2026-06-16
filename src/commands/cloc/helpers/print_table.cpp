@@ -44,19 +44,19 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
     if (sorting == "total") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_total() > b.second.get_total();
+            return a.second.stats.get_total() > b.second.stats.get_total();
         });
     } else if (sorting == "comments") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_comments() > b.second.get_comments();
+            return a.second.stats.get_comments() > b.second.stats.get_comments();
         });
     } else if (sorting == "blank") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_blank_lines() > b.second.get_blank_lines();
+            return a.second.stats.get_blank_lines() > b.second.stats.get_blank_lines();
         });
     } else if (sorting == "code") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_code() > b.second.get_code();
+            return a.second.stats.get_code() > b.second.stats.get_code();
         });
     } else if (sorting == "files") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
@@ -87,28 +87,28 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
     table_data.push_back(table_header);
 
-    for (const auto& [name, stats] : sorted) {
+    for (const auto& [name, language] : sorted) {
         if (!quiet) {
             table_data.push_back(
               { text(name) | color(Color::Green),
-                text(std::to_string(stats.get_files())) | color(Color::White),
-                text(std::to_string(stats.get_total())) | color(Color::White),
-                text(std::to_string(stats.get_code())) | color(Color::White),
-                text(std::to_string(stats.get_comments())) | color(Color::White),
-                text(std::to_string(stats.get_blank_lines())) | color(Color::White) });
+                text(std::to_string(language.get_files())) | color(Color::White),
+                text(std::to_string(language.stats.get_total())) | color(Color::White),
+                text(std::to_string(language.stats.get_code())) | color(Color::White),
+                text(std::to_string(language.stats.get_comments())) | color(Color::White),
+                text(std::to_string(language.stats.get_blank_lines())) | color(Color::White) });
 
-            total_files += stats.get_files();
-            total_lines += stats.get_total();
-            total_code += stats.get_code();
-            total_comment += stats.get_comments();
-            total_blank += stats.get_blank_lines();
+            total_files += language.get_files();
+            total_lines += language.stats.get_total();
+            total_code += language.stats.get_code();
+            total_comment += language.stats.get_comments();
+            total_blank += language.stats.get_blank_lines();
         } else {
             table_data.push_back(
               { text(name) | color(Color::Green),
-                text(std::to_string(stats.get_total())) | color(Color::White),
-                text(std::to_string(stats.get_code())) | color(Color::White),
-                text(std::to_string(stats.get_comments())) | color(Color::White),
-                text(std::to_string(stats.get_blank_lines())) | color(Color::White) });
+                text(std::to_string(language.stats.get_total())) | color(Color::White),
+                text(std::to_string(language.stats.get_code())) | color(Color::White),
+                text(std::to_string(language.stats.get_comments())) | color(Color::White),
+                text(std::to_string(language.stats.get_blank_lines())) | color(Color::White) });
         }
     }
 
