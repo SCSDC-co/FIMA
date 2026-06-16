@@ -41,7 +41,8 @@ get_item_size(const std::filesystem::path& path)
     size_t size{};
 
     if (std::filesystem::is_directory(path)) {
-        for (auto i = std::filesystem::recursive_directory_iterator(path);
+        for (auto i = std::filesystem::recursive_directory_iterator(
+               path, std::filesystem::directory_options::skip_permission_denied);
              i != std::filesystem::recursive_directory_iterator();
              ++i) {
             if (i.depth() >= fima::config::depth && fima::config::depth >= 0) {

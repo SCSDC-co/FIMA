@@ -222,9 +222,9 @@ DirectoryItem::is_symlink() const
 [[nodiscard]] bool
 DirectoryItem::is_valid() const
 {
-    return (this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
-            this->get_owner() == "unknown") ||
-           (this->is_symlink() && !std::filesystem::exists(this->get_symlink_target()));
+    // broken symlinks are still valid, it's helpful to notify the user that a symlink is broken
+    return !(this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
+             this->get_owner() == "unknown");
 }
 [[nodiscard]] bool
 DirectoryItem::get_is_hidden() const

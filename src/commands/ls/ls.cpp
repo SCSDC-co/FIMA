@@ -65,10 +65,11 @@ ls(const std::filesystem::path& path,
     }
 
     // remove items that are invalid
-    items.erase(std::remove_if(items.begin(),
-                               items.end(),
-                               [](const fima::fs::DirectoryItem& item) { return item.is_valid(); }),
-                items.end());
+    items.erase(
+      std::remove_if(items.begin(),
+                     items.end(),
+                     [](const fima::fs::DirectoryItem& item) { return !item.is_valid(); }),
+      items.end());
 
     if (options.long_output) {
         ls::helpers::print_long(items, options.icons, options.verbose);

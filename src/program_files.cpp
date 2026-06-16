@@ -99,7 +99,7 @@ get_language_family(const std::filesystem::path& path)
 get_item_icon(const std::filesystem::path& path)
 {
     if (std::filesystem::is_symlink(path)) {
-        return " ";
+        return "";
     }
 
     std::string file_name{ path.filename().string() };
