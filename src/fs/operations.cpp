@@ -148,11 +148,7 @@ is_compressed_archive(const std::filesystem::path& path)
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    if (ft.contains(ext)) {
-        return true;
-    } else {
-        return false;
-    }
+    return ft.contains(ext);
 }
 
 bool
@@ -172,11 +168,7 @@ is_media(const std::filesystem::path& path)
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    if (ft.contains(ext)) {
-        return true;
-    } else {
-        return false;
-    }
+    return ft.contains(ext);
 }
 
 bool

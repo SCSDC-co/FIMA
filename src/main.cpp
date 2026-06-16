@@ -127,7 +127,7 @@ main(int argc, char** argv)
 
     // ──────────────────────────────────────────────────────────────────────
 
-    std::vector<_fs::path> remove_paths{};
+    std::vector<std::string> remove_paths{};
     bool remove_recursive{ false };
 
     fima::commands::setup_remove(app, remove_paths, remove_recursive);

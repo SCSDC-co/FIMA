@@ -12,4 +12,5 @@ class Fima(ConanFile):
         "libzippp/7.1-1.10.1",
         "cli11/2.6.2",
         "termcolor/2.1.0",
+        "p-ranav-glob/0.0.1",
     )
