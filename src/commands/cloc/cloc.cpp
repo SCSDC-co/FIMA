@@ -84,13 +84,13 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
                                            comment["multiline_start"].get<std::string>(),
                                            comment["multiline_end"].get<std::string>());
 
-        fima::cloc::classes::LanguageStats language_stats{ file_stats.get_code(),
-                                                           file_stats.get_blank_lines(),
-                                                           file_stats.get_comments() };
-
         auto language = analyzed_languages.find(file_language_name);
 
         if (language == analyzed_languages.end()) {
+            fima::cloc::classes::LanguageStats language_stats{ file_stats.get_code(),
+                                                               file_stats.get_blank_lines(),
+                                                               file_stats.get_comments() };
+
             analyzed_languages.insert({ file_language_name, language_stats });
         } else {
             analyzed_languages.at(file_language_name).stats += file_stats;
