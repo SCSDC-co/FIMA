@@ -104,7 +104,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
 void
 _cloc(const std::vector<std::regex>& paths_to_ignore,
       const fima::git::GitRepo& repo,
-      const fima::options::cloc_options options)
+      const fima::options::cloc_options& options)
 {
     if (options.show_languages) {
         fima::cloc::helpers::show_languages();
