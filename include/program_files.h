@@ -117,6 +117,76 @@ inline const std::string_view family_spec_file = R"json({
             "multiline_start": "{/*",
             "multiline_end": "*/}"
         }
+    },
+    "haskell": {
+        "comments": {
+            "single": "--",
+            "multiline_start": "{-",
+            "multiline_end": "-}"
+        }
+    },
+    "erlang": {
+        "comments": {
+            "single": "%",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "fortran": {
+        "comments": {
+            "single": "!",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "ada": {
+        "comments": {
+            "single": "--",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "ocaml": {
+        "comments": {
+            "single": "//",
+            "multiline_start": "(*",
+            "multiline_end": "*)"
+        }
+    },
+    "sql": {
+        "comments": {
+            "single": "--",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
+        }
+    },
+    "coffeescript": {
+        "comments": {
+            "single": "#",
+            "multiline_start": "###",
+            "multiline_end": "###"
+        }
+    },
+    "prolog": {
+        "comments": {
+            "single": "%",
+            "multiline_start": "/*",
+            "multiline_end": "*/"
+        }
+    },
+    "wat": {
+        "comments": {
+            "single": ";;",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
+    },
+    "cobol": {
+        "comments": {
+            "single": "*>",
+            "multiline_start": "",
+            "multiline_end": ""
+        }
     }
 }
 )json";
@@ -240,7 +310,91 @@ inline const std::string_view map_languages_name = R"json({
     ".cmd": "CMD",
     ".jsx": "JavaScript React",
     ".tsx": "TypeScript React",
-    ".csv": "CSV"
+    ".csv": "CSV",
+    ".build": "Meson",
+    ".bzl": "Bazel",
+    ".d": "D",
+    ".gleam": "Gleam",
+    ".glsl": "GLSL",
+    ".vert": "GLSL",
+    ".frag": "GLSL",
+    ".geom": "GLSL",
+    ".tesc": "GLSL",
+    ".tese": "GLSL",
+    ".comp": "GLSL",
+    ".groovy": "Groovy",
+    ".gvy": "Groovy",
+    ".hlsl": "HLSL",
+    ".fx": "HLSL",
+    ".fxh": "HLSL",
+    ".kts": "Kotlin Script",
+    ".odin": "Odin",
+    ".pony": "Pony",
+    ".proto": "Protocol Buffers",
+    ".pug": "Pug",
+    ".qml": "QML",
+    ".res": "ReScript",
+    ".resi": "ReScript",
+    ".sol": "Solidity",
+    ".sv": "SystemVerilog",
+    ".svh": "SystemVerilog",
+    ".typ": "Typst",
+    ".vala": "Vala",
+    ".vapi": "Vala",
+    ".v": "Verilog",
+    ".vh": "Verilog",
+    ".wgsl": "WGSL",
+    ".awk": "AWK",
+    ".ex": "Elixir",
+    ".exs": "Elixir",
+    ".graphql": "GraphQL",
+    ".gql": "GraphQL",
+    ".hcl": "HCL",
+    ".pp": "Puppet",
+    ".r": "R",
+    ".R": "R",
+    ".tcl": "Tcl",
+    ".meson": "Meson",
+    ".wrap": "Meson",
+    ".nf": "Nextflow",
+    ".vue": "Vue",
+    ".red": "Red",
+    ".reds": "Red",
+    ".moon": "MoonScript",
+    ".hs": "Haskell",
+    ".lhs": "Haskell",
+    ".elm": "Elm",
+    ".purs": "PureScript",
+    ".erl": "Erlang",
+    ".hrl": "Erlang",
+    ".f": "Fortran",
+    ".f90": "Fortran",
+    ".f95": "Fortran",
+    ".f03": "Fortran",
+    ".f08": "Fortran",
+    ".ada": "Ada",
+    ".ads": "Ada",
+    ".vhd": "VHDL",
+    ".vhdl": "VHDL",
+    ".ml": "OCaml",
+    ".mli": "OCaml",
+    ".fs": "F#",
+    ".fsx": "F#",
+    ".sml": "Standard ML",
+    ".sql": "SQL",
+    ".coffee": "CoffeeScript",
+    ".pro": "Prolog",
+    ".wat": "WebAssembly",
+    ".wast": "WebAssembly",
+    ".cob": "COBOL",
+    ".cbl": "COBOL",
+    ".db": "Database",
+    ".sqlite": "SQLite",
+    ".sqlite3": "SQLite",
+    ".db3": "SQLite",
+    ".mdb": "Access",
+    ".accdb": "Access",
+    ".dump": "Database Dump"
 }
 )json";
 
@@ -364,7 +518,91 @@ inline const std::string_view map_languages_family = R"json({
     ".lua": "lua",
     ".cmd": "cmd",
     ".jsx": "react",
-    ".tsx": "react"
+    ".tsx": "react",
+    ".build": "shell_like",
+    ".bzl": "shell_like",
+    ".d": "c_like",
+    ".gleam": "c_like",
+    ".glsl": "c_like",
+    ".vert": "c_like",
+    ".frag": "c_like",
+    ".geom": "c_like",
+    ".tesc": "c_like",
+    ".tese": "c_like",
+    ".comp": "c_like",
+    ".groovy": "c_like",
+    ".gvy": "c_like",
+    ".hlsl": "c_like",
+    ".fx": "c_like",
+    ".fxh": "c_like",
+    ".kts": "c_like",
+    ".odin": "c_like",
+    ".pony": "c_like",
+    ".proto": "c_like",
+    ".pug": "c_like",
+    ".qml": "c_like",
+    ".res": "c_like",
+    ".resi": "c_like",
+    ".sol": "c_like",
+    ".sv": "c_like",
+    ".svh": "c_like",
+    ".typ": "c_like",
+    ".vala": "c_like",
+    ".vapi": "c_like",
+    ".v": "c_like",
+    ".vh": "c_like",
+    ".wgsl": "c_like",
+    ".awk": "shell_like",
+    ".ex": "shell_like",
+    ".exs": "shell_like",
+    ".graphql": "shell_like",
+    ".gql": "shell_like",
+    ".hcl": "shell_like",
+    ".pp": "shell_like",
+    ".r": "shell_like",
+    ".R": "shell_like",
+    ".tcl": "shell_like",
+    ".meson": "shell_like",
+    ".wrap": "shell_like",
+    ".nf": "shell_like",
+    ".vue": "markup",
+    ".red": "lisp_like",
+    ".reds": "lisp_like",
+    ".moon": "lua",
+    ".hs": "haskell",
+    ".lhs": "haskell",
+    ".elm": "haskell",
+    ".purs": "haskell",
+    ".erl": "erlang",
+    ".hrl": "erlang",
+    ".f": "fortran",
+    ".f90": "fortran",
+    ".f95": "fortran",
+    ".f03": "fortran",
+    ".f08": "fortran",
+    ".ada": "ada",
+    ".ads": "ada",
+    ".vhd": "ada",
+    ".vhdl": "ada",
+    ".ml": "ocaml",
+    ".mli": "ocaml",
+    ".fs": "ocaml",
+    ".fsx": "ocaml",
+    ".sml": "ocaml",
+    ".sql": "sql",
+    ".coffee": "coffeescript",
+    ".pro": "prolog",
+    ".wat": "wat",
+    ".wast": "wat",
+    ".cob": "cobol",
+    ".cbl": "cobol",
+    ".db": "text",
+    ".sqlite": "text",
+    ".sqlite3": "text",
+    ".db3": "text",
+    ".mdb": "text",
+    ".accdb": "text",
+    ".dump": "text"
 }
 )json";
 
@@ -586,7 +824,59 @@ inline const std::string_view map_file_icon = R"json({
     ".pcf": "",
     ".cff": "",
     ".sfd": "",
-    ".ninja": "󰝴"
+    ".ninja": "󰝴",
+    ".bzl": "",
+    ".d": "",
+    ".groovy": "",
+    ".gvy": "",
+    ".kts": "",
+    ".pug": "",
+    ".qml": "",
+    ".res": "",
+    ".resi": "",
+    ".sol": "",
+    ".sv": "",
+    ".svh": "",
+    ".typ": "",
+    ".vala": "",
+    ".vapi": "",
+    ".v": "",
+    ".vh": "",
+    ".awk": "",
+    ".ex": "",
+    ".exs": "",
+    ".graphql": "",
+    ".gql": "",
+    ".hcl": "",
+    ".pp": "",
+    ".r": "",
+    ".R": "",
+    ".vue": "",
+    ".moon": "",
+    ".hs": "",
+    ".lhs": "",
+    ".elm": "",
+    ".purs": "",
+    ".erl": "",
+    ".hrl": "",
+    ".f": "",
+    ".f90": "",
+    ".f95": "",
+    ".f03": "",
+    ".f08": "",
+    ".ml": "",
+    ".mli": "",
+    ".fs": "",
+    ".fsx": "",
+    ".sql": "",
+    ".coffee": "",
+    ".db": "",
+    ".sqlite": "",
+    ".sqlite3": "",
+    ".db3": "",
+    ".mdb": "",
+    ".accdb": "",
+    ".dump": ""
 }
 )json";
 

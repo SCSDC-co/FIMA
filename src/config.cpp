@@ -11,7 +11,8 @@
 
 #include "config.h"
 
-#include "parsers/toml.hpp"
+#include <toml++/toml.hpp>
+
 #include "program_files.h"
 
 namespace fima {

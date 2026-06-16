@@ -19,6 +19,7 @@ find_package(libgit2 REQUIRED)
 find_package(libzippp REQUIRED)
 find_package(termcolor REQUIRED)
 find_package(p-ranav-glob REQUIRED)
+find_package(tomlplusplus REQUIRED)
 find_package(CLI11 REQUIRED)
 
 add_subdirectory(./src/)
@@ -41,6 +42,7 @@ target_link_libraries(
         nlohmann_json::nlohmann_json
         libgit2::libgit2
         p-ranav-glob::p-ranav-glob
+        tomlplusplus::tomlplusplus
         CLI11::CLI11
 )
 
