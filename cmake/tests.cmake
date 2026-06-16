@@ -1,5 +1,7 @@
 enable_testing()
 
+include(CTest)
+
 # code doverage config
 add_library(coverage_config INTERFACE)
 

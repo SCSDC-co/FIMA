@@ -11,8 +11,6 @@ project(
     DESCRIPTION "FIMA - Fast, Incredible, Minimal & Awesome File Manager"
 )
 
-include(CTest)
-
 find_package(nlohmann_json REQUIRED)
 find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
