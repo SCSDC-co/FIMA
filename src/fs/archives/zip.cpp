@@ -36,13 +36,14 @@ create_archive(const std::vector<std::filesystem::path>& items_to_zip,
 
     for (const auto& item : items_to_zip) {
         if (std::filesystem::is_directory(item)) {
+            archive.addEntry(item);
+
             for (auto& entry : std::filesystem::recursive_directory_iterator(
                    item, std::filesystem::directory_options::skip_permission_denied)) {
                 if (entry.is_regular_file()) {
-                    std::filesystem::path relative =
-                      std::filesystem::relative(entry.path(), item.parent_path());
-
-                    archive.addFile(relative.string(), entry.path().string());
+                    archive.addFile(entry.path().string(), entry.path().string());
+                } else if (entry.is_directory()) {
+                    archive.addEntry(entry.path());
                 }
             }
         } else if (std::filesystem::is_regular_file(item)) {

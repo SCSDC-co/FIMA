@@ -196,7 +196,7 @@ reset_config_files(const bool& preserve_config_file)
 
     std::cout << termcolor::green
               << "Successfully reset all the config file, config file preserved: "
-              << termcolor::reset << (preserve_config_file ? "true" : "false");
+              << termcolor::reset << (preserve_config_file ? "true" : "false") << '\n';
 }
 
 void
@@ -208,7 +208,7 @@ setup_variables()
 
     MAP_LANGUAGES_NAME_PATH   = MAPPINGS_PATH / "language_name.json";
     MAP_LANGUAGES_FAMILY_PATH = MAPPINGS_PATH / "language_family.json";
-    MAP_LANGUAGES_ICON_PATH   = MAPPINGS_PATH / "lanugage_icon.json";
+    MAP_LANGUAGES_ICON_PATH   = MAPPINGS_PATH / "language_icon.json";
     MAP_DIRECTORY_ICON_PATH   = MAPPINGS_PATH / "directory_icon.json";
     FAMILY_SPEC_PATH          = FIMA_CONFIG_PATH / "family_spec.json";
     CONFIG_FILE_PATH          = FIMA_CONFIG_PATH / "config.toml";
