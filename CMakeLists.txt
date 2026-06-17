@@ -47,7 +47,17 @@ target_link_libraries(
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
 
 if(NOT MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC -Wall -pedantic)
+    target_compile_options(
+        ${PROJECT_NAME}
+        PUBLIC
+            -Wall
+            -Wextra
+            -Wpedantic
+            -Wreorder
+            -Wunused
+            -Wshadow
+            -Werror=return-type
+    )
 endif()
 
 include(./cmake/tests.cmake)

@@ -34,8 +34,8 @@ class GitRepo
         {
         }
 
-        void set_name(const std::string& name) { this->name = name; }
-        void set_url(const std::string& url) { this->url = url; }
+        void set_name(const std::string& _name) { this->name = _name; }
+        void set_url(const std::string& _url) { this->url = _url; }
 
         [[nodiscard]] std::string get_name() const { return this->name; }
         [[nodiscard]] std::string get_url_bare() const { return this->url; }
