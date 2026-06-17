@@ -11,7 +11,6 @@
 
 #include "commands/info/directory.h"
 
-#include <cmath>
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -87,34 +86,8 @@ dir(const std::filesystem::directory_entry& path,
 
         std::string biggest_file_path{ std::filesystem::relative(
           std::prev(size_path_map.end())->second) };
-        std::string biggest_file_size{};
-
-        if (biggest_file_size_tmp == 0) {
-            biggest_file_size = "-";
-        }
-
-        double dimension = static_cast<double>(biggest_file_size_tmp);
-        std::string ext;
-
-        if (dimension >= 1024 * 1024 * 1024) {
-            ext = "GB";
-            dimension /= 1024 * 1024 * 1024;
-        } else if (dimension >= 1024 * 1024) {
-            ext = "MB";
-            dimension /= 1024 * 1024;
-        } else if (dimension >= 1024) {
-            ext = "KB";
-            dimension /= 1024;
-        } else {
-            ext = "B";
-        }
-
-        // if the number is already rounded there's no need to display the decimal digits
-        if (std::round(dimension) == static_cast<int>(dimension)) {
-            biggest_file_size = std::format("{:.0f}{}", dimension, ext);
-        } else {
-            biggest_file_size = std::format("{:.2f}{}", dimension, ext);
-        }
+        std::string biggest_file_size{ fima::fs::operations::make_size_readable(
+          biggest_file_size_tmp) };
 
         document = vbox(
           // header

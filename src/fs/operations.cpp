@@ -11,8 +11,10 @@
 
 #include "fs/operations.h"
 
+#include <cmath>
 #include <cstddef>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <ftxui/dom/node.hpp>
 #include <grp.h>
@@ -45,25 +47,27 @@ get_item_size(const std::filesystem::path& path)
                path, std::filesystem::directory_options::skip_permission_denied);
              i != std::filesystem::recursive_directory_iterator();
              ++i) {
+            const std::filesystem::path item = i->path();
+
             if (i.depth() >= fima::config::depth && fima::config::depth >= 0) {
-                break;
-            }
-
-            if (std::filesystem::is_directory(i->path())) {
                 continue;
             }
 
-            if (!std::filesystem::is_regular_file(i->path())) {
+            if (std::filesystem::is_directory(item)) {
                 continue;
             }
 
-            if (std::filesystem::is_symlink(i->path()) &&
-                !std::filesystem::exists(std::filesystem::read_symlink(i->path()))) {
+            if (!std::filesystem::is_regular_file(item)) {
+                continue;
+            }
+
+            if (std::filesystem::is_symlink(item) &&
+                !std::filesystem::exists(std::filesystem::read_symlink(item))) {
                 continue;
             }
 
             try {
-                size += std::filesystem::file_size(i->path());
+                size += std::filesystem::file_size(item);
             } catch (...) {
                 // ignores inaccessible files
             }
@@ -79,6 +83,38 @@ get_item_size(const std::filesystem::path& path)
     }
 
     return size;
+}
+
+std::string
+make_size_readable(const size_t& size)
+{
+    if (size == 0) {
+        return "-";
+    }
+
+    std::string readable_size{};
+
+    std::string sizes{ "BKMGTPE" };
+
+    int i{};
+    double mantissa = size;
+
+    for (; mantissa >= 1024.0; mantissa /= 1024.0, ++i) {
+    }
+
+    mantissa = std::ceil(mantissa * 10.0) / 10.0;
+
+    std::format_string<double&> format_string{ "{:0.1f}" };
+
+    if (static_cast<int>(mantissa * 10.0) % 10 == 0) {
+        format_string = "{:0.0f}";
+    }
+
+    readable_size += std::format(format_string, mantissa);
+    readable_size += sizes[i];
+    readable_size += (i ? "B" : "");
+
+    return readable_size;
 }
 
 std::filesystem::file_time_type

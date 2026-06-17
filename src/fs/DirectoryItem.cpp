@@ -12,7 +12,6 @@
 #include "fs/DirectoryItem.h"
 
 #include <chrono>
-#include <cmath>
 #include <filesystem>
 #include <format>
 #include <ftxui/dom/node.hpp>
@@ -158,32 +157,7 @@ DirectoryItem::get_icon() const
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
-    if (this->get_size() == 0) {
-        return "-";
-    }
-
-    double dimension = static_cast<double>(this->get_size());
-    std::string ext;
-
-    if (dimension >= 1024 * 1024 * 1024) {
-        ext = "GB";
-        dimension /= 1024 * 1024 * 1024;
-    } else if (dimension >= 1024 * 1024) {
-        ext = "MB";
-        dimension /= 1024 * 1024;
-    } else if (dimension >= 1024) {
-        ext = "KB";
-        dimension /= 1024;
-    } else {
-        ext = "B";
-    }
-
-    // if the number is already rounded there's no need to display the decimal digits
-    if (std::round(dimension) == static_cast<int>(dimension)) {
-        return std::format("{:.0f}{}", dimension, ext);
-    }
-
-    return std::format("{:.2f}{}", dimension, ext);
+    return fima::fs::operations::make_size_readable(this->size);
 }
 [[nodiscard]] DirectoryItem::ItemColor
 DirectoryItem::get_color() const
