@@ -105,7 +105,7 @@ print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const
 {
     std::vector<std::vector<Element>> table_data{
         { text("Permissions ") | color(Color::Green) | underlined | bold,
-          text(" Size ") | color(Color::Yellow) | underlined | bold,
+          text(" Size ") | color(Color::Yellow) | underlined | bold | align_right,
           text(" User ") | color(Color::Red) | underlined | bold,
           text(" Date Modified ") | color(Color::Blue) | underlined | bold,
           text(" Name ") | color(Color::Green) | underlined | bold },
@@ -120,7 +120,7 @@ print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const
 
         table_data.push_back(
           { item.get_permissions_tui(),
-            text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow),
+            text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow) | align_right,
             text(" " + item.get_owner() + " ") | color(Color::Red),
             text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
             hbox(text(" " + item.get_name(icons)) |

@@ -57,6 +57,18 @@ if(NOT MSVC)
             -Wunused
             -Wshadow
             -Werror=return-type
+            -Weffc++
+            -Wvla
+            -Wconversion
+            -Wunused-result
+            -Wswitch
+            -Wswitch-default
+            -Wswitch-enum
+    )
+else()
+    target_compile_options(
+        ${PROJECT_NAME}
+        PUBLIC /W4 /WX /permissive- /Zc:__cplusplus /diagnostics:caret
     )
 endif()
 
