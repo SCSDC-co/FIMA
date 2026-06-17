@@ -53,6 +53,9 @@ class GitRepo
 
     GitRepo(const std::filesystem::path& path);
 
+    GitRepo(const GitRepo&)            = delete;
+    GitRepo& operator=(const GitRepo&) = delete;
+
     void set_repo_path(const std::filesystem::path& path);
     void change_repo_path(const std::filesystem::path& path);
 
