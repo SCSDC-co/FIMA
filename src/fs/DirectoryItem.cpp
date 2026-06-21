@@ -19,6 +19,7 @@
 #include <string>
 #include <termcolor/termcolor.hpp>
 
+#include "config.h"
 #include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
 #include "program_files.h"
@@ -147,7 +148,7 @@ DirectoryItem::get_last_modification_date() const
     auto sctp  = std::chrono::clock_cast<std::chrono::system_clock>(date_with_rounded_seconds);
     auto local = std::chrono::zoned_time{ std::chrono::current_zone(), sctp };
 
-    return std::format("{:%d %b %Y %H:%M:%S}", local);
+    return std::format("{:%d %b %Y %H:%M}", local);
 }
 [[nodiscard]] std::string
 DirectoryItem::get_icon() const
@@ -157,6 +158,10 @@ DirectoryItem::get_icon() const
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
+    if (this->is_directory() && !fima::config::process_directory_size) {
+        return std::to_string(this->size);
+    }
+
     return fima::fs::operations::make_size_readable(this->size);
 }
 [[nodiscard]] DirectoryItem::ItemColor

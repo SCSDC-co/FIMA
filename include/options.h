@@ -33,7 +33,7 @@ struct ls_options
     bool all{ false };
     bool long_output{ false };
     bool verbose{ false };
-    bool gitignore{ true };
+    bool headers{ false };
 };
 
 struct info_options

@@ -674,8 +674,8 @@ inline const std::string_view map_file_icon = R"json({
     ".html": "",
     ".htm": "",
     ".xhtml": "",
-    ".md": "",
-    ".markdown": "",
+    ".md": "",
+    ".markdown": "",
     ".xml": "󰗀",
     ".xaml": "󰙳",
     ".svg": "󰜡",
@@ -881,7 +881,7 @@ inline const std::string_view map_file_icon = R"json({
 )json";
 
 inline const std::string_view map_directory_icon = R"json({
-    ".git": "",
+    ".git": "",
     "include": "󱁿",
     "src": "󰣞",
     "node_modules": "",
@@ -904,7 +904,9 @@ inline const std::string_view map_directory_icon = R"json({
     "api": "󱂛",
     "client": "󱩛",
     "server": "",
-    ".github": ""
+    ".github": "",
+    "build": "",
+    "out": ""
 }
 )json";
 

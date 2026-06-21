@@ -25,7 +25,10 @@ void
 print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons);
 
 void
-print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const bool& verbose);
+print_long(std::vector<fima::fs::DirectoryItem>& items,
+           const bool& icons,
+           const bool& verbose,
+           const bool& headers);
 
 } // namespace helpers
 

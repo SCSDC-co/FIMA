@@ -24,7 +24,8 @@ parse_config_file()
 {
     auto config = toml::parse_file(fima::program_files::CONFIG_FILE_PATH.string());
 
-    depth = config["depth"].value_or(8);
+    depth                  = config["depth"].value_or(8);
+    process_directory_size = config["process_directory_size"].value_or(false);
 }
 
 } // namespace config

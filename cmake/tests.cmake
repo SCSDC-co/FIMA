@@ -28,7 +28,7 @@ option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 if(FIMA_BUILD_TESTS)
     add_test(NAME test_version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME test_ls COMMAND ${PROJECT_NAME} .. ls)
-    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialGv)
+    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialv)
     add_test(NAME test_tree COMMAND ${PROJECT_NAME} .. tree)
     add_test(
         NAME test_mk

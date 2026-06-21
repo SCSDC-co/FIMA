@@ -23,6 +23,7 @@
 
 #include "fs/DirectoryItem.h"
 #include "fs/operations.h"
+#include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 
@@ -34,6 +35,7 @@ namespace helpers {
 
 using namespace ftxui;
 
+// what the actual fuck is this function, I don't understand nothing
 void
 print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
 {
@@ -101,33 +103,61 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
 }
 
 void
-print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const bool& verbose)
+print_long(std::vector<fima::fs::DirectoryItem>& items,
+           const bool& icons,
+           const bool& verbose,
+           const bool& headers)
 {
-    std::vector<std::vector<Element>> table_data{
-        { text("Permissions ") | color(Color::Green) | underlined | bold,
-          text(" Size ") | color(Color::Yellow) | underlined | bold | align_right,
-          text(" User ") | color(Color::Red) | underlined | bold,
-          text(" Date Modified ") | color(Color::Blue) | underlined | bold,
-          text(" Name ") | color(Color::Green) | underlined | bold },
-    };
+    std::vector<std::vector<Element>> table_data{};
+
+    if (headers) {
+        table_data.push_back({ text("Permissions ") | color(Color::Yellow) | bold,
+                               text("Size ") | color(Color::Green) | bold | align_right,
+                               text("User ") | color(Color::Red) | bold,
+                               text("Date Modified ") | color(Color::Blue) | bold,
+                               text("Name ") | color(Color::Green) | bold });
+    }
 
     for (fima::fs::DirectoryItem& item : items) {
-        Color _color;
-
-        _color = item.get_color_tui();
+        Color item_color{ item.get_color_tui() };
+        Color size_color{ Color::Green };
+        Decorator size_decorator{ nothing };
 
         item.set_size();
 
+        std::string size{ item.get_size_with_extension() };
+
+        switch (*(size.rbegin() + 1)) {
+            case 'K':
+                size_decorator = bold;
+                break;
+            case 'M':
+                size_color = Color::Yellow;
+                break;
+            case 'G':
+                size_color     = Color::Yellow;
+                size_decorator = bold;
+                break;
+            case 'T':
+                size_color = Color::Red;
+                break;
+            case 'E':
+            case 'P':
+                size_color     = Color::Red;
+                size_decorator = bold;
+        }
+
         table_data.push_back(
-          { item.get_permissions_tui(),
-            text(" " + item.get_size_with_extension() + " ") | color(Color::Yellow) | align_right,
-            text(" " + item.get_owner() + " ") | color(Color::Red),
-            text(" " + item.get_last_modification_date() + " ") | color(Color::Blue),
-            hbox(text(" " + item.get_name(icons)) |
-                   (fima::fs::operations::is_file_executable(item.get_path()) ? color(_color) | bold
-                                                                              : color(_color)),
+          { hbox(item.get_permissions_tui(), text(" ")),
+            text(size + " ") | color(size_color) | size_decorator | align_right,
+            text(item.get_owner() + " ") | color(Color::Red),
+            text(item.get_last_modification_date() + " ") | color(Color::Blue),
+            hbox(text(item.get_name(icons)) |
+                   (fima::fs::operations::is_file_executable(item.get_path())
+                      ? color(item_color) | bold
+                      : color(item_color)),
                  text((item.is_symlink() ? " -> " + std::string(item.get_symlink_target()) : "")) |
-                   color(_color)) });
+                   color(item_color)) });
     }
 
     Table table = Table({ table_data });

@@ -37,6 +37,7 @@ inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
 };
 
 inline int depth{};
+inline int process_directory_size{};
 
 void
 parse_config_file();

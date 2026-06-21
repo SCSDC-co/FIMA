@@ -11,6 +11,7 @@
 
 #include "fs/operations.h"
 
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <filesystem>
@@ -20,6 +21,7 @@
 #include <grp.h>
 #include <ios>
 #include <iostream>
+#include <iterator>
 #include <pwd.h>
 #include <string>
 #include <string_view>
@@ -27,6 +29,7 @@
 #include <termcolor/termcolor.hpp>
 #include <unistd.h>
 #include <unordered_set>
+#include <vector>
 
 #include "config.h"
 #include "ftxui/dom/elements.hpp"
@@ -43,37 +46,43 @@ get_item_size(const std::filesystem::path& path)
     size_t size{};
 
     if (std::filesystem::is_directory(path)) {
-        for (auto i = std::filesystem::recursive_directory_iterator(
-               path, std::filesystem::directory_options::skip_permission_denied);
-             i != std::filesystem::recursive_directory_iterator();
-             ++i) {
-            const std::filesystem::path item = i->path();
+        if (fima::config::process_directory_size) {
+            for (auto i = std::filesystem::recursive_directory_iterator(
+                   path, std::filesystem::directory_options::skip_permission_denied);
+                 i != std::filesystem::recursive_directory_iterator();
+                 ++i) {
+                const std::filesystem::path item = i->path();
 
-            if (i.depth() >= fima::config::depth && fima::config::depth >= 0) {
-                continue;
-            }
+                if (i.depth() >= fima::config::depth && fima::config::depth >= 0) {
+                    continue;
+                }
 
-            if (std::filesystem::is_directory(item)) {
-                continue;
-            }
+                if (std::filesystem::is_directory(item)) {
+                    continue;
+                }
 
-            if (!std::filesystem::is_regular_file(item)) {
-                continue;
-            }
+                if (!std::filesystem::is_regular_file(item)) {
+                    continue;
+                }
 
-            if (std::filesystem::is_symlink(item) &&
-                !std::filesystem::exists(std::filesystem::read_symlink(item))) {
-                continue;
-            }
+                if (std::filesystem::is_symlink(item) &&
+                    !std::filesystem::exists(std::filesystem::read_symlink(item))) {
+                    continue;
+                }
 
-            try {
-                size += std::filesystem::file_size(item);
-            } catch (...) {
-                // ignores inaccessible files
+                try {
+                    size += std::filesystem::file_size(item);
+                } catch (...) {
+                    // ignores inaccessible files
+                }
             }
+        } else {
+            // instead of the directory size we just get the number of entries
+            size =
+              std::distance(std::filesystem::directory_iterator(
+                              path, std::filesystem::directory_options::skip_permission_denied),
+                            std::filesystem::directory_iterator());
         }
-    } else if (!std::filesystem::is_regular_file(path)) {
-        size = 0;
     } else {
         try {
             size = std::filesystem::file_size(path);
@@ -86,35 +95,31 @@ get_item_size(const std::filesystem::path& path)
 }
 
 std::string
-make_size_readable(const size_t& size)
+make_size_readable(const size_t size)
 {
     if (size == 0) {
         return "-";
     }
 
-    std::string readable_size{};
-
-    std::string sizes{ "BKMGTPE" };
+    std::array<char, 7> sizes{ 'B', 'K', 'M', 'G', 'T', 'P', 'E' };
 
     int i{};
     double mantissa = size;
 
-    for (; mantissa >= 1024.0; mantissa /= 1024.0, ++i) {
+    for (; mantissa >= 1000.0; mantissa /= 1000.0, ++i) {
     }
 
-    mantissa = std::ceil(mantissa * 10.0) / 10.0;
+    mantissa = std::round(mantissa * 10.0) / 10.0;
 
-    std::format_string<double&> format_string{ "{:0.1f}" };
+    std::format_string<double&, std::string&> format_string{ "{:0.1f} {:<2}" };
+
+    std::string extension{ std::string(1, sizes[i]) + (i ? "B" : "") };
 
     if (static_cast<int>(mantissa * 10.0) % 10 == 0) {
-        format_string = "{:0.0f}";
+        format_string = "{:0.0f} {:<2}";
     }
 
-    readable_size += std::format(format_string, mantissa);
-    readable_size += sizes[i];
-    readable_size += (i ? "B" : "");
-
-    return readable_size;
+    return std::format(format_string, mantissa, extension);
 }
 
 std::filesystem::file_time_type

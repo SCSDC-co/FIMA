@@ -24,7 +24,7 @@ size_t
 get_item_size(const std::filesystem::path& path);
 
 std::string
-make_size_readable(const size_t& size);
+make_size_readable(const size_t size);
 
 std::filesystem::file_time_type
 get_file_time(const std::filesystem::path& path);

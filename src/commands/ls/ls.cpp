@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <vector>
 
+#include "CLI/CLI.hpp"
 #include "commands/ls/helpers/printer.h"
 #include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
@@ -33,11 +34,7 @@ ls(const std::filesystem::path& path,
 {
     std::vector<std::filesystem::directory_entry> list_of_the_directory;
 
-    if (options.gitignore) {
-        list_of_the_directory = fima::fs::get_directories_entries(path, repo, options.all);
-    } else {
-        list_of_the_directory = fima::fs::get_directories_entries_no_git(path, options.all);
-    }
+    list_of_the_directory = fima::fs::get_directories_entries_no_git(path, options.all);
 
     auto to_lower = [=](std::string s) {
         std::transform(
@@ -72,7 +69,7 @@ ls(const std::filesystem::path& path,
       items.end());
 
     if (options.long_output) {
-        ls::helpers::print_long(items, options.icons, options.verbose);
+        ls::helpers::print_long(items, options.icons, options.verbose, options.headers);
     } else {
         ls::helpers::print_normal(items, options.icons);
     }
@@ -101,15 +98,16 @@ setup_ls(CLI::App& app,
       ->configurable(true);
 
     subcmd
-      ->add_flag(
-        "-G,--no-gitignore", [&](int) { options.gitignore = false; }, "Ignore .gitignore")
+      ->add_flag("-v,--verbose",
+                 options.verbose,
+                 "Display the number of directories and files (only works with long output)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     subcmd
-      ->add_flag("-v,--verbose",
-                 options.verbose,
-                 "Display the number of directories and files (only works with long output)")
+      ->add_flag("-H,--headers",
+                 options.headers,
+                 "Add a header to each column (only works with long output)")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
