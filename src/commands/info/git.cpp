@@ -24,8 +24,8 @@
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "mappings.h"
 #include "options.h"
-#include "program_files.h"
 #include "utility/join.h"
 
 namespace fima {
@@ -91,7 +91,7 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
                     text(repo.get_repo_path()) | color(Color::White),
                     text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
                       color(Color::White) | flex,
-                    text(fima::program_files::get_item_icon(repo.get_repo_path()) + " "))) |
+                    text(std::string(fima::mappings::get_item_icon(repo.get_repo_path())) + " "))) |
           color(Color::Green),
 
         hbox(window(text(" INFO ") | bold,

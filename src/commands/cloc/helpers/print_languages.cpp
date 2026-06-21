@@ -11,20 +11,17 @@
 
 #include "commands/cloc/helpers/print_languages.h"
 
-#include <fstream>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <map>
-#include <nlohmann/json.hpp>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "ftxui/dom/node.hpp"
-#include "program_files.h"
+#include "mappings.h"
 
 namespace fima {
 
@@ -57,20 +54,8 @@ show_languages()
 
     json file;
 
-    std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_NAME_PATH);
-    file = json::parse(file_stream);
-
-    std::unordered_map<std::string, std::string> language_map_name;
-
-    for (auto it = file.begin(); it != file.end(); ++it) {
-        const std::string& ext  = it.key();
-        const std::string& name = it.value();
-
-        lang_to_exts[name].push_back(ext);
-    }
-
-    for (const auto& [ext, name] : language_map_name) {
-        lang_to_exts[name].push_back(ext);
+    for (auto& [ext, name] : fima::mappings::map_extension_name) {
+        lang_to_exts[std::string(name)].push_back(ext);
     }
 
     for (auto& [lang, exts] : lang_to_exts) {

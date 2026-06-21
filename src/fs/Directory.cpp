@@ -20,7 +20,7 @@
 #include "config.h"
 #include "fs/get_directories_entries.h"
 #include "git/GitRepo.h"
-#include "program_files.h"
+#include "mappings.h"
 
 namespace fima {
 
@@ -44,19 +44,8 @@ Directory::set_stats(const fima::git::GitRepo& repo)
       fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
     for (const std::filesystem::path& item : entries) {
-        std::string family = fima::program_files::get_language_family(item);
-
-        std::string single_comment =
-          fima::program_files::language_file_json[family]["comments"]["single"].get<std::string>();
-        std::string multiline_start =
-          fima::program_files::language_file_json[family]["comments"]["multiline_start"]
-            .get<std::string>();
-        std::string multiline_end =
-          fima::program_files::language_file_json[family]["comments"]["multiline_end"]
-            .get<std::string>();
-
         stats +=
-          fima::cloc::helpers::count_lines(item, single_comment, multiline_start, multiline_end);
+          fima::cloc::helpers::count_lines(item, fima::mappings::get_language_comments(item));
     }
 
     this->stats = stats;

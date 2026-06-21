@@ -31,7 +31,6 @@
 #include "config.h"
 #include "git/GitRepo.h"
 #include "options.h"
-#include "program_files.h"
 #include "termcolor/termcolor.hpp"
 #include "tui/tui.h"
 #include "utility/regex.h"
@@ -41,7 +40,8 @@ namespace _fs = std::filesystem;
 int
 main(int argc, char** argv)
 {
-    fima::program_files::setup_variables();
+    fima::config::setup_variables();
+    fima::config::create_config_file();
     fima::config::parse_config_file();
 
     CLI::App app;
@@ -58,15 +58,12 @@ main(int argc, char** argv)
 
     app
       .set_config(
-        "--config", fima::program_files::CONFIG_FILE_PATH, "Specify the config file (TOML format) ")
-      ->transform(CLI::FileOnDefaultPath(fima::program_files::CONFIG_FILE_PATH))
+        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format) ")
+      ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
     app.allow_config_extras(CLI::config_extras_mode::ignore);
 
     app.require_subcommand(0, 1);
-
-    bool reset_program_files{ false };
-    bool preserve_config_file{ false };
 
     _fs::directory_entry path{ _fs::current_path() };
 
@@ -74,17 +71,6 @@ main(int argc, char** argv)
     fima::git::GitRepo repo = fima::git::GitRepo(std::filesystem::absolute(path));
 
     app.set_version_flag("-v,--version", std::string(fima::config::VERSION))->configurable(false);
-
-    app.add_flag("--reset-config-files", reset_program_files, "Reset the config files")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(false);
-
-    app
-      .add_flag("--preserve-config-file",
-                preserve_config_file,
-                "Preserve the config.toml file (only work when using --reset-config-files)")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(true);
 
     app.add_option("directory", path, "Directory to work on (default current directory)")
       ->check(CLI::ExistingDirectory)
@@ -182,11 +168,7 @@ main(int argc, char** argv)
 
     CLI11_PARSE(app, argc, argv);
 
-    if (reset_program_files) {
-        fima::program_files::reset_config_files(preserve_config_file);
-
-        return 0;
-    } else if (app.get_subcommands().empty()) {
+    if (app.get_subcommands().empty()) {
         fima::tui::start_tui(path);
 
         return 0;

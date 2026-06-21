@@ -28,8 +28,8 @@
 #include "config.h"
 #include "fs/get_directories_entries.h"
 #include "git/GitRepo.h"
+#include "mappings.h"
 #include "options.h"
-#include "program_files.h"
 #include "utility/regex.h"
 
 namespace _fs = std::filesystem;
@@ -57,7 +57,7 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
         return;
     }
 
-    std::unordered_map<std::string, fima::cloc::classes::LanguageStats> analyzed_languages{};
+    std::unordered_map<std::string_view, fima::cloc::classes::LanguageStats> analyzed_languages{};
 
     std::vector<_fs::directory_entry> paths = {};
 
@@ -74,15 +74,10 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     }
 
     for (const _fs::path& path : paths) {
-        std::string file_language_family = fima::program_files::get_language_family(path);
-        std::string file_language_name   = fima::program_files::get_language_name(path);
-        auto comment = fima::program_files::language_file_json[file_language_family]["comments"];
+        std::string_view file_language_name{ fima::mappings::get_language_name(path) };
+        fima::mappings::Comments comments{ fima::mappings::get_language_comments(path) };
 
-        fima::cloc::classes::Stats file_stats =
-          fima::cloc::helpers::count_lines(path,
-                                           comment["single"].get<std::string>(),
-                                           comment["multiline_start"].get<std::string>(),
-                                           comment["multiline_end"].get<std::string>());
+        fima::cloc::classes::Stats file_stats{ fima::cloc::helpers::count_lines(path, comments) };
 
         auto language = analyzed_languages.find(file_language_name);
 
