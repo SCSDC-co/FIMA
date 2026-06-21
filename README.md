@@ -21,18 +21,6 @@ FIMA (File Manager) is a simple and fast file manager, written in C++.
 
 ## Customization
 
-### Mappings
-
-All the mappings of FIMA are stored in a JSON format and thus they can be changed
-to be however you want without changing the program source code.
-
-The same applies for languages specifications.
-
-They are located here:
-
-- linux: `$HOME/.config/fima`
-- windows: `$APPDATA/fima`
-
 ### Config file
 
 FIMA supports a config file in TOML format, it's located here:
