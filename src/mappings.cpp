@@ -12,7 +12,6 @@
 #include "mappings.h"
 
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include <regex>
 #include <string_view>
 #include <unordered_set>

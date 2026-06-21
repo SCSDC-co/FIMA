@@ -12,7 +12,6 @@
 #include "fs/Directory.h"
 
 #include <filesystem>
-#include <nlohmann/json_fwd.hpp>
 #include <vector>
 
 #include "commands/cloc/helpers/Stats.h"
