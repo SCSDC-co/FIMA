@@ -50,10 +50,10 @@ You customize them in the config file like this:
 
 ```toml
 [icons.files]
-<extension without the ., it can be a custom one> = "<icon>"
+# <extension without the ., it can be a custom one> = "<icon>"
 
 [icons.dirs]
-<name of the dir> = "<icon>"
+# <name of the dir> = "<icon>"
 ```
 
 **Exemple**:
