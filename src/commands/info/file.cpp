@@ -48,7 +48,7 @@ file(const std::filesystem::directory_entry& path)
           text((file.metadata.is_symlink() ? file.metadata.get_symlink_target().string() : "")) |
             color(Color::White),
           text((file.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
-          text("  " + file.metadata.get_icon()))) |
+          text("  " + file.metadata.get_icon() + " "))) |
           color(Color::Green),
 
         hbox(

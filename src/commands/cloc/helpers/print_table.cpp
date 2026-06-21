@@ -30,13 +30,14 @@ namespace cloc {
 namespace helpers {
 
 void
-print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageStats>& language_map,
-            const std::string& sorting,
-            const bool& quiet)
+print_table(
+  const std::unordered_map<std::string_view, fima::cloc::classes::LanguageStats>& language_map,
+  const std::string& sorting,
+  const bool& quiet)
 {
     using namespace ftxui;
 
-    std::vector<std::pair<std::string, fima::cloc::classes::LanguageStats>> sorted;
+    std::vector<std::pair<std::string_view, fima::cloc::classes::LanguageStats>> sorted;
 
     for (const auto& it : language_map) {
         sorted.push_back(it);
@@ -90,7 +91,7 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
     for (const auto& [name, language] : sorted) {
         if (!quiet) {
             table_data.push_back(
-              { text(name) | color(Color::Green),
+              { text(std::string(name)) | color(Color::Green),
                 text(std::to_string(language.get_files())) | color(Color::White),
                 text(std::to_string(language.stats.get_total())) | color(Color::White),
                 text(std::to_string(language.stats.get_code())) | color(Color::White),
@@ -104,7 +105,7 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
             total_blank += language.stats.get_blank_lines();
         } else {
             table_data.push_back(
-              { text(name) | color(Color::Green),
+              { text(std::string(name)) | color(Color::Green),
                 text(std::to_string(language.stats.get_total())) | color(Color::White),
                 text(std::to_string(language.stats.get_code())) | color(Color::White),
                 text(std::to_string(language.stats.get_comments())) | color(Color::White),

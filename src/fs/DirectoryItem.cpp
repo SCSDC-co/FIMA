@@ -22,7 +22,7 @@
 #include "config.h"
 #include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
-#include "program_files.h"
+#include "mappings.h"
 
 namespace fima {
 
@@ -35,7 +35,7 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , last_modification_date(fima::fs::operations::get_file_time(path))
   , owner(fima::fs::operations::get_file_owner(path))
   , is_hidden(path.path().filename().native().starts_with('.'))
-  , icon(fima::program_files::get_item_icon(path.path()) + " ")
+  , icon(fima::mappings::get_item_icon(path.path()))
 {
     this->set_color();
 }
@@ -105,7 +105,7 @@ DirectoryItem::get_name(const bool& icons) const
     std::string name;
 
     if (icons) {
-        name += fima::program_files::get_item_icon(this->get_path()) + " ";
+        name += this->icon + " ";
     }
 
     name += this->name;
