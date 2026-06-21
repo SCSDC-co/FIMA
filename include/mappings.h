@@ -12,7 +12,6 @@
 #pragma once
 
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include <string_view>
 #include <unordered_map>
 

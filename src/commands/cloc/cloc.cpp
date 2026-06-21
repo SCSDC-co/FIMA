@@ -13,7 +13,6 @@
 
 #include <filesystem>
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include <regex>
 #include <string>
 #include <termcolor/termcolor.hpp>
