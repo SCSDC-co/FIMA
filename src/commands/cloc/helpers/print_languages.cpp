@@ -48,11 +48,8 @@ void
 show_languages()
 {
     using namespace ftxui;
-    using json = nlohmann::json;
 
     std::map<std::string, std::vector<std::string>> lang_to_exts;
-
-    json file;
 
     for (auto& [ext, name] : fima::mappings::map_extension_name) {
         lang_to_exts[std::string(name)].push_back(ext);
