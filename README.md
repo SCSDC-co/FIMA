@@ -42,6 +42,30 @@ verbose = true
 ignore = ["CLI11.hpp"]
 ```
 
+### Icons
+
+The icons can be customized.
+
+You customize them in the config file like this:
+
+```toml
+[icons.files]
+<extension without the ., it can be a custom one> = "<icon>"
+
+[icons.dirs]
+<name of the dir> = "<icon>"
+```
+
+**Exemple**:
+
+```toml
+[icons.files]
+cpp = "󰙲"
+
+[icons.dirs]
+custom_name = ""
+```
+
 ## Road Map
 
 - [x] add the following commands:
