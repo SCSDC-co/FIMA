@@ -11,10 +11,12 @@
 
 #include "config.h"
 
+#include <string_view>
 #include <toml++/toml.hpp>
 
 #include "fs/get_config_path.h"
 #include "fs/operations.h"
+#include "mappings.h"
 
 namespace fima {
 
@@ -43,10 +45,28 @@ create_config_file()
 void
 parse_config_file()
 {
-    auto config = toml::parse_file(CONFIG_FILE_PATH.string());
+    auto config{ toml::parse_file(CONFIG_FILE_PATH.string()) };
 
     depth                  = config["depth"].value_or(8);
     process_directory_size = config["process_directory_size"].value_or(false);
+
+    if (config["icons"]["files"].is_table()) {
+        for (auto& icon : *config["icons"]["files"].as_table()) {
+            std::string ext{ std::string(1, '.') + icon.first.data() };
+            std::string _icon{ icon.second.value_or("") };
+
+            fima::mappings::map_extension_icon[ext] = _icon;
+        }
+    }
+
+    if (config["icons"]["dirs"].is_table()) {
+        for (auto& icon : *config["icons"]["dirs"].as_table()) {
+            std::string ext{ icon.first.data() };
+            std::string _icon{ icon.second.value_or("") };
+
+            fima::mappings::map_directory_icon[ext] = _icon;
+        }
+    }
 }
 
 } // namespace config

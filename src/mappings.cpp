@@ -94,7 +94,7 @@ get_language_name(const std::filesystem::path& path)
     return map_extension_name.at(extension);
 }
 
-[[nodiscard]] std::string_view
+[[nodiscard]] std::string
 get_item_icon(const std::filesystem::path& path)
 {
     if (std::filesystem::is_symlink(path)) {
@@ -103,49 +103,48 @@ get_item_icon(const std::filesystem::path& path)
 
     std::string file_name{ path.filename().string() };
 
-    if (!std::filesystem::is_directory(path)) {
-        if (file_name == ".editorconfig") {
-            return "";
-        } else if (std::regex_match(file_name, std::regex(R"(^\.git.*)"))) {
-            return "";
-        } else if (std::regex_match(file_name, std::regex(R"(^\.clang.*)"))) {
-            return "󱁻";
-        } else if (std::regex_match(file_name, std::regex(R"(license.*)", std::regex::icase))) {
-            return "";
-        } else if (std::regex_match(file_name,
-                                    std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
-            return "󰂺";
-        } else if (std::regex_match(file_name,
-                                    std::regex(R"((\.)?(bash|zsh)rc)", std::regex::icase))) {
-            return "󱆃";
-        } else if (file_name == "CMakeLists.txt") {
-            return "";
-        } else if (file_name == "Makefile") {
-            return "";
+    if (std::filesystem::is_directory(path)) {
+        if (std::filesystem::is_empty(path)) {
+            return "";
         }
 
-        std::string extension = path.extension();
+        auto icon{ map_directory_icon.find(file_name) };
 
-        auto icon{ map_extension_icon.find(extension) };
-
-        if (icon == map_extension_icon.end()) {
-            return "";
+        if (icon == map_directory_icon.end()) {
+            return "";
         }
 
-        return map_extension_icon.at(extension);
+        return map_directory_icon.at(file_name);
     }
 
-    if (std::filesystem::is_empty(path)) {
-        return "";
+    if (file_name == ".editorconfig") {
+        return "";
+    } else if (std::regex_match(file_name, std::regex(R"(^\.git.*)"))) {
+        return "";
+    } else if (std::regex_match(file_name, std::regex(R"(^\.clang.*)"))) {
+        return "󱁻";
+    } else if (std::regex_match(file_name, std::regex(R"(license.*)", std::regex::icase))) {
+        return "";
+    } else if (std::regex_match(file_name,
+                                std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
+        return "󰂺";
+    } else if (std::regex_match(file_name, std::regex(R"((\.)?(bash|zsh)rc)", std::regex::icase))) {
+        return "󱆃";
+    } else if (file_name == "CMakeLists.txt") {
+        return "";
+    } else if (file_name == "Makefile") {
+        return "";
     }
 
-    auto icon{ map_directory_icon.find(file_name) };
+    std::string extension = path.extension();
 
-    if (icon == map_directory_icon.end()) {
-        return "";
+    auto icon{ map_extension_icon.find(extension) };
+
+    if (icon == map_extension_icon.end()) {
+        return "";
     }
 
-    return map_directory_icon.at(file_name);
+    return map_extension_icon.at(extension);
 }
 
 } // namespace mappings

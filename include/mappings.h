@@ -70,7 +70,7 @@ get_language_comments(const std::filesystem::path& path);
 [[nodiscard]] std::string_view
 get_language_name(const std::filesystem::path& path);
 
-[[nodiscard]] std::string_view
+[[nodiscard]] std::string
 get_item_icon(const std::filesystem::path& path);
 
 inline const std::unordered_map<std::string_view, Comments> map_language_family_comments{
@@ -304,7 +304,7 @@ inline const std::unordered_map<std::string_view, std::string_view> map_extensio
     { ".dump", "text" }
 };
 
-inline const std::unordered_map<std::string, std::string_view> map_extension_name{
+inline std::unordered_map<std::string, std::string_view> map_extension_name{
     { ".cpp", "C++" },
     { ".cxx", "C++" },
     { ".cc", "C++" },
@@ -510,7 +510,7 @@ inline const std::unordered_map<std::string, std::string_view> map_extension_nam
     { ".dump", "Database Dump" }
 };
 
-inline const std::unordered_map<std::string, std::string_view> map_extension_icon{
+inline std::unordered_map<std::string, std::string> map_extension_icon{
     { ".cpp", "" },      { ".cxx", "" },     { ".cc", "" },      { ".c", "" },
     { ".h", "" },        { ".hpp", "" },     { ".hxx", "" },     { ".inl", "" },
     { ".rs", "" },       { ".cs", "" },      { ".js", "" },      { ".ts", "" },
@@ -581,7 +581,7 @@ inline const std::unordered_map<std::string, std::string_view> map_extension_ico
     { ".accdb", "" },    { ".dump", "" }
 };
 
-inline const std::unordered_map<std::string, std::string_view> map_directory_icon{
+inline std::unordered_map<std::string, std::string> map_directory_icon{
     { ".git", "" },     { "include", "󱁿" },   { "src", "󰣞" },    { "node_modules", "" },
     { ".config", "󱁿" }, { ".vscode", "󰨞" },   { ".idea", "" },   { "cmake", "" },
     { "scripts", "󰴉" }, { "docs", "󱂷" },      { "doc", "󱂷" },    { "assets", "󰉏" },
