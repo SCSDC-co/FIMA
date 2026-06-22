@@ -69,7 +69,7 @@ cpp = "󰙲"
 custom_name = ""
 
 [icons.name]
-"*cat*" = "" # *cat* converts to ^.*car.*$
+"*cat*" = "" # *cat* converts to ^.*cat.*$
 ```
 
 ## Road Map
