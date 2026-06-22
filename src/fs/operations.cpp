@@ -79,9 +79,9 @@ get_item_size(const std::filesystem::path& path)
         } else {
             // instead of the directory size we just get the number of entries
             size =
-              std::distance(std::filesystem::directory_iterator(
+              std::distance(std::filesystem::recursive_directory_iterator(
                               path, std::filesystem::directory_options::skip_permission_denied),
-                            std::filesystem::directory_iterator());
+                            std::filesystem::recursive_directory_iterator());
         }
     } else {
         try {

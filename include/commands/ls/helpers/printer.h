@@ -25,6 +25,9 @@ void
 print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons);
 
 void
+print_one_line(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons);
+
+void
 print_long(std::vector<fima::fs::DirectoryItem>& items,
            const bool& icons,
            const bool& verbose,

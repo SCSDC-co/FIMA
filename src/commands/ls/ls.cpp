@@ -37,23 +37,43 @@ ls(const std::filesystem::path& path,
     list_of_the_directory = fima::fs::get_directories_entries_no_git(path, options.all);
 
     auto to_lower = [=](std::string s) {
-        std::transform(
-          s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
         return s;
     };
 
-    // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
-    std::sort(list_of_the_directory.begin(),
-              list_of_the_directory.end(),
-              [to_lower](const std::filesystem::directory_entry& a,
-                         const std::filesystem::directory_entry& b) {
-                  if (a.is_directory() != b.is_directory()) {
-                      return a.is_directory();
-                  }
+    if (options.directory_first) {
+        std::sort(list_of_the_directory.begin(),
+                  list_of_the_directory.end(),
+                  [to_lower](const std::filesystem::directory_entry& a,
+                             const std::filesystem::directory_entry& b) {
+                      if (a.is_directory() != b.is_directory()) {
+                          return a.is_directory();
+                      }
 
-                  return to_lower(a.path().filename().string()) <
-                         to_lower(b.path().filename().string());
-              });
+                      return to_lower(a.path().filename().string()) <
+                             to_lower(b.path().filename().string());
+                  });
+    } else if (options.directory_last) {
+        std::sort(list_of_the_directory.begin(),
+                  list_of_the_directory.end(),
+                  [to_lower](const std::filesystem::directory_entry& a,
+                             const std::filesystem::directory_entry& b) {
+                      if (a.is_directory() != b.is_directory()) {
+                          return !a.is_directory();
+                      }
+
+                      return to_lower(a.path().filename().string()) <
+                             to_lower(b.path().filename().string());
+                  });
+    } else {
+        std::sort(list_of_the_directory.begin(),
+                  list_of_the_directory.end(),
+                  [to_lower](const std::filesystem::directory_entry& a,
+                             const std::filesystem::directory_entry& b) {
+                      return to_lower(a.path().filename().string()) <
+                             to_lower(b.path().filename().string());
+                  });
+    }
 
     std::vector<fima::fs::DirectoryItem> items{};
 
@@ -70,6 +90,8 @@ ls(const std::filesystem::path& path,
 
     if (options.long_output) {
         ls::helpers::print_long(items, options.icons, options.verbose, options.headers);
+    } else if (options.one_line) {
+        ls::helpers::print_one_line(items, options.icons);
     } else {
         ls::helpers::print_normal(items, options.icons);
     }
@@ -108,6 +130,21 @@ setup_ls(CLI::App& app,
       ->add_flag("-H,--headers",
                  options.headers,
                  "Add a header to each column (only works with long output)")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->add_flag("-1,--one-line", options.one_line, "Display one entry per line")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag(
+        "--group-directories-first", options.directory_first, "List directories before files")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd
+      ->add_flag("--group-directories-last", options.directory_last, "List directories after files")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 

@@ -104,6 +104,27 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
 }
 
 void
+print_one_line(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
+{
+    std::vector<Element> vertical_elements{};
+
+    for (auto& item : items) {
+        vertical_elements.push_back(
+          text(item.get_name(icons)) |
+          (item.is_directory() || fima::fs::operations::is_file_executable(item.get_path())
+             ? color(item.get_color_tui()) | bold
+             : color(item.get_color_tui())));
+    }
+
+    auto document = vbox(vertical_elements);
+    auto screen   = Screen::Create(Dimension::Fit(document), Dimension::Fixed(items.size()));
+    Render(screen, document);
+    screen.Print();
+
+    std::cout << '\n';
+}
+
+void
 print_long(std::vector<fima::fs::DirectoryItem>& items,
            const bool& icons,
            const bool& verbose,

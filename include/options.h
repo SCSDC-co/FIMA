@@ -34,6 +34,9 @@ struct ls_options
     bool long_output{ false };
     bool verbose{ false };
     bool headers{ false };
+    bool one_line{ false };
+    bool directory_first{ false };
+    bool directory_last{ false };
 };
 
 struct info_options
