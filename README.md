@@ -59,7 +59,7 @@ You customize them in the config file like this:
 # <name in quotes (support glob, all the comparisons are case-insensitive)> = "<icon>"
 ```
 
-**Exemple**:
+**Example**:
 
 ```toml
 [icons.files]
