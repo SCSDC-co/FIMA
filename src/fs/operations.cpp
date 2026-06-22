@@ -153,9 +153,13 @@ get_file_owner(const std::filesystem::path& path)
 bool
 is_file_executable(const std::filesystem::path& path)
 {
-    static const std::unordered_set<std::string> ft = { ".exe", ".dll", ".sys", ".cpl",
-                                                        ".ocx", ".scr", ".efi", ".msi",
-                                                        ".app", ".apk", ".ipa", ".elf" };
+    if (std::filesystem::is_directory(path)) {
+        return false;
+    }
+
+    static const std::unordered_set<std::string> ft = { ".exe", ".dll", ".sys", ".cpl", ".ocx",
+                                                        ".scr", ".efi", ".msi", ".app", ".apk",
+                                                        ".ipa", ".elf", ".o",   ".obj" };
 
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);

@@ -154,7 +154,8 @@ setup_cloc(CLI::App& app,
         std::vector<std::regex> regexes;
 
         for (const _fs::path& path : options.paths_to_ignore) {
-            regexes.push_back(fima::utility::regex::glob_to_regex(path.filename().string()));
+            regexes.push_back(
+              std::regex(fima::utility::regex::glob_to_regex(path.filename().string())));
         }
 
         _cloc(regexes, repo, options);

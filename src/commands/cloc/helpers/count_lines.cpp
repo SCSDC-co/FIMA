@@ -55,31 +55,38 @@ count_lines(const fs::path& file_path, const fima::mappings::Comments& comments)
             }
 
             if (can_have_single_comments &&
-                (line.starts_with(comments.single) || line.starts_with(comments.single_alt))) {
+                ((!comments.single.empty() && line.starts_with(comments.single)) ||
+                 (!comments.single_alt.empty() && line.starts_with(comments.single_alt)))) {
                 ++comment_lines;
 
                 continue;
             }
 
             if (can_have_multiline_comments) {
-                if ((line.starts_with(comments.multiline_start) &&
+                if ((!comments.multiline_start.empty() && !comments.multiline_end.empty() &&
+                     line.starts_with(comments.multiline_start) &&
                      line.ends_with(comments.multiline_end)) ||
-                    (line.starts_with(comments.multiline_start_alt) &&
+                    (!comments.multiline_start_alt.empty() && !comments.multiline_end_alt.empty() &&
+                     line.starts_with(comments.multiline_start_alt) &&
                      line.ends_with(comments.multiline_end_alt))) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (is_multiline && !(line.ends_with(comments.multiline_end) ||
-                                      line.ends_with(comments.multiline_end_alt))) {
+                if (is_multiline &&
+                    !((!comments.multiline_end.empty() && line.ends_with(comments.multiline_end)) ||
+                      (!comments.multiline_end_alt.empty() &&
+                       line.ends_with(comments.multiline_end_alt)))) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (!is_multiline && (line.starts_with(comments.multiline_start) ||
-                                      line.starts_with(comments.multiline_start_alt))) {
+                if (!is_multiline && ((!comments.multiline_start.empty() &&
+                                       line.starts_with(comments.multiline_start)) ||
+                                      (!comments.multiline_start_alt.empty() &&
+                                       line.starts_with(comments.multiline_start_alt)))) {
                     ++comment_lines;
 
                     is_multiline = true;
@@ -87,8 +94,10 @@ count_lines(const fs::path& file_path, const fima::mappings::Comments& comments)
                     continue;
                 }
 
-                if (is_multiline && (line.starts_with(comments.multiline_end) ||
-                                     line.starts_with(comments.multiline_end_alt))) {
+                if (is_multiline && ((!comments.multiline_end.empty() &&
+                                      line.starts_with(comments.multiline_end)) ||
+                                     (!comments.multiline_end_alt.empty() &&
+                                      line.starts_with(comments.multiline_end_alt)))) {
                     is_multiline = false;
 
                     ++comment_lines;

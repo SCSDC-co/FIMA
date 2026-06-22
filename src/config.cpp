@@ -17,6 +17,7 @@
 #include "fs/get_config_path.h"
 #include "fs/operations.h"
 #include "mappings.h"
+#include "utility/regex.h"
 
 namespace fima {
 
@@ -65,6 +66,15 @@ parse_config_file()
             std::string _icon{ icon.second.value_or("") };
 
             fima::mappings::map_directory_icon[ext] = _icon;
+        }
+    }
+
+    if (config["icons"]["name"].is_table()) {
+        for (auto& icon : *config["icons"]["name"].as_table()) {
+            std::string regex{ fima::utility::regex::glob_to_regex(icon.first.data()) };
+            std::string _icon{ icon.second.value_or("") };
+
+            fima::mappings::map_name_icon[regex] = _icon;
         }
     }
 }

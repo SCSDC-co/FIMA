@@ -16,6 +16,8 @@
 #include <string_view>
 #include <unordered_set>
 
+#include "fs/operations.h"
+
 namespace fima {
 
 namespace mappings {
@@ -56,7 +58,7 @@ get_language_comments(const std::filesystem::path& path)
     auto family{ map_extension_language_family.find(extension) };
 
     if (family == map_extension_language_family.end()) {
-        return {}; // the family doesn't exists, so we default to the text comments (no comments)
+        return {}; // the family doesn't exists, so we default to no comments
     }
 
     return map_language_family_comments.at(family->second);
@@ -100,6 +102,10 @@ get_item_icon(const std::filesystem::path& path)
         return "";
     }
 
+    if (fima::fs::operations::is_file_executable(path)) {
+        return "";
+    }
+
     std::string file_name{ path.filename().string() };
 
     if (std::filesystem::is_directory(path)) {
@@ -116,23 +122,10 @@ get_item_icon(const std::filesystem::path& path)
         return map_directory_icon.at(file_name);
     }
 
-    if (file_name == ".editorconfig") {
-        return "";
-    } else if (std::regex_match(file_name, std::regex(R"(^\.git.*)"))) {
-        return "";
-    } else if (std::regex_match(file_name, std::regex(R"(^\.clang.*)"))) {
-        return "󱁻";
-    } else if (std::regex_match(file_name, std::regex(R"(license.*)", std::regex::icase))) {
-        return "";
-    } else if (std::regex_match(file_name,
-                                std::regex(R"(readme\.(md|markdown))", std::regex::icase))) {
-        return "󰂺";
-    } else if (std::regex_match(file_name, std::regex(R"((\.)?(bash|zsh)rc)", std::regex::icase))) {
-        return "󱆃";
-    } else if (file_name == "CMakeLists.txt") {
-        return "";
-    } else if (file_name == "Makefile") {
-        return "";
+    for (auto& [name, icon] : map_name_icon) {
+        if (std::regex_match(file_name, std::regex(name, std::regex::icase))) {
+            return icon;
+        }
     }
 
     std::string extension = path.extension();

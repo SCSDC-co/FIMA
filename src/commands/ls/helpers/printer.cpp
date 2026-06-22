@@ -12,6 +12,7 @@
 #include "commands/ls/helpers/printer.h"
 
 #include <algorithm>
+#include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -153,7 +154,8 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
             text(item.get_owner() + " ") | color(Color::Red),
             text(item.get_last_modification_date() + " ") | color(Color::Blue),
             hbox(text(item.get_name(icons)) |
-                   (fima::fs::operations::is_file_executable(item.get_path())
+                   (fima::fs::operations::is_file_executable(item.get_path()) ||
+                        std::filesystem::is_directory(item.get_path())
                       ? color(item_color) | bold
                       : color(item_color)),
                  text((item.is_symlink() ? " -> " + std::string(item.get_symlink_target()) : "")) |
