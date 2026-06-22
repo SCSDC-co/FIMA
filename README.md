@@ -56,7 +56,7 @@ You customize them in the config file like this:
 # <name of the dir> = "<icon>"
 
 [icons.name]
-# <name (support glob, all the comparisons are case-insensitive)> = "<icon>"
+# <name in quotes (support glob, all the comparisons are case-insensitive)> = "<icon>"
 ```
 
 **Exemple**:
@@ -69,7 +69,7 @@ cpp = "󰙲"
 custom_name = ""
 
 [icons.name]
-*cat* = "" # *cat* converts to ^.*car.*$
+"*cat*" = "" # *cat* converts to ^.*car.*$
 ```
 
 ## Road Map
