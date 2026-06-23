@@ -115,24 +115,6 @@ setup_ls(CLI::App& app,
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->add_flag("-l,--long", options.long_output, "Display the file metadata")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(true);
-
-    subcmd
-      ->add_flag("-v,--verbose",
-                 options.verbose,
-                 "Display the number of directories and files (only works with long output)")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(true);
-
-    subcmd
-      ->add_flag("-H,--headers",
-                 options.headers,
-                 "Add a header to each column (only works with long output)")
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
-      ->configurable(true);
-
     subcmd->add_flag("-1,--one-line", options.one_line, "Display one entry per line")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
@@ -148,7 +130,21 @@ setup_ls(CLI::App& app,
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->usage("fima ls [OPTIONS]");
+    subcmd->add_flag("-l,--long", options.long_output, "Display the file metadata")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    subcmd->add_flag("-v,--verbose", options.verbose, "Display the number of directories and files")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true)
+      ->group("LONG OUTPUT OPTIONS");
+
+    subcmd->add_flag("-H,--headers", options.headers, "Add a header to each column")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true)
+      ->group("LONG OUTPUT OPTIONS");
+
+    subcmd->usage("fima [PATH] ls [OPTIONS]");
 
     subcmd->callback([&]() { fima::commands::ls(path, repo, options); });
 }

@@ -126,7 +126,10 @@ setup_cloc(CLI::App& app,
       ->configurable(true)
       ->expected(0, -1);
 
-    subcmd->add_option("--sort,-S", options.sorting, "Type of sorting")
+    subcmd
+      ->add_option("--sort,-S",
+                   options.sorting,
+                   "Type of sorting (total (default), files, code, comments, blank)")
       ->configurable(true)
       ->expected(0, 1);
 

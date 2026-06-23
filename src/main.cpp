@@ -49,16 +49,16 @@ main(int argc, char** argv)
 
     app.name("fima");
     app.description("FIMA - Fast, Incredible, Minimal & Awesome File Manager");
-    app.usage("fima [TARGET] [OPTIONS] [SUBCOMMANDS]");
+    app.usage("fima [PATH] [OPTIONS] [SUBCOMMANDS]");
     app.footer("\nMade with love by SCSDC 󰋑 ");
 
     app.get_formatter()->column_width(25);
     app.get_formatter()->long_option_alignment_ratio(0.25);
-    app.get_formatter()->label("POSITIONALS", "TARGET");
+    app.get_formatter()->label("POSITIONALS", "PATH");
 
     app
       .set_config(
-        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format) ")
+        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
       ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
     app.allow_config_extras(CLI::config_extras_mode::ignore);
