@@ -24,22 +24,19 @@ add_subdirectory(./src/)
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_include_directories(
-    fima_lib
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-        $<INSTALL_INTERFACE:include/>
+    fima_lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+                    $<INSTALL_INTERFACE:include/>
 )
 
 target_link_libraries(
     fima_lib
-    PUBLIC
-        libzippp::libzippp
-        termcolor::termcolor
-        ftxui::ftxui
-        libgit2::libgit2
-        p-ranav-glob::p-ranav-glob
-        tomlplusplus::tomlplusplus
-        CLI11::CLI11
+    PUBLIC libzippp::libzippp
+           termcolor::termcolor
+           ftxui::ftxui
+           libgit2::libgit2
+           p-ranav-glob::p-ranav-glob
+           tomlplusplus::tomlplusplus
+           CLI11::CLI11
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
@@ -47,26 +44,29 @@ target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
 if(NOT MSVC)
     target_compile_options(
         ${PROJECT_NAME}
-        PUBLIC
-            -Wall
-            -Wextra
-            -Wpedantic
-            -Wreorder
-            -Wunused
-            -Wshadow
-            -Werror=return-type
-            -Weffc++
-            -Wvla
-            -Wconversion
-            -Wunused-result
-            -Wswitch
-            -Wswitch-default
-            -Wswitch-enum
+        PUBLIC -Wall
+               -Wextra
+               -Wpedantic
+               -Wreorder
+               -Wunused
+               -Wshadow
+               -Werror=return-type
+               -Weffc++
+               -Wvla
+               -Wconversion
+               -Wunused-result
+               -Wswitch
+               -Wswitch-default
+               -Wswitch-enum
     )
 else()
     target_compile_options(
         ${PROJECT_NAME}
-        PUBLIC /W4 /WX /permissive- /Zc:__cplusplus /diagnostics:caret
+        PUBLIC /W4
+               /WX
+               /permissive-
+               /Zc:__cplusplus
+               /diagnostics:caret
     )
 endif()
 
