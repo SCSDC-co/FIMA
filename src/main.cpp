@@ -15,6 +15,7 @@
 
 // I ABSOLUTELY LOVE THIS LIBRARY
 #include "CLI/App.hpp"
+#include "CLI/CLI.hpp"
 #include "CLI/Config.hpp"
 #include "CLI/Formatter.hpp"
 #include "commands/cloc/cloc.h"
@@ -56,11 +57,22 @@ main(int argc, char** argv)
     app.get_formatter()->long_option_alignment_ratio(0.25);
     app.get_formatter()->label("POSITIONALS", "PATH");
 
+    CLI::Option* config = app
+                            .set_config("--config",
+                                        fima::config::CONFIG_FILE_PATH,
+                                        "Specify the config file (TOML format)")
+                            ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+
     app
-      .set_config(
-        "--config", fima::config::CONFIG_FILE_PATH, "Specify the config file (TOML format)")
-      ->transform(CLI::FileOnDefaultPath(fima::config::CONFIG_FILE_PATH))
-      ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+      .add_flag_callback(
+        "--no-config",
+        [config]() {
+            config->clear();
+            config->add_result(""); // an empty path disables config processing
+        },
+        "Ignore all configuration files")
+      ->callback_priority(CLI::CallbackPriority::First);
+
     app.allow_config_extras(CLI::config_extras_mode::ignore);
 
     app.require_subcommand(0, 1);
