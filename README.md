@@ -88,6 +88,7 @@ custom_name = ""
   - [x] general improvement
   - [x] polish
   - [x] add verbose mode to `info`
+- [ ] add theming features
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) if you want to contribute!
 
