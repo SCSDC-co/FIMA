@@ -1,5 +1,6 @@
 /*
  * include/config.h
+ * src/config.cpp
  *
  * This file contains the variables that should be available in all the program
  *
@@ -43,6 +44,7 @@ inline int process_directory_size{};
 inline std::filesystem::path CONFIG_PATH;
 inline std::filesystem::path FIMA_CONFIG_PATH;
 inline std::filesystem::path CONFIG_FILE_PATH;
+inline std::filesystem::path THEME_FILE_PATH;
 
 void
 setup_variables();

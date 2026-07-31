@@ -14,7 +14,7 @@ project(
 find_package(ftxui REQUIRED)
 find_package(libgit2 REQUIRED)
 find_package(libzippp REQUIRED)
-find_package(termcolor REQUIRED)
+find_package(rang REQUIRED)
 find_package(p-ranav-glob REQUIRED)
 find_package(tomlplusplus REQUIRED)
 find_package(CLI11 REQUIRED)
@@ -31,7 +31,7 @@ target_include_directories(
 target_link_libraries(
     fima_lib
     PUBLIC libzippp::libzippp
-           termcolor::termcolor
+           rang::rang
            ftxui::ftxui
            libgit2::libgit2
            p-ranav-glob::p-ranav-glob
