@@ -11,6 +11,7 @@
 
 #include "theme.h"
 
+#include <algorithm>
 #include <array>
 #include <cctype>
 #include <cstdlib>
@@ -131,7 +132,7 @@ parse_color(const toml::node_view<toml::node>& node)
         }
 
         for (int i{ 1 }; i < string->length(); ++i) {
-            char c{ string->at(i) };
+            char c{ static_cast<char>(std::tolower(string->at(i))) };
 
             if (!char_to_number_hex.contains(c)) {
                 std::cerr << theme.error << "HEX string is not valid." << '\n';
@@ -144,14 +145,18 @@ parse_color(const toml::node_view<toml::node>& node)
 
         color = Color::from_string(*string);
     } else {
-        if (!name_to_named_color.contains(*string)) {
+        std::string lowercase{ *string };
+
+        std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(), ::tolower);
+
+        if (!name_to_named_color.contains(lowercase)) {
             std::cerr << '\"' << *string << '\"' << theme.error << " is not a valid color name."
                       << Color::reset << '\n';
 
             std::exit(1);
         }
 
-        color = Color::from_string(*(node.value<std::string_view>()));
+        color = Color::from_string(lowercase);
     }
 
     return color;
