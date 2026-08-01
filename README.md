@@ -115,25 +115,30 @@ All the colors can be written in 3 different formats:
 - HEX string (`#76946a`)
 - RGB array (`[118, 148, 106]`)
 - Color name (`green`)
-  - These are all the available color names:
-    - `black`
-    - `dark grey`
-    - `light grey`
-    - `dark gray`
-    - `light gray`
-    - `white`
-    - `blue`
-    - `light blue`
-    - `cyan`
-    - `light cyan`
-    - `green`
-    - `light green`
-    - `magenta`
-    - `light magenta`
-    - `red`
-    - `light red`
-    - `yellow`
-    - `light yellow`
+
+<details>
+<summary>Available color names:</summary>
+
+- `black`
+- `dark grey`
+- `light grey`
+- `dark gray`
+- `light gray`
+- `white`
+- `blue`
+- `light blue`
+- `cyan`
+- `light cyan`
+- `green`
+- `light green`
+- `magenta`
+- `light magenta`
+- `red`
+- `light red`
+- `yellow`
+- `light yellow`
+
+</details>
 
 <details>
 <summary>Default theme:</summary>
