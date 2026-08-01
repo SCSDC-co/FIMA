@@ -24,7 +24,8 @@ remove(const std::vector<std::string>& paths_glob, const bool& recursive)
 {
     for (const auto& entry : glob::rglob(paths_glob)) {
         try {
-            if (!recursive && std::filesystem::is_directory(entry)) {
+            if (!recursive && std::filesystem::is_directory(entry) &&
+                std::filesystem::is_empty(entry)) {
                 std::cerr << fima::theme::theme.error << "Cannot remove directory "
                           << fima::theme::theme.secondary << entry.relative_path().string()
                           << fima::theme::theme.error << ". Becuase is not empty."
