@@ -70,6 +70,12 @@ if(FIMA_BUILD_TESTS)
                                           tests/test1.txt tests/test2.txt
     )
     add_test(NAME test_zip COMMAND ${PROJECT_NAME} zip tests -o tests.zip)
+    add_test(NAME test_create_item_to_add_items_to_zip COMMAND ${PROJECT_NAME}
+                                                               mk -f test.txt
+    )
+    add_test(NAME test_add_items_to_zip COMMAND ${PROJECT_NAME} zip test.txt -o
+                                                tests.zip
+    )
     add_test(NAME test_unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o tests)
     add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
 
