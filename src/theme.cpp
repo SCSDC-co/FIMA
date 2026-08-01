@@ -104,9 +104,9 @@ parse_color(const toml::node_view<toml::node>& node)
     if (node.is_array()) {
         std::array<int, 3> rgb_arr{};
 
-        rgb_arr[0] = node.as_array()[0].value_or(0);
-        rgb_arr[1] = node.as_array()[1].value_or(0);
-        rgb_arr[2] = node.as_array()[2].value_or(0);
+        rgb_arr[0] = node.as_array()->at(0).value_or(0);
+        rgb_arr[1] = node.as_array()->at(1).value_or(0);
+        rgb_arr[2] = node.as_array()->at(2).value_or(0);
 
         for (auto item : rgb_arr) {
             if (item < 0 || item > 255) {

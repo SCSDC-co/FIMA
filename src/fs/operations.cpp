@@ -308,11 +308,25 @@ get_perms_tui(const std::filesystem::path& item)
 
         std::filesystem::perms permissions{ st.permissions() };
 
-        auto show = [=](char op, std::filesystem::perms perm, Color _color) {
+        auto show = [=](char op, std::filesystem::perms perm) {
             Element element;
 
+            Color _color{};
+
+            switch (op) {
+                case 'r':
+                    _color = fima::theme::theme.perms_read.get_color_for_tui();
+                    break;
+                case 'w':
+                    _color = fima::theme::theme.perms_write.get_color_for_tui();
+                    break;
+                case 'x':
+                    _color = fima::theme::theme.perms_exec.get_color_for_tui();
+                    break;
+            }
+
             if (std::filesystem::perms::none == (perm & permissions)) {
-                element = text("-") | color(Color::GrayDark);
+                element = text("-") | color(fima::theme::theme.perms_null.get_color_for_tui());
             } else if (perm == std::filesystem::perms::owner_read ||
                        perm == std::filesystem::perms::owner_exec ||
                        perm == std::filesystem::perms::owner_write) {
@@ -327,9 +341,11 @@ get_perms_tui(const std::filesystem::path& item)
         if (std::filesystem::is_regular_file(st)) {
             element_vector.push_back(text("-") | bold);
         } else if (std::filesystem::is_directory(st)) {
-            element_vector.push_back(text("d") | color(Color::Green));
+            element_vector.push_back(text("d") |
+                                     color(fima::theme::theme.directory.get_color_for_tui()));
         } else if (std::filesystem::is_symlink(st)) {
-            element_vector.push_back(text("l") | color(Color::Blue));
+            element_vector.push_back(text("l") |
+                                     color(fima::theme::theme.symlink.get_color_for_tui()));
         } else if (std::filesystem::is_character_file(st)) {
             element_vector.push_back(text("c") | bold);
         } else if (std::filesystem::is_block_file(st)) {
@@ -342,15 +358,15 @@ get_perms_tui(const std::filesystem::path& item)
             element_vector.push_back(text("?") | bold); // unknown type
         }
 
-        element_vector.push_back(show('r', std::filesystem::perms::owner_read, Color::Green));
-        element_vector.push_back(show('w', std::filesystem::perms::owner_write, Color::Yellow));
-        element_vector.push_back(show('x', std::filesystem::perms::owner_exec, Color::Red));
-        element_vector.push_back(show('r', std::filesystem::perms::group_read, Color::Green));
-        element_vector.push_back(show('w', std::filesystem::perms::group_write, Color::Yellow));
-        element_vector.push_back(show('x', std::filesystem::perms::group_exec, Color::Red));
-        element_vector.push_back(show('r', std::filesystem::perms::others_read, Color::Green));
-        element_vector.push_back(show('w', std::filesystem::perms::others_write, Color::Yellow));
-        element_vector.push_back(show('x', std::filesystem::perms::others_exec, Color::Red));
+        element_vector.push_back(show('r', std::filesystem::perms::owner_read));
+        element_vector.push_back(show('w', std::filesystem::perms::owner_write));
+        element_vector.push_back(show('x', std::filesystem::perms::owner_exec));
+        element_vector.push_back(show('r', std::filesystem::perms::group_read));
+        element_vector.push_back(show('w', std::filesystem::perms::group_write));
+        element_vector.push_back(show('x', std::filesystem::perms::group_exec));
+        element_vector.push_back(show('r', std::filesystem::perms::others_read));
+        element_vector.push_back(show('w', std::filesystem::perms::others_write));
+        element_vector.push_back(show('x', std::filesystem::perms::others_exec));
     } catch (const std::exception& ex) {
         std::cerr << fima::theme::theme.error
                   << "Failed to get permissions for: " << fima::theme::theme.secondary

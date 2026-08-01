@@ -25,7 +25,6 @@
 #include "fs/get_directories_entries.h"
 #include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
-#include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
 #include "theme.h"
 #include "utility/join.h"
