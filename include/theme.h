@@ -166,10 +166,10 @@ class Color
                         stream << rang::fg::black;
                         break;
                     case NamedColor::DarkGray:
-                        stream << rang::fg::gray;
+                        stream << rang::fgB::gray;
                         break;
                     case NamedColor::LightGray:
-                        stream << rang::fgB::gray;
+                        stream << rang::fg::gray;
                         break;
                     case NamedColor::White:
                         // why the fuck rang doesn't have the white color support

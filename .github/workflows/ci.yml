@@ -25,6 +25,8 @@ jobs:
           cat > ~/.config/fima/theme.toml << 'EOF'
           [general]
           primary = "yellow"
+          secondary = [252, 186, 3]
+          border = "#fcba03"
           EOF
 
       - name: Setup C++
