@@ -14,7 +14,8 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include <termcolor/termcolor.hpp>
+
+#include "theme.h"
 
 namespace fs = std::filesystem;
 
@@ -22,16 +23,17 @@ void
 _rename(const fs::path old_name, const fs::path new_name)
 {
     if (!fs::exists(old_name)) {
-        std::cerr << termcolor::red
-                  << "The item you want to rename does not exist: " << termcolor::reset
-                  << old_name.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The item you want to rename does not exist: " << fima::theme::theme.secondary
+                  << old_name.string() << fima::theme::Color::reset << '\n';
 
         return;
     }
 
     if (fs::exists(new_name)) {
-        std::cerr << termcolor::red << "The item already exists: " << termcolor::reset
-                  << new_name.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The item already exists: " << fima::theme::theme.secondary
+                  << new_name.string() << fima::theme::Color::reset << '\n';
 
         return;
     }
@@ -39,11 +41,14 @@ _rename(const fs::path old_name, const fs::path new_name)
     try {
         fs::rename(old_name, new_name);
 
-        std::cout << old_name.string() << termcolor::green << " renamed to: " << termcolor::reset
-                  << new_name.string() << '\n';
+        std::cout << old_name.string() << fima::theme::theme.primary
+                  << " renamed to: " << fima::theme::theme.secondary << new_name.string()
+                  << fima::theme::Color::reset << '\n';
     } catch (const std::exception& ex) {
-        std::cerr << termcolor::red << "Failed to rename: " << termcolor::reset << old_name.string()
-                  << termcolor::red << " to " << termcolor::reset << new_name.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "Failed to rename: " << fima::theme::theme.secondary << old_name.string()
+                  << fima::theme::theme.error << " to " << fima::theme::theme.secondary
+                  << new_name.string() << fima::theme::Color::reset << '\n';
 
         std::cerr << ex.what();
     }

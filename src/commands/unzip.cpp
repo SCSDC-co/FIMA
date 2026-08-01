@@ -12,32 +12,35 @@
 
 #include <filesystem>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
 
 #include "fs/archives/unzip.h"
+#include "theme.h"
 
 void
 unzip(const std::filesystem::path& arhcive_to_unzip, const std::filesystem::path& output)
 {
     if (!std::filesystem::exists(arhcive_to_unzip)) {
-        std::cerr << termcolor::red << "The archive doesn't exists: " << termcolor::reset
-                  << arhcive_to_unzip.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The archive doesn't exists: " << fima::theme::theme.secondary
+                  << arhcive_to_unzip.string() << fima::theme::Color::reset << '\n';
 
         return;
     }
 
     if (std::filesystem::exists(output)) {
-        std::cerr << termcolor::red << "The output directory already exists: " << termcolor::reset
-                  << output.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The output directory already exists: " << fima::theme::theme.secondary
+                  << output.string() << fima::theme::Color::reset << '\n';
 
         return;
     }
 
     fima::fs::archives::unzip(arhcive_to_unzip, output);
 
-    std::cout << termcolor::green << "Archive " << termcolor::reset << arhcive_to_unzip.string()
-              << termcolor::green << " unzipped to: " << termcolor::reset << output.string()
-              << '\n';
+    std::cout << fima::theme::theme.primary << "Archive " << fima::theme::theme.secondary
+              << arhcive_to_unzip.string() << fima::theme::theme.primary
+              << " unzipped to: " << fima::theme::theme.secondary << output.string()
+              << fima::theme::Color::reset << '\n';
 }
 
 namespace fima {

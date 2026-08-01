@@ -17,6 +17,8 @@
 #include <ftxui/screen/color.hpp>
 #include <string>
 
+#include "theme.h"
+
 namespace fima {
 
 namespace fs {
@@ -24,16 +26,6 @@ namespace fs {
 class DirectoryItem
 {
   public:
-    enum class ItemColor
-    {
-        RED,
-        GREEN,
-        WHITE,
-        YELLOW,
-        BLUE,
-        CYAN,
-    };
-
     DirectoryItem(const std::filesystem::directory_entry& path);
 
     void set_color();
@@ -58,9 +50,8 @@ class DirectoryItem
     [[nodiscard]] std::filesystem::path get_symlink_target() const;
 
     [[nodiscard]] ftxui::Element get_permissions_tui() const;
-    [[nodiscard]] ftxui::Color get_color_tui() const;
 
-    [[nodiscard]] DirectoryItem::ItemColor get_color() const;
+    [[nodiscard]] fima::theme::Color get_color() const;
 
   private:
     bool is_hidden{};
@@ -69,14 +60,12 @@ class DirectoryItem
     std::string owner{};
     std::string name{};
     std::string icon{};
-    ItemColor color{};
+    fima::theme::Color color{};
 
     std::filesystem::path path{};
     std::filesystem::file_time_type last_modification_date{};
 
     size_t size{};
-
-    ftxui::Color color_tui{};
 };
 
 } // namespace fs

@@ -22,6 +22,7 @@
 
 #include "ftxui/dom/node.hpp"
 #include "mappings.h"
+#include "theme.h"
 
 namespace fima {
 
@@ -64,12 +65,14 @@ show_languages()
     table_data.push_back({ text("Language") | bold, text("Extension") | bold });
 
     for (const auto& [lang, exts] : lang_to_exts) {
-        table_data.push_back(
-          { text(lang) | color(Color::Green), text(join_extensions(exts)) | color(Color::Blue) });
+        table_data.push_back({ text(lang) | color(fima::theme::theme.primary.get_color_for_tui()),
+                               text(join_extensions(exts)) |
+                                 color(fima::theme::theme.secondary.get_color_for_tui()) });
     }
 
-    table_data.push_back({ text("Total:") | color(Color::Green),
-                           text(std::to_string(table_data.size() - 1)) | color(Color::Blue) });
+    table_data.push_back({ text("Total:") | color(fima::theme::theme.primary.get_color_for_tui()),
+                           text(std::to_string(table_data.size() - 1)) |
+                             color(fima::theme::theme.secondary.get_color_for_tui()) });
 
     Table table = Table(table_data);
 
@@ -81,7 +84,7 @@ show_languages()
 
     table.SelectRows(table_data.size() - 2, -1).SeparatorHorizontal();
 
-    Element document = table.Render() | color(Color::Green);
+    Element document = table.Render() | color(fima::theme::theme.border.get_color_for_tui());
     Screen screen =
       ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_data.size() + 4));
     Render(screen, document);

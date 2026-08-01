@@ -15,7 +15,6 @@
 #include <iostream>
 #include <regex>
 #include <string>
-#include <termcolor/termcolor.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -29,6 +28,7 @@
 #include "git/GitRepo.h"
 #include "mappings.h"
 #include "options.h"
+#include "theme.h"
 #include "utility/regex.h"
 
 namespace _fs = std::filesystem;
@@ -43,15 +43,18 @@ cloc(const std::vector<std::regex>& paths_to_ignore,
     };
 
     if (!sorting_options.contains(options.sorting)) {
-        std::cout << termcolor::red << "This sorting option: " << termcolor::reset
-                  << options.sorting << termcolor::red << " doesn't exists." << termcolor::reset
-                  << '\n';
+        std::cout << fima::theme::theme.error
+                  << "This sorting option: " << fima::theme::theme.secondary << options.sorting
+                  << fima::theme::theme.error << " doesn't exists." << '\n';
 
-        std::cout << termcolor::red << "Available options:" << termcolor::reset << '\n';
+        std::cout << fima::theme::theme.error
+                  << "Available options:" << fima::theme::theme.secondary << '\n';
 
         for (const std::string& item : sorting_options) {
             std::cout << "  " << item << (item == "total" ? " (default)" : "") << '\n';
         }
+
+        std::cout << fima::theme::Color::reset;
 
         return;
     }

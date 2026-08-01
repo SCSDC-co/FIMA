@@ -17,12 +17,12 @@
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <string>
-#include <termcolor/termcolor.hpp>
 
 #include "config.h"
 #include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
 #include "mappings.h"
+#include "theme.h"
 
 namespace fima {
 
@@ -43,41 +43,20 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
 void
 DirectoryItem::set_color()
 {
-    ItemColor color{};
+    fima::theme::Color color{};
 
     if (this->is_directory()) {
-        color = ItemColor::GREEN;
+        color = fima::theme::theme.directory;
     } else if (this->is_symlink()) {
-        color = ItemColor::CYAN;
+        color = fima::theme::theme.symlink;
     } else if (fima::fs::operations::is_file_executable(this->path)) {
-        color = ItemColor::RED;
+        color = fima::theme::theme.executable;
     } else if (fima::fs::operations::is_compressed_archive(this->path)) {
-        color = ItemColor::BLUE;
+        color = fima::theme::theme.archive;
     } else if (fima::fs::operations::is_media(this->path)) {
-        color = ItemColor::YELLOW;
+        color = fima::theme::theme.media;
     } else {
-        color = ItemColor::WHITE;
-    }
-
-    switch (color) {
-        case ItemColor::RED:
-            this->color_tui = ftxui::Color::Red;
-            break;
-        case ItemColor::GREEN:
-            this->color_tui = ftxui::Color::Green;
-            break;
-        case ItemColor::WHITE:
-            this->color_tui = ftxui::Color::White;
-            break;
-        case ItemColor::YELLOW:
-            this->color_tui = ftxui::Color::Yellow;
-            break;
-        case ItemColor::BLUE:
-            this->color_tui = ftxui::Color::Blue;
-            break;
-        case ItemColor::CYAN:
-            this->color_tui = ftxui::Color::Cyan;
-            break;
+        color = fima::theme::theme.normal_file;
     }
 
     this->color = color;
@@ -164,7 +143,7 @@ DirectoryItem::get_size_with_extension() const
 
     return fima::fs::operations::make_size_readable(this->size);
 }
-[[nodiscard]] DirectoryItem::ItemColor
+[[nodiscard]] fima::theme::Color
 DirectoryItem::get_color() const
 {
     return this->color;
@@ -174,12 +153,6 @@ DirectoryItem::get_color() const
 DirectoryItem::get_permissions_tui() const
 {
     return fima::fs::operations::get_perms_tui(this->get_path());
-}
-
-[[nodiscard]] ftxui::Color
-DirectoryItem::get_color_tui() const
-{
-    return this->color_tui;
 }
 
 [[nodiscard]] bool

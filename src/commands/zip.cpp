@@ -13,11 +13,11 @@
 
 #include <filesystem>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/archives/add_entries.h"
 #include "fs/archives/zip.h"
+#include "theme.h"
 
 void
 zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesystem::path& output)
@@ -26,11 +26,11 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
         fima::fs::archives::zip::add_entries(items_to_zip, output);
 
         for (const auto& item : items_to_zip) {
-            std::cout << termcolor::green
+            std::cout << fima::theme::theme.primary
                       << (std::filesystem::is_directory(item) ? "Directory " : "File ")
-                      << termcolor::reset << std::filesystem::relative(item).string()
-                      << termcolor::green << " added to " << termcolor::reset << output.string()
-                      << '\n';
+                      << fima::theme::theme.secondary << std::filesystem::relative(item).string()
+                      << fima::theme::theme.primary << " added to " << fima::theme::theme.secondary
+                      << output.string() << fima::theme::Color::reset << '\n';
         }
 
         return;
@@ -38,8 +38,8 @@ zip(const std::vector<std::filesystem::path>& items_to_zip, const std::filesyste
 
     fima::fs::archives::zip::create_archive(items_to_zip, output);
 
-    std::cout << termcolor::green << "Zipped files to: " << termcolor::reset << output.string()
-              << '\n';
+    std::cout << fima::theme::theme.primary << "Zipped files to: " << fima::theme::theme.secondary
+              << output.string() << fima::theme::Color::reset << '\n';
 }
 
 namespace fima {

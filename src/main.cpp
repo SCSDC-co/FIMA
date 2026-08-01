@@ -8,16 +8,17 @@
  * See LICENSE file for details.
  */
 
+#include <CLI/App.hpp>
+#include <CLI/CLI.hpp>
+#include <CLI/Config.hpp>
+#include <CLI/Formatter.hpp>
 #include <filesystem>
 #include <iostream>
+#include <rang.hpp>
 #include <string>
 #include <vector>
 
 // I ABSOLUTELY LOVE THIS LIBRARY
-#include "CLI/App.hpp"
-#include "CLI/CLI.hpp"
-#include "CLI/Config.hpp"
-#include "CLI/Formatter.hpp"
 #include "commands/cloc/cloc.h"
 #include "commands/copy.h"
 #include "commands/create.h"
@@ -32,7 +33,7 @@
 #include "config.h"
 #include "git/GitRepo.h"
 #include "options.h"
-#include "termcolor/termcolor.hpp"
+#include "theme.h"
 #include "tui/tui.h"
 #include "utility/regex.h"
 
@@ -44,6 +45,8 @@ main(int argc, char** argv)
     fima::config::setup_variables();
     fima::config::create_config_file();
     fima::config::parse_config_file();
+
+    fima::theme::parse_theme_file();
 
     CLI::App app;
     argv = app.ensure_utf8(argv);
@@ -94,14 +97,14 @@ main(int argc, char** argv)
         ->configurable(false);
 
     version_subcmd->callback([&]() {
-        std::cout << termcolor::green;
+        std::cout << fima::theme::theme.primary;
 
         std::cout << fima::config::LOGO << '\n';
 
         std::cout << "Fast, Incredible, Minimal and Awesome File Manager" << '\n' << '\n';
-        std::cout << "Version: " << termcolor::reset << fima::config::VERSION << '\n';
+        std::cout << "Version: " << fima::theme::theme.secondary << fima::config::VERSION << '\n';
 
-        std::cout << '\n';
+        std::cout << fima::theme::Color::reset << '\n';
     });
 
     // ──────────────────────────────────────────────────────────────────────

@@ -27,6 +27,7 @@
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "theme.h"
 #include "utility/join.h"
 #include "utility/most_common.h"
 #include "utility/regex.h"
@@ -49,7 +50,8 @@ dir(const std::filesystem::directory_entry& path,
     dir.set_number_of_files(repo);
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
-        return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
+        return hbox(text(title) | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                    value | color(fima::theme::theme.secondary.get_color_for_tui()));
     };
 
     Element document{};
@@ -91,13 +93,14 @@ dir(const std::filesystem::directory_entry& path,
 
         document = vbox(
           // header
-          border(hbox(text("DINFO: ") | bold | color(Color::Green),
-                      text(dir.metadata.get_path()) | color(Color::White),
-                      text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-                        color(Color::White),
-                      text((dir.metadata.get_is_hidden() ? " (hidden) " : " ")) | flex,
-                      text(dir.metadata.get_icon()))) |
-            color(Color::Green),
+          border(hbox(
+            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_is_hidden() ? " (hidden) " : " ")) | flex,
+            text(dir.metadata.get_icon()))) |
+            color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(
             window(text(" INFO ") | bold,
@@ -107,7 +110,7 @@ dir(const std::filesystem::directory_entry& path,
                                           text(std::to_string(dir.get_number_of_files()))),
                         draw_window_entry("Last modification date: ",
                                           text(dir.metadata.get_last_modification_date())))) |
-              color(Color::Green) | flex,
+              color(fima::theme::theme.border.get_color_for_tui()) | flex,
 
             window(
               text(" LOC ") | bold,
@@ -116,24 +119,25 @@ dir(const std::filesystem::directory_entry& path,
                    draw_window_entry("Blank lines: ",
                                      text(std::to_string(dir.stats.get_blank_lines()))),
                    draw_window_entry("Total: ", text(std::to_string(dir.stats.get_total()))))) |
-              color(Color::Green)),
-          window(text(" VERBOSE ") | bold | color(Color::Green),
+              color(fima::theme::theme.border.get_color_for_tui())),
+          window(text(" VERBOSE ") | bold,
                  vbox(draw_window_entry("Extensions: ", text(extensions)),
                       draw_window_entry("Most common extension: ", text(most_common_extension)),
                       draw_window_entry(
                         "Biggest file: ",
                         hbox(text(biggest_file_path), text(" (" + biggest_file_size + ")"))))) |
-            color(Color::Green));
+            color(fima::theme::theme.border.get_color_for_tui()));
     } else {
         document = vbox(
           // header
-          border(hbox(text("DINFO: ") | bold | color(Color::Green),
-                      text(dir.metadata.get_path()) | color(Color::White),
-                      text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-                        color(Color::White),
-                      text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
-                      text("  " + dir.metadata.get_icon() + " "))) |
-            color(Color::Green),
+          border(hbox(
+            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+            text("  " + dir.metadata.get_icon() + " "))) |
+            color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(
             window(text(" INFO ") | bold,
@@ -143,7 +147,7 @@ dir(const std::filesystem::directory_entry& path,
                                           text(std::to_string(dir.get_number_of_files()))),
                         draw_window_entry("Last modification date: ",
                                           text(dir.metadata.get_last_modification_date())))) |
-              color(Color::Green) | flex,
+              color(fima::theme::theme.border.get_color_for_tui()) | flex,
 
             window(
               text(" LOC ") | bold,
@@ -152,7 +156,7 @@ dir(const std::filesystem::directory_entry& path,
                    draw_window_entry("Blank lines: ",
                                      text(std::to_string(dir.stats.get_blank_lines()))),
                    draw_window_entry("Total: ", text(std::to_string(dir.stats.get_total()))))) |
-              color(Color::Green)));
+              color(fima::theme::theme.border.get_color_for_tui())));
     }
 
     auto screen = Screen::Create(Dimension::Fit(document));

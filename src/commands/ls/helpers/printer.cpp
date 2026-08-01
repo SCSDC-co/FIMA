@@ -19,7 +19,6 @@
 #include <ftxui/screen/terminal.hpp>
 #include <iostream>
 #include <string>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/DirectoryItem.h"
@@ -27,6 +26,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -85,7 +85,7 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
                         element_string.size() + 2,
                       ' ');
 
-        Element element = text(element_string) | color(items[i].get_color_tui());
+        Element element = text(element_string) | color(items[i].get_color().get_color_for_tui());
 
         if (items[i].is_directory() ||
             fima::fs::operations::is_file_executable(items[i].get_path())) {
@@ -112,8 +112,8 @@ print_one_line(const std::vector<fima::fs::DirectoryItem>& items, const bool& ic
         vertical_elements.push_back(
           text(item.get_name(icons)) |
           (item.is_directory() || fima::fs::operations::is_file_executable(item.get_path())
-             ? color(item.get_color_tui()) | bold
-             : color(item.get_color_tui())));
+             ? color(item.get_color().get_color_for_tui()) | bold
+             : color(item.get_color().get_color_for_tui())));
     }
 
     auto document = vbox(vertical_elements);
@@ -141,7 +141,7 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
     }
 
     for (fima::fs::DirectoryItem& item : items) {
-        Color item_color{ item.get_color_tui() };
+        Color item_color{ item.get_color().get_color_for_tui() };
         Color size_color{ Color::Green };
         Decorator size_decorator{ nothing };
 
@@ -208,9 +208,10 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
             }
         }
 
-        std::cout << termcolor::green << "files: " << termcolor::reset << number_of_files
-                  << termcolor::green << ", ";
-        std::cout << "directories: " << termcolor::reset << number_of_directories << '\n';
+        std::cout << fima::theme::theme.primary << "files: " << fima::theme::theme.secondary
+                  << number_of_files << fima::theme::theme.primary << ", ";
+        std::cout << "directories: " << fima::theme::theme.secondary << number_of_directories
+                  << fima::theme::Color::reset << '\n';
     }
 }
 

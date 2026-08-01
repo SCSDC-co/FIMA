@@ -22,6 +22,7 @@
 
 #include "commands/cloc/helpers/LanguageStats.h"
 #include "ftxui/dom/node.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -91,12 +92,17 @@ print_table(
     for (const auto& [name, language] : sorted) {
         if (!quiet) {
             table_data.push_back(
-              { text(std::string(name)) | color(Color::Green),
-                text(std::to_string(language.get_files())) | color(Color::White),
-                text(std::to_string(language.stats.get_total())) | color(Color::White),
-                text(std::to_string(language.stats.get_code())) | color(Color::White),
-                text(std::to_string(language.stats.get_comments())) | color(Color::White),
-                text(std::to_string(language.stats.get_blank_lines())) | color(Color::White) });
+              { text(std::string(name)) | color(fima::theme::theme.primary.get_color_for_tui()),
+                text(std::to_string(language.get_files())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_total())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_code())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_comments())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_blank_lines())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()) });
 
             total_files += language.get_files();
             total_lines += language.stats.get_total();
@@ -105,21 +111,31 @@ print_table(
             total_blank += language.stats.get_blank_lines();
         } else {
             table_data.push_back(
-              { text(std::string(name)) | color(Color::Green),
-                text(std::to_string(language.stats.get_total())) | color(Color::White),
-                text(std::to_string(language.stats.get_code())) | color(Color::White),
-                text(std::to_string(language.stats.get_comments())) | color(Color::White),
-                text(std::to_string(language.stats.get_blank_lines())) | color(Color::White) });
+              { text(std::string(name)) | color(fima::theme::theme.primary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_total())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_code())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_comments())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_blank_lines())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()) });
         }
     }
 
     if (!quiet) {
-        table_data.push_back({ text("Total") | color(Color::Green),
-                               text(std::to_string(total_files)) | color(Color::White),
-                               text(std::to_string(total_lines)) | color(Color::White),
-                               text(std::to_string(total_code)) | color(Color::White),
-                               text(std::to_string(total_comment)) | color(Color::White),
-                               text(std::to_string(total_blank)) | color(Color::White) });
+        table_data.push_back(
+          { text("Total") | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(std::to_string(total_files)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_lines)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_code)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_comment)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_blank)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()) });
     }
 
     Table table = Table(table_data);
@@ -144,7 +160,7 @@ print_table(
         table_size = table_data.size() + 4;
     }
 
-    Element document = table.Render() | color(Color::Green);
+    Element document = table.Render() | color(fima::theme::theme.border.get_color_for_tui());
     Screen screen = ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_size));
     Render(screen, document);
     screen.Print();

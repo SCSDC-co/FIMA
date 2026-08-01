@@ -174,7 +174,7 @@ class Color
                     case NamedColor::White:
                         // why the fuck rang doesn't have the white color support
 #ifndef _WIN32
-                        stream << "\033[37m";
+                        stream << "\033[97m";
 #else
                         HANDLE handle{};
 
@@ -245,6 +245,11 @@ struct Theme
     Color archive{};
     Color media{};
     Color normal_file{};
+
+    Color perms_read{};
+    Color perms_write{};
+    Color perms_exec{};
+    Color perms_null{};
 };
 
 inline Theme default_theme{ .primary   = Color("green"),
@@ -257,7 +262,12 @@ inline Theme default_theme{ .primary   = Color("green"),
                             .symlink     = Color("blue"),
                             .archive     = Color("blue"),
                             .media       = Color("yellow"),
-                            .normal_file = Color("white") };
+                            .normal_file = Color("white"),
+
+                            .perms_read  = Color("green"),
+                            .perms_write = Color("yellow"),
+                            .perms_exec  = Color("red"),
+                            .perms_null  = Color("light gray") };
 
 inline Theme theme{ default_theme };
 

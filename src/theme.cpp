@@ -176,6 +176,7 @@ parse_theme_file()
 
     auto general{ theme_file["general"] };
     auto specific{ theme_file["specific"] };
+    auto perms{ theme_file["permissions"] };
 
     apply_color_if_node_exists(theme.primary, general["primary"]);
     apply_color_if_node_exists(theme.secondary, general["secondary"]);
@@ -188,6 +189,11 @@ parse_theme_file()
     apply_color_if_node_exists(theme.archive, specific["archive"]);
     apply_color_if_node_exists(theme.media, specific["media"]);
     apply_color_if_node_exists(theme.normal_file, specific["normal_file"]);
+
+    apply_color_if_node_exists(theme.perms_read, perms["read"]);
+    apply_color_if_node_exists(theme.perms_write, perms["write"]);
+    apply_color_if_node_exists(theme.perms_exec, perms["execute"]);
+    apply_color_if_node_exists(theme.perms_null, perms["null"]);
 }
 
 } // namespace theme

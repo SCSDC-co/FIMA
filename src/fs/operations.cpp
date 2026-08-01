@@ -26,13 +26,13 @@
 #include <string>
 #include <string_view>
 #include <sys/stat.h>
-#include <termcolor/termcolor.hpp>
 #include <unistd.h>
 #include <unordered_set>
 #include <vector>
 
 #include "config.h"
 #include "ftxui/dom/elements.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -286,8 +286,9 @@ get_perms(const std::filesystem::path& item)
         perms += show('w', std::filesystem::perms::others_write);
         perms += show('x', std::filesystem::perms::others_exec);
     } catch (const std::exception& ex) {
-        std::cerr << termcolor::red << "Failed to get permissions for: " << termcolor::reset
-                  << item.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "Failed to get permissions for: " << fima::theme::theme.secondary
+                  << item.string() << fima::theme::Color::reset << '\n';
 
         std::cerr << ex.what();
     }
@@ -351,8 +352,9 @@ get_perms_tui(const std::filesystem::path& item)
         element_vector.push_back(show('w', std::filesystem::perms::others_write, Color::Yellow));
         element_vector.push_back(show('x', std::filesystem::perms::others_exec, Color::Red));
     } catch (const std::exception& ex) {
-        std::cerr << termcolor::red << "Failed to get permissions for: " << termcolor::reset
-                  << item.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "Failed to get permissions for: " << fima::theme::theme.secondary
+                  << item.string() << fima::theme::Color::reset << '\n';
 
         std::cerr << ex.what();
     }

@@ -13,12 +13,12 @@
 
 #include <filesystem>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
 
 #include "CLI/CLI.hpp"
 #include "commands/info/directory.h"
 #include "commands/info/file.h"
 #include "commands/info/git.h"
+#include "theme.h"
 
 void
 _info(const fima::options::info_options& options,
@@ -26,8 +26,9 @@ _info(const fima::options::info_options& options,
       fima::git::GitRepo& repo)
 {
     if (!std::filesystem::exists(path)) {
-        std::cerr << termcolor::red << "The path doesn't exist: " << termcolor::reset
-                  << path.path().string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The path doesn't exist: " << fima::theme::theme.secondary
+                  << path.path().string() << fima::theme::Color::reset << '\n';
 
         return;
     }
