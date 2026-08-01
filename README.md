@@ -72,6 +72,78 @@ custom_name = ""
 "*cat*" = "" # *cat* converts to ^.*cat.*$
 ```
 
+### Theme
+
+The FIMA's colors can be changed how you want.
+
+The theme file is located here:
+
+- linux: `$HOME/.config/fima/theme.toml`
+- windows: `$APPDATA/fima/theme.toml`
+
+All the colors can be written in 3 different formats:
+
+- HEX string (`#76946a`)
+- RGB array (`[118, 148, 106]`)
+- Color name (`green`)
+  - These are all the available color names:
+    - `black`
+    - `dark grey`
+    - `light grey`
+    - `dark gray`
+    - `light gray`
+    - `white`
+    - `blue`
+    - `light blue`
+    - `cyan`
+    - `light cyan`
+    - `green`
+    - `light green`
+    - `magenta`
+    - `light magenta`
+    - `red`
+    - `light red`
+    - `yellow`
+    - `light yellow`
+
+<details>
+<summary>Default theme:</summary>
+
+You can dump it using `--dump-default-theme`
+
+```toml
+[general]
+primary = "green"
+secondary = "white"
+border = "green"
+info = "green"
+warning = "yellow"
+error = "red"
+
+[specific]
+directory = "green"
+executable = "red"
+symlink = "blue"
+archive = "blue"
+media = "yellow"
+normal_file = "white"
+
+[permissions]
+read = "green"
+write = "yellow"
+execute = "red"
+null = "light gray"
+
+[ls]
+permissions = "yellow"
+size = "green"
+user = "red"
+date_modified = "blue"
+name = "green"
+```
+
+</details>
+
 ## Road Map
 
 - [x] add the following commands:
@@ -88,7 +160,7 @@ custom_name = ""
   - [x] general improvement
   - [x] polish
   - [x] add verbose mode to `info`
-- [ ] add theming features
+- [x] add theming features
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) if you want to contribute!
 
