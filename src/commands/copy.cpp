@@ -13,15 +13,17 @@
 
 #include <filesystem>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
+
+#include "theme.h"
 
 void
 copy_directory(std::filesystem::path source, std::filesystem::path destination)
 {
     if (!std::filesystem::is_directory(source)) {
-        std::cerr << termcolor::red
-                  << "The source directory is a file or does not exists: " << termcolor::reset
-                  << source.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The source directory is a file or does not exists: "
+                  << fima::theme::theme.secondary << source.string() << fima::theme::Color::reset
+                  << '\n';
     }
 
     if (!std::filesystem::is_directory(destination)) {
@@ -34,11 +36,14 @@ copy_directory(std::filesystem::path source, std::filesystem::path destination)
                               std::filesystem::copy_options::overwrite_existing |
                                 std::filesystem::copy_options::recursive);
 
-        std::cout << source.string() << termcolor::green << " copied to " << termcolor::reset
-                  << destination.string() << '\n';
+        std::cout << source.string() << fima::theme::theme.primary << " copied to "
+                  << fima::theme::theme.secondary << destination.string()
+                  << fima::theme::Color::reset << '\n';
     } catch (const std::exception& ex) {
-        std::cerr << termcolor::red << "Failed to copy " << termcolor::reset << source.string()
-                  << termcolor::red << " to " << termcolor::reset << destination.string() << '\n';
+        std::cerr << fima::theme::theme.error << "Failed to copy " << fima::theme::theme.secondary
+                  << source.string() << fima::theme::theme.error << " to "
+                  << fima::theme::theme.secondary << destination.string()
+                  << fima::theme::Color::reset << '\n';
 
         std::cerr << ex.what();
     }
@@ -48,20 +53,24 @@ void
 _copy_file(const std::filesystem::path source, const std::filesystem::path destination)
 {
     if (!std::filesystem::is_regular_file(source)) {
-        std::cerr << termcolor::red
-                  << "The source file is a directory or does not exists: " << termcolor::reset
-                  << source.string() << '\n';
+        std::cerr << fima::theme::theme.error
+                  << "The source file is a directory or does not exists: "
+                  << fima::theme::theme.secondary << source.string() << fima::theme::Color::reset
+                  << '\n';
     }
 
     try {
         std::filesystem::copy_file(
           source, destination, std::filesystem::copy_options::overwrite_existing);
 
-        std::cout << source.string() << termcolor::green << " copied to " << termcolor::reset
-                  << destination.string() << '\n';
+        std::cout << source.string() << fima::theme::theme.primary << " copied to "
+                  << fima::theme::theme.secondary << destination.string()
+                  << fima::theme::Color::reset << '\n';
     } catch (const std::exception& ex) {
-        std::cerr << termcolor::red << "Failed to copy " << termcolor::reset << source.string()
-                  << termcolor::red << " to " << termcolor::reset << destination.string() << '\n';
+        std::cerr << fima::theme::theme.error << "Failed to copy " << fima::theme::theme.secondary
+                  << source.string() << fima::theme::theme.error << " to "
+                  << fima::theme::theme.secondary << destination.string()
+                  << fima::theme::Color::reset << '\n';
 
         std::cerr << ex.what();
     }

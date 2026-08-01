@@ -14,9 +14,9 @@
 #include <filesystem>
 #include <glob/glob.hpp>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
+#include "theme.h"
 #include "utility/regex.h"
 
 void
@@ -25,9 +25,10 @@ remove(const std::vector<std::string>& paths_glob, const bool& recursive)
     for (const auto& entry : glob::rglob(paths_glob)) {
         try {
             if (!recursive && std::filesystem::is_directory(entry)) {
-                std::cerr << termcolor::red << "Cannot remove directory " << termcolor::reset
-                          << entry.relative_path().string() << termcolor::red
-                          << ". Becuase is not empty." << '\n';
+                std::cerr << fima::theme::theme.error << "Cannot remove directory "
+                          << fima::theme::theme.secondary << entry.relative_path().string()
+                          << fima::theme::theme.error << ". Becuase is not empty."
+                          << fima::theme::Color::reset << '\n';
 
                 continue;
             }
@@ -35,22 +36,25 @@ remove(const std::vector<std::string>& paths_glob, const bool& recursive)
             if (std::filesystem::is_directory(entry)) {
                 for (auto& item : std::filesystem::directory_iterator(
                        entry, std::filesystem::directory_options::skip_permission_denied)) {
-                    std::cout << termcolor::green << "Removed "
+                    std::cout << fima::theme::theme.primary << "Removed "
                               << (item.is_directory() ? "directory" : "file") << ": "
-                              << termcolor::reset << std::filesystem::relative(item.path()).string()
-                              << '\n';
+                              << fima::theme::theme.secondary
+                              << std::filesystem::relative(item.path()).string()
+                              << fima::theme::Color::reset << '\n';
                 }
             }
 
-            std::cout << termcolor::green
+            std::cout << fima::theme::theme.primary
                       << (std::filesystem::is_directory(entry) ? "Directory" : "File")
-                      << " removed: " << termcolor::reset << entry.filename().string()
-                      << (std::filesystem::is_directory(entry) ? "/" : "") << '\n';
+                      << " removed: " << fima::theme::theme.secondary << entry.filename().string()
+                      << (std::filesystem::is_directory(entry) ? "/" : "")
+                      << fima::theme::Color::reset << '\n';
 
             std::filesystem::remove_all(entry);
         } catch (const std::exception& ex) {
-            std::cerr << termcolor::red << "Failed to remove item: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "Failed to remove item: " << fima::theme::theme.secondary << entry.string()
+                      << fima::theme::Color::reset << '\n';
 
             std::cerr << ex.what();
         }

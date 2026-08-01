@@ -16,11 +16,12 @@
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <iostream>
+#include <rang.hpp>
 #include <string>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/operations.h"
+#include "theme.h"
 
 namespace fima {
 
@@ -33,36 +34,36 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
 
     switch (permissions[0]) {
         case 'd':
-            std::cout << termcolor::green;
+            std::cout << fima::theme::theme.directory;
             break;
         case 'l':
-            std::cout << termcolor::blue;
+            std::cout << fima::theme::theme.symlink;
             break;
         case '-':
-            std::cout << termcolor::bold;
+            std::cout << rang::style::bold;
             break;
     }
 
-    std::cout << permissions[0] << termcolor::reset;
+    std::cout << permissions[0] << theme::Color::reset;
 
     i++;
 
     for (; i < 4; ++i) {
         switch (permissions[i]) {
             case '-':
-                std::cout << termcolor::bright_grey << '-' << termcolor::reset;
+                std::cout << fima::theme::theme.perms_null << '-' << fima::theme::Color::reset;
                 break;
             case 'r':
-                std::cout << termcolor::green << termcolor::bold << termcolor::underline << 'r'
-                          << termcolor::reset;
+                std::cout << fima::theme::theme.perms_read << rang::style::bold
+                          << rang::style::underline << 'r' << fima::theme::Color::reset;
                 break;
             case 'w':
-                std::cout << termcolor::yellow << termcolor::bold << termcolor::underline << 'w'
-                          << termcolor::reset;
+                std::cout << fima::theme::theme.perms_write << rang::style::bold
+                          << rang::style::underline << 'w' << fima::theme::Color::reset;
                 break;
             case 'x':
-                std::cout << termcolor::red << termcolor::bold << termcolor::underline << 'x'
-                          << termcolor::reset;
+                std::cout << fima::theme::theme.perms_exec << rang::style::bold
+                          << rang::style::underline << 'x' << fima::theme::Color::reset;
                 break;
         }
     }
@@ -70,16 +71,16 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
     for (; i < permissions.length(); ++i) {
         switch (permissions[i]) {
             case '-':
-                std::cout << termcolor::bright_grey << '-' << termcolor::reset;
+                std::cout << fima::theme::theme.perms_null << '-' << fima::theme::Color::reset;
                 break;
             case 'r':
-                std::cout << termcolor::green << 'r' << termcolor::reset;
+                std::cout << fima::theme::theme.perms_read << 'r' << fima::theme::Color::reset;
                 break;
             case 'w':
-                std::cout << termcolor::yellow << 'w' << termcolor::reset;
+                std::cout << fima::theme::theme.perms_write << 'w' << fima::theme::Color::reset;
                 break;
             case 'x':
-                std::cout << termcolor::red << 'x' << termcolor::reset;
+                std::cout << fima::theme::theme.perms_exec << 'x' << fima::theme::Color::reset;
                 break;
         }
     }
@@ -87,13 +88,13 @@ print_perms(const std::string& permissions, const std::filesystem::path& entry)
     std::cout << "  ";
 
     if (std::filesystem::is_directory(entry)) {
-        std::cout << termcolor::green;
+        std::cout << fima::theme::theme.directory;
     } else if (fima::fs::operations::is_file_executable(entry)) {
-        std::cout << termcolor::red;
+        std::cout << fima::theme::theme.executable;
     }
 
     std::cout << entry.string() << (std::filesystem::is_directory(entry) ? "/" : "")
-              << termcolor::reset << '\n';
+              << fima::theme::Color::reset << '\n';
 }
 
 } // namespace perms
@@ -105,8 +106,9 @@ permissions(const std::vector<std::filesystem::path>& paths)
 {
     for (const std::filesystem::path& item : paths) {
         if (!std::filesystem::exists(item)) {
-            std::cerr << termcolor::red << "The path doesn't exists: " << termcolor::reset
-                      << item.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "The path doesn't exists: " << fima::theme::Color::reset << item.string()
+                      << '\n';
 
             continue;
         }

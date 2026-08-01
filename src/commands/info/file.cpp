@@ -19,7 +19,7 @@
 
 #include "fs/File.h"
 #include "ftxui/dom/node.hpp"
-#include "ftxui/screen/color.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -36,20 +36,21 @@ file(const std::filesystem::directory_entry& path)
     file.set_stats();
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
-        return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
+        return hbox(text(title) | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                    value | color(fima::theme::theme.secondary.get_color_for_tui()));
     };
 
     Element document = vbox(
       { // header
         border(hbox(
-          text("FINFO: ") | bold | color(Color::Green),
-          text(file.metadata.get_path()) | color(Color::White),
+          text("FINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+          text(file.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
           text((file.metadata.is_symlink() ? " -> " : "")),
           text((file.metadata.is_symlink() ? file.metadata.get_symlink_target().string() : "")) |
-            color(Color::White),
+            color(fima::theme::theme.symlink.get_color_for_tui()),
           text((file.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
           text("  " + file.metadata.get_icon() + " "))) |
-          color(Color::Green),
+          color(fima::theme::theme.border.get_color_for_tui()),
 
         hbox(
           window(text(" INFO ") | bold,
@@ -58,7 +59,7 @@ file(const std::filesystem::directory_entry& path)
                       draw_window_entry("File type: ", text(file.get_file_type())),
                       draw_window_entry("Last modification date: ",
                                         text(file.metadata.get_last_modification_date())))) |
-            color(Color::Green) | flex,
+            color(fima::theme::theme.border.get_color_for_tui()) | flex,
 
           window(
             text(" LOC ") | bold,
@@ -67,7 +68,7 @@ file(const std::filesystem::directory_entry& path)
                  draw_window_entry("Blank lines: ",
                                    text(std::to_string(file.stats.get_blank_lines()))),
                  draw_window_entry("Total: ", text(std::to_string(file.stats.get_total()))))) |
-            color(Color::Green)) });
+            color(fima::theme::theme.border.get_color_for_tui())) });
 
     auto screen = Screen::Create(Dimension::Fit(document));
     Render(screen, document);

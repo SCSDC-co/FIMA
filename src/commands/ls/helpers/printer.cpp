@@ -19,7 +19,6 @@
 #include <ftxui/screen/terminal.hpp>
 #include <iostream>
 #include <string>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/DirectoryItem.h"
@@ -27,6 +26,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -85,7 +85,7 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
                         element_string.size() + 2,
                       ' ');
 
-        Element element = text(element_string) | color(items[i].get_color_tui());
+        Element element = text(element_string) | color(items[i].get_color().get_color_for_tui());
 
         if (items[i].is_directory() ||
             fima::fs::operations::is_file_executable(items[i].get_path())) {
@@ -112,8 +112,8 @@ print_one_line(const std::vector<fima::fs::DirectoryItem>& items, const bool& ic
         vertical_elements.push_back(
           text(item.get_name(icons)) |
           (item.is_directory() || fima::fs::operations::is_file_executable(item.get_path())
-             ? color(item.get_color_tui()) | bold
-             : color(item.get_color_tui())));
+             ? color(item.get_color().get_color_for_tui()) | bold
+             : color(item.get_color().get_color_for_tui())));
     }
 
     auto document = vbox(vertical_elements);
@@ -133,16 +133,20 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
     std::vector<std::vector<Element>> table_data{};
 
     if (headers) {
-        table_data.push_back({ text("Permissions ") | color(Color::Yellow) | bold,
-                               text("Size ") | color(Color::Green) | bold | align_right,
-                               text("User ") | color(Color::Red) | bold,
-                               text("Date Modified ") | color(Color::Blue) | bold,
-                               text("Name ") | color(Color::Green) | bold });
+        table_data.push_back(
+          { text("Permissions ") | color(fima::theme::theme.ls_permissions.get_color_for_tui()) |
+              bold,
+            text("Size ") | color(fima::theme::theme.ls_size.get_color_for_tui()) | bold |
+              align_right,
+            text("User ") | color(fima::theme::theme.ls_user.get_color_for_tui()) | bold,
+            text("Date Modified ") |
+              color(fima::theme::theme.ls_date_modified.get_color_for_tui()) | bold,
+            text("Name ") | color(fima::theme::theme.ls_name.get_color_for_tui()) | bold });
     }
 
     for (fima::fs::DirectoryItem& item : items) {
-        Color item_color{ item.get_color_tui() };
-        Color size_color{ Color::Green };
+        Color item_color{ item.get_color().get_color_for_tui() };
+        Color size_color{ fima::theme::theme.info.get_color_for_tui() };
         Decorator size_decorator{ nothing };
 
         item.set_size();
@@ -154,26 +158,29 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
                 size_decorator = bold;
                 break;
             case 'M':
-                size_color = Color::Yellow;
+                size_color = fima::theme::theme.warning.get_color_for_tui();
                 break;
             case 'G':
-                size_color     = Color::Yellow;
+                size_color     = fima::theme::theme.warning.get_color_for_tui();
                 size_decorator = bold;
                 break;
             case 'T':
-                size_color = Color::Red;
+                size_color = fima::theme::theme.error
+                               .get_color_for_tui(); // we use error because i think it's the best
+                                                     // one for this kind of info
                 break;
             case 'E':
             case 'P':
-                size_color     = Color::Red;
+                size_color     = fima::theme::theme.error.get_color_for_tui();
                 size_decorator = bold;
         }
 
         table_data.push_back(
           { hbox(item.get_permissions_tui(), text(" ")),
             text(size + " ") | color(size_color) | size_decorator | align_right,
-            text(item.get_owner() + " ") | color(Color::Red),
-            text(item.get_last_modification_date() + " ") | color(Color::Blue),
+            text(item.get_owner() + " ") | color(fima::theme::theme.ls_user.get_color_for_tui()),
+            text(item.get_last_modification_date() + " ") |
+              color(fima::theme::theme.ls_date_modified.get_color_for_tui()),
             hbox(text(item.get_name(icons)) |
                    (fima::fs::operations::is_file_executable(item.get_path()) ||
                         std::filesystem::is_directory(item.get_path())
@@ -208,9 +215,10 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
             }
         }
 
-        std::cout << termcolor::green << "files: " << termcolor::reset << number_of_files
-                  << termcolor::green << ", ";
-        std::cout << "directories: " << termcolor::reset << number_of_directories << '\n';
+        std::cout << fima::theme::theme.primary << "files: " << fima::theme::theme.secondary
+                  << number_of_files << fima::theme::theme.primary << ", ";
+        std::cout << "directories: " << fima::theme::theme.secondary << number_of_directories
+                  << fima::theme::Color::reset << '\n';
     }
 }
 

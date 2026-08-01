@@ -29,6 +29,7 @@ setup_variables()
     CONFIG_PATH      = fima::fs::get_application_config_path();
     FIMA_CONFIG_PATH = CONFIG_PATH / "fima";
     CONFIG_FILE_PATH = FIMA_CONFIG_PATH / "config.toml";
+    THEME_FILE_PATH  = FIMA_CONFIG_PATH / "theme.toml";
 }
 
 void
