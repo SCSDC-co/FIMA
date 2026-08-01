@@ -12,6 +12,7 @@
 #include <CLI/CLI.hpp>
 #include <CLI/Config.hpp>
 #include <CLI/Formatter.hpp>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <rang.hpp>
@@ -95,6 +96,43 @@ main(int argc, char** argv)
     CLI::App* version_subcmd =
       app.add_subcommand("version", "Print the current version with some extra information")
         ->configurable(false);
+
+    app.add_flag_callback("--dump-default-theme", [&]() {
+        std::cout << "[general]" << '\n';
+        std::cout << "primary = \"" << fima::theme::default_theme.primary.name_string << "\""
+                  << '\n';
+        std::cout << "secondary = \"" << fima::theme::default_theme.secondary.name_string << "\""
+                  << '\n';
+        std::cout << "border = \"" << fima::theme::default_theme.border.name_string << "\"" << '\n';
+        std::cout << "error = \"" << fima::theme::default_theme.error.name_string << "\"" << '\n'
+                  << '\n';
+
+        std::cout << "[specific]" << '\n';
+        std::cout << "directory = \"" << fima::theme::default_theme.directory.name_string << "\""
+                  << '\n';
+        std::cout << "executable = \"" << fima::theme::default_theme.executable.name_string << "\""
+                  << '\n';
+        std::cout << "symlink = \"" << fima::theme::default_theme.symlink.name_string << "\""
+                  << '\n';
+        std::cout << "archive = \"" << fima::theme::default_theme.archive.name_string << "\""
+                  << '\n';
+        std::cout << "media = \"" << fima::theme::default_theme.media.name_string << "\"" << '\n';
+        std::cout << "normal_file = \"" << fima::theme::default_theme.normal_file.name_string
+                  << "\"" << '\n'
+                  << '\n';
+
+        std::cout << "[permissions]" << '\n';
+        std::cout << "read = \"" << fima::theme::default_theme.perms_read.name_string << "\""
+                  << '\n';
+        std::cout << "write = \"" << fima::theme::default_theme.perms_write.name_string << "\""
+                  << '\n';
+        std::cout << "execute = \"" << fima::theme::default_theme.perms_exec.name_string << "\""
+                  << '\n';
+        std::cout << "null = \"" << fima::theme::default_theme.perms_null.name_string << "\""
+                  << '\n';
+
+        std::exit(0);
+    });
 
     version_subcmd->callback([&]() {
         std::cout << fima::theme::theme.primary;
