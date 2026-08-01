@@ -42,8 +42,10 @@ option(
 
 if(FIMA_BUILD_TESTS)
     add_test(NAME test_version COMMAND ${PROJECT_NAME} -v)
+    add_test(NAME test_version_subcmd COMMAND ${PROJECT_NAME} version)
     add_test(NAME test_ls COMMAND ${PROJECT_NAME} .. ls)
-    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialv)
+    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialvH)
+    add_test(NAME test_ls_one_line COMMAND ${PROJECT_NAME} .. ls -1)
     add_test(NAME test_tree COMMAND ${PROJECT_NAME} .. tree)
     add_test(NAME test_mk COMMAND ${PROJECT_NAME} mk -d tests -f
                                   tests/test1.txt tests/test2.txt
@@ -72,4 +74,11 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
 
     add_test(NAME test_tui COMMAND ${PROJECT_NAME})
+
+    add_test(NAME test_default_theme COMMAND ${PROJECT_NAME}
+                                             --dump-default-theme
+    )
+    add_test(NAME test_default_config COMMAND ${PROJECT_NAME}
+                                              --dump-default-config
+    )
 endif()
