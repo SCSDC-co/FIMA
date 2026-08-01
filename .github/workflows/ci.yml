@@ -19,6 +19,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Create theme file
+        run: |
+          mkdir -p ~/.config/fima
+          cat > ~/.config/fima/theme.toml << 'EOF'
+          [general]
+          primary = "yellow"
+          EOF
+
       - name: Setup C++
         uses: aminya/setup-cpp@v1
         with:
