@@ -237,6 +237,8 @@ struct Theme
     Color primary{};
     Color secondary{};
     Color border{};
+    Color info{};
+    Color warning{};
     Color error{};
 
     Color directory{};
@@ -250,24 +252,40 @@ struct Theme
     Color perms_write{};
     Color perms_exec{};
     Color perms_null{};
+
+    Color ls_permissions{};
+    Color ls_size{};
+    Color ls_user{};
+    Color ls_date_modified{};
+    Color ls_name{};
 };
 
-inline Theme default_theme{ .primary   = Color("green"),
-                            .secondary = Color("white"),
-                            .border    = Color("green"),
-                            .error     = Color("red"),
+inline Theme default_theme{
+    .primary   = Color("green"),
+    .secondary = Color("white"),
+    .border    = Color("green"),
+    .info      = Color("green"),
+    .warning   = Color("yellow"),
+    .error     = Color("red"),
 
-                            .directory   = Color("green"),
-                            .executable  = Color("red"),
-                            .symlink     = Color("blue"),
-                            .archive     = Color("blue"),
-                            .media       = Color("yellow"),
-                            .normal_file = Color("white"),
+    .directory   = Color("green"),
+    .executable  = Color("red"),
+    .symlink     = Color("blue"),
+    .archive     = Color("blue"),
+    .media       = Color("yellow"),
+    .normal_file = Color("white"),
 
-                            .perms_read  = Color("green"),
-                            .perms_write = Color("yellow"),
-                            .perms_exec  = Color("red"),
-                            .perms_null  = Color("light gray") };
+    .perms_read  = Color("green"),
+    .perms_write = Color("yellow"),
+    .perms_exec  = Color("red"),
+    .perms_null  = Color("light gray"),
+
+    .ls_permissions   = Color("yellow"),
+    .ls_size          = Color("green"),
+    .ls_user          = Color("red"),
+    .ls_date_modified = Color("blue"),
+    .ls_name          = Color("green"),
+};
 
 inline Theme theme{ default_theme };
 

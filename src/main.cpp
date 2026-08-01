@@ -104,6 +104,9 @@ main(int argc, char** argv)
         std::cout << "secondary = \"" << fima::theme::default_theme.secondary.name_string << "\""
                   << '\n';
         std::cout << "border = \"" << fima::theme::default_theme.border.name_string << "\"" << '\n';
+        std::cout << "info = \"" << fima::theme::default_theme.info.name_string << "\"" << '\n';
+        std::cout << "warning = \"" << fima::theme::default_theme.warning.name_string << "\""
+                  << '\n';
         std::cout << "error = \"" << fima::theme::default_theme.error.name_string << "\"" << '\n'
                   << '\n';
 
@@ -129,7 +132,17 @@ main(int argc, char** argv)
         std::cout << "execute = \"" << fima::theme::default_theme.perms_exec.name_string << "\""
                   << '\n';
         std::cout << "null = \"" << fima::theme::default_theme.perms_null.name_string << "\""
+                  << '\n'
                   << '\n';
+
+        std::cout << "[ls]" << '\n';
+        std::cout << "permissions = \"" << fima::theme::default_theme.ls_permissions.name_string
+                  << "\"" << '\n';
+        std::cout << "size = \"" << fima::theme::default_theme.ls_size.name_string << "\"" << '\n';
+        std::cout << "user = \"" << fima::theme::default_theme.ls_user.name_string << "\"" << '\n';
+        std::cout << "date_modified = \"" << fima::theme::default_theme.ls_date_modified.name_string
+                  << "\"" << '\n';
+        std::cout << "name = \"" << fima::theme::default_theme.ls_name.name_string << "\"" << '\n';
 
         std::exit(0);
     });

@@ -182,10 +182,13 @@ parse_theme_file()
     auto general{ theme_file["general"] };
     auto specific{ theme_file["specific"] };
     auto perms{ theme_file["permissions"] };
+    auto ls{ theme_file["ls"] };
 
     apply_color_if_node_exists(theme.primary, general["primary"]);
     apply_color_if_node_exists(theme.secondary, general["secondary"]);
     apply_color_if_node_exists(theme.border, general["border"]);
+    apply_color_if_node_exists(theme.info, general["info"]);
+    apply_color_if_node_exists(theme.warning, general["warning"]);
     apply_color_if_node_exists(theme.error, general["error"]);
 
     apply_color_if_node_exists(theme.directory, specific["directory"]);
@@ -199,6 +202,12 @@ parse_theme_file()
     apply_color_if_node_exists(theme.perms_write, perms["write"]);
     apply_color_if_node_exists(theme.perms_exec, perms["execute"]);
     apply_color_if_node_exists(theme.perms_null, perms["null"]);
+
+    apply_color_if_node_exists(theme.ls_permissions, ls["permissions"]);
+    apply_color_if_node_exists(theme.ls_size, ls["size"]);
+    apply_color_if_node_exists(theme.ls_user, ls["user"]);
+    apply_color_if_node_exists(theme.ls_date_modified, ls["date_modified"]);
+    apply_color_if_node_exists(theme.ls_name, ls["name"]);
 }
 
 } // namespace theme
