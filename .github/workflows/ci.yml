@@ -19,9 +19,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create theme file
+      - name: Create theme and config file
         run: |
-          mkdir -p ~/.config/fima
+          cat > ~/.config/fima/config.toml << 'EOF'
+          [icons.files]
+          cpp = "󰙲"
+          [icons.dirs]
+          custom_name = ""
+          [icons.name]
+          "*cat*" = ""
+          EOF
           cat > ~/.config/fima/theme.toml << 'EOF'
           [general]
           primary = "yellow"
