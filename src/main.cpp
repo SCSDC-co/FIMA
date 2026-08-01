@@ -147,6 +147,42 @@ main(int argc, char** argv)
         std::exit(0);
     });
 
+    app.add_flag_callback("--dump-default-config", [&]() {
+        std::cout << "depth = 8" << '\n';
+        std::cout << "process_directory_size = false" << '\n' << '\n';
+
+        std::cout << "[ls]" << '\n';
+        std::cout << "icons = false" << '\n';
+        std::cout << "all = false" << '\n';
+        std::cout << "one-line = false" << '\n';
+        std::cout << "group-directories-first = false" << '\n';
+        std::cout << "group-directories-last = false" << '\n';
+        std::cout << "long = false" << '\n';
+        std::cout << "verbose = false" << '\n';
+        std::cout << "headers = false" << '\n' << '\n';
+
+        std::cout << "[tree]" << '\n';
+        std::cout << "all = false" << '\n';
+        std::cout << "no-gitignore = false" << '\n';
+        std::cout << "verbose = false" << '\n' << '\n';
+
+        std::cout << "[rm]" << '\n';
+        std::cout << "recursive = false" << '\n' << '\n';
+
+        std::cout << "[cloc]" << '\n';
+        std::cout << "ignore = [ \"\" ]" << '\n';
+        std::cout << "sort = \"total\"" << '\n';
+        std::cout << "quiet = false" << '\n';
+        std::cout << "no-gitignore = false" << '\n' << '\n';
+
+        std::cout << "[info]" << '\n';
+        std::cout << "verbose = false" << '\n';
+        std::cout << "tags = false" << '\n';
+        std::cout << "remotes = false" << '\n';
+
+        std::exit(0);
+    });
+
     version_subcmd->callback([&]() {
         std::cout << fima::theme::theme.primary;
 

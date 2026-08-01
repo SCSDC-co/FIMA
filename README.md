@@ -28,19 +28,48 @@ FIMA supports a config file in TOML format, it's located here:
 - linux: `$HOME/.config/fima/config.toml`
 - windows: `$APPDATA/fima/config.toml`
 
-If the file doesn't exists it will create it
+If the file doesn't exists it will create it.
 
-Example file:
+<details>
+<summary>Default config:</summary>
+
+You can dump it using `--dump-default-config`.
 
 ```toml
+depth = 8
+process_directory_size = false
+
 [ls]
-icons = true
-long = true
-verbose = true
+icons = false
+all = false
+one-line = false
+group-directories-first = false
+group-directories-last = false
+long = false
+verbose = false
+headers = false
+
+[tree]
+all = false
+no-gitignore = false
+verbose = false
+
+[rm]
+recursive = false
 
 [cloc]
-ignore = ["CLI11.hpp"]
+ignore = [ "" ]
+sort = "total"
+quiet = false
+no-gitignore = false
+
+[info]
+verbose = false
+tags = false
+remotes = false
 ```
+
+</details>
 
 ### Icons
 
@@ -109,7 +138,7 @@ All the colors can be written in 3 different formats:
 <details>
 <summary>Default theme:</summary>
 
-You can dump it using `--dump-default-theme`
+You can dump it using `--dump-default-theme`.
 
 ```toml
 [general]
