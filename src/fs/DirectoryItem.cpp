@@ -40,6 +40,18 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
     this->set_color();
 }
 
+DirectoryItem::DirectoryItem(const std::filesystem::path& path)
+  : name(path.filename().string())
+  , path(path)
+  , permissions(fima::fs::operations::get_perms(path))
+  , last_modification_date(fima::fs::operations::get_file_time(path))
+  , owner(fima::fs::operations::get_file_owner(path))
+  , is_hidden(path.filename().native().starts_with('.'))
+  , icon(fima::mappings::get_item_icon(path))
+{
+    this->set_color();
+}
+
 void
 DirectoryItem::set_color()
 {

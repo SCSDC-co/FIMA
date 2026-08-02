@@ -198,7 +198,7 @@ main(int argc, char** argv)
 
     fima::options::ls_options ls_options{};
 
-    fima::commands::setup_ls(app, path, repo, ls_options);
+    fima::commands::setup_ls(app, repo, ls_options);
 
     // ──────────────────────────────────────────────────────────────────────
 
@@ -244,7 +244,7 @@ main(int argc, char** argv)
 
     fima::options::cloc_options cloc_options{};
 
-    fima::commands::setup_cloc(app, path, repo, cloc_options);
+    fima::commands::setup_cloc(app, repo, cloc_options);
 
     // ──────────────────────────────────────────────────────────────────────
 

@@ -27,6 +27,7 @@ class DirectoryItem
 {
   public:
     DirectoryItem(const std::filesystem::directory_entry& path);
+    DirectoryItem(const std::filesystem::path& path);
 
     void set_color();
     void set_size();
