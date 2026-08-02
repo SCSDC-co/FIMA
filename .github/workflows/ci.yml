@@ -32,8 +32,8 @@ jobs:
           EOF
           cat > ~/.config/fima/theme.toml << 'EOF'
           [general]
-          primary = "black"
-          secondary = "dark gray"
+          primary = [92, 243, 11]
+          secondary = "#9482af"
           border = "light gray"
           info = "white"
           warning = "blue"
@@ -54,8 +54,8 @@ jobs:
           null = "light yellow"
 
           [ls]
-          permissions = "#9482af"
-          size = [92, 243, 11]
+          permissions = "black"
+          size = "dark gray"
           EOF
 
       - name: Setup C++

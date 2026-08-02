@@ -44,7 +44,9 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME test_version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME test_version_subcmd COMMAND ${PROJECT_NAME} version)
     add_test(NAME test_ls COMMAND ${PROJECT_NAME} .. ls)
-    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} .. ls -ialvH)
+    add_test(NAME test_ls_all_options COMMAND ${PROJECT_NAME} ../tests ls
+                                              -ialvH
+    )
     add_test(NAME test_ls_one_line COMMAND ${PROJECT_NAME} .. ls -1)
     add_test(NAME test_tree COMMAND ${PROJECT_NAME} .. tree)
     add_test(NAME test_mk COMMAND ${PROJECT_NAME} mk -d tests -f
@@ -57,7 +59,9 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME test_rm COMMAND ${PROJECT_NAME} rm tests/test2.txt tests
                                   ./test.txt -r
     )
-    add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms ../conanfile.py)
+    add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms
+                                     ../tests/all_perms.txt
+    )
     add_test(NAME test_cloc COMMAND ${PROJECT_NAME} .. cloc)
     add_test(NAME test_cloc_all_options COMMAND ${PROJECT_NAME} .. cloc -i
                                                 "*.hpp" -S files -qG
