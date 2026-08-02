@@ -8,6 +8,7 @@
  * See LICENSE file for details.
  */
 
+// I ABSOLUTELY LOVE THIS LIBRARY
 #include <CLI/App.hpp>
 #include <CLI/CLI.hpp>
 #include <CLI/Config.hpp>
@@ -19,7 +20,6 @@
 #include <string>
 #include <vector>
 
-// I ABSOLUTELY LOVE THIS LIBRARY
 #include "commands/cloc/cloc.h"
 #include "commands/copy.h"
 #include "commands/create.h"
