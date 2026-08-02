@@ -21,10 +21,7 @@ conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 --setti
     exit 1
 }
 
-cmake .. \
-    -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
-    -DCMAKE_BUILD_TYPE=Debug -DFIMA_BUILD_TESTS=ON \
-    -DFIMA_CODE_COVERAGE=ON || {
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DFIMA_BUILD_TESTS=ON -DFIMA_CODE_COVERAGE=ON || {
     echo "CMake configuration failed"
     exit 1
 }
@@ -36,6 +33,7 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
+<<<<<<< HEAD
 ctest -j "$(nproc)" --output-on-failure -T Test
 
 lcov --capture \
@@ -50,3 +48,6 @@ lcov --remove coverage.info \
     --ignore-errors inconsistent,inconsistent \
     --output-file coverage.info
 lcov --list coverage.info
+=======
+ctest -j "$(nproc)" --output-on-failure -T Test -T Coverage
+>>>>>>> parent of 16c78f1 (coverage: change the coverage tool from gcov to lcov)

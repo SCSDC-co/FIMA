@@ -66,11 +66,14 @@ jobs:
           cmake: "3.31.0"
           gcc: "16"
 
+<<<<<<< HEAD
       - name: Install lcov
         run: |
           sudo apt-get update
           sudo apt-get install -y lcov
 
+=======
+>>>>>>> parent of 16c78f1 (coverage: change the coverage tool from gcov to lcov)
       - name: Setup conan profile
         run: conan profile detect
 
@@ -80,5 +83,4 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}

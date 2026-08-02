@@ -161,7 +161,6 @@ class Color
                        << 'm';
                 break;
             case ColorType::NAMED:
-                // LCOV_EXCL_START
                 switch (color.name) {
                     case NamedColor::Black:
                         stream << rang::fg::black;
@@ -227,7 +226,6 @@ class Color
                         break;
                 }
                 break;
-                // LCOV_EXCL_STOP
         }
 
         return stream;
