@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 
+#include "fs/operations.h"
 #include "theme.h"
 #include "utility/regex.h"
 
@@ -23,6 +24,22 @@ void
 remove(const std::vector<std::string>& paths_glob, const bool& recursive)
 {
     for (const auto& entry : glob::rglob(paths_glob)) {
+        if (fima::fs::operations::is_root(entry)) {
+            std::cerr << fima::theme::theme.error << "You cannot remove the root directory."
+                      << '\n';
+
+            continue;
+        }
+
+        if (fima::fs::operations::is_ancestor(entry, std::filesystem::current_path())) {
+            std::cerr
+              << fima::theme::theme.error
+              << "You cannot remove a directory that contains the current working directory."
+              << fima::theme::Color::reset << '\n';
+
+            continue;
+        }
+
         try {
             if (!recursive && std::filesystem::is_directory(entry) &&
                 !std::filesystem::is_empty(entry)) {

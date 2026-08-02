@@ -264,6 +264,17 @@ is_root(const std::filesystem::path& path)
     return !canonical_path.has_relative_path();
 }
 
+bool
+is_ancestor(const std::filesystem::path& ancestor, const std::filesystem::path& descendant)
+{
+    const std::filesystem::path a = std::filesystem::weakly_canonical(ancestor);
+    const std::filesystem::path d = std::filesystem::weakly_canonical(descendant);
+
+    auto rel = d.lexically_relative(a);
+
+    return !rel.empty() && !rel.string().starts_with("..");
+}
+
 void
 create(const std::filesystem::path& path, const std::string_view& conent)
 {

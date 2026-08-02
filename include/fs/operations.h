@@ -47,6 +47,9 @@ is_media(const std::filesystem::path& path);
 bool
 is_root(const std::filesystem::path& path);
 
+bool
+is_ancestor(const std::filesystem::path& ancestor, const std::filesystem::path& descendant);
+
 void
 create(const std::filesystem::path& path, const std::string_view& conent);
 
