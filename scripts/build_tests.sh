@@ -4,6 +4,8 @@
 
 set -eo pipefail
 
+GCOV_TOOL=$(gcc -print-prog-name=gcov)
+
 echo
 
 cd "$(dirname "$0")" || exit 1
@@ -40,7 +42,8 @@ lcov --capture \
     --directory . \
     --output-file coverage.info \
     --ignore-errors inconsistent,inconsistent \
-    --rc geninfo_unexecuted_blocks=1
+    --rc geninfo_unexecuted_blocks=1 \
+    --gcov-tool "$GCOV_TOOL"
 lcov --remove coverage.info \
     "/usr/*" \
     "*/.conan2/*" \
