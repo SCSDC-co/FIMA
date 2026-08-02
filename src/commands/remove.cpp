@@ -26,7 +26,7 @@ remove(const std::vector<std::string>& paths_glob, const bool& recursive)
     for (const auto& entry : glob::rglob(paths_glob)) {
         if (fima::fs::operations::is_root(entry)) {
             std::cerr << fima::theme::theme.error << "You cannot remove the root directory."
-                      << '\n';
+                      << fima::theme::Color::reset << '\n';
 
             continue;
         }
