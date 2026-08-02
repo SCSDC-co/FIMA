@@ -4,8 +4,6 @@
 
 set -eo pipefail
 
-GCOV_TOOL="/usr/bin/$(gcc -print-prog-name=gcov)"
-
 echo
 
 cd "$(dirname "$0")" || exit 1
@@ -33,21 +31,4 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
-<<<<<<< HEAD
-ctest -j "$(nproc)" --output-on-failure -T Test
-
-lcov --capture \
-    --directory . \
-    --output-file coverage.info \
-    --ignore-errors inconsistent,inconsistent \
-    --rc geninfo_unexecuted_blocks=1 \
-    --gcov-tool "$GCOV_TOOL"
-lcov --remove coverage.info \
-    "/usr/*" \
-    "*/.conan2/*" \
-    --ignore-errors inconsistent,inconsistent \
-    --output-file coverage.info
-lcov --list coverage.info
-=======
 ctest -j "$(nproc)" --output-on-failure -T Test -T Coverage
->>>>>>> parent of 16c78f1 (coverage: change the coverage tool from gcov to lcov)
