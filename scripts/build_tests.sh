@@ -4,7 +4,7 @@
 
 set -eo pipefail
 
-GCOV_TOOL=$(gcc -print-prog-name=gcov)
+GCOV_TOOL="/usr/bin/$(gcc -print-prog-name=gcov)"
 
 echo
 
