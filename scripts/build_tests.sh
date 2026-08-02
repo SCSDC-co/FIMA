@@ -19,7 +19,10 @@ conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 --setti
     exit 1
 }
 
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DFIMA_BUILD_TESTS=ON -DFIMA_CODE_COVERAGE=ON || {
+cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
+    -DCMAKE_BUILD_TYPE=Debug -DFIMA_BUILD_TESTS=ON \
+    -DFIMA_CODE_COVERAGE=ON || {
     echo "CMake configuration failed"
     exit 1
 }
@@ -31,4 +34,16 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
-ctest -j "$(nproc)" --output-on-failure -T Test -T Coverage
+ctest -j "$(nproc)" --output-on-failure -T Test
+
+lcov --capture \
+    --directory . \
+    --output-file coverage.info \
+    --ignore-errors inconsistent,inconsistent \
+    --rc geninfo_unexecuted_blocks=1
+lcov --remove coverage.info \
+    "/usr/*" \
+    "*/.conan2/*" \
+    --ignore-errors inconsistent,inconsistent \
+    --output-file coverage.info
+lcov --list coverage.info

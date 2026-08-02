@@ -66,6 +66,9 @@ jobs:
           cmake: "3.31.0"
           gcc: "15"
 
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@v1
+
       - name: Setup conan profile
         run: conan profile detect
 
@@ -75,4 +78,5 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
+          files: coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
