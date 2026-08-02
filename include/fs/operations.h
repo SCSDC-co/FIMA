@@ -32,6 +32,9 @@ get_file_time(const std::filesystem::path& path);
 std::string
 get_file_owner(const std::filesystem::path& path);
 
+std::string
+get_file_type(const std::filesystem::path& path);
+
 bool
 is_file_executable(const std::filesystem::path& path);
 

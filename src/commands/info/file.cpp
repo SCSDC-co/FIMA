@@ -18,6 +18,7 @@
 #include <string>
 
 #include "fs/File.h"
+#include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
 #include "theme.h"
 
@@ -56,7 +57,9 @@ file(const std::filesystem::directory_entry& path)
           window(text(" INFO ") | bold,
                  vbox(draw_window_entry("Size: ", text(file.metadata.get_size_with_extension())),
                       draw_window_entry("Permissions: ", file.metadata.get_permissions_tui()),
-                      draw_window_entry("File type: ", text(file.get_file_type())),
+                      draw_window_entry(
+                        "File type: ",
+                        text(fima::fs::operations::get_file_type(file.metadata.get_path()))),
                       draw_window_entry("Last modification date: ",
                                         text(file.metadata.get_last_modification_date())))) |
             color(fima::theme::theme.border.get_color_for_tui()) | flex,

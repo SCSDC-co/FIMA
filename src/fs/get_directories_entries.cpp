@@ -134,25 +134,24 @@ get_files_for_cloc(const _fs::directory_entry& path,
 {
     std::vector<_fs::directory_entry> paths{};
 
-    auto file_is_ignored = [&](std::filesystem::path path) {
+    static const std::unordered_set<std::string> ft_to_skip = {
+        ".undo", ".spl", ".icns", ".mpack", ".class", ".woff2", ".ttf",  ".ttf2", ".a",    ".lib",
+        ".pdb",  ".md5", ".pdf",  ".gtk",   ".gtk1",  ".gtk2",  ".gtk3", ".gtk4", ".gtk5", ".gtk6"
+    };
+
+    auto file_is_ignored = [&](const std::filesystem::path& path) {
         return ignore && fima::utility::regex::matches_any_regex(path.filename().string(),
                                                                  ignored_files_or_directories);
     };
 
-    static const std::unordered_set<std::string> ft_to_skip = {
-        ".zip",  ".tar",    ".png",      ".jpeg",  ".jpg",  ".mp3",  ".mp4",  ".mp2",   ".mp1",
-        ".wav",  ".avi",    ".webp",     ".undo",  ".spl",  ".ico",  ".icns", ".mpack", ".exe",
-        ".o",    ".class",  ".appimage", ".woff2", ".ttf",  ".ttf2", ".dll",  ".rar",   ".7z",
-        ".gz",   ".bz2",    ".xz",       ".z",     ".lz",   ".lzma", ".lzo",  ".zst",   ".tgz",
-        ".tbz2", ".tar.gz", ".tar.xz",   ".gif",   ".bmp",  ".tiff", ".tif",  ".avif",  ".heif",
-        ".heic", ".svg",    ".psd",      ".xcf",   ".raw",  ".cr2",  ".nef",  ".arw",   ".dng",
-        ".mkv",  ".webm",   ".mov",      ".wmv",   ".flv",  ".mpeg", ".mpg",  ".m4v",   ".3gp",
-        ".m2ts", ".mts",    ".vob",      ".ogv",   ".rmvb", ".hevc", ".h264", ".h265",  ".flac",
-        ".aac",  ".m4a",    ".ogg",      ".opus",  ".wma",  ".aiff", ".alac", ".ape",   ".mid",
-        ".midi", ".so",     ".dylib",    ".a",     ".obj",  ".lib",  ".bin",  ".out",   ".elf",
-        ".pdb",  ".deb",    ".rpm",      ".snap",  ".msi",  ".pkg",  ".dmg",  ".apk",   ".jar",
-        ".war",  ".ear",    ".iso",      ".md5",   ".pdf",  ".gtk",  ".gtk1", ".gtk2",  ".gtk3",
-        ".gtk4", ".gtk5",   ".gtk6"
+    auto is_file_valid = [&](const std::filesystem::path& path) {
+        std::string ext{ path.extension().string() };
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+        return !(ft_to_skip.contains(ext) || fima::fs::operations::is_file_executable(path) ||
+                 fima::fs::operations::is_compressed_archive(path) ||
+                 fima::fs::operations::is_media(path)) &&
+               _fs::is_regular_file(path);
     };
 
     if (_fs::is_directory(path)) {
@@ -170,16 +169,12 @@ get_files_for_cloc(const _fs::directory_entry& path,
                 continue;
             }
 
-            if (_fs::is_regular_file(item)) {
+            if (is_file_valid(item)) {
                 paths.push_back(item);
             }
         }
     } else if (_fs::is_regular_file(path)) {
-        std::string ext = path.path().extension().string();
-        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-        if (!ft_to_skip.contains(ext) && !fima::fs::operations::is_file_executable(path) &&
-            !file_is_ignored(path)) {
+        if (is_file_valid(path)) {
             paths.push_back(path);
         }
     }

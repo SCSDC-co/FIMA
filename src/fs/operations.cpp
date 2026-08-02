@@ -32,6 +32,7 @@
 
 #include "config.h"
 #include "ftxui/dom/elements.hpp"
+#include "mappings.h"
 #include "theme.h"
 
 namespace fima {
@@ -150,6 +151,30 @@ get_file_owner(const std::filesystem::path& path)
     return std::to_string(info.st_uid);
 }
 
+std::string
+get_file_type(const std::filesystem::path& path)
+{
+    std::string type{};
+
+    std::string ext{ path.extension().string() };
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    if (is_file_executable(path)) {
+        type = "Executable";
+    } else if (is_media(path)) {
+        type = "Media";
+    } else if (is_compressed_archive(path)) {
+        type = "Compressed Archive";
+    } else if (auto it = fima::mappings::map_extension_name.find(ext);
+               it != fima::mappings::map_extension_name.end()) {
+        type = it->second;
+    } else {
+        type = "Normal File";
+    }
+
+    return type;
+}
+
 bool
 is_file_executable(const std::filesystem::path& path)
 {
@@ -157,14 +182,23 @@ is_file_executable(const std::filesystem::path& path)
         return false;
     }
 
-    static const std::unordered_set<std::string> ft = { ".exe", ".dll", ".sys", ".cpl", ".ocx",
-                                                        ".scr", ".efi", ".msi", ".app", ".apk",
-                                                        ".ipa", ".elf", ".o",   ".obj" };
+    static const std::unordered_set<std::string> ft = {
+        ".exe", ".dll",   ".sys", ".cpl", ".ocx",      ".scr", ".efi",  ".msi",
+        ".app", ".apk",   ".ipa", ".elf", ".o",        ".obj", ".com",  ".bin",
+        ".so",  ".dylib", ".out", ".run", ".appimage", ".ko",  ".wasm", ".pyc",
+    };
+
+    static const std::unordered_set<std::string> scripts = {
+        ".sh",  ".zsh", ".bash", ".csh", ".ksh", ".tcsh", ".fish",        ".py", ".pyw",
+        ".pl",  ".pm",  ".rb",   ".php", ".js",  ".mjs",  ".cjs",         ".ts", ".lua",
+        ".ps1", ".vbs", ".bat",  ".cmd", ".awk", ".tcl",  ".applescript",
+    };
 
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    if (ext == ".sh" || ext == ".zsh") {
+    // scripts are text even when executable
+    if (scripts.contains(ext)) {
         return false;
     }
 
@@ -185,9 +219,11 @@ bool
 is_compressed_archive(const std::filesystem::path& path)
 {
     static const std::unordered_set<std::string> ft = {
-        ".zip",  ".rar", ".7z",  ".tar", ".gz",  ".bz2", ".xz",  ".z",   ".lz",  ".lzma",
-        ".lzo",  ".zst", ".dmg", ".pkg", ".xip", ".cab", ".msi", ".wim", ".deb", ".rpm",
-        ".snap", ".jar", ".war", ".ear", ".aar", ".apk", ".ipa", ".whl", ".egg",
+        ".zip",  ".rar", ".7z",   ".tar",   ".gz",  ".bz2",  ".xz",  ".z",   ".lz",
+        ".lzma", ".lzo", ".zst",  ".dmg",   ".pkg", ".xip",  ".cab", ".msi", ".wim",
+        ".deb",  ".rpm", ".snap", ".jar",   ".war", ".ear",  ".aar", ".apk", ".ipa",
+        ".whl",  ".egg", ".tgz",  ".tbz2",  ".txz", ".tzst", ".lz4", ".br",  ".iso",
+        ".img",  ".ar",  ".cpio", ".crate", ".ace", ".arc",  ".arj",
     };
 
     std::string ext = path.extension().string();
@@ -207,7 +243,11 @@ is_media(const std::filesystem::path& path)
         ".f4v",  ".mxf",  ".roq", ".drc", ".amv",  ".webm", ".m4v",  ".mp3",  ".aac",  ".m4a",
         ".ogg",  ".opus", ".wma", ".amr", ".ac3",  ".flac", ".alac", ".wav",  ".aiff", ".aif",
         ".ape",  ".wv",   ".tta", ".oga", ".mka",  ".ra",   ".mid",  ".midi", ".rmi",  ".dsf",
-        ".dff",  ".caf",  ".pcm",
+        ".dff",  ".caf",  ".pcm", ".jxl", ".jfif", ".jpe",  ".svg",  ".svgz", ".tga",  ".exr",
+        ".hdr",  ".bpg",  ".qoi", ".pbm", ".pgm",  ".ppm",  ".pnm",  ".mts",  ".m2v",  ".ts",
+        ".ogm",  ".y4m",  ".m4b", ".m4p", ".m4r",  ".weba", ".spx",  ".au",   ".snd",  ".voc",
+        ".w64",  ".mpc",  ".shn", ".tak", ".xm",   ".mod",  ".s3m",  ".it",   ".aifc", ".mp1",
+        ".mp2",
     };
 
     std::string ext = path.extension().string();
