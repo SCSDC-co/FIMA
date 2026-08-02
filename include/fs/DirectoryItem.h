@@ -38,6 +38,8 @@ class DirectoryItem
     [[nodiscard]] std::string get_last_modification_date() const;
     [[nodiscard]] std::string get_icon() const;
     [[nodiscard]] std::string get_size_with_extension() const;
+    [[nodiscard]] std::string get_parent_path() const;
+    [[nodiscard]] std::string get_parent_path_relative() const;
 
     [[nodiscard]] size_t get_size() const;
 

@@ -38,12 +38,17 @@ using namespace ftxui;
 
 // what the actual fuck is this function, I don't understand nothing
 void
-print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
+print_normal(const std::vector<fima::fs::DirectoryItem>& items,
+             const bool& icons,
+             const bool& relative_paths)
 {
     int max_width = 0;
 
     for (const auto& item : items) {
-        max_width = std::max(max_width, static_cast<int>(item.get_name(icons).size()));
+        max_width =
+          std::max(max_width,
+                   static_cast<int>((relative_paths ? item.get_parent_path_relative().size() : 0) +
+                                    item.get_name(icons).size()));
     }
 
     int term_width = Terminal::Size().dimx;
@@ -56,7 +61,8 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
     for (size_t i = 0; i < items.size(); ++i) {
         size_t row = i % rows;
 
-        std::string element_string = items[i].get_name(icons);
+        std::string element_string =
+          (relative_paths ? items[i].get_parent_path_relative() : "") + items[i].get_name(icons);
 
         grid_string[row].push_back(element_string);
     }
@@ -78,19 +84,24 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
         size_t row = i % rows;
         size_t col = i / rows;
 
-        std::string element_string = items[i].get_name(icons);
+        std::string element_string = items[i].get_name(false);
+
+        int full_size = element_string.size() +
+                        (relative_paths ? items[i].get_parent_path_relative().size() : 0);
 
         element_string +=
-          std::string(std::max(static_cast<int>(element_string.size()), get_max_of_column(col)) -
-                        element_string.size() + 2,
-                      ' ');
+          std::string(std::max(full_size, get_max_of_column(col)) - full_size + 2, ' ');
 
-        Element element = text(element_string) | color(items[i].get_color().get_color_for_tui());
-
-        if (items[i].is_directory() ||
-            fima::fs::operations::is_file_executable(items[i].get_path())) {
-            element = element | bold;
-        }
+        Element element =
+          hbox(text((icons ? items[i].get_icon() + " " : "")),
+               (relative_paths ? text(items[i].get_parent_path_relative()) |
+                                   color(fima::theme::theme.directory.get_color_for_tui())
+                               : text("")),
+               text(element_string) | color(items[i].get_color().get_color_for_tui()) |
+                 (items[i].is_directory() ||
+                      fima::fs::operations::is_file_executable(items[i].get_path())
+                    ? bold
+                    : nothing));
 
         grid[row].push_back(element);
     }
@@ -104,16 +115,23 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icon
 }
 
 void
-print_one_line(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons)
+print_one_line(const std::vector<fima::fs::DirectoryItem>& items,
+               const bool& icons,
+               const bool& relative_paths)
 {
     std::vector<Element> vertical_elements{};
 
     for (auto& item : items) {
-        vertical_elements.push_back(
-          text(item.get_name(icons)) |
-          (item.is_directory() || fima::fs::operations::is_file_executable(item.get_path())
-             ? color(item.get_color().get_color_for_tui()) | bold
-             : color(item.get_color().get_color_for_tui())));
+        // i'm getting crazy
+        vertical_elements.push_back(hbox(
+          text((icons ? item.get_icon() + " " : "")) | color(item.get_color().get_color_for_tui()),
+          (relative_paths ? text(item.get_parent_path_relative()) |
+                              color(fima::theme::theme.directory.get_color_for_tui())
+                          : text("")),
+          text(item.get_name(false)) | color(item.get_color().get_color_for_tui()) |
+            (item.is_directory() || fima::fs::operations::is_file_executable(item.get_path())
+               ? bold
+               : nothing)));
     }
 
     auto document = vbox(vertical_elements);
@@ -128,7 +146,8 @@ void
 print_long(std::vector<fima::fs::DirectoryItem>& items,
            const bool& icons,
            const bool& verbose,
-           const bool& headers)
+           const bool& headers,
+           const bool& relative_paths)
 {
     std::vector<std::vector<Element>> table_data{};
 
@@ -145,7 +164,6 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
     }
 
     for (fima::fs::DirectoryItem& item : items) {
-        Color item_color{ item.get_color().get_color_for_tui() };
         Color size_color{ fima::theme::theme.info.get_color_for_tui() };
         Decorator size_decorator{ nothing };
 
@@ -175,19 +193,24 @@ print_long(std::vector<fima::fs::DirectoryItem>& items,
                 size_decorator = bold;
         }
 
+        // what the heck is that
         table_data.push_back(
           { hbox(item.get_permissions_tui(), text(" ")),
             text(size + " ") | color(size_color) | size_decorator | align_right,
             text(item.get_owner() + " ") | color(fima::theme::theme.ls_user.get_color_for_tui()),
             text(item.get_last_modification_date() + " ") |
               color(fima::theme::theme.ls_date_modified.get_color_for_tui()),
-            hbox(text(item.get_name(icons)) |
+            hbox(text(item.get_icon() + " ") | color(item.get_color().get_color_for_tui()),
+                 (relative_paths ? text(item.get_parent_path_relative()) |
+                                     color(fima::theme::theme.directory.get_color_for_tui())
+                                 : text("")),
+                 text(item.get_name(false)) | color(item.get_color().get_color_for_tui()) |
                    (fima::fs::operations::is_file_executable(item.get_path()) ||
                         std::filesystem::is_directory(item.get_path())
-                      ? color(item_color) | bold
-                      : color(item_color)),
+                      ? bold
+                      : nothing),
                  text((item.is_symlink() ? " -> " + std::string(item.get_symlink_target()) : "")) |
-                   color(item_color)) });
+                   color(item.get_color().get_color_for_tui())) });
     }
 
     Table table = Table({ table_data });

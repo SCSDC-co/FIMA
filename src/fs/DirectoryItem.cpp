@@ -39,7 +39,6 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
 {
     this->set_color();
 }
-
 DirectoryItem::DirectoryItem(const std::filesystem::path& path)
   : name(path.filename().string())
   , path(path)
@@ -154,6 +153,20 @@ DirectoryItem::get_size_with_extension() const
     }
 
     return fima::fs::operations::make_size_readable(this->size);
+}
+[[nodiscard]] std::string
+DirectoryItem::get_parent_path() const
+{
+    std::string path{ this->get_path().parent_path().string() };
+
+    return path + (!path.empty() ? "/" : "");
+}
+[[nodiscard]] std::string
+DirectoryItem::get_parent_path_relative() const
+{
+    std::string path{ this->get_path().parent_path().relative_path().string() };
+
+    return path + (!path.empty() ? "/" : "");
 }
 [[nodiscard]] fima::theme::Color
 DirectoryItem::get_color() const

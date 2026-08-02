@@ -22,7 +22,6 @@
 #include "commands/ls/helpers/printer.h"
 #include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
-#include "git/GitRepo.h"
 #include "options.h"
 #include "theme.h"
 
@@ -31,7 +30,7 @@ namespace fima {
 namespace commands {
 
 void
-ls(const fima::git::GitRepo& repo, fima::options::ls_options& options)
+ls(fima::options::ls_options& options)
 {
     auto to_lower = [=](std::string s) {
         std::transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -48,17 +47,36 @@ ls(const fima::git::GitRepo& repo, fima::options::ls_options& options)
                   return to_lower(a.filename().string()) < to_lower(b.filename().string());
               });
 
-    for (auto it = options.paths.begin(); it != options.paths.end(); ++it) {
+    std::vector<std::filesystem::path> paths{};
+    auto it = options.paths.begin();
+
+    for (; it != options.paths.end() && !std::filesystem::is_directory(*it); ++it) {
+        paths.append_range(glob::rglob(it->string()));
+    }
+
+    if (paths.size() > 0) {
+        std::vector<fima::fs::DirectoryItem> items{};
+
+        for (auto path : paths) {
+            items.emplace_back(path);
+        }
+
+        if (options.long_output) {
+            ls::helpers::print_long(items, options.icons, options.verbose, options.headers, true);
+        } else if (options.one_line) {
+            ls::helpers::print_one_line(items, options.icons, true);
+        } else {
+            ls::helpers::print_normal(items, options.icons, true);
+        }
+    }
+
+    for (; it != options.paths.end(); ++it) {
         auto item = *it;
 
         std::vector<std::filesystem::path> list_of_the_directory;
 
-        if (std::filesystem::is_directory(item)) {
-            list_of_the_directory.append_range(
-              fima::fs::get_directories_entries_no_git(item, options.all));
-        } else {
-            list_of_the_directory = glob::rglob(item.string());
-        }
+        list_of_the_directory.append_range(
+          fima::fs::get_directories_entries_no_git(item, options.all));
 
         if (options.directory_first) {
             std::sort(list_of_the_directory.begin(),
@@ -92,11 +110,10 @@ ls(const fima::git::GitRepo& repo, fima::options::ls_options& options)
 
         std::vector<fima::fs::DirectoryItem> items{};
 
-        for (const std::filesystem::path& item : list_of_the_directory) {
-            items.emplace_back(item);
+        for (const std::filesystem::path& path : list_of_the_directory) {
+            items.emplace_back(path);
         }
 
-        // remove items that are invalid
         items.erase(
           std::remove_if(items.begin(),
                          items.end(),
@@ -105,22 +122,22 @@ ls(const fima::git::GitRepo& repo, fima::options::ls_options& options)
 
         if (options.paths.size() > 1 && std::filesystem::is_directory(item)) {
             std::cout << '\n'
-                      << fima::theme::theme.primary << item.string() << '/'
-                      << fima::theme::Color::reset << '\n';
+                      << fima::theme::theme.primary << item.string()
+                      << "/:" << fima::theme::Color::reset << '\n';
         }
 
         if (options.long_output) {
-            ls::helpers::print_long(items, options.icons, options.verbose, options.headers);
+            ls::helpers::print_long(items, options.icons, options.verbose, options.headers, false);
         } else if (options.one_line) {
-            ls::helpers::print_one_line(items, options.icons);
+            ls::helpers::print_one_line(items, options.icons, false);
         } else {
-            ls::helpers::print_normal(items, options.icons);
+            ls::helpers::print_normal(items, options.icons, false);
         }
     }
 }
 
 void
-setup_ls(CLI::App& app, const fima::git::GitRepo& repo, fima::options::ls_options& options)
+setup_ls(CLI::App& app, fima::options::ls_options& options)
 {
     CLI::App* subcmd =
       app.add_subcommand("ls", "Print the content of the directory like the ls command")
@@ -168,7 +185,7 @@ setup_ls(CLI::App& app, const fima::git::GitRepo& repo, fima::options::ls_option
 
     subcmd->usage("fima [PATH] ls [OPTIONS]");
 
-    subcmd->callback([&]() { fima::commands::ls(repo, options); });
+    subcmd->callback([&]() { fima::commands::ls(options); });
 }
 
 } // namespace commands

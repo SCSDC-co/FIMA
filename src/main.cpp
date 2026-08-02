@@ -198,7 +198,7 @@ main(int argc, char** argv)
 
     fima::options::ls_options ls_options{};
 
-    fima::commands::setup_ls(app, repo, ls_options);
+    fima::commands::setup_ls(app, ls_options);
 
     // ──────────────────────────────────────────────────────────────────────
 
