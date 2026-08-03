@@ -87,5 +87,11 @@ target_compile_definitions(fima_lib PUBLIC
   VERSION_STRING="${PROJECT_VERSION}-${GITVERSIONDETECT_VERSION_COMMIT_SHA}"
 )
 
+include(GNUInstallDirs)
+
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
 include(tests)
 include(deploy)
