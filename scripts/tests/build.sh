@@ -8,7 +8,9 @@ echo
 
 cd "$(dirname "$0")" || exit 1
 
-[ ! -d ../../build ] && mkdir ../../build
+[ -d ../../build ] && rm -r ../../build/
+
+mkdir ../../build
 
 cd ../../build || exit 1
 
