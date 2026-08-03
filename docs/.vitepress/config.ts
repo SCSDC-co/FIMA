@@ -8,7 +8,7 @@ export default defineConfig({
     cleanUrls: true,
     appearance: "force-dark",
     lastUpdated: true,
-    base: "/fima/",
+    base: "/FIMA/",
 
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
@@ -18,7 +18,7 @@ export default defineConfig({
         ],
 
         socialLinks: [
-            { icon: "github", link: "https://github.com/SCSDC-co/fima" },
+            { icon: "github", link: "https://github.com/SCSDC-co/FIMA" },
         ],
 
         search: {
