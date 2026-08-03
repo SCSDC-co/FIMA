@@ -12,6 +12,7 @@
     "preview": "vitepress preview docs"
   },
   "devDependencies": {
+    "@davidingplus/vitepress-image-viewer": "^1.1.5",
     "vitepress": "2.0.0-alpha.19"
   }
 }

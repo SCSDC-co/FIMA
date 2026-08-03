@@ -12,7 +12,7 @@ hero:
       link: /get-started
     - theme: alt
       text: Features
-      link: /features/ls
+      link: /features
 
 features:
   - title: Filesystem Toolbox

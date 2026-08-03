@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@davidingplus/vitepress-image-viewer':
+        specifier: ^1.1.5
+        version: 1.1.5
       vitepress:
         specifier: 2.0.0-alpha.19
         version: 2.0.0-alpha.19(postcss@8.5.25)
@@ -30,6 +33,9 @@ packages:
   '@babel/types@7.29.8':
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
+
+  '@davidingplus/vitepress-image-viewer@1.1.5':
+    resolution: {integrity: sha512-wnk1HcASQ7ym1S9Kef+92ZravrliLg1FBwfe9HgQhBjBy4Gp3DnzlXXMUDWjm3DLqfHaUnGMzMThtg5j1WopZw==}
 
   '@docsearch/css@4.7.0':
     resolution: {integrity: sha512-Sk5xkdRFeE7PeWjG9l4AfTwdvMfr9wHiwNNCpHXT4v4SNyNMKdHGvEILc31BgaVFGDDNbv5u/a73tofRiwbEZw==}
@@ -635,6 +641,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
+
+  '@davidingplus/vitepress-image-viewer@1.1.5': {}
 
   '@docsearch/css@4.7.0': {}
 
