@@ -39,6 +39,10 @@ target_link_libraries(
            CLI11::CLI11
 )
 
+if(WIN32)
+    target_link_libraries(fima_lib PRIVATE Advapi32)
+endif()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
 
 if(NOT MSVC)

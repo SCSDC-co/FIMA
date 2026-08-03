@@ -22,13 +22,19 @@
 #include <ios>
 #include <iostream>
 #include <iterator>
-#include <pwd.h>
 #include <string>
 #include <string_view>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <unordered_set>
 #include <vector>
+
+#ifndef _WIN32
+#  include <pwd.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+#else
+#  include <Aclapi.h>
+#  include <windows.h>
+#endif
 
 #include "config.h"
 #include "ftxui/dom/elements.hpp"
@@ -136,6 +142,7 @@ get_file_time(const std::filesystem::path& path)
 std::string
 get_file_owner(const std::filesystem::path& path)
 {
+#ifndef _WIN32
     struct stat info;
 
     if (stat(path.c_str(), &info) != 0) {
@@ -149,6 +156,46 @@ get_file_owner(const std::filesystem::path& path)
     }
 
     return std::to_string(info.st_uid);
+#else // why windows needs to be so disgusting, WHYYYYYYYYYYYYYYYYYYYYYYYYYY
+    PSECURITY_DESCRIPTOR security_descriptor = nullptr;
+    PSID owner_sid                           = nullptr;
+
+    if (GetNamedSecurityInfoW(path.wstring().c_str(),
+                              SE_FILE_OBJECT,
+                              OWNER_SECURITY_INFORMATION,
+                              &owner_sid,
+                              nullptr,
+                              nullptr,
+                              nullptr,
+                              &security_descriptor) != ERROR_SUCCESS) {
+        return "unknown";
+    }
+
+    wchar_t name[256];
+    wchar_t domain[256];
+
+    DWORD name_size   = sizeof(name) / sizeof(wchar_t);
+    DWORD domain_size = sizeof(domain) / sizeof(wchar_t);
+
+    SID_NAME_USE sid_type;
+
+    std::string result = "unknown";
+
+    if (LookupAccountSidW(nullptr, owner_sid, name, &name_size, domain, &domain_size, &sid_type)) {
+
+        int size = WideCharToMultiByte(CP_UTF8, 0, name, -1, nullptr, 0, nullptr, nullptr);
+
+        if (size > 0) {
+            result.resize(size - 1);
+
+            WideCharToMultiByte(CP_UTF8, 0, name, -1, result.data(), size, nullptr, nullptr);
+        }
+    }
+
+    LocalFree(security_descriptor);
+
+    return result;
+#endif
 }
 
 std::string
