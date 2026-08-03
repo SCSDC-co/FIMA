@@ -236,18 +236,17 @@ bool
 is_media(const std::filesystem::path& path)
 {
     static const std::unordered_set<std::string> ft = {
-        ".jpg",  ".jpeg", ".png", ".bmp", ".tiff", ".tif",  ".webp", ".avif", ".heif", ".heic",
-        ".ico",  ".cur",  ".psd", ".xcf", ".raw",  ".cr2",  ".nef",  ".arw",  ".dng",  ".gif",
-        ".mp4",  ".mkv",  ".avi", ".mov", ".wmv",  ".flv",  ".mpeg", ".mpg",  ".3gp",  ".3g2",
-        ".m2ts", ".vob",  ".ogv", ".rm",  ".rmvb", ".asf",  ".divx", ".hevc", ".h264", ".h265",
-        ".f4v",  ".mxf",  ".roq", ".drc", ".amv",  ".webm", ".m4v",  ".mp3",  ".aac",  ".m4a",
-        ".ogg",  ".opus", ".wma", ".amr", ".ac3",  ".flac", ".alac", ".wav",  ".aiff", ".aif",
-        ".ape",  ".wv",   ".tta", ".oga", ".mka",  ".ra",   ".mid",  ".midi", ".rmi",  ".dsf",
-        ".dff",  ".caf",  ".pcm", ".jxl", ".jfif", ".jpe",  ".svg",  ".svgz", ".tga",  ".exr",
-        ".hdr",  ".bpg",  ".qoi", ".pbm", ".pgm",  ".ppm",  ".pnm",  ".mts",  ".m2v",  ".ts",
-        ".ogm",  ".y4m",  ".m4b", ".m4p", ".m4r",  ".weba", ".spx",  ".au",   ".snd",  ".voc",
-        ".w64",  ".mpc",  ".shn", ".tak", ".xm",   ".mod",  ".s3m",  ".it",   ".aifc", ".mp1",
-        ".mp2",
+        ".jpg",  ".jpeg", ".png", ".bmp",  ".tiff", ".tif",  ".webp", ".avif", ".heif", ".heic",
+        ".ico",  ".cur",  ".psd", ".xcf",  ".raw",  ".cr2",  ".nef",  ".arw",  ".dng",  ".gif",
+        ".mp4",  ".mkv",  ".avi", ".mov",  ".wmv",  ".flv",  ".mpeg", ".mpg",  ".3gp",  ".3g2",
+        ".m2ts", ".vob",  ".ogv", ".rm",   ".rmvb", ".asf",  ".divx", ".hevc", ".h264", ".h265",
+        ".f4v",  ".mxf",  ".roq", ".drc",  ".amv",  ".webm", ".m4v",  ".mp3",  ".aac",  ".m4a",
+        ".ogg",  ".opus", ".wma", ".amr",  ".ac3",  ".flac", ".alac", ".wav",  ".aiff", ".aif",
+        ".ape",  ".wv",   ".tta", ".oga",  ".mka",  ".ra",   ".mid",  ".midi", ".rmi",  ".dsf",
+        ".dff",  ".caf",  ".pcm", ".jxl",  ".jfif", ".jpe",  ".svg",  ".svgz", ".tga",  ".exr",
+        ".hdr",  ".bpg",  ".qoi", ".pbm",  ".pgm",  ".ppm",  ".pnm",  ".m2v",  ".ogm",  ".y4m",
+        ".m4b",  ".m4p",  ".m4r", ".weba", ".spx",  ".au",   ".snd",  ".voc",  ".w64",  ".mpc",
+        ".shn",  ".tak",  ".xm",  ".mod",  ".s3m",  ".it",   ".aifc", ".mp1",  ".mp2",
     };
 
     std::string ext = path.extension().string();

@@ -12,7 +12,7 @@ cd "$(dirname "$0")" || exit 1
 
 cd ../../build || exit 1
 
-conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 || {
+conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 -s build_type=Release || {
     echo "Conan setup failed"
     exit 1
 }

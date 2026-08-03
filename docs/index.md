@@ -8,18 +8,27 @@ hero:
   tagline: Aimed to be fast and easy to use
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Get Started
+      link: /get-started
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Features
+      link: /features/ls
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Filesystem Toolbox
+    details: FIMA is more than a file manager. It provides a complete filesystem toolbox for developers, power users, and everyday users
+    icon: 📁
+  - title: Customizable
+    details: Customize every aspect of FIMA, from icons and themes to tool-specific settings
+    icon: ⚙
+  - title: Open source
+    details: FIMA is fully open source and licensed under the GPL 3.0 license
+    link: https://github.com/SCSDC-co/FIMA/tree/main/LICENSE
+    linkText: View the license
 ---
 
+<br>
+
+::: warning
+FIMA is in its early stages of deployments so it may have some bugs
+:::

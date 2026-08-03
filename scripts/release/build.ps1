@@ -11,7 +11,7 @@ if (-not (Test-Path -Path ../../build -PathType Container)) {
 Set-Location -Path ../../build
 
 try {
-    conan install .. --output-folder=. --build=missing -s compiler.cppstd=23
+    conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 -s build_type=Release
 } catch {
     Write-Error "Conan setup failed"
     exit 1
