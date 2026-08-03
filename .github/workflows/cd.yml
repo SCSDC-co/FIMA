@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    
+
 
 jobs:
   build-and-test:
@@ -27,13 +27,19 @@ jobs:
 
       - name: Build the program
         run: ./scripts/release/build.sh
-      
+
       - name: Build DEB Package
         run: cd build && cpack -G DEB && cd ..
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: |
-            build/fima
-            build/fima_*.*.*_.deb
+          path: build/fima
+          name: Binary
+
+      - name: Upload DEB Artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          path: build/fima_*.deb
+          name: DEB
+
