@@ -28,10 +28,7 @@ These dependencies are optional but recommended.
 ### Scripts
 
 There are helper scripts (located in `scripts/`) that help you build the program,
-there are 2 versions:
-
-- `scripts/build.sh` – If you have bash
-- `scripts/build.ps1` – If you have powershell
+there are release and tests ones, the names are pretty much self explanatory
 
 ## Coding style
 

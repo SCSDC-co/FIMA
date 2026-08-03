@@ -4,13 +4,11 @@ Write-Host ""
 
 Set-Location -Path (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
-Get-Content utils/ascii-art.txt | ForEach-Object { Write-Host $_ -ForegroundColor Green }
-
-if (-not (Test-Path -Path ../build -PathType Container)) {
-    New-Item -ItemType Directory -Path ../build | Out-Null
+if (-not (Test-Path -Path ../../build -PathType Container)) {
+    New-Item -ItemType Directory -Path ../../build | Out-Null
 }
 
-Set-Location -Path ../build
+Set-Location -Path ../../build
 
 try {
     conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 --settings=build_type=Debug
