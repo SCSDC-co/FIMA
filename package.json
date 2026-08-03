@@ -1,0 +1,14 @@
+{
+  "name": "FIMA docs site",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "FIMA - Fast, Incredible, Minimal & Awesome File Manager",
+  "author": "Giuliano De Amicis",
+  "license": "GPL-3.0-only",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  }
+}
