@@ -129,7 +129,7 @@ setup_permissions(CLI::App& app, std::vector<std::filesystem::path>& paths)
       ->configurable(false)
       ->required(true);
 
-    subcmd->usage("fima perms [PATHS]");
+    subcmd->usage("fima perms PATHS");
 
     subcmd->callback([&]() { permissions(paths); });
 }

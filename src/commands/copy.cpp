@@ -92,7 +92,7 @@ setup_copy(CLI::App& app, std::filesystem::path& source, std::filesystem::path& 
       ->configurable(false)
       ->required(true);
 
-    subcmd->usage("fima copy [SOURCE] [DESTINATION]");
+    subcmd->usage("fima cp [SOURCE] [DESTINATION]");
 
     subcmd->callback([&]() {
         if (std::filesystem::is_regular_file(source)) {

@@ -64,14 +64,14 @@ setup_rename(CLI::App& app, fs::path& old_name, fs::path& new_name)
     CLI::App* subcmd =
       app.add_subcommand("mv", "Move/rename a file or a directory")->configurable(false);
 
-    subcmd->add_option("old-name", old_name, "File or directory to move or rename")
+    subcmd->add_option("old-path", old_name, "File or directory to move or rename")
       ->configurable(false)
       ->required(true);
-    subcmd->add_option("new-name", new_name, "The new name for the directory or file")
+    subcmd->add_option("new-path", new_name, "The new name for the directory or file")
       ->configurable(false)
       ->required(true);
 
-    subcmd->usage("fima rename [OLD NAME] [NEW NAME]");
+    subcmd->usage("fima mv OLD_PATH NEW_PATH");
 
     subcmd->callback([&]() { _rename(old_name, new_name); });
 }
