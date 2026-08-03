@@ -98,7 +98,7 @@ setup_remove(CLI::App& app, std::vector<std::string>& paths_glob, bool& recursiv
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->usage("fima remove [PATHS] [OPTIONS]");
+    subcmd->usage("fima rm PATHS [OPTIONS]");
 
     subcmd->callback([&]() { remove(paths_glob, recursive); });
 }

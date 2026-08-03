@@ -1,0 +1,33 @@
+:root {
+    --vp-c-brand-1: #76946a;
+    --vp-c-brand-2: #76946a;
+}
+
+.dark {
+    --vp-c-bg: #181616;
+    --vp-c-gutter: #2a2a2a;
+
+    --vp-c-brand-3: #53684a;
+
+    --vp-c-default-2: #3b3b3b;
+    --vp-c-default-3: #2a2a2a;
+
+    --vp-c-border: #2a2a2a;
+    --vp-c-divider: #76946a;
+
+    --vp-c-bg-alt: #2a2a2a;
+    --vp-c-bg-elv: #2a2a2a;
+    --vp-c-bg-soft: #2a2a2a;
+
+    --vp-code-block-divider-color: var(--vp-c-bg);
+}
+
+.VPNavBarSearchButton {
+    border: 1px var(--vp-c-bg) solid;
+
+    transition: border-color 0.25s;
+}
+
+.VPNavBarSearchButton:hover {
+    border: 1px var(--vp-c-brand-1) solid;
+}

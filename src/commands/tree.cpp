@@ -174,7 +174,7 @@ setup_tree(CLI::App& app,
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->usage("fima tree [OPTIONS]");
+    subcmd->usage("fima [PATH] tree [OPTIONS]");
 
     // when calling through the CLI it shouldn't be use a TUI
     options.tui = false;

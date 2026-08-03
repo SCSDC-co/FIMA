@@ -183,7 +183,7 @@ setup_ls(CLI::App& app, fima::options::ls_options& options)
       ->configurable(true)
       ->group("LONG OUTPUT OPTIONS");
 
-    subcmd->usage("fima [PATH] ls [OPTIONS]");
+    subcmd->usage("fima ls [PATHS] [OPTIONS]");
 
     subcmd->callback([&]() { fima::commands::ls(options); });
 }

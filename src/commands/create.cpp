@@ -90,7 +90,7 @@ setup_create(CLI::App& app,
 
     subcmd->add_option("-d,--dir", dir_paths, "Directories to create")->configurable(false);
 
-    subcmd->usage("fima create -d [DIRECTORIES] -f [FILES]");
+    subcmd->usage("fima mk -d [DIRECTORIES] -f [FILES]");
 
     subcmd->callback([&]() {
         dir(dir_paths);
