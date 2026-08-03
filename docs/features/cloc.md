@@ -8,6 +8,8 @@ outline: deep
 
 ## Usage
 
+`fima cloc [PATHS] [OPTIONS]`
+
 **options:**
 
 - `-i, --ignore TEXT ...`  Paths to ignore

@@ -9,6 +9,8 @@ with additional features and customization options.
 
 ## Usage
 
+`fima ls [PATHS] [OPTIONS]`
+
 **Options:**
 
 - `-i, --icons` Put an icon next to the name of the item
