@@ -1,0 +1,39 @@
+name: Build and deploy program
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup C++
+        uses: aminya/setup-cpp@v1
+        with:
+          ninja: true
+          conan: true
+          cmake: "3.31.0"
+          gcc: "15"
+
+      - name: Setup conan profile
+        run: conan profile detect
+
+      - name: Build the program
+        run: ./scripts/release/build.sh
+      
+      - name: Build DEB Package
+        run: cd build && cpack -G DEB && cd ..
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            build/fima
+            build/fima_*.*.*_.deb
