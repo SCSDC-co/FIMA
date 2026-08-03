@@ -34,6 +34,12 @@ jobs:
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: |
-            build/fima
-            build/fima_*.*.*_*.deb
+          path: build/fima
+          name: Binary
+
+      - name: Upload DEB Artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          path: build/fima_*.deb
+          name: DEB
+
