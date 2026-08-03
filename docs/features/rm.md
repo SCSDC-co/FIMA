@@ -4,7 +4,7 @@ outline: deep
 
 # RM
 
-`fima rm` is a recreation of `rm` that support glob.
+`fima rm` is a reimplementation of `rm` that support glob.
 
 ## Usage
 
