@@ -44,7 +44,6 @@ int
 main(int argc, char** argv)
 {
     fima::config::setup_variables();
-    fima::config::create_config_file();
     fima::config::parse_config_file();
 
     fima::theme::parse_theme_file();
@@ -61,11 +60,10 @@ main(int argc, char** argv)
     app.get_formatter()->long_option_alignment_ratio(0.25);
     app.get_formatter()->label("POSITIONALS", "PATH");
 
-    CLI::Option* config = app
-                            .set_config("--config",
-                                        fima::config::CONFIG_FILE_PATH,
-                                        "Specify the config file (TOML format)")
-                            ->multi_option_policy(CLI::MultiOptionPolicy::Throw);
+    CLI::Option* config = app.set_config("-c,--config",
+                                         fima::config::CONFIG_FILE_PATH,
+                                         "Specify the config file (TOML format)",
+                                         false);
 
     app
       .add_flag_callback(

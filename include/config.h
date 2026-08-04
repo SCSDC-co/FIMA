@@ -38,8 +38,8 @@ inline const std::vector<std::regex> DEFAULT_DIRS_TO_IGNORE = {
     std::regex{ R"(obj)" },          std::regex{ R"(__pycache__)" }
 };
 
-inline int depth{};
-inline int process_directory_size{};
+inline int depth{ 8 };
+inline bool process_directory_size{ false };
 
 inline std::filesystem::path CONFIG_PATH;
 inline std::filesystem::path FIMA_CONFIG_PATH;
@@ -48,9 +48,6 @@ inline std::filesystem::path THEME_FILE_PATH;
 
 void
 setup_variables();
-
-void
-create_config_file();
 
 void
 parse_config_file();
