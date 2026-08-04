@@ -61,10 +61,18 @@ jobs:
           ninja: true
           conan: true
           cmake: "3.31.0"
-          gcc: "16"
+          gcc: "15"
+
+      - name: Cache or restore conan dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-${{ runner.os }}-${{ hashFiles('conan.lock') }}
+          restore-keys: |
+            conan-${{ runner.os }}-
 
       - name: Setup conan profile
-        run: conan profile detect
+        run: conan profile detect --force
 
       - name: Build the program
         run: ./scripts/tests/build.sh
