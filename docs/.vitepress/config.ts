@@ -1,7 +1,8 @@
-import { defineConfig } from "vitepress";
+import { defineConfig, UserConfig } from "vitepress";
+import { withSidebar } from "vitepress-sidebar";
+import { VitePressSidebarOptions } from "vitepress-sidebar/types";
 
-// https://vitepress.dev/reference/site-config
-export default defineConfig({
+const vitePressOptions: UserConfig = {
     title: "FIMA",
     description: "Fast, Incredible, Minimal & Awesome File Manager",
 
@@ -33,31 +34,22 @@ export default defineConfig({
             message: "Released under the GPL 3.0 License.",
             copyright: "Copyright © 2026-present Giuliano De Amicis",
         },
-
-        sidebar: [
-            {
-                text: "Docs",
-                items: [
-                    { text: "Get Started", link: "/get-started" },
-                    {
-                        text: "Features",
-                        items: [
-                            { text: "Home Page", link: "/features" },
-                            { text: "LS", link: "/features/ls" },
-                            { text: "Tree", link: "/features/tree" },
-                            { text: "MK", link: "/features/mk" },
-                            { text: "RM", link: "/features/rm" },
-                            { text: "CP", link: "/features/cp" },
-                            { text: "MV", link: "/features/mv" },
-                            { text: "Perms", link: "/features/perms" },
-                            { text: "CLOC", link: "/features/cloc" },
-                            { text: "Info", link: "/features/info" },
-                            { text: "Zip", link: "/features/zip" },
-                            { text: "Unzip", link: "/features/unzip" },
-                        ],
-                    },
-                ],
-            },
-        ],
     },
-});
+};
+
+const vitePressSidebarOptions: VitePressSidebarOptions = {
+    documentRootPath: "docs/",
+    collapsed: true,
+    capitalizeFirst: true,
+    hyphenToSpace: true,
+    useTitleFromFileHeading: true,
+    manualSortFileNameByPriority: [
+        "get-started.md",
+        "customization-and-configuration.md",
+    ],
+    sortMenusOrderByDescending: false,
+};
+
+export default defineConfig(
+    withSidebar(vitePressOptions, vitePressSidebarOptions),
+);
