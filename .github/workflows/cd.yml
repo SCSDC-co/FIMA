@@ -1,0 +1,45 @@
+name: Build and deploy program
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Setup C++
+        uses: aminya/setup-cpp@8170d66c458f4a045220b7b0966c10940bb2a15d
+        with:
+          ninja: true
+          conan: true
+          cmake: "3.31.0"
+          gcc: "15"
+
+      - name: Setup conan profile
+        run: conan profile detect
+
+      - name: Build the program
+        run: ./scripts/release/build.sh
+
+      - name: Build DEB Package
+        run: cd build && cpack -G DEB && cd ..
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          path: build/fima
+          name: Binary
+
+      - name: Upload DEB Artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          path: build/fima_*.deb
+          name: DEB
+
