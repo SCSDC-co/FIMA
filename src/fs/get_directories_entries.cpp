@@ -150,7 +150,7 @@ get_files_for_cloc(const _fs::directory_entry& path,
 
         return !(ft_to_skip.contains(ext) || fima::fs::operations::is_file_executable(path) ||
                  fima::fs::operations::is_compressed_archive(path) ||
-                 fima::fs::operations::is_media(path)) &&
+                 fima::fs::operations::is_media(path) || fima::fs::operations::is_lockfile(path)) &&
                _fs::is_regular_file(path);
     };
 

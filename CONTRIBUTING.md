@@ -30,6 +30,14 @@ These dependencies are optional but recommended.
 There are helper scripts (located in `scripts/`) that help you build the program,
 there are release and tests ones, the names are pretty much self explanatory
 
+## Branches
+
+There are 3 main branches:
+
+- `main` this branch is protected and you can't directly push on it
+- `dev` this branch is used for developing FIMA
+- `website-docs` this branch is used for develop the website docs
+
 ## Coding style
 
 FIMA has a set of coding styles, make sure to follow them.

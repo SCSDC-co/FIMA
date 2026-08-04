@@ -7,9 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GitVersionDetect)
 
-set(PROJECT_DESCRIPTION
-    "FIMA - Fast, Incredible, Minimal & Awesome File Manager"
-)
+set(PROJECT_DESCRIPTION "Fast, Incredible, Minimal & Awesome File Manager")
 
 project(
     fima
@@ -46,6 +44,10 @@ target_link_libraries(
            tomlplusplus::tomlplusplus
            CLI11::CLI11
 )
+
+if(WIN32)
+    target_link_libraries(fima_lib PRIVATE Advapi32)
+endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)
 

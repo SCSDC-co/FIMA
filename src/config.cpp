@@ -11,11 +11,11 @@
 
 #include "config.h"
 
+#include <filesystem>
 #include <string_view>
 #include <toml++/toml.hpp>
 
 #include "fs/get_config_path.h"
-#include "fs/operations.h"
 #include "mappings.h"
 #include "utility/regex.h"
 
@@ -33,23 +33,15 @@ setup_variables()
 }
 
 void
-create_config_file()
-{
-    if (!std::filesystem::exists(FIMA_CONFIG_PATH)) {
-        std::filesystem::create_directory(FIMA_CONFIG_PATH);
-    }
-
-    if (!std::filesystem::exists(CONFIG_FILE_PATH)) {
-        fima::fs::operations::create(CONFIG_FILE_PATH, "");
-    }
-}
-
-void
 parse_config_file()
 {
+    if (!std::filesystem::exists(CONFIG_FILE_PATH)) {
+        return;
+    }
+
     auto config{ toml::parse_file(CONFIG_FILE_PATH.string()) };
 
-    depth                  = config["depth"].value_or(8);
+    depth                  = config["depth"].value_or(0);
     process_directory_size = config["process_directory_size"].value_or(false);
 
     if (config["icons"]["files"].is_table()) {
