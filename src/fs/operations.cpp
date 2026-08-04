@@ -160,39 +160,62 @@ get_file_owner(const std::filesystem::path& path)
     PSECURITY_DESCRIPTOR security_descriptor = nullptr;
     PSID owner_sid                           = nullptr;
 
-    if (GetNamedSecurityInfoW(path.wstring().c_str(),
-                              SE_FILE_OBJECT,
-                              OWNER_SECURITY_INFORMATION,
-                              &owner_sid,
-                              nullptr,
-                              nullptr,
-                              nullptr,
-                              &security_descriptor) != ERROR_SUCCESS) {
+    const DWORD status = GetNamedSecurityInfoW(path.wstring().c_str(),
+                                               SE_FILE_OBJECT,
+                                               OWNER_SECURITY_INFORMATION,
+                                               &owner_sid,
+                                               nullptr,
+                                               nullptr,
+                                               nullptr,
+                                               &security_descriptor);
+
+    if (status != ERROR_SUCCESS) {
         return "unknown";
     }
 
-    wchar_t name[256];
-    wchar_t domain[256];
+    DWORD name_size   = 0;
+    DWORD domain_size = 0;
+    SID_NAME_USE sid_type{};
 
-    DWORD name_size   = sizeof(name) / sizeof(wchar_t);
-    DWORD domain_size = sizeof(domain) / sizeof(wchar_t);
+    LookupAccountSidW(nullptr, owner_sid, nullptr, &name_size, nullptr, &domain_size, &sid_type);
 
-    SID_NAME_USE sid_type;
+    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+        LocalFree(security_descriptor);
+        return "unknown";
+    }
 
-    std::string result = "unknown";
+    std::wstring name(name_size, L'\0');
+    std::wstring domain(domain_size, L'\0');
 
-    if (LookupAccountSidW(nullptr, owner_sid, name, &name_size, domain, &domain_size, &sid_type)) {
-
-        int size = WideCharToMultiByte(CP_UTF8, 0, name, -1, nullptr, 0, nullptr, nullptr);
-
-        if (size > 0) {
-            result.resize(size - 1);
-
-            WideCharToMultiByte(CP_UTF8, 0, name, -1, result.data(), size, nullptr, nullptr);
-        }
+    if (!LookupAccountSidW(
+          nullptr, owner_sid, name.data(), &name_size, domain.data(), &domain_size, &sid_type)) {
+        LocalFree(security_descriptor);
+        return "unknown";
     }
 
     LocalFree(security_descriptor);
+
+    if (!name.empty() && name.back() == L'\0') {
+        name.pop_back();
+    }
+
+    const int utf8_size = WideCharToMultiByte(
+      CP_UTF8, 0, name.data(), static_cast<int>(name.size()), nullptr, 0, nullptr, nullptr);
+
+    if (utf8_size <= 0) {
+        return "unknown";
+    }
+
+    std::string result(static_cast<std::size_t>(utf8_size), '\0');
+
+    WideCharToMultiByte(CP_UTF8,
+                        0,
+                        name.data(),
+                        static_cast<int>(name.size()),
+                        result.data(),
+                        utf8_size,
+                        nullptr,
+                        nullptr);
 
     return result;
 #endif
