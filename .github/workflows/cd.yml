@@ -25,8 +25,16 @@ jobs:
           cmake: "3.31.0"
           gcc: "15"
 
+      - name: Cache or restore conan dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-${{ runner.os }}-${{ hashFiles('conan.lock') }}
+          restore-keys: |
+            conan-${{ runner.os }}-
+
       - name: Setup conan profile
-        run: conan profile detect
+        run: conan profile detect --force
 
       - name: Build the program
         run: ./scripts/release/build.sh
@@ -95,6 +103,7 @@ jobs:
           gpgconf --kill gpg-agent
 
       - name: Install aptly
+        if: steps.check_tag.outputs.is_tag == 'true'
         run: |
           curl -o- https://www.aptly.info/pubkey.txt | sudo gpg --dearmor -o /usr/share/keyrings/aptly-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/aptly-archive-keyring.gpg] http://repo.aptly.info/ squeeze main" | sudo tee /etc/apt/sources.list.d/aptly.list
