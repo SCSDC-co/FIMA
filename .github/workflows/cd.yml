@@ -103,6 +103,7 @@ jobs:
           gpgconf --kill gpg-agent
 
       - name: Install aptly
+        if: steps.check_tag.outputs.is_tag == 'true'
         run: |
           curl -o- https://www.aptly.info/pubkey.txt | sudo gpg --dearmor -o /usr/share/keyrings/aptly-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/aptly-archive-keyring.gpg] http://repo.aptly.info/ squeeze main" | sudo tee /etc/apt/sources.list.d/aptly.list
