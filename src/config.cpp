@@ -15,7 +15,7 @@
 #include <string_view>
 #include <toml++/toml.hpp>
 
-#include "fs/get_config_path.h"
+#include "fs/get_application_directories.h"
 #include "mappings.h"
 #include "utility/regex.h"
 

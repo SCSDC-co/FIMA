@@ -32,6 +32,7 @@
 #include "commands/unzip.h"
 #include "commands/zip.h"
 #include "config.h"
+#include "fs/trash.h"
 #include "git/GitRepo.h"
 #include "options.h"
 #include "theme.h"
@@ -47,6 +48,8 @@ main(int argc, char** argv)
     fima::config::parse_config_file();
 
     fima::theme::parse_theme_file();
+
+    fima::fs::trash::setup_variables();
 
     CLI::App app;
     argv = app.ensure_utf8(argv);
