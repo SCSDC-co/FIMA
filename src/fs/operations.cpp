@@ -22,13 +22,19 @@
 #include <ios>
 #include <iostream>
 #include <iterator>
-#include <pwd.h>
 #include <string>
 #include <string_view>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <unordered_set>
 #include <vector>
+
+#ifndef _WIN32
+#  include <pwd.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+#else
+#  include <Aclapi.h>
+#  include <windows.h>
+#endif
 
 #include "config.h"
 #include "ftxui/dom/elements.hpp"
@@ -136,6 +142,7 @@ get_file_time(const std::filesystem::path& path)
 std::string
 get_file_owner(const std::filesystem::path& path)
 {
+#ifndef _WIN32
     struct stat info;
 
     if (stat(path.c_str(), &info) != 0) {
@@ -149,6 +156,69 @@ get_file_owner(const std::filesystem::path& path)
     }
 
     return std::to_string(info.st_uid);
+#else // why windows needs to be so disgusting, WHYYYYYYYYYYYYYYYYYYYYYYYYYY
+    PSECURITY_DESCRIPTOR security_descriptor = nullptr;
+    PSID owner_sid                           = nullptr;
+
+    const DWORD status = GetNamedSecurityInfoW(path.wstring().c_str(),
+                                               SE_FILE_OBJECT,
+                                               OWNER_SECURITY_INFORMATION,
+                                               &owner_sid,
+                                               nullptr,
+                                               nullptr,
+                                               nullptr,
+                                               &security_descriptor);
+
+    if (status != ERROR_SUCCESS) {
+        return "unknown";
+    }
+
+    DWORD name_size   = 0;
+    DWORD domain_size = 0;
+    SID_NAME_USE sid_type{};
+
+    LookupAccountSidW(nullptr, owner_sid, nullptr, &name_size, nullptr, &domain_size, &sid_type);
+
+    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+        LocalFree(security_descriptor);
+        return "unknown";
+    }
+
+    std::wstring name(name_size, L'\0');
+    std::wstring domain(domain_size, L'\0');
+
+    if (!LookupAccountSidW(
+          nullptr, owner_sid, name.data(), &name_size, domain.data(), &domain_size, &sid_type)) {
+        LocalFree(security_descriptor);
+        return "unknown";
+    }
+
+    LocalFree(security_descriptor);
+
+    if (!name.empty() && name.back() == L'\0') {
+        name.pop_back();
+    }
+
+    const int utf8_size = WideCharToMultiByte(
+      CP_UTF8, 0, name.data(), static_cast<int>(name.size()), nullptr, 0, nullptr, nullptr);
+
+    if (utf8_size <= 0) {
+        return "unknown";
+    }
+
+    std::string result(static_cast<std::size_t>(utf8_size), '\0');
+
+    WideCharToMultiByte(CP_UTF8,
+                        0,
+                        name.data(),
+                        static_cast<int>(name.size()),
+                        result.data(),
+                        utf8_size,
+                        nullptr,
+                        nullptr);
+
+    return result;
+#endif
 }
 
 std::string
@@ -182,18 +252,6 @@ is_file_executable(const std::filesystem::path& path)
         return false;
     }
 
-    static const std::unordered_set<std::string> ft = {
-        ".exe", ".dll",   ".sys", ".cpl", ".ocx",      ".scr", ".efi",  ".msi",
-        ".app", ".apk",   ".ipa", ".elf", ".o",        ".obj", ".com",  ".bin",
-        ".so",  ".dylib", ".out", ".run", ".appimage", ".ko",  ".wasm", ".pyc",
-    };
-
-    static const std::unordered_set<std::string> scripts = {
-        ".sh",  ".zsh", ".bash", ".csh", ".ksh", ".tcsh", ".fish",        ".py", ".pyw",
-        ".pl",  ".pm",  ".rb",   ".php", ".js",  ".mjs",  ".cjs",         ".ts", ".lua",
-        ".ps1", ".vbs", ".bat",  ".cmd", ".awk", ".tcl",  ".applescript",
-    };
-
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
@@ -202,7 +260,7 @@ is_file_executable(const std::filesystem::path& path)
         return false;
     }
 
-    if (ft.contains(ext)) {
+    if (executables.contains(ext)) {
         return true;
     }
 
@@ -218,41 +276,19 @@ is_file_executable(const std::filesystem::path& path)
 bool
 is_compressed_archive(const std::filesystem::path& path)
 {
-    static const std::unordered_set<std::string> ft = {
-        ".zip",  ".rar", ".7z",   ".tar",   ".gz",  ".bz2",  ".xz",  ".z",   ".lz",
-        ".lzma", ".lzo", ".zst",  ".dmg",   ".pkg", ".xip",  ".cab", ".msi", ".wim",
-        ".deb",  ".rpm", ".snap", ".jar",   ".war", ".ear",  ".aar", ".apk", ".ipa",
-        ".whl",  ".egg", ".tgz",  ".tbz2",  ".txz", ".tzst", ".lz4", ".br",  ".iso",
-        ".img",  ".ar",  ".cpio", ".crate", ".ace", ".arc",  ".arj",
-    };
-
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    return ft.contains(ext);
+    return archives.contains(ext);
 }
 
 bool
 is_media(const std::filesystem::path& path)
 {
-    static const std::unordered_set<std::string> ft = {
-        ".jpg",  ".jpeg", ".png", ".bmp",  ".tiff", ".tif",  ".webp", ".avif", ".heif", ".heic",
-        ".ico",  ".cur",  ".psd", ".xcf",  ".raw",  ".cr2",  ".nef",  ".arw",  ".dng",  ".gif",
-        ".mp4",  ".mkv",  ".avi", ".mov",  ".wmv",  ".flv",  ".mpeg", ".mpg",  ".3gp",  ".3g2",
-        ".m2ts", ".vob",  ".ogv", ".rm",   ".rmvb", ".asf",  ".divx", ".hevc", ".h264", ".h265",
-        ".f4v",  ".mxf",  ".roq", ".drc",  ".amv",  ".webm", ".m4v",  ".mp3",  ".aac",  ".m4a",
-        ".ogg",  ".opus", ".wma", ".amr",  ".ac3",  ".flac", ".alac", ".wav",  ".aiff", ".aif",
-        ".ape",  ".wv",   ".tta", ".oga",  ".mka",  ".ra",   ".mid",  ".midi", ".rmi",  ".dsf",
-        ".dff",  ".caf",  ".pcm", ".jxl",  ".jfif", ".jpe",  ".svg",  ".svgz", ".tga",  ".exr",
-        ".hdr",  ".bpg",  ".qoi", ".pbm",  ".pgm",  ".ppm",  ".pnm",  ".m2v",  ".ogm",  ".y4m",
-        ".m4b",  ".m4p",  ".m4r", ".weba", ".spx",  ".au",   ".snd",  ".voc",  ".w64",  ".mpc",
-        ".shn",  ".tak",  ".xm",  ".mod",  ".s3m",  ".it",   ".aifc", ".mp1",  ".mp2",
-    };
-
     std::string ext = path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    return ft.contains(ext);
+    return media.contains(ext);
 }
 
 bool
@@ -261,6 +297,18 @@ is_root(const std::filesystem::path& path)
     std::filesystem::path canonical_path = std::filesystem::canonical(path);
 
     return !canonical_path.has_relative_path();
+}
+
+bool
+is_lockfile(const std::filesystem::path& path)
+{
+    std::string name{ path.filename().string() };
+    std::string ext{ path.extension().string() };
+
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+
+    return ext == ".lock" || lockfiles.contains(name);
 }
 
 bool

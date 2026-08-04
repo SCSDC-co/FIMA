@@ -43,12 +43,12 @@ fima ls path/ file.txt "**/glob[.txt]*"
 
 ## Showcase
 
-![Showcase 1](/ls_showcase_1.png)
+<Showcase src="/ls_showcase_1.png" />
 
 ---
 
-![Showcase 2](/ls_showcase_2.png)
+<Showcase src="/ls_showcase_2.png" />
 
 ---
 
-![Showcase 3](/ls_showcase_3.png)
+<Showcase src="/ls_showcase_3.png" />

@@ -38,12 +38,12 @@ fima ingo -g
 
 ## Showcase
 
-![Showcase 1](/info_showcase_1.png)
+<Showcase src="/info_showcase_1.png" />
 
 ---
 
-![Showcase 2](/info_showcase_2.png)
+<Showcase src="/info_showcase_2.png" />
 
 ---
 
-![Showcase 3](/info_showcase_3.png)
+<Showcase src="/info_showcase_3.png" />

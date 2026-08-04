@@ -32,3 +32,5 @@ features:
 ::: warning
 FIMA is in its early stages of development so it may have some bugs
 :::
+
+<Contributors heading="CONTRIBUTORS" :contributors="$contributors" />
