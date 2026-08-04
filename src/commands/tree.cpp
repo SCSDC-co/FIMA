@@ -17,7 +17,6 @@
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <string>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "config.h"
@@ -27,6 +26,7 @@
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
+#include "theme.h"
 #include "tui/commands/tree/tree_tui.h"
 #include "utility/regex.h"
 
@@ -84,14 +84,15 @@ create_tree(const std::filesystem::directory_entry& path,
 
         if (!options.tui) {
             if (entry.is_directory()) {
-                std::cout << termcolor::green << prefix << pointers[0]
-                          << entry.path().filename().string() << "/" << termcolor::reset
-                          << std::endl;
+                std::cout << fima::theme::theme.primary << prefix << pointers[0]
+                          << entry.path().filename().string() << "/" << fima::theme::theme.secondary
+                          << fima::theme::Color::reset << std::endl;
             } else {
-                std::cout << termcolor::green << prefix << pointers[0] << termcolor::reset
-                          << entry.path().filename().string() << std::endl;
+                std::cout << fima::theme::theme.primary << prefix << pointers[0]
+                          << fima::theme::theme.secondary << entry.path().filename().string()
+                          << fima::theme::Color::reset << std::endl;
             }
-        } else if (options.tui) {
+        } else {
             Element prefix_elem = text(prefix) | color(Color::Green);
             Element name_elem =
               text(entry.path().filename().string() + (entry.is_directory() ? "/ " : " "));
@@ -124,8 +125,9 @@ create_tree(const std::filesystem::directory_entry& path,
             const fima::options::tree_options& options)
 {
     if (!options.tui) {
-        std::cout << termcolor::green << path.path().string()
-                  << (path.path().string().back() == '/' ? "" : "/") << termcolor::reset << '\n';
+        std::cout << fima::theme::theme.primary << path.path().string()
+                  << (path.path().string().back() == '/' ? "" : "/") << fima::theme::theme.secondary
+                  << fima::theme::Color::reset << '\n';
     }
 
     create_tree(path, repo, options, options.prefix);
@@ -135,10 +137,12 @@ create_tree(const std::filesystem::directory_entry& path,
     } else if (options.verbose) {
         std::cout << '\n';
 
-        std::cout << termcolor::green << "Number of directories: " << termcolor::reset
-                  << std::to_string(number_of_dirs) << '\n';
-        std::cout << termcolor::green << "Number of files: " << termcolor::reset
-                  << std::to_string(number_of_files) << '\n';
+        std::cout << fima::theme::theme.primary
+                  << "Number of directories: " << fima::theme::theme.secondary
+                  << std::to_string(number_of_dirs) << fima::theme::Color::reset << '\n';
+        std::cout << fima::theme::theme.primary
+                  << "Number of files: " << fima::theme::theme.secondary
+                  << std::to_string(number_of_files) << fima::theme::Color::reset << '\n';
     }
 }
 
@@ -170,7 +174,7 @@ setup_tree(CLI::App& app,
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->usage("fima tree [OPTIONS]");
+    subcmd->usage("fima [PATH] tree [OPTIONS]");
 
     // when calling through the CLI it shouldn't be use a TUI
     options.tui = false;

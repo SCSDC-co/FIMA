@@ -14,78 +14,137 @@
 #include <algorithm>
 #include <cctype>
 #include <filesystem>
+#include <glob/glob.hpp>
+#include <iostream>
 #include <vector>
 
+#include "CLI/CLI.hpp"
 #include "commands/ls/helpers/printer.h"
 #include "fs/DirectoryItem.h"
 #include "fs/get_directories_entries.h"
-#include "git/GitRepo.h"
 #include "options.h"
+#include "theme.h"
 
 namespace fima {
 
 namespace commands {
 
 void
-ls(const std::filesystem::path& path,
-   const fima::git::GitRepo& repo,
-   const fima::options::ls_options& options)
+ls(fima::options::ls_options& options)
 {
-    std::vector<std::filesystem::directory_entry> list_of_the_directory;
-
-    if (options.gitignore) {
-        list_of_the_directory = fima::fs::get_directories_entries(path, repo, options.all);
-    } else {
-        list_of_the_directory = fima::fs::get_directories_entries_no_git(path, options.all);
-    }
-
     auto to_lower = [=](std::string s) {
-        std::transform(
-          s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
         return s;
     };
 
-    // what was I thinking when I did the 2 vector thing? Sorting the vector is much better
-    std::sort(list_of_the_directory.begin(),
-              list_of_the_directory.end(),
-              [to_lower](const std::filesystem::directory_entry& a,
-                         const std::filesystem::directory_entry& b) {
-                  if (a.is_directory() != b.is_directory()) {
-                      return a.is_directory();
+    std::sort(options.paths.begin(),
+              options.paths.end(),
+              [to_lower](const std::filesystem::path& a, const std::filesystem::path& b) {
+                  if (std::filesystem::is_directory(a) != std::filesystem::is_directory(b)) {
+                      return !std::filesystem::is_directory(a);
                   }
 
-                  return to_lower(a.path().filename().string()) <
-                         to_lower(b.path().filename().string());
+                  return to_lower(a.filename().string()) < to_lower(b.filename().string());
               });
 
-    std::vector<fima::fs::DirectoryItem> items{};
+    std::vector<std::filesystem::path> paths{};
+    auto it = options.paths.begin();
 
-    for (const std::filesystem::directory_entry& item : list_of_the_directory) {
-        items.emplace_back(item);
+    for (; it != options.paths.end() && !std::filesystem::is_directory(*it); ++it) {
+        paths.append_range(glob::rglob(it->string()));
     }
 
-    // remove items that are invalid
-    items.erase(std::remove_if(items.begin(),
-                               items.end(),
-                               [](const fima::fs::DirectoryItem& item) { return item.is_valid(); }),
-                items.end());
+    if (paths.size() > 0) {
+        std::vector<fima::fs::DirectoryItem> items{};
 
-    if (options.long_output) {
-        ls::helpers::print_long(items, options.icons, options.verbose);
-    } else {
-        ls::helpers::print_normal(items, options.icons);
+        for (auto path : paths) {
+            items.emplace_back(path);
+        }
+
+        if (options.long_output) {
+            ls::helpers::print_long(items, options.icons, options.verbose, options.headers, true);
+        } else if (options.one_line) {
+            ls::helpers::print_one_line(items, options.icons, true);
+        } else {
+            ls::helpers::print_normal(items, options.icons, true);
+        }
+    }
+
+    for (; it != options.paths.end(); ++it) {
+        auto item = *it;
+
+        std::vector<std::filesystem::path> list_of_the_directory;
+
+        list_of_the_directory.append_range(
+          fima::fs::get_directories_entries_no_git(item, options.all));
+
+        if (options.directory_first) {
+            std::sort(list_of_the_directory.begin(),
+                      list_of_the_directory.end(),
+                      [to_lower](const std::filesystem::path& a, const std::filesystem::path& b) {
+                          if (std::filesystem::is_directory(a) !=
+                              std::filesystem::is_directory(b)) {
+                              return std::filesystem::is_directory(a);
+                          }
+
+                          return to_lower(a.filename().string()) < to_lower(b.filename().string());
+                      });
+        } else if (options.directory_last) {
+            std::sort(list_of_the_directory.begin(),
+                      list_of_the_directory.end(),
+                      [to_lower](const std::filesystem::path& a, const std::filesystem::path& b) {
+                          if (std::filesystem::is_directory(a) !=
+                              std::filesystem::is_directory(b)) {
+                              return !std::filesystem::is_directory(a);
+                          }
+
+                          return to_lower(a.filename().string()) < to_lower(b.filename().string());
+                      });
+        } else {
+            std::sort(list_of_the_directory.begin(),
+                      list_of_the_directory.end(),
+                      [to_lower](const std::filesystem::path& a, const std::filesystem::path& b) {
+                          return to_lower(a.filename().string()) < to_lower(b.filename().string());
+                      });
+        }
+
+        std::vector<fima::fs::DirectoryItem> items{};
+
+        for (const std::filesystem::path& path : list_of_the_directory) {
+            items.emplace_back(path);
+        }
+
+        items.erase(
+          std::remove_if(items.begin(),
+                         items.end(),
+                         [](const fima::fs::DirectoryItem& item) { return !item.is_valid(); }),
+          items.end());
+
+        if (options.paths.size() > 1 && std::filesystem::is_directory(item)) {
+            std::cout << '\n'
+                      << fima::theme::theme.primary << item.string()
+                      << "/:" << fima::theme::Color::reset << '\n';
+        }
+
+        if (options.long_output) {
+            ls::helpers::print_long(items, options.icons, options.verbose, options.headers, false);
+        } else if (options.one_line) {
+            ls::helpers::print_one_line(items, options.icons, false);
+        } else {
+            ls::helpers::print_normal(items, options.icons, false);
+        }
     }
 }
 
 void
-setup_ls(CLI::App& app,
-         const std::filesystem::directory_entry& path,
-         const fima::git::GitRepo& repo,
-         fima::options::ls_options& options)
+setup_ls(CLI::App& app, fima::options::ls_options& options)
 {
     CLI::App* subcmd =
       app.add_subcommand("ls", "Print the content of the directory like the ls command")
         ->configurable(false);
+
+    subcmd->add_option("paths", options.paths, "The paths to work on (default current directory)")
+      ->configurable(false);
 
     subcmd->add_flag("-i,--icons", options.icons, "Put an icon next to the name of the item")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
@@ -95,26 +154,38 @@ setup_ls(CLI::App& app,
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->add_flag("-l,--long", options.long_output, "Display the file metadata")
+    subcmd->add_flag("-1,--one-line", options.one_line, "Display one entry per line")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     subcmd
       ->add_flag(
-        "-G,--no-gitignore", [&](int) { options.gitignore = false; }, "Ignore .gitignore")
+        "--group-directories-first", options.directory_first, "List directories before files")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
     subcmd
-      ->add_flag("-v,--verbose",
-                 options.verbose,
-                 "Display the number of directories and files (only works with long output)")
+      ->add_flag("--group-directories-last", options.directory_last, "List directories after files")
       ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
       ->configurable(true);
 
-    subcmd->usage("fima ls [OPTIONS]");
+    subcmd->add_flag("-l,--long", options.long_output, "Display the file metadata")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
 
-    subcmd->callback([&]() { fima::commands::ls(path, repo, options); });
+    subcmd->add_flag("-v,--verbose", options.verbose, "Display the number of directories and files")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true)
+      ->group("LONG OUTPUT OPTIONS");
+
+    subcmd->add_flag("-H,--headers", options.headers, "Add a header to each column")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true)
+      ->group("LONG OUTPUT OPTIONS");
+
+    subcmd->usage("fima ls [PATHS] [OPTIONS]");
+
+    subcmd->callback([&]() { fima::commands::ls(options); });
 }
 
 } // namespace commands

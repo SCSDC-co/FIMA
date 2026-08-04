@@ -1,6 +1,11 @@
 # trash
 build/
 .cache/
+node_modules/
+
+# vitepress things
+docs/.vitepress/dist
+docs/.vitepress/cache
 
 # CMake user staff
 CMakeUserPresets.json

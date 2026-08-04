@@ -304,6 +304,10 @@ GitRepo::is_file_ignored(const _fs::path& path) const
 {
     int is_ignored;
 
+    if (_fs::is_symlink(path) && !_fs::exists(_fs::read_symlink(path))) {
+        return 0;
+    }
+
     _fs::path relative_path =
       _fs::relative(_fs::canonical(path), this->git_repo_path.parent_path());
 

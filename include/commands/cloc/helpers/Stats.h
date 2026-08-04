@@ -44,7 +44,9 @@ class Stats
         this->code += s.code;
         this->blank_lines += s.blank_lines;
         this->comments += s.comments;
-        this->total += s.total;
+
+        this->set_total();
+
         return *this;
     }
 

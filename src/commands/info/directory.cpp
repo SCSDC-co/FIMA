@@ -11,7 +11,6 @@
 
 #include "commands/info/directory.h"
 
-#include <cmath>
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
@@ -23,10 +22,11 @@
 
 #include "config.h"
 #include "fs/Directory.h"
+#include "fs/get_directories_entries.h"
 #include "fs/operations.h"
 #include "ftxui/dom/node.hpp"
-#include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "theme.h"
 #include "utility/join.h"
 #include "utility/most_common.h"
 #include "utility/regex.h"
@@ -49,32 +49,22 @@ dir(const std::filesystem::directory_entry& path,
     dir.set_number_of_files(repo);
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
-        return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
+        return hbox(text(title) | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                    value | color(fima::theme::theme.secondary.get_color_for_tui()));
     };
 
     Element document{};
 
     if (verbose) {
-        auto it{ std::filesystem::recursive_directory_iterator(
-          path, std::filesystem::directory_options::skip_permission_denied) };
+        std::vector<std::filesystem::directory_entry> files{ fima::fs::get_files_for_cloc(
+          path, repo, true, true, fima::config::DEFAULT_DIRS_TO_IGNORE) };
 
         std::unordered_set<std::string> extensions_set{};
         std::vector<std::string> extensions_vec{};
 
         std::map<size_t, std::filesystem::path> size_path_map{};
 
-        for (auto& item : it) {
-            if (item.is_directory()) {
-                continue;
-            }
-
-            if (repo.is_file_ignored(item) &&
-                fima::utility::regex::matches_any_regex(item.path().filename().string(),
-                                                        fima::config::DEFAULT_DIRS_TO_IGNORE)) {
-                it.disable_recursion_pending();
-                continue;
-            }
-
+        for (const std::filesystem::directory_entry& item : files) {
             std::filesystem::path path = item.path();
             std::string extension      = path.extension().string();
 
@@ -97,44 +87,19 @@ dir(const std::filesystem::directory_entry& path,
 
         std::string biggest_file_path{ std::filesystem::relative(
           std::prev(size_path_map.end())->second) };
-        std::string biggest_file_size{};
-
-        if (biggest_file_size_tmp == 0) {
-            biggest_file_size = "-";
-        }
-
-        double dimension = static_cast<double>(biggest_file_size_tmp);
-        std::string ext;
-
-        if (dimension >= 1024 * 1024 * 1024) {
-            ext = "GB";
-            dimension /= 1024 * 1024 * 1024;
-        } else if (dimension >= 1024 * 1024) {
-            ext = "MB";
-            dimension /= 1024 * 1024;
-        } else if (dimension >= 1024) {
-            ext = "KB";
-            dimension /= 1024;
-        } else {
-            ext = "B";
-        }
-
-        // if the number is already rounded there's no need to display the decimal digits
-        if (std::round(dimension) == static_cast<int>(dimension)) {
-            biggest_file_size = std::format("{:.0f}{}", dimension, ext);
-        } else {
-            biggest_file_size = std::format("{:.2f}{}", dimension, ext);
-        }
+        std::string biggest_file_size{ fima::fs::operations::make_size_readable(
+          biggest_file_size_tmp) };
 
         document = vbox(
           // header
-          border(hbox(text("DINFO: ") | bold | color(Color::Green),
-                      text(dir.metadata.get_path()) | color(Color::White),
-                      text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-                        color(Color::White),
-                      text((dir.metadata.get_is_hidden() ? " (hidden) " : " ")) | flex,
-                      text(dir.metadata.get_icon()))) |
-            color(Color::Green),
+          border(hbox(
+            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+            text(" " + dir.metadata.get_icon() + " "))) |
+            color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(
             window(text(" INFO ") | bold,
@@ -144,7 +109,7 @@ dir(const std::filesystem::directory_entry& path,
                                           text(std::to_string(dir.get_number_of_files()))),
                         draw_window_entry("Last modification date: ",
                                           text(dir.metadata.get_last_modification_date())))) |
-              color(Color::Green) | flex,
+              color(fima::theme::theme.border.get_color_for_tui()) | flex,
 
             window(
               text(" LOC ") | bold,
@@ -153,24 +118,25 @@ dir(const std::filesystem::directory_entry& path,
                    draw_window_entry("Blank lines: ",
                                      text(std::to_string(dir.stats.get_blank_lines()))),
                    draw_window_entry("Total: ", text(std::to_string(dir.stats.get_total()))))) |
-              color(Color::Green)),
-          window(text(" VERBOSE ") | bold | color(Color::Green),
+              color(fima::theme::theme.border.get_color_for_tui())),
+          window(text(" VERBOSE ") | bold,
                  vbox(draw_window_entry("Extensions: ", text(extensions)),
                       draw_window_entry("Most common extension: ", text(most_common_extension)),
                       draw_window_entry(
                         "Biggest file: ",
                         hbox(text(biggest_file_path), text(" (" + biggest_file_size + ")"))))) |
-            color(Color::Green));
+            color(fima::theme::theme.border.get_color_for_tui()));
     } else {
         document = vbox(
           // header
-          border(hbox(text("DINFO: ") | bold | color(Color::Green),
-                      text(dir.metadata.get_path()) | color(Color::White),
-                      text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-                        color(Color::White),
-                      text((dir.metadata.get_is_hidden() ? " (hidden) " : " ")) | flex,
-                      text(dir.metadata.get_icon()))) |
-            color(Color::Green),
+          border(hbox(
+            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+            text("  " + dir.metadata.get_icon() + " "))) |
+            color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(
             window(text(" INFO ") | bold,
@@ -180,7 +146,7 @@ dir(const std::filesystem::directory_entry& path,
                                           text(std::to_string(dir.get_number_of_files()))),
                         draw_window_entry("Last modification date: ",
                                           text(dir.metadata.get_last_modification_date())))) |
-              color(Color::Green) | flex,
+              color(fima::theme::theme.border.get_color_for_tui()) | flex,
 
             window(
               text(" LOC ") | bold,
@@ -189,7 +155,7 @@ dir(const std::filesystem::directory_entry& path,
                    draw_window_entry("Blank lines: ",
                                      text(std::to_string(dir.stats.get_blank_lines()))),
                    draw_window_entry("Total: ", text(std::to_string(dir.stats.get_total()))))) |
-              color(Color::Green)));
+              color(fima::theme::theme.border.get_color_for_tui())));
     }
 
     auto screen = Screen::Create(Dimension::Fit(document));

@@ -23,11 +23,17 @@ namespace operations {
 size_t
 get_item_size(const std::filesystem::path& path);
 
+std::string
+make_size_readable(const size_t size);
+
 std::filesystem::file_time_type
 get_file_time(const std::filesystem::path& path);
 
 std::string
 get_file_owner(const std::filesystem::path& path);
+
+std::string
+get_file_type(const std::filesystem::path& path);
 
 bool
 is_file_executable(const std::filesystem::path& path);
@@ -40,6 +46,9 @@ is_media(const std::filesystem::path& path);
 
 bool
 is_root(const std::filesystem::path& path);
+
+bool
+is_ancestor(const std::filesystem::path& ancestor, const std::filesystem::path& descendant);
 
 void
 create(const std::filesystem::path& path, const std::string_view& conent);

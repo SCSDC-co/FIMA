@@ -11,10 +11,7 @@
 
 #pragma once
 
-#include <filesystem>
-
 #include "CLI/App.hpp"
-#include "git/GitRepo.h"
 #include "options.h"
 
 namespace fima {
@@ -22,10 +19,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_ls(CLI::App& app,
-         const std::filesystem::directory_entry& path,
-         const fima::git::GitRepo& repo,
-         fima::options::ls_options& options);
+setup_ls(CLI::App& app, fima::options::ls_options& options);
 
 } // namespace commands
 

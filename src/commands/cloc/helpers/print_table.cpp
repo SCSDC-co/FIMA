@@ -22,6 +22,7 @@
 
 #include "commands/cloc/helpers/LanguageStats.h"
 #include "ftxui/dom/node.hpp"
+#include "theme.h"
 
 namespace fima {
 
@@ -30,13 +31,14 @@ namespace cloc {
 namespace helpers {
 
 void
-print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageStats>& language_map,
-            const std::string& sorting,
-            const bool& quiet)
+print_table(
+  const std::unordered_map<std::string_view, fima::cloc::classes::LanguageStats>& language_map,
+  const std::string& sorting,
+  const bool& quiet)
 {
     using namespace ftxui;
 
-    std::vector<std::pair<std::string, fima::cloc::classes::LanguageStats>> sorted;
+    std::vector<std::pair<std::string_view, fima::cloc::classes::LanguageStats>> sorted;
 
     for (const auto& it : language_map) {
         sorted.push_back(it);
@@ -44,19 +46,19 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
     if (sorting == "total") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_total() > b.second.get_total();
+            return a.second.stats.get_total() > b.second.stats.get_total();
         });
     } else if (sorting == "comments") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_comments() > b.second.get_comments();
+            return a.second.stats.get_comments() > b.second.stats.get_comments();
         });
     } else if (sorting == "blank") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_blank_lines() > b.second.get_blank_lines();
+            return a.second.stats.get_blank_lines() > b.second.stats.get_blank_lines();
         });
     } else if (sorting == "code") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
-            return a.second.get_code() > b.second.get_code();
+            return a.second.stats.get_code() > b.second.stats.get_code();
         });
     } else if (sorting == "files") {
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
@@ -87,38 +89,53 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
 
     table_data.push_back(table_header);
 
-    for (const auto& [name, stats] : sorted) {
+    for (const auto& [name, language] : sorted) {
         if (!quiet) {
             table_data.push_back(
-              { text(name) | color(Color::Green),
-                text(std::to_string(stats.get_files())) | color(Color::White),
-                text(std::to_string(stats.get_total())) | color(Color::White),
-                text(std::to_string(stats.get_code())) | color(Color::White),
-                text(std::to_string(stats.get_comments())) | color(Color::White),
-                text(std::to_string(stats.get_blank_lines())) | color(Color::White) });
+              { text(std::string(name)) | color(fima::theme::theme.primary.get_color_for_tui()),
+                text(std::to_string(language.get_files())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_total())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_code())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_comments())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_blank_lines())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()) });
 
-            total_files += stats.get_files();
-            total_lines += stats.get_total();
-            total_code += stats.get_code();
-            total_comment += stats.get_comments();
-            total_blank += stats.get_blank_lines();
+            total_files += language.get_files();
+            total_lines += language.stats.get_total();
+            total_code += language.stats.get_code();
+            total_comment += language.stats.get_comments();
+            total_blank += language.stats.get_blank_lines();
         } else {
             table_data.push_back(
-              { text(name) | color(Color::Green),
-                text(std::to_string(stats.get_total())) | color(Color::White),
-                text(std::to_string(stats.get_code())) | color(Color::White),
-                text(std::to_string(stats.get_comments())) | color(Color::White),
-                text(std::to_string(stats.get_blank_lines())) | color(Color::White) });
+              { text(std::string(name)) | color(fima::theme::theme.primary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_total())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_code())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_comments())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(std::to_string(language.stats.get_blank_lines())) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()) });
         }
     }
 
     if (!quiet) {
-        table_data.push_back({ text("Total") | color(Color::Green),
-                               text(std::to_string(total_files)) | color(Color::White),
-                               text(std::to_string(total_lines)) | color(Color::White),
-                               text(std::to_string(total_code)) | color(Color::White),
-                               text(std::to_string(total_comment)) | color(Color::White),
-                               text(std::to_string(total_blank)) | color(Color::White) });
+        table_data.push_back(
+          { text("Total") | color(fima::theme::theme.primary.get_color_for_tui()),
+            text(std::to_string(total_files)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_lines)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_code)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_comment)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()),
+            text(std::to_string(total_blank)) |
+              color(fima::theme::theme.secondary.get_color_for_tui()) });
     }
 
     Table table = Table(table_data);
@@ -143,7 +160,7 @@ print_table(const std::unordered_map<std::string, fima::cloc::classes::LanguageS
         table_size = table_data.size() + 4;
     }
 
-    Element document = table.Render() | color(Color::Green);
+    Element document = table.Render() | color(fima::theme::theme.border.get_color_for_tui());
     Screen screen = ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_size));
     Render(screen, document);
     screen.Print();

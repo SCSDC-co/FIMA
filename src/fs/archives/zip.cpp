@@ -12,9 +12,8 @@
 #include "fs/archives/zip.h"
 
 #include <filesystem>
+#include <libzippp/libzippp.h>
 #include <vector>
-
-#include "libzippp/libzippp.h"
 
 namespace fima {
 
@@ -36,16 +35,18 @@ create_archive(const std::vector<std::filesystem::path>& items_to_zip,
 
     for (const auto& item : items_to_zip) {
         if (std::filesystem::is_directory(item)) {
-            for (auto& entry : std::filesystem::recursive_directory_iterator(item)) {
-                if (entry.is_regular_file()) {
-                    std::filesystem::path relative =
-                      std::filesystem::relative(entry.path(), item.parent_path());
+            archive.addEntry(item);
 
-                    archive.addFile(relative.string(), entry.path().string());
+            for (auto& entry : std::filesystem::recursive_directory_iterator(
+                   item, std::filesystem::directory_options::skip_permission_denied)) {
+                if (entry.is_regular_file()) {
+                    archive.addFile(entry.path().string(), entry.path().string());
+                } else if (entry.is_directory()) {
+                    archive.addEntry(entry.path());
                 }
             }
         } else if (std::filesystem::is_regular_file(item)) {
-            archive.addFile(item.filename().string(), item.string());
+            archive.addFile(item.string(), item.string());
         }
     }
 

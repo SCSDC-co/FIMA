@@ -13,18 +13,19 @@
 
 #include <filesystem>
 #include <iostream>
-#include <termcolor/termcolor.hpp>
 #include <vector>
 
 #include "fs/operations.h"
+#include "theme.h"
 
 void
 file(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
         if (std::filesystem::exists(entry)) {
-            std::cerr << termcolor::red << "This file already exists: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "This file already exists: " << fima::theme::theme.secondary
+                      << entry.string() << fima::theme::Color::reset << '\n';
 
             continue;
         }
@@ -32,11 +33,13 @@ file(const std::vector<std::filesystem::path>& paths)
         try {
             fima::fs::operations::create(entry, "");
 
-            std::cout << termcolor::green << "File created at: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cout << fima::theme::theme.primary
+                      << "File created at: " << fima::theme::theme.secondary << entry.string()
+                      << fima::theme::Color::reset << '\n';
         } catch (const std::exception& ex) {
-            std::cerr << termcolor::red << "Failed to create the file: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "Failed to create the file: " << fima::theme::theme.secondary
+                      << entry.string() << fima::theme::Color::reset << '\n';
 
             std::cerr << ex.what();
         }
@@ -48,8 +51,9 @@ dir(const std::vector<std::filesystem::path>& paths)
 {
     for (const auto& entry : paths) {
         if (std::filesystem::exists(entry)) {
-            std::cerr << termcolor::red << "This directory already exists: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "This directory already exists: " << fima::theme::theme.secondary
+                      << entry.string() << fima::theme::Color::reset << '\n';
 
             continue;
         }
@@ -57,11 +61,13 @@ dir(const std::vector<std::filesystem::path>& paths)
         try {
             std::filesystem::create_directories(entry);
 
-            std::cout << termcolor::green << "Directory created at: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cout << fima::theme::theme.primary
+                      << "Directory created at: " << fima::theme::theme.secondary << entry.string()
+                      << fima::theme::Color::reset << '\n';
         } catch (const std::exception& ex) {
-            std::cerr << termcolor::red << "Failed to create the directory: " << termcolor::reset
-                      << entry.string() << '\n';
+            std::cerr << fima::theme::theme.error
+                      << "Failed to create the directory: " << fima::theme::theme.secondary
+                      << entry.string() << fima::theme::Color::reset << '\n';
 
             std::cerr << ex.what();
         }
@@ -84,7 +90,7 @@ setup_create(CLI::App& app,
 
     subcmd->add_option("-d,--dir", dir_paths, "Directories to create")->configurable(false);
 
-    subcmd->usage("fima create -d [DIRECTORIES] -f [FILES]");
+    subcmd->usage("fima mk -d [DIRECTORIES] -f [FILES]");
 
     subcmd->callback([&]() {
         dir(dir_paths);

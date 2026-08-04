@@ -22,10 +22,21 @@ namespace ls {
 namespace helpers {
 
 void
-print_normal(const std::vector<fima::fs::DirectoryItem>& items, const bool& icons);
+print_normal(const std::vector<fima::fs::DirectoryItem>& items,
+             const bool& icons,
+             const bool& relative_paths);
 
 void
-print_long(std::vector<fima::fs::DirectoryItem>& items, const bool& icons, const bool& verbose);
+print_one_line(const std::vector<fima::fs::DirectoryItem>& items,
+               const bool& icons,
+               const bool& relative_paths);
+
+void
+print_long(std::vector<fima::fs::DirectoryItem>& items,
+           const bool& icons,
+           const bool& verbose,
+           const bool& headers,
+           const bool& relative_paths);
 
 } // namespace helpers
 

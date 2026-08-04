@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include <filesystem>
-
 #include "CLI/App.hpp"
 #include "git/GitRepo.h"
 #include "options.h"
@@ -22,10 +20,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_cloc(CLI::App& app,
-           const std::filesystem::path& path,
-           const fima::git::GitRepo& repo,
-           fima::options::cloc_options& options);
+setup_cloc(CLI::App& app, const fima::git::GitRepo& repo, fima::options::cloc_options& options);
 
 } // namespace commands
 

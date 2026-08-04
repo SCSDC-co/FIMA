@@ -19,12 +19,17 @@ namespace cloc {
 
 namespace classes {
 
-class LanguageStats : public Stats
+class LanguageStats
 {
   private:
-    int files{ 0 };
+    int files{ 1 }; // a language cannot exists without at least one file
 
   public:
+    Stats stats{};
+
+    LanguageStats(const int& _code = 0, const int& _blank_lines = 0, const int& _comments = 0)
+      : stats(_code, _blank_lines, _comments) {};
+
     void update_files();
 
     [[nodiscard]] int get_files() const;

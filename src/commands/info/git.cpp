@@ -24,8 +24,9 @@
 #include "ftxui/dom/node.hpp"
 #include "ftxui/screen/color.hpp"
 #include "git/GitRepo.h"
+#include "mappings.h"
 #include "options.h"
-#include "program_files.h"
+#include "theme.h"
 #include "utility/join.h"
 
 namespace fima {
@@ -38,8 +39,9 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
     using namespace ftxui;
 
     if (!repo.get_is_in_repo()) {
-        Element document =
-          text(" NOT IN A REPO ") | color(Color::Red) | borderStyled(ROUNDED, Color::Red);
+        Element document = text(" NOT IN A REPO ") |
+                           color(fima::theme::theme.error.get_color_for_tui()) |
+                           borderStyled(ROUNDED, fima::theme::theme.error.get_color_for_tui());
 
         auto screen = Screen::Create(Dimension::Fit(document));
         Render(screen, document);
@@ -51,7 +53,8 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
     }
 
     auto draw_window_entry = [&](const std::string& title, const Element& value) {
-        return hbox(text(title) | bold | color(Color::Green), value | color(Color::White));
+        return hbox(text(title) | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                    value | color(fima::theme::theme.secondary.get_color_for_tui()));
     };
 
     std::vector<std::string> tag_list;
@@ -80,19 +83,22 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
         for (int i = 0; i < remote_list.size(); ++i) {
             fima::git::GitRepo::Remote remote{ remote_list[i] };
 
-            remote_table_data.push_back({ text(remote.get_name()) | color(Color::White),
-                                          text(" " + remote.get_url()) | color(Color::White) });
+            remote_table_data.push_back(
+              { text(remote.get_name()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(" " + remote.get_url()) |
+                  color(fima::theme::theme.secondary.get_color_for_tui()) });
         }
     }
 
     std::vector<Element> document_data = {
         // header
-        border(hbox(text("GINFO: ") | bold | color(Color::Green),
-                    text(repo.get_repo_path()) | color(Color::White),
-                    text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
-                      color(Color::White) | flex,
-                    text(fima::program_files::get_item_icon(repo.get_repo_path()) + " "))) |
-          color(Color::Green),
+        border(
+          hbox(text("GINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+               text(repo.get_repo_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+               text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
+                 color(Color::White) | flex,
+               text(std::string(fima::mappings::get_item_icon(repo.get_repo_path())) + " "))) |
+          color(fima::theme::theme.border.get_color_for_tui()),
 
         hbox(window(text(" INFO ") | bold,
                     vbox(draw_window_entry("Branch: ", text(repo.get_repo_branch())),
@@ -102,7 +108,7 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
                          draw_window_entry("Tag: ", text(repo.get_tag_name())),
                          draw_window_entry("Tag message: ", text(repo.get_tag_message())),
                          draw_window_entry("Tag tagger: ", text(repo.get_tag_tagger())))) |
-               color(Color::Green),
+               color(fima::theme::theme.border.get_color_for_tui()),
 
              window(text(" COMMITS ") | bold,
                     vbox(draw_window_entry("Commit number: ",
@@ -113,21 +119,21 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
                          draw_window_entry("Message: ", text(repo.get_commit_message())),
                          draw_window_entry("Commit author: ", text(repo.get_commit_author())),
                          draw_window_entry("Committer: ", text(repo.get_commit_committer())))) |
-               color(Color::Green) | flex),
+               color(fima::theme::theme.border.get_color_for_tui()) | flex),
 
     };
 
     if (options.tags && !tag_list.empty()) {
-        document_data.push_back(
-          window(text(" TAGS ") | bold,
-                 paragraph(tag_list_elements) | color(Color::White) | color(Color::White)) |
-          color(Color::Green) | flex);
+        document_data.push_back(window(text(" TAGS ") | bold,
+                                       paragraph(tag_list_elements) |
+                                         color(fima::theme::theme.secondary.get_color_for_tui())) |
+                                color(fima::theme::theme.border.get_color_for_tui()) | flex);
     }
 
     if (options.remote && !remote_list.empty()) {
         document_data.push_back(
           window(text(" REMOTES ") | bold, Table(remote_table_data).Render()) |
-          color(Color::Green) | flex);
+          color(fima::theme::theme.border.get_color_for_tui()) | flex);
     }
 
     Element document = vbox(document_data);

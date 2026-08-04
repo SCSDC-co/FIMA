@@ -14,13 +14,52 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
+      - name: Create theme and config file
+        run: |
+          mkdir -p ~/.config/fima
+          cat > ~/.config/fima/config.toml << 'EOF'
+          [icons.files]
+          cpp = "󰙲"
+          [icons.dirs]
+          custom_name = ""
+          [icons.name]
+          "*cat*" = ""
+          EOF
+          cat > ~/.config/fima/theme.toml << 'EOF'
+          [general]
+          primary = [92, 243, 11]
+          secondary = "#9482af"
+          border = "light gray"
+          info = "white"
+          warning = "blue"
+          error = "light blue"
+
+          [specific]
+          directory = "cyan"
+          executable = "light cyan"
+          symlink = "green"
+          archive = "light green"
+          media = "magenta"
+          normal_file = "light magenta"
+
+          [permissions]
+          read = "red"
+          write = "light red"
+          execute = "yellow"
+          null = "light yellow"
+
+          [ls]
+          permissions = "black"
+          size = "dark gray"
+          EOF
+
       - name: Setup C++
         uses: aminya/setup-cpp@8170d66c458f4a045220b7b0966c10940bb2a15d
         with:
           ninja: true
           conan: true
           cmake: "3.31.0"
-          gcc: "15"
+          gcc: "16"
 
       - name: Setup conan profile
         run: conan profile detect

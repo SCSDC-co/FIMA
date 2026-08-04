@@ -16,6 +16,7 @@
 #include <string>
 
 #include "commands/cloc/helpers/Stats.h"
+#include "mappings.h"
 #include "utility/trim_string.h"
 
 namespace fs = std::filesystem;
@@ -27,10 +28,7 @@ namespace cloc {
 namespace helpers {
 
 fima::cloc::classes::Stats
-count_lines(const fs::path& file_path,
-            const std::string& single_comment,
-            const std::string& multiline_start,
-            const std::string& multiline_end)
+count_lines(const fs::path& file_path, const fima::mappings::Comments& comments)
 {
     fima::cloc::classes::Stats file_stats;
 
@@ -43,8 +41,8 @@ count_lines(const fs::path& file_path,
         int blank_lines{ 0 };
         int comment_lines{ 0 };
 
-        bool can_have_single_comments{ !single_comment.empty() };
-        bool can_have_multiline_comments{ !(multiline_start.empty() || multiline_end.empty()) };
+        bool can_have_single_comments{ comments.can_have_single_comment() };
+        bool can_have_multiline_comments{ comments.can_have_multiline_comment() };
         bool is_multiline{ false };
 
         while (std::getline(file, line)) {
@@ -56,26 +54,39 @@ count_lines(const fs::path& file_path,
                 continue;
             }
 
-            if (can_have_single_comments && line.starts_with(single_comment)) {
+            if (can_have_single_comments &&
+                ((!comments.single.empty() && line.starts_with(comments.single)) ||
+                 (!comments.single_alt.empty() && line.starts_with(comments.single_alt)))) {
                 ++comment_lines;
 
                 continue;
             }
 
             if (can_have_multiline_comments) {
-                if (line.starts_with(multiline_start) && line.ends_with(multiline_end)) {
+                if ((!comments.multiline_start.empty() && !comments.multiline_end.empty() &&
+                     line.starts_with(comments.multiline_start) &&
+                     line.ends_with(comments.multiline_end)) ||
+                    (!comments.multiline_start_alt.empty() && !comments.multiline_end_alt.empty() &&
+                     line.starts_with(comments.multiline_start_alt) &&
+                     line.ends_with(comments.multiline_end_alt))) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (is_multiline && !line.ends_with(multiline_end)) {
+                if (is_multiline &&
+                    !((!comments.multiline_end.empty() && line.ends_with(comments.multiline_end)) ||
+                      (!comments.multiline_end_alt.empty() &&
+                       line.ends_with(comments.multiline_end_alt)))) {
                     ++comment_lines;
 
                     continue;
                 }
 
-                if (!is_multiline && line.starts_with(multiline_start)) {
+                if (!is_multiline && ((!comments.multiline_start.empty() &&
+                                       line.starts_with(comments.multiline_start)) ||
+                                      (!comments.multiline_start_alt.empty() &&
+                                       line.starts_with(comments.multiline_start_alt)))) {
                     ++comment_lines;
 
                     is_multiline = true;
@@ -83,7 +94,10 @@ count_lines(const fs::path& file_path,
                     continue;
                 }
 
-                if (is_multiline && line.starts_with(multiline_end)) {
+                if (is_multiline && ((!comments.multiline_end.empty() &&
+                                      line.starts_with(comments.multiline_end)) ||
+                                     (!comments.multiline_end_alt.empty() &&
+                                      line.starts_with(comments.multiline_end_alt)))) {
                     is_multiline = false;
 
                     ++comment_lines;

@@ -12,17 +12,17 @@
 #include "fs/DirectoryItem.h"
 
 #include <chrono>
-#include <cmath>
 #include <filesystem>
 #include <format>
 #include <ftxui/dom/node.hpp>
 #include <ftxui/screen/color.hpp>
 #include <string>
-#include <termcolor/termcolor.hpp>
 
+#include "config.h"
 #include "fs/operations.h"
 #include "ftxui/dom/elements.hpp"
-#include "program_files.h"
+#include "mappings.h"
+#include "theme.h"
 
 namespace fima {
 
@@ -35,7 +35,18 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
   , last_modification_date(fima::fs::operations::get_file_time(path))
   , owner(fima::fs::operations::get_file_owner(path))
   , is_hidden(path.path().filename().native().starts_with('.'))
-  , icon(fima::program_files::get_item_icon(path.path()) + " ")
+  , icon(fima::mappings::get_item_icon(path.path()))
+{
+    this->set_color();
+}
+DirectoryItem::DirectoryItem(const std::filesystem::path& path)
+  : name(path.filename().string())
+  , path(path)
+  , permissions(fima::fs::operations::get_perms(path))
+  , last_modification_date(fima::fs::operations::get_file_time(path))
+  , owner(fima::fs::operations::get_file_owner(path))
+  , is_hidden(path.filename().native().starts_with('.'))
+  , icon(fima::mappings::get_item_icon(path))
 {
     this->set_color();
 }
@@ -43,41 +54,20 @@ DirectoryItem::DirectoryItem(const std::filesystem::directory_entry& path)
 void
 DirectoryItem::set_color()
 {
-    ItemColor color{};
+    fima::theme::Color color{};
 
     if (this->is_directory()) {
-        color = ItemColor::GREEN;
+        color = fima::theme::theme.directory;
     } else if (this->is_symlink()) {
-        color = ItemColor::CYAN;
+        color = fima::theme::theme.symlink;
     } else if (fima::fs::operations::is_file_executable(this->path)) {
-        color = ItemColor::RED;
+        color = fima::theme::theme.executable;
     } else if (fima::fs::operations::is_compressed_archive(this->path)) {
-        color = ItemColor::BLUE;
+        color = fima::theme::theme.archive;
     } else if (fima::fs::operations::is_media(this->path)) {
-        color = ItemColor::YELLOW;
+        color = fima::theme::theme.media;
     } else {
-        color = ItemColor::WHITE;
-    }
-
-    switch (color) {
-        case ItemColor::RED:
-            this->color_tui = ftxui::Color::Red;
-            break;
-        case ItemColor::GREEN:
-            this->color_tui = ftxui::Color::Green;
-            break;
-        case ItemColor::WHITE:
-            this->color_tui = ftxui::Color::White;
-            break;
-        case ItemColor::YELLOW:
-            this->color_tui = ftxui::Color::Yellow;
-            break;
-        case ItemColor::BLUE:
-            this->color_tui = ftxui::Color::Blue;
-            break;
-        case ItemColor::CYAN:
-            this->color_tui = ftxui::Color::Cyan;
-            break;
+        color = fima::theme::theme.normal_file;
     }
 
     this->color = color;
@@ -105,7 +95,7 @@ DirectoryItem::get_name(const bool& icons) const
     std::string name;
 
     if (icons) {
-        name += fima::program_files::get_item_icon(this->get_path()) + " ";
+        name += this->icon + " ";
     }
 
     name += this->name;
@@ -148,7 +138,7 @@ DirectoryItem::get_last_modification_date() const
     auto sctp  = std::chrono::clock_cast<std::chrono::system_clock>(date_with_rounded_seconds);
     auto local = std::chrono::zoned_time{ std::chrono::current_zone(), sctp };
 
-    return std::format("{:%d %b %Y %H:%M:%S}", local);
+    return std::format("{:%d %b %Y %H:%M}", local);
 }
 [[nodiscard]] std::string
 DirectoryItem::get_icon() const
@@ -158,34 +148,27 @@ DirectoryItem::get_icon() const
 [[nodiscard]] std::string
 DirectoryItem::get_size_with_extension() const
 {
-    if (this->get_size() == 0) {
-        return "-";
+    if (this->is_directory() && !fima::config::process_directory_size) {
+        return std::to_string(this->size);
     }
 
-    double dimension = static_cast<double>(this->get_size());
-    std::string ext;
-
-    if (dimension >= 1024 * 1024 * 1024) {
-        ext = "GB";
-        dimension /= 1024 * 1024 * 1024;
-    } else if (dimension >= 1024 * 1024) {
-        ext = "MB";
-        dimension /= 1024 * 1024;
-    } else if (dimension >= 1024) {
-        ext = "KB";
-        dimension /= 1024;
-    } else {
-        ext = "B";
-    }
-
-    // if the number is already rounded there's no need to display the decimal digits
-    if (std::round(dimension) == static_cast<int>(dimension)) {
-        return std::format("{:.0f}{}", dimension, ext);
-    }
-
-    return std::format("{:.2f}{}", dimension, ext);
+    return fima::fs::operations::make_size_readable(this->size);
 }
-[[nodiscard]] DirectoryItem::ItemColor
+[[nodiscard]] std::string
+DirectoryItem::get_parent_path() const
+{
+    std::string path{ this->get_path().parent_path().string() };
+
+    return path + (!path.empty() ? "/" : "");
+}
+[[nodiscard]] std::string
+DirectoryItem::get_parent_path_relative() const
+{
+    std::string path{ this->get_path().parent_path().relative_path().string() };
+
+    return path + (!path.empty() ? "/" : "");
+}
+[[nodiscard]] fima::theme::Color
 DirectoryItem::get_color() const
 {
     return this->color;
@@ -195,12 +178,6 @@ DirectoryItem::get_color() const
 DirectoryItem::get_permissions_tui() const
 {
     return fima::fs::operations::get_perms_tui(this->get_path());
-}
-
-[[nodiscard]] ftxui::Color
-DirectoryItem::get_color_tui() const
-{
-    return this->color_tui;
 }
 
 [[nodiscard]] bool
@@ -222,8 +199,9 @@ DirectoryItem::is_symlink() const
 [[nodiscard]] bool
 DirectoryItem::is_valid() const
 {
-    return this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
-           this->get_owner() == "unknown";
+    // broken symlinks are still valid, it's helpful to notify the user that a symlink is broken
+    return !(this->get_last_modification_date() == "unknown" && this->get_size() == 0 &&
+             this->get_owner() == "unknown");
 }
 [[nodiscard]] bool
 DirectoryItem::get_is_hidden() const

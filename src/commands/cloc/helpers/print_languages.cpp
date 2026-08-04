@@ -11,20 +11,18 @@
 
 #include "commands/cloc/helpers/print_languages.h"
 
-#include <fstream>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <ftxui/screen/color.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <iostream>
 #include <map>
-#include <nlohmann/json.hpp>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "ftxui/dom/node.hpp"
-#include "program_files.h"
+#include "mappings.h"
+#include "theme.h"
 
 namespace fima {
 
@@ -51,26 +49,11 @@ void
 show_languages()
 {
     using namespace ftxui;
-    using json = nlohmann::json;
 
     std::map<std::string, std::vector<std::string>> lang_to_exts;
 
-    json file;
-
-    std::ifstream file_stream(fima::program_files::MAP_LANGUAGES_NAME_PATH);
-    file = json::parse(file_stream);
-
-    std::unordered_map<std::string, std::string> language_map_name;
-
-    for (auto it = file.begin(); it != file.end(); ++it) {
-        const std::string& ext  = it.key();
-        const std::string& name = it.value();
-
-        lang_to_exts[name].push_back(ext);
-    }
-
-    for (const auto& [ext, name] : language_map_name) {
-        lang_to_exts[name].push_back(ext);
+    for (auto& [ext, name] : fima::mappings::map_extension_name) {
+        lang_to_exts[std::string(name)].push_back(ext);
     }
 
     for (auto& [lang, exts] : lang_to_exts) {
@@ -82,12 +65,14 @@ show_languages()
     table_data.push_back({ text("Language") | bold, text("Extension") | bold });
 
     for (const auto& [lang, exts] : lang_to_exts) {
-        table_data.push_back(
-          { text(lang) | color(Color::Green), text(join_extensions(exts)) | color(Color::Blue) });
+        table_data.push_back({ text(lang) | color(fima::theme::theme.primary.get_color_for_tui()),
+                               text(join_extensions(exts)) |
+                                 color(fima::theme::theme.secondary.get_color_for_tui()) });
     }
 
-    table_data.push_back({ text("Total:") | color(Color::Green),
-                           text(std::to_string(table_data.size() - 1)) | color(Color::Blue) });
+    table_data.push_back({ text("Total:") | color(fima::theme::theme.primary.get_color_for_tui()),
+                           text(std::to_string(table_data.size() - 1)) |
+                             color(fima::theme::theme.secondary.get_color_for_tui()) });
 
     Table table = Table(table_data);
 
@@ -99,7 +84,7 @@ show_languages()
 
     table.SelectRows(table_data.size() - 2, -1).SeparatorHorizontal();
 
-    Element document = table.Render() | color(Color::Green);
+    Element document = table.Render() | color(fima::theme::theme.border.get_color_for_tui());
     Screen screen =
       ftxui::Screen::Create(Dimension::Fit(document), Dimension::Fixed(table_data.size() + 4));
     Render(screen, document);
