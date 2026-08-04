@@ -25,4 +25,4 @@ fima perms file.txt directory
 
 ## Showcase
 
-![Showcase](/perms_showcase.png)
+<Showcase src="/perms_showcase.png" />

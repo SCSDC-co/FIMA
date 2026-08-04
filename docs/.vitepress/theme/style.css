@@ -36,3 +36,9 @@ summary {
     cursor: pointer;
     user-select: none;
 }
+
+.vp-contributors-heading {
+    color: var(--vp-c-brand-1);
+    font-weight: bold;
+    margin-top: 48px;
+}

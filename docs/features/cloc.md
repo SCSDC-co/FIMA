@@ -36,12 +36,12 @@ fima cloc -G
 
 ## Showcase
 
-![Showcase 1](/cloc_showcase_1.png)
+<Showcase src="/cloc_showcase_1.png" />
 
 ---
 
-![Showcase 2](/cloc_showcase_2.png)
+<Showcase src="/cloc_showcase_2.png" />
 
 ---
 
-![Showcase 3](/cloc_showcase_3.png)
+<Showcase src="/cloc_showcase_3.png" />

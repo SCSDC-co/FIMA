@@ -12,9 +12,9 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
     devDependencies:
-      '@davidingplus/vitepress-image-viewer':
-        specifier: ^1.1.5
-        version: 1.1.5
+      medium-zoom:
+        specifier: ^1.1.0
+        version: 1.1.0
       vitepress:
         specifier: 2.0.0-alpha.19
         version: 2.0.0-alpha.19(postcss@8.5.25)
@@ -44,9 +44,6 @@ packages:
   '@cssnr/vitepress-plugin-contributors@0.2.0':
     resolution: {integrity: sha512-QENg45D1yNXLZblSvsUCXPVFAYxqBrWEsQ+u3BdMFAdi17+3dgxuYvAzmGZXux5iuTGjjM+sPng1b7f2tVQ32A==}
     hasBin: true
-
-  '@davidingplus/vitepress-image-viewer@1.1.5':
-    resolution: {integrity: sha512-wnk1HcASQ7ym1S9Kef+92ZravrliLg1FBwfe9HgQhBjBy4Gp3DnzlXXMUDWjm3DLqfHaUnGMzMThtg5j1WopZw==}
 
   '@docsearch/css@4.7.0':
     resolution: {integrity: sha512-Sk5xkdRFeE7PeWjG9l4AfTwdvMfr9wHiwNNCpHXT4v4SNyNMKdHGvEILc31BgaVFGDDNbv5u/a73tofRiwbEZw==}
@@ -515,6 +512,9 @@ packages:
   mdast-util-to-hast@13.2.1:
     resolution: {integrity: sha512-cctsq2wp5vTsLIcaymblUriiTcZd0CwWtCbLvrOzYCDZoWyMNV8sZ7krj09FSnsiJi3WVsHLM4k6Dq/yaPyCXA==}
 
+  medium-zoom@1.1.0:
+    resolution: {integrity: sha512-ewyDsp7k4InCUp3jRmwHBRFGyjBimKps/AJLjRSox+2q/2H4p/PNpQf+pwONWlJiOudkBXtbdmVbFjqyybfTmQ==}
+
   micromark-util-character@2.1.1:
     resolution: {integrity: sha512-wv8tdUTJ3thSFFFJKtpYKOYiGP2+v96Hvk4Tu8KpCAsTMs6yi+nVmGh1syvSCsaxz45J6Jbw+9DD6g97+NV67Q==}
 
@@ -735,8 +735,6 @@ snapshots:
   '@cssnr/vitepress-plugin-contributors@0.2.0':
     dependencies:
       commander: 14.0.3
-
-  '@davidingplus/vitepress-image-viewer@1.1.5': {}
 
   '@docsearch/css@4.7.0': {}
 
@@ -1125,6 +1123,8 @@ snapshots:
       unist-util-position: 5.0.0
       unist-util-visit: 5.1.0
       vfile: 6.0.3
+
+  medium-zoom@1.1.0: {}
 
   micromark-util-character@2.1.1:
     dependencies:
