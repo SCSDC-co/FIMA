@@ -41,13 +41,13 @@ parse_config_file()
 
     auto config{ toml::parse_file(CONFIG_FILE_PATH.string()) };
 
-    depth                  = *config["depth"].value<int>();
-    process_directory_size = *config["process_directory_size"].value<bool>();
+    depth                  = config["depth"].value_or(0);
+    process_directory_size = config["process_directory_size"].value_or(false);
 
     if (config["icons"]["files"].is_table()) {
         for (auto& icon : *config["icons"]["files"].as_table()) {
             std::string ext{ std::string(1, '.') + icon.first.data() };
-            std::string _icon{ *icon.second.value<std::string>() };
+            std::string _icon{ icon.second.value_or("") };
 
             fima::mappings::map_extension_icon[ext] = _icon;
         }
@@ -56,7 +56,7 @@ parse_config_file()
     if (config["icons"]["dirs"].is_table()) {
         for (auto& icon : *config["icons"]["dirs"].as_table()) {
             std::string ext{ icon.first.data() };
-            std::string _icon{ *icon.second.value<std::string>() };
+            std::string _icon{ icon.second.value_or("") };
 
             fima::mappings::map_directory_icon[ext] = _icon;
         }
@@ -65,7 +65,7 @@ parse_config_file()
     if (config["icons"]["name"].is_table()) {
         for (auto& icon : *config["icons"]["name"].as_table()) {
             std::string regex{ fima::utility::regex::glob_to_regex(icon.first.data()) };
-            std::string _icon{ *icon.second.value<std::string>() };
+            std::string _icon{ icon.second.value_or("") };
 
             fima::mappings::map_name_icon[regex] = _icon;
         }
