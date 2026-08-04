@@ -67,6 +67,11 @@ if(NOT MSVC)
                -Wswitch-default
                -Wswitch-enum
     )
+    target_link_options(
+        ${PROJECT_NAME}
+        PRIVATE -static-libstdc++
+        -static-libgcc
+    )
 else()
     target_compile_options(
         ${PROJECT_NAME}
