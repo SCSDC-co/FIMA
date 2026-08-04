@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
@@ -20,7 +20,7 @@ jobs:
           ninja: true
           conan: true
           cmake: "3.31.0"
-          gcc: "14"
+          gcc: "15"
 
       - name: Setup conan profile
         run: conan profile detect

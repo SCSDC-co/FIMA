@@ -1,16 +1,14 @@
 name: Build and test the program
 
 on:
-  pull_request:
-
-  workflow_dispatch:
+  pull_request_target:
 
 env:
   CMAKE_GENERATOR: Ninja
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
