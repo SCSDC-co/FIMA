@@ -31,8 +31,8 @@ fima tree -avG
 
 ## Showcase
 
-![Showcase 1](/tree_showcase_1.png)
+<Showcase src="/tree_showcase_1.png" />
 
 ---
 
-![Showcase 2](/tree_showcase_2.png)
+<Showcase src="/tree_showcase_2.png" />

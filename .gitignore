@@ -6,6 +6,7 @@ node_modules/
 # vitepress things
 docs/.vitepress/dist
 docs/.vitepress/cache
+docs/.vitepress/contributors.json
 
 # CMake user staff
 CMakeUserPresets.json

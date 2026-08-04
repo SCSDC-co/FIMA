@@ -1,18 +1,24 @@
 {
-  "name": "FIMA docs site",
-  "type": "module",
-  "version": "0.1.0",
-  "description": "FIMA - Fast, Incredible, Minimal & Awesome File Manager",
-  "author": "Giuliano De Amicis",
-  "license": "GPL-3.0-only",
-  "packageManager": "pnpm@10.33.2",
-  "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
-  },
-  "devDependencies": {
-    "@davidingplus/vitepress-image-viewer": "^1.1.5",
-    "vitepress": "2.0.0-alpha.19"
-  }
+    "name": "FIMA docs site",
+    "type": "module",
+    "version": "0.1.0",
+    "description": "FIMA - Fast, Incredible, Minimal & Awesome File Manager",
+    "author": "Giuliano De Amicis",
+    "license": "GPL-3.0-only",
+    "packageManager": "pnpm@10.33.2",
+    "scripts": {
+        "dev": "vitepress dev docs",
+        "build": "vitepress build docs",
+        "preview": "vitepress preview docs",
+        "get-contributors": "npx get-contributors SCSDC-co/FIMA -f docs/.vitepress/contributors.json",
+        "postinstall": "npm run get-contributors"
+    },
+    "devDependencies": {
+        "medium-zoom": "^1.1.0",
+        "vitepress": "2.0.0-alpha.19",
+        "vitepress-sidebar": "^1.36.1"
+    },
+    "dependencies": {
+        "@cssnr/vitepress-plugin-contributors": "^0.2.0"
+    }
 }
