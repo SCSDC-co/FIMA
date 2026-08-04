@@ -31,3 +31,8 @@
 .VPNavBarSearchButton:hover {
     border: 1px var(--vp-c-brand-1) solid;
 }
+
+summary {
+    cursor: pointer;
+    user-select: none;
+}

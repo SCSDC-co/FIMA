@@ -13,6 +13,10 @@
   },
   "devDependencies": {
     "@davidingplus/vitepress-image-viewer": "^1.1.5",
-    "vitepress": "2.0.0-alpha.19"
+    "vitepress": "2.0.0-alpha.19",
+    "vitepress-sidebar": "^1.36.1"
+  },
+  "dependencies": {
+    "@cssnr/vitepress-plugin-contributors": "^0.2.0"
   }
 }
