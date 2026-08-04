@@ -1,5 +1,5 @@
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fast, Incredible, Minimal & Awesome File Manager")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_DESCRIPTION "Super cool file manager that provides a complete filesystem toolbox for developers, power users, and everyday users")
 set(CPACK_PACKAGE_VENDOR "SCSDC")
 
