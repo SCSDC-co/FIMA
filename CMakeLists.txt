@@ -7,9 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GitVersionDetect)
 
-set(PROJECT_DESCRIPTION
-    "FIMA - Fast, Incredible, Minimal & Awesome File Manager"
-)
+set(PROJECT_DESCRIPTION "Fast, Incredible, Minimal & Awesome File Manager")
 
 project(
     fima

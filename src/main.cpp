@@ -52,7 +52,7 @@ main(int argc, char** argv)
     argv = app.ensure_utf8(argv);
 
     app.name("fima");
-    app.description("FIMA - Fast, Incredible, Minimal & Awesome File Manager");
+    app.description("Fast, Incredible, Minimal & Awesome File Manager");
     app.usage("fima [PATH] [OPTIONS] [SUBCOMMANDS]");
     app.footer("\nMade with love by SCSDC 󰋑 ");
 
