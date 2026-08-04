@@ -11,14 +11,16 @@
 
 #pragma once
 
-#include "CLI/App.hpp"
+#include <CLI/App.hpp>
+
+#include "options.h"
 
 namespace fima {
 
 namespace commands {
 
 void
-setup_remove(CLI::App& app, std::vector<std::string>& paths, bool& recursive);
+setup_remove(CLI::App& app, fima::options::rm_options& options);
 
 }
 

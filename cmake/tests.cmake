@@ -57,7 +57,7 @@ if(FIMA_BUILD_TESTS)
     )
     add_test(NAME test_mv COMMAND ${PROJECT_NAME} mv tests/test3.txt ./test.txt)
     add_test(NAME test_rm COMMAND ${PROJECT_NAME} rm tests/test2.txt tests
-                                  ./test.txt -r
+                                  ./test.txt -rvt
     )
     add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms
                                      ../tests/all_perms.txt
@@ -81,7 +81,7 @@ if(FIMA_BUILD_TESTS)
                                                 tests.zip
     )
     add_test(NAME test_unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o tests)
-    add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
+    add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -rvt)
 
     add_test(NAME test_tui COMMAND ${PROJECT_NAME})
 

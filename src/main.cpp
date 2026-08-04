@@ -216,10 +216,9 @@ main(int argc, char** argv)
 
     // ──────────────────────────────────────────────────────────────────────
 
-    std::vector<std::string> remove_paths{};
-    bool remove_recursive{ false };
+    fima::options::rm_options rm_options{};
 
-    fima::commands::setup_remove(app, remove_paths, remove_recursive);
+    fima::commands::setup_remove(app, rm_options);
 
     // ──────────────────────────────────────────────────────────────────────
 
