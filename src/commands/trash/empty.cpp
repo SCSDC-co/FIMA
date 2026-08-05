@@ -2,7 +2,7 @@
  * src/commands/trash/empty.cpp
  * include/commands/trash/empty.h
  *
- * The declaration of the `trash empty` subcommand
+ * The implementation of the `trash empty` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.

@@ -12,16 +12,18 @@
 #include "commands/trash/trash.h"
 
 #include <CLI/App.hpp>
+#include <vector>
 
 #include "commands/trash/empty.h"
 #include "commands/trash/list.h"
+#include "commands/trash/restore.h"
 
 namespace fima {
 
 namespace commands {
 
 void
-setup_trash(CLI::App& app, bool& yes)
+setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& id)
 {
     CLI::App* subcmd = app.add_subcommand("trash", "Trash operations")
                          ->configurable(false)
@@ -44,6 +46,15 @@ setup_trash(CLI::App& app, bool& yes)
     trash_empty->usage("fima trash empty [OPTIONS]");
 
     trash_empty->callback([&]() { fima::commands::trash::empty(yes); });
+
+    CLI::App* trash_restore =
+      subcmd->add_subcommand("restore", "Restore an item from the trash")->configurable(false);
+
+    trash_restore->add_option("id", id, "The ID of the file to restore");
+
+    trash_restore->usage("fima trash restore ID");
+
+    trash_restore->callback([&]() { fima::commands::trash::restore(id); });
 }
 
 } // namespace commands
