@@ -269,7 +269,9 @@ main(int argc, char** argv)
 
     // ──────────────────────────────────────────────────────────────────────
 
-    fima::commands::setup_trash(app);
+    bool trash_yes{ false };
+
+    fima::commands::setup_trash(app, trash_yes);
 
     // ──────────────────────────────────────────────────────────────────────
 

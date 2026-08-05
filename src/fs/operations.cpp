@@ -104,10 +104,6 @@ get_item_size(const std::filesystem::path& path)
 std::string
 make_size_readable(const size_t size)
 {
-    if (size == 0) {
-        return "-";
-    }
-
     std::array<char, 7> sizes{ 'B', 'K', 'M', 'G', 'T', 'P', 'E' };
 
     int i{};

@@ -12,6 +12,7 @@
 #include "commands/trash.h"
 
 #include <CLI/App.hpp>
+#include <cstddef>
 #include <filesystem>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
@@ -158,7 +159,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_trash(CLI::App& app)
+setup_trash(CLI::App& app, bool& yes)
 {
     CLI::App* subcmd = app.add_subcommand("trash", "Trash operations")
                          ->configurable(false)
@@ -170,6 +171,87 @@ setup_trash(CLI::App& app)
     trash_list->usage("fima trash list");
 
     trash_list->callback([&]() { _trash_list(); });
+
+    CLI::App* trash_empty =
+      subcmd->add_subcommand("empty", "Empties the trash")->configurable(false);
+
+    trash_empty->add_flag("-y,--yes", yes, "Doesn't ask for the confirmation")
+      ->multi_option_policy(CLI::MultiOptionPolicy::Throw)
+      ->configurable(true);
+
+    trash_empty->usage("fima trash empty [OPTIONS]");
+
+    trash_empty->callback([&]() {
+        int i{ 0 };
+
+        std::size_t size{};
+
+        for (auto& it : std::filesystem::directory_iterator(
+               fima::fs::trash::TRASH_FILES_PATH,
+               std::filesystem::directory_options::skip_permission_denied)) {
+            if (it.is_directory()) {
+                for (auto& _it : std::filesystem::recursive_directory_iterator(
+                       it, std::filesystem::directory_options::skip_permission_denied)) {
+                    if (_it.is_directory()) {
+                        continue;
+                    }
+
+                    size += _it.file_size();
+                }
+            } else {
+                size += it.file_size();
+            }
+
+            ++i;
+        }
+
+        if (i == 0) {
+            std::cout << fima::theme::theme.primary << "The trash is already empty."
+                      << fima::theme::Color::reset << '\n';
+
+            return;
+        }
+
+        if (yes) {
+            std::filesystem::remove_all(fima::fs::trash::TRASH_FILES_PATH);
+            std::filesystem::remove_all(fima::fs::trash::TRASH_TRASHINFO_PATH);
+
+            std::filesystem::create_directories(fima::fs::trash::TRASH_FILES_PATH);
+            std::filesystem::create_directories(fima::fs::trash::TRASH_TRASHINFO_PATH);
+
+            std::cout << fima::theme::theme.primary << "Trash emptied successfully!"
+                      << fima::theme::Color::reset << '\n';
+
+            return;
+        }
+
+        std::string size_str{ fima::fs::operations::make_size_readable(size) };
+
+        if (size_str.back() == ' ') {
+            size_str.pop_back();
+        }
+
+        char confirm{};
+
+        std::cout << fima::theme::theme.primary << "The trash contains " << i << " items ("
+                  << size_str << ")." << '\n';
+        std::cout << "Are you sure you want to permanently delete them? [y/N]: "
+                  << fima::theme::Color::reset;
+
+        std::cin >> confirm;
+
+        if (confirm == 'y' || confirm == 'Y') {
+            std::filesystem::remove_all(fima::fs::trash::TRASH_FILES_PATH);
+            std::filesystem::remove_all(fima::fs::trash::TRASH_TRASHINFO_PATH);
+
+            std::filesystem::create_directories(fima::fs::trash::TRASH_FILES_PATH);
+            std::filesystem::create_directories(fima::fs::trash::TRASH_TRASHINFO_PATH);
+
+            std::cout << '\n'
+                      << fima::theme::theme.primary << "Trash emptied successfully!"
+                      << fima::theme::Color::reset << '\n';
+        }
+    });
 }
 
 } // namespace commands

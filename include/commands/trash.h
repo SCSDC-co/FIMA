@@ -18,7 +18,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_trash(CLI::App& app);
+setup_trash(CLI::App& app, bool& yes);
 
 }
 
