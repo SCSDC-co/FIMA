@@ -28,6 +28,7 @@
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
+#include "commands/trash.h"
 #include "commands/tree.h"
 #include "commands/unzip.h"
 #include "commands/zip.h"
@@ -265,6 +266,10 @@ main(int argc, char** argv)
     std::filesystem::path unzip_output_path{};
 
     fima::commands::setup_unzip(app, unzip_archive, unzip_output_path);
+
+    // ──────────────────────────────────────────────────────────────────────
+
+    fima::commands::setup_trash(app);
 
     // ──────────────────────────────────────────────────────────────────────
 

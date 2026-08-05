@@ -26,6 +26,9 @@ inline std::filesystem::path TRASH_TRASHINFO_PATH{};
 void
 setup_variables();
 
+std::string
+get_file_id(const std::filesystem::path& path);
+
 void
 add_file_to_trash(const std::filesystem::path& path);
 

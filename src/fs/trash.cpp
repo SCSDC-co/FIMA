@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <toml++/toml.hpp>
+#include <vector>
 
 #include "fs/get_application_directories.h"
 #include "theme.h"
@@ -40,9 +41,36 @@ setup_variables()
     std::filesystem::create_directories(TRASH_TRASHINFO_PATH);
 }
 
+std::string
+get_file_id(const std::filesystem::path& path)
+{
+    std::string id{};
+
+    std::string file_name{ path.filename().string() };
+
+    std::size_t underscores = 0;
+
+    for (std::size_t i = 0; i < file_name.size(); ++i) {
+        if (file_name[i] == '_') {
+            ++underscores;
+
+            if (underscores == 3) {
+                id = file_name.substr(0, i);
+            }
+        }
+    }
+
+    return id;
+}
+
 void
 add_file_to_trash(const std::filesystem::path& path)
 {
+    auto to_lower = [=](std::string s) {
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+        return s;
+    };
+
     auto current_time{ fima::utility::get_current_time() };
 
     auto local_time = current_time.get_local_time();
@@ -62,13 +90,36 @@ add_file_to_trash(const std::filesystem::path& path)
 
     std::string file_name{ path.filename().string() };
 
-    std::filesystem::path trash_path =
-      TRASH_FILES_PATH / (current_time_formatted + '_' + file_name);
+    std::vector<std::filesystem::path> paths{};
 
-    for (std::size_t i = 1; std::filesystem::exists(trash_path); ++i) {
-        trash_path =
-          TRASH_FILES_PATH / (current_time_formatted + '_' + std::to_string(i) + '_' + file_name);
+    for (auto& it : std::filesystem::directory_iterator(
+           fima::fs::trash::TRASH_FILES_PATH,
+           std::filesystem::directory_options::skip_permission_denied)) {
+        paths.push_back(it.path());
     }
+
+    std::sort(paths.begin(),
+              paths.end(),
+              [to_lower](const std::filesystem::path& a, const std::filesystem::path& b) {
+                  return to_lower(a.filename().string()) < to_lower(b.filename().string());
+              });
+
+    std::size_t i{ 0 };
+
+    for (const auto& path : paths) {
+        std::string full_id{ get_file_id(path) };
+
+        int counter{ std::stoi(full_id.substr(16)) };
+
+        if (full_id.substr(0, 15) == current_time_formatted) {
+            if (i == counter) {
+                ++i;
+            }
+        }
+    }
+
+    std::filesystem::path trash_path =
+      TRASH_FILES_PATH / (current_time_formatted + '_' + std::to_string(i) + '_' + file_name);
 
     std::filesystem::path trashinfo_path{ TRASH_TRASHINFO_PATH /
                                           (trash_path.filename().string() + ".trashinfo") };
@@ -86,7 +137,10 @@ add_file_to_trash(const std::filesystem::path& path)
     }
 
     auto tbl{ toml::table{
-      { "metadata", toml::table{ { "path", path.string() }, { "deleted_at", deleted_at } } } } };
+      { "metadata",
+        toml::table{
+          { "path", std::filesystem::absolute(std::filesystem::weakly_canonical(path)).string() },
+          { "deleted_at", deleted_at } } } } };
 
     std::ofstream trashinfo_file{ trashinfo_path };
 
