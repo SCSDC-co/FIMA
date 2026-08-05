@@ -58,6 +58,14 @@ struct tree_options
     bool verbose{ false };
 };
 
+struct rm_options
+{
+    std::vector<std::string> paths{};
+    bool recursive{ false };
+    bool verbose{ false };
+    bool no_trash{ false };
+};
+
 } // namespace options
 
 } // namespace fima

@@ -57,7 +57,7 @@ if(FIMA_BUILD_TESTS)
     )
     add_test(NAME test_mv COMMAND ${PROJECT_NAME} mv tests/test3.txt ./test.txt)
     add_test(NAME test_rm COMMAND ${PROJECT_NAME} rm tests/test2.txt tests
-                                  ./test.txt -r
+                                  ./test.txt -rvt
     )
     add_test(NAME test_perms COMMAND ${PROJECT_NAME} perms
                                      ../tests/all_perms.txt
@@ -81,7 +81,45 @@ if(FIMA_BUILD_TESTS)
                                                 tests.zip
     )
     add_test(NAME test_unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o tests)
-    add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -r)
+    add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -rvt)
+
+    add_test(NAME test_mk_for_trash_1 COMMAND ${PROJECT_NAME} mk -f file.txt
+                                              file2.txt file3.txt
+    )
+    add_test(NAME test_rm_for_trash_1 COMMAND ${PROJECT_NAME} rm file.txt
+                                              file2.txt file3.txt
+    )
+
+    add_test(NAME test_trash_list COMMAND ${PROJECT_NAME} trash list)
+    add_test(NAME test_trash_list_plain COMMAND ${PROJECT_NAME} trash list
+                                                --plain
+    )
+
+    add_test(NAME test_trash_restore
+             COMMAND ${CMAKE_COMMAND} -P
+                     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/trash_restore_test.cmake
+    )
+
+    add_test(NAME test_mk_for_trash_2 COMMAND ${PROJECT_NAME} mk -f file.txt
+                                              file2.txt file3.txt
+    )
+    add_test(NAME test_rm_for_trash_2 COMMAND ${PROJECT_NAME} rm file.txt
+                                              file2.txt file3.txt
+    )
+
+    add_test(NAME test_trash_remove
+             COMMAND ${CMAKE_COMMAND} -P
+                     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/trash_remove_test.cmake
+    )
+
+    add_test(NAME test_mk_for_trash_3 COMMAND ${PROJECT_NAME} mk -f file.txt
+                                              file2.txt file3.txt
+    )
+    add_test(NAME test_rm_for_trash_3 COMMAND ${PROJECT_NAME} rm file.txt
+                                              file2.txt file3.txt
+    )
+
+    add_test(NAME test_trash_empty COMMAND ${PROJECT_NAME} trash empty -y)
 
     add_test(NAME test_tui COMMAND ${PROJECT_NAME})
 

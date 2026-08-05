@@ -1,8 +1,8 @@
 /*
- * src/commands/remove.cpp
- * include/commands/remove.h
+ * src/commands/trash/list.cpp
+ * include/commands/trash/list.h
  *
- * The declaration of the `remove` subcommand
+ * The declaration of the `trash list` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -11,17 +11,17 @@
 
 #pragma once
 
-#include <CLI/App.hpp>
-
-#include "options.h"
-
 namespace fima {
 
 namespace commands {
 
+namespace trash {
+
 void
-setup_remove(CLI::App& app, fima::options::rm_options& options);
+list(const bool& plain);
 
 }
+
+} // namespace commands
 
 } // namespace fima

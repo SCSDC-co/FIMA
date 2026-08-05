@@ -28,10 +28,12 @@
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
+#include "commands/trash/trash.h"
 #include "commands/tree.h"
 #include "commands/unzip.h"
 #include "commands/zip.h"
 #include "config.h"
+#include "fs/trash.h"
 #include "git/GitRepo.h"
 #include "options.h"
 #include "theme.h"
@@ -47,6 +49,8 @@ main(int argc, char** argv)
     fima::config::parse_config_file();
 
     fima::theme::parse_theme_file();
+
+    fima::fs::trash::setup_variables();
 
     CLI::App app;
     argv = app.ensure_utf8(argv);
@@ -213,10 +217,9 @@ main(int argc, char** argv)
 
     // ──────────────────────────────────────────────────────────────────────
 
-    std::vector<std::string> remove_paths{};
-    bool remove_recursive{ false };
+    fima::options::rm_options rm_options{};
 
-    fima::commands::setup_remove(app, remove_paths, remove_recursive);
+    fima::commands::setup_remove(app, rm_options);
 
     // ──────────────────────────────────────────────────────────────────────
 
@@ -263,6 +266,14 @@ main(int argc, char** argv)
     std::filesystem::path unzip_output_path{};
 
     fima::commands::setup_unzip(app, unzip_archive, unzip_output_path);
+
+    // ──────────────────────────────────────────────────────────────────────
+
+    bool trash_yes{ false };
+    std::vector<std::string> trash_id{};
+    bool trash_list_plain{ false };
+
+    fima::commands::setup_trash(app, trash_yes, trash_id, trash_list_plain);
 
     // ──────────────────────────────────────────────────────────────────────
 
