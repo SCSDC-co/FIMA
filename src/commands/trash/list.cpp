@@ -30,9 +30,8 @@ namespace commands {
 namespace trash {
 
 void
-list()
+list(const bool& plain)
 {
-
     using namespace ftxui;
 
     auto to_lower = [=](std::string s) {
@@ -99,42 +98,57 @@ list()
 
         std::string _path{ *trashinfo["metadata"]["path"].value<std::string>() };
 
-        Color size_color{ fima::theme::theme.info.get_color_for_tui() };
-        Decorator size_decorator{ nothing };
+        if (!plain) {
+            Color size_color{ fima::theme::theme.info.get_color_for_tui() };
+            Decorator size_decorator{ nothing };
 
-        switch (*(size.rbegin() + 1)) {
-            case 'K':
-                size_decorator = bold;
-                break;
-            case 'M':
-                size_color = fima::theme::theme.warning.get_color_for_tui();
-                break;
-            case 'G':
-                size_color     = fima::theme::theme.warning.get_color_for_tui();
-                size_decorator = bold;
-                break;
-            case 'T':
-                size_color = fima::theme::theme.error
-                               .get_color_for_tui(); // we use error because i think it's the
-                                                     // best one for this kind of info
-                break;
-            case 'E':
-            case 'P':
-                size_color     = fima::theme::theme.error.get_color_for_tui();
-                size_decorator = bold;
+            switch (*(size.rbegin() + 1)) {
+                case 'K':
+                    size_decorator = bold;
+                    break;
+                case 'M':
+                    size_color = fima::theme::theme.warning.get_color_for_tui();
+                    break;
+                case 'G':
+                    size_color     = fima::theme::theme.warning.get_color_for_tui();
+                    size_decorator = bold;
+                    break;
+                case 'T':
+                    size_color = fima::theme::theme.error
+                                   .get_color_for_tui(); // we use error because i think it's the
+                                                         // best one for this kind of info
+                    break;
+                case 'E':
+                case 'P':
+                    size_color     = fima::theme::theme.error.get_color_for_tui();
+                    size_decorator = bold;
+            }
+
+            table_data.push_back(
+              { text(id) | color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(size) | color(size_color) | size_decorator,
+                text(age_str) | color(fima::theme::theme.secondary.get_color_for_tui()),
+                text(_path) | color(fima::theme::theme.secondary.get_color_for_tui()) });
+        } else {
+            std::cout << id << ":" << '\n';
+            std::cout << "  path: " << _path << '\n';
+            std::cout << "  size: " << size << '\n';
+            std::cout << "  age: " << age_str << '\n';
+
+            if (path != paths.back()) {
+                std::cout << '\n';
+            }
         }
-
-        table_data.push_back(
-          { text(id) | color(fima::theme::theme.secondary.get_color_for_tui()),
-            text(size) | color(size_color) | size_decorator,
-            text(age_str) | color(fima::theme::theme.secondary.get_color_for_tui()),
-            text(_path) | color(fima::theme::theme.secondary.get_color_for_tui()) });
     }
 
-    if (table_data.size() == 1) {
+    if (paths.size() == 0) {
         std::cout << fima::theme::theme.primary << "The trash is empty" << fima::theme::Color::reset
                   << '\n';
 
+        return;
+    }
+
+    if (plain) {
         return;
     }
 

@@ -270,9 +270,10 @@ main(int argc, char** argv)
     // ──────────────────────────────────────────────────────────────────────
 
     bool trash_yes{ false };
-    std::vector<std::string> id{};
+    std::vector<std::string> trash_id{};
+    bool trash_list_plain{ false };
 
-    fima::commands::setup_trash(app, trash_yes, id);
+    fima::commands::setup_trash(app, trash_yes, trash_id, trash_list_plain);
 
     // ──────────────────────────────────────────────────────────────────────
 

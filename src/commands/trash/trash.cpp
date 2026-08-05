@@ -24,7 +24,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids)
+setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids, bool& list_plain)
 {
     CLI::App* subcmd = app.add_subcommand("trash", "Trash operations")
                          ->configurable(false)
@@ -33,9 +33,11 @@ setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids)
     CLI::App* trash_list =
       subcmd->add_subcommand("list", "List all the files in the trash")->configurable(false);
 
+    trash_list->add_flag("-p,--plain", list_plain, "Plain output")->configurable(true);
+
     trash_list->usage("fima trash list");
 
-    trash_list->callback([&]() { fima::commands::trash::list(); });
+    trash_list->callback([&]() { fima::commands::trash::list(list_plain); });
 
     CLI::App* trash_empty =
       subcmd->add_subcommand("empty", "Empties the trash")->configurable(false);

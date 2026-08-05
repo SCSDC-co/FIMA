@@ -83,6 +83,15 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME test_unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o tests)
     add_test(NAME test_rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -rvt)
 
+    add_test(NAME test_mk_for_trash COMMAND ${PROJECT_NAME} mk -f file.txt
+                                            file2.txt file3.txt
+    )
+    add_test(NAME test_rm_for_trash COMMAND ${PROJECT_NAME} rm file.txt
+                                            file2.txt file3.txt
+    )
+
+    add_test(NAME test_trash_list COMMAND ${PROJECT_NAME} trash list)
+
     add_test(NAME test_tui COMMAND ${PROJECT_NAME})
 
     add_test(NAME test_default_theme COMMAND ${PROJECT_NAME}

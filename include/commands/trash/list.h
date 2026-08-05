@@ -18,7 +18,7 @@ namespace commands {
 namespace trash {
 
 void
-list();
+list(const bool& plain);
 
 }
 

@@ -19,7 +19,7 @@ namespace fima {
 namespace commands {
 
 void
-setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids);
+setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids, bool& list_plain);
 
 }
 
