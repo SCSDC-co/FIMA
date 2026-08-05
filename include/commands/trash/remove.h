@@ -1,8 +1,8 @@
 /*
- * src/commands/trash/trash.cpp
- * include/commands/trash/trash.h
+ * src/commands/trash/remove.cpp
+ * include/commands/trash/remove.h
  *
- * The declaration of the `trash` subcommand
+ * The declaration of the `trash remove` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -11,16 +11,20 @@
 
 #pragma once
 
-#include <CLI/App.hpp>
+#include <string>
 #include <vector>
 
 namespace fima {
 
 namespace commands {
 
+namespace trash {
+
 void
-setup_trash(CLI::App& app, bool& yes, std::vector<std::string>& ids);
+remove(const std::vector<std::string>& ids);
 
 }
+
+} // namespace commands
 
 } // namespace fima
