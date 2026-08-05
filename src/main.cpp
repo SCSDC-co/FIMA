@@ -28,7 +28,7 @@
 #include "commands/permissions.h"
 #include "commands/remove.h"
 #include "commands/rename.h"
-#include "commands/trash.h"
+#include "commands/trash/trash.h"
 #include "commands/tree.h"
 #include "commands/unzip.h"
 #include "commands/zip.h"

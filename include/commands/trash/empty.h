@@ -1,8 +1,8 @@
 /*
- * src/commands/trash.cpp
- * include/commands/trash.h
+ * src/commands/trash/empty.cpp
+ * include/commands/trash/empty.h
  *
- * The declaration of the `trash` subcommand
+ * The declaration of the `trash empty` subcommand
  *
  * Copyright (C) 2026 Giuliano De Amicis. All rights reserved.
  * This software is licensed under the GPL-3.0-or-later.
@@ -11,15 +11,17 @@
 
 #pragma once
 
-#include <CLI/App.hpp>
-
 namespace fima {
 
 namespace commands {
 
+namespace trash {
+
 void
-setup_trash(CLI::App& app, bool& yes);
+empty(const bool& yes);
 
 }
+
+} // namespace commands
 
 } // namespace fima
