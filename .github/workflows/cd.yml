@@ -73,11 +73,12 @@ jobs:
       - name: Check for tag
         id: check_tag
         run: |
-          if git tag --points-at HEAD~ | grep -q .; then
-            echo "is_tag=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "is_tag=false" >> "$GITHUB_OUTPUT"
-          fi
+            if git tag --points-at HEAD^1 | grep -q . || \
+               git tag --points-at HEAD^2 2>/dev/null | grep -q .; then
+              echo "is_tag=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "is_tag=false" >> "$GITHUB_OUTPUT"
+            fi
 
       - name: Download DEB artifact
         if: steps.check_tag.outputs.is_tag == 'true'
