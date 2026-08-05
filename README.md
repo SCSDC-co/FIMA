@@ -196,7 +196,7 @@ name = "green"
   - [x] add verbose mode to `info`
 - [x] add theming features
 - [x] create docs website using `vitepress`
-- [ ] add trash features
+- [x] add trash features
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) if you want to contribute!
 
