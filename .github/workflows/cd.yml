@@ -88,11 +88,11 @@ jobs:
 
       - name: Set config from env var
         if: steps.check_tag.outputs.is_tag == 'true'
-        run: echo $APTLY_CONFIG > .aptly.conf
+        run: echo $APTLY_CONFIG > ~/.aptly.conf
 
       - name: Download aptly db and pool from R2
         if: steps.check_tag.outputs.is_tag == 'true'
-        run: aws s3 sync s3://apt-repository/.aptly .aptly
+        run: aws s3 sync s3://apt-repository/.aptly /home/runner/.aptly
 
       - name: Import GPG signing key
         if: steps.check_tag.outputs.is_tag == 'true'
@@ -122,5 +122,5 @@ jobs:
 
       - name: Upload Aptly DB and Pool to S3
         if: steps.check_tag.outputs.is_tag == 'true'
-        run: aws s3 sync .aptly/db s3://.aptly/db && aws s3 sync .aptly/pool s3://.aplty/pool
+        run: aws s3 sync /home/runner/.aptly/db s3://.aptly/db && aws s3 sync /home/runner/.aptly/pool s3://.aplty/pool
 
