@@ -14,7 +14,7 @@ Pros:
 
 - **simple**: FIMA is a simple tool, with simple commands
   and it tries to be as much as user-friendly as possible.
-- **customizable**: FIMA is customizable and configurable
+- **customizable**: FIMA is customizable and configurable,
   you don't adapt yourself to FIMA's workflow, FIMA adapts
   to your workflow.
 - **cross platform**: FIMA supports Linux, Windows and MacOS.
