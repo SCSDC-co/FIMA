@@ -45,7 +45,9 @@ const vitePressSidebarOptions: VitePressSidebarOptions = {
     useTitleFromFileHeading: true,
     manualSortFileNameByPriority: [
         "get-started.md",
+        "features.md",
         "customization-and-configuration.md",
+        "trash-bin.md",
     ],
     sortMenusOrderByDescending: false,
 };
