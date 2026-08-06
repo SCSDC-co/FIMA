@@ -6,6 +6,42 @@ outline: deep
 
 Let's install FIMA!
 
+## Why FIMA?
+
+Before installing FIMA we want to tell you why you _should_.
+
+Pros:
+
+- **simple**: FIMA is a simple tool, with simple commands
+  and it tries to be as much as user-friendly as possible.
+- **customizable**: FIMA is customizable and configurable
+  you don't adapt yourself to FIMA's workflow, FIMA adapts
+  to your workflow.
+- **cross platform**: FIMA supports Linux, Windows and MacOS.
+- **self-contained**: FIMA is distributed as a single binary and does not
+  require installing multiple external tools.
+- **single binary**: FIMA provides all of its features in
+  a single binary, while other workflows may require
+  installing and managing multiple programs.
+
+Cons:
+
+- **slow with big amounts of data**: when you pass to FIMA
+  medium to big amounts of data it may become slower.
+- **early stage of development**: FIMA is its early stages
+  of development so it has some bugs.
+
+---
+
+There are really great alternatives to FIMA:
+
+- [`ranger`](https://github.com/ranger/ranger)
+- [`superfile`](https://github.com/yorukot/superfile)
+- [`yazi`](https://github.com/sxyazi/yazi)
+- [`nnn`](https://github.com/jarun/nnn)
+- [`scc`](https://github.com/boyter/scc)
+- [`eza`](https://github.com/eza-community/eza)
+
 ## Requirements
 
 FIMA has no external dependencies, but we recommend the following for the best experience:
