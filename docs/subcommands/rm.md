@@ -13,6 +13,8 @@ outline: deep
 **Opions:**
 
 - `-r, --recursive` Remove directories and their contents recursively
+- `-v, --verbose` Outputs the names of the removed directory
+- `-t, --no-trash` Remove the item directly
 
 ## Examples
 
