@@ -6,7 +6,7 @@ outline: deep
 
 FIMA has a builtin trash bin.
 
-It is located here:
+It is located at:
 
 - Linux: `$HOME/.local/share/fima/trash/`
 - Windows: `$LOCALAPPDATA/fima/trash/`
@@ -15,7 +15,7 @@ It is located here:
 
 When a file is deleted with `rm` without the `-t, --no-trash`
 it moves the file here: `TRASH_DIRECTORY/files/` and it gives it a new name
-following this rules: `ID_<original file name>`.
+following these rules: `ID_<original file name>`.
 
 `ID` looks like this: `YYYYMMDD_HHMMSS_COUNTER`.
 `COUNTER` is used for avoiding `ID`s duplication.
@@ -23,6 +23,11 @@ following this rules: `ID_<original file name>`.
 So if we delete a file named `file.txt` its name in
 the trash bin can look like this:
 `20260806_195324_0_file.txt`.
+
+::: info
+Directories are handled the same way as files
+:::
+
 ---
 
 After the file is moved a `.trashinfo` is created here: `TRASH_DIRECTORY/trashinfo/`.
