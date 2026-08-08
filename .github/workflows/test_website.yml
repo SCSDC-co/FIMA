@@ -1,0 +1,27 @@
+name: Test the documentation website
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+
+    if: github.head_ref == 'website-docs'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Setup node to the latest version
+        uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the site
+        run: npm run build

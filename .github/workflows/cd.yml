@@ -57,7 +57,7 @@ jobs:
   deploy-to-apt:
     needs: build-and-test
     runs-on: ubuntu-24.04
-    environment: 
+    environment:
       name: production
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.R2_KEY_ID }}
@@ -89,7 +89,7 @@ jobs:
       - name: Set config from env var
         if: steps.check_tag.outputs.is_tag == 'true'
         run: echo $APTLY_CONFIG > .aptly.conf
-      
+
       - name: Download aptly db and pool from R2
         if: steps.check_tag.outputs.is_tag == 'true'
         run: aws s3 sync s3://apt-repository/.aptly .aptly
