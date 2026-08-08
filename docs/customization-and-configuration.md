@@ -1,12 +1,10 @@
 ---
 outline: deep
-prev: false
 ---
 
 # Configuration and Customization
 
-FIMA includes a wide range of filesystem utilities,
-each designed for a specific workflow.
+FIMA tries to be as customizable and configurable as possible
 
 ## Configuration
 

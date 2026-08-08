@@ -23,8 +23,8 @@ features:
     icon: ⚙
   - title: Open source
     details: FIMA is fully open source and licensed under the GPL 3.0 license
-    link: https://github.com/SCSDC-co/FIMA/tree/main/LICENSE
-    linkText: View the license
+    link: https://github.com/SCSDC-co/FIMA/
+    linkText: View the GitHub repo
 ---
 
 <br>

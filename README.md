@@ -2,7 +2,9 @@
 
 # FIMA
 
-<img src="https://skillicons.dev/icons?i=bash,cpp,cmake" >
+[Documentation](https://scsdc-co.github.io/FIMA/)
+
+<img src="https://skillicons.dev/icons?i=cpp,cmake" >
 
 ---
 
