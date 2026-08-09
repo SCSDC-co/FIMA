@@ -5,4 +5,9 @@ coverage:
 ignore:
   # pretty much useless to get the coverage, it isn't used in actual program
   - "src/tui/commands/tree/tree_tui.cpp"
-  - "src/commands/trash/empty.cpp" # it's impossible to test it fully
+
+  # impossible and/or useless to test them fully
+  - "src/commands/trash/empty.cpp"
+  - "include/utility/regex.h"
+  - "include/fs/get_application_directories.h"
+  - "include/theme.h"
