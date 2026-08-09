@@ -6,7 +6,3 @@ ignore:
   # pretty much useless to get the coverage, it isn't used in actual program
   - "src/tui/commands/tree/tree_tui.cpp"
   - "src/commands/trash/empty.cpp" # it's impossible to test it fully
-
-  # When i will find a method to test those i will delete them from there
-  - src/commands/trash/remove.cpp
-  - src/commands/trash/restore.cpp
