@@ -1,5 +1,6 @@
-# SPDX-License-Identifier: GPL-3.0-or-later Copyright 2023 Antonio Vázquez
-# Blanco <antoniovazquezblanco@gmail.com>
+# cmake-format: off
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2023 Antonio Vázquez Blanco <antoniovazquezblanco@gmail.com>
 
 #[=======================================================================[.rst:
 GitVersionDetect
@@ -16,7 +17,7 @@ This will define the following variables:
 
 ``GITVERSIONDETECT_VERSION``
   Full git tag as git describe --dirty would produce.
-``GITVERSIONDETECT_VERhttps://raw.githubusercontent.com/antoniovazquezblanco/cmake-gitversiondetect/refs/heads/main/GitVersionDetect.cmakeSION_MAJOR``
+``GITVERSIONDETECT_VERSION_MAJOR``
   Major version matched from GITVERSIONDETECT_VERSION.
 ``GITVERSIONDETECT_VERSION_MINOR``
   Minor version matched from GITVERSIONDETECT_VERSION.
@@ -29,6 +30,7 @@ This will define the following variables:
   Latest commit sha.
 
 #]=======================================================================]
+# cmake-format: on
 
 # Requirements
 cmake_minimum_required(VERSION 3.10)
