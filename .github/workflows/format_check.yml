@@ -1,0 +1,26 @@
+name: Check the formatting
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup C++
+        uses: aminya/setup-cpp@8170d66c458f4a045220b7b0966c10940bb2a15d
+        with:
+          clang-format: true
+          cmakelang: true
+
+      - name: Check C++ Formatting
+        run: clang-format $(find src include -type f -name \( "*.cpp" -o -name "*.h" \)) -n --Werror
+
+      - name: Check CMake Formatting
+        run: cmake-format $(find cmake src -type f -name \( "CMakeLists.txt" -o -name "*.cmake" \)) CMakeLists.txt --check

@@ -1,6 +1,8 @@
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
-set(CPACK_PACKAGE_DESCRIPTION "Super cool file manager that provides a complete filesystem toolbox for developers, power users, and everyday users")
+set(CPACK_PACKAGE_DESCRIPTION
+    "Super cool file manager that provides a complete filesystem toolbox for developers, power users, and everyday users"
+)
 set(CPACK_PACKAGE_VENDOR "SCSDC")
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -17,8 +19,17 @@ set(CPACK_DEB_COMPONENT_INSTALL YES)
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Sckab <giuliano@scsdc-co.org>")
 
-if(NOT CMAKE_INSTALL_PREFIX OR CMAKE_INSTALL_PREFIX STREQUAL "/usr/local")
-    set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "" FORCE)
+if(NOT CMAKE_INSTALL_PREFIX
+   OR CMAKE_INSTALL_PREFIX
+      STREQUAL
+      "/usr/local"
+)
+    set(CMAKE_INSTALL_PREFIX
+        "/usr"
+        CACHE PATH
+              ""
+              FORCE
+    )
 endif()
 
 set(CPACK_GENERATOR "DEB")
