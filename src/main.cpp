@@ -169,7 +169,9 @@ main(int argc, char** argv)
         std::cout << "verbose = false" << '\n' << '\n';
 
         std::cout << "[rm]" << '\n';
-        std::cout << "recursive = false" << '\n' << '\n';
+        std::cout << "recursive = false" << '\n';
+        std::cout << "verbose = false" << '\n';
+        std::cout << "no-trash = false" << '\n' << '\n';
 
         std::cout << "[cloc]" << '\n';
         std::cout << "ignore = [ \"\" ]" << '\n';
@@ -180,7 +182,13 @@ main(int argc, char** argv)
         std::cout << "[info]" << '\n';
         std::cout << "verbose = false" << '\n';
         std::cout << "tags = false" << '\n';
-        std::cout << "remotes = false" << '\n';
+        std::cout << "remotes = false" << '\n' << '\n';
+
+        std::cout << "[trash.list]" << '\n';
+        std::cout << "plain = false" << '\n' << '\n';
+
+        std::cout << "[trash.empty]" << '\n';
+        std::cout << "yes = false" << '\n';
 
         std::exit(0);
     });
