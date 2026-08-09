@@ -86,8 +86,8 @@ print_normal(const std::vector<fima::fs::DirectoryItem>& items,
 
         std::string element_string = items[i].get_name(false);
 
-        int full_size = element_string.size() +
-                        (relative_paths ? items[i].get_parent_path_relative().size() : 0);
+        int full_size =
+          element_string.size() + (relative_paths ? items[i].get_parent_path_relative().size() : 0);
 
         element_string +=
           std::string(std::max(full_size, get_max_of_column(col)) - full_size + 2, ' ');

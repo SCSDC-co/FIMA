@@ -71,7 +71,8 @@ if(NOT MSVC)
     )
     target_link_options(
         ${PROJECT_NAME}
-        PRIVATE -static-libstdc++
+        PRIVATE
+        -static-libstdc++
         -static-libgcc
     )
 else()
