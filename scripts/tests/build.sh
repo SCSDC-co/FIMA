@@ -31,4 +31,4 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
-ctest -j "$(nproc)" --output-on-failure -T Test -T Coverage
+ctest --output-on-failure -T Test -T Coverage

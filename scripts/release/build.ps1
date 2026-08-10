@@ -25,8 +25,7 @@ try {
 }
 
 try {
-    $jobs = [Environment]::ProcessorCount
-    cmake --build . -- -j $jobs
+    cmake --build .
 } catch {
     Write-Error "Build failed"
     exit 1

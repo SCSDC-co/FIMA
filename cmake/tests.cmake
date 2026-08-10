@@ -1,7 +1,7 @@
 enable_testing()
 
 include(CTest)
-include(get_ids_from_trash)
+include(setup_trash)
 
 # code doverage config
 add_library(coverage_config INTERFACE)
@@ -26,6 +26,8 @@ endif()
 option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 
 if(FIMA_BUILD_TESTS)
+    setup_trash()
+
     add_test(NAME version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME version_subcmd COMMAND ${PROJECT_NAME} version)
     add_test(NAME ls COMMAND ${PROJECT_NAME} .. ls)
@@ -36,9 +38,10 @@ if(FIMA_BUILD_TESTS)
                              tests/test2.txt
     )
     add_test(NAME cp COMMAND ${PROJECT_NAME} cp tests/test2.txt tests/test3.txt)
-    add_test(NAME mv COMMAND ${PROJECT_NAME} mv tests/test3.txt ./test.txt)
-    add_test(NAME rm COMMAND ${PROJECT_NAME} rm tests/test2.txt tests
-                             ./test.txt -rvt
+    add_test(NAME cp_dir COMMAND ${PROJECT_NAME} cp tests tests_cp)
+    add_test(NAME mv COMMAND ${PROJECT_NAME} mv tests/test3.txt test.txt)
+    add_test(NAME rm COMMAND ${PROJECT_NAME} rm tests/test2.txt tests tests_cp
+                             test.txt -rvt
     )
     add_test(NAME perms COMMAND ${PROJECT_NAME} perms ../tests/all_perms.txt)
     add_test(NAME cloc COMMAND ${PROJECT_NAME} .. cloc)
@@ -62,33 +65,21 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o unzip_tests)
     add_test(NAME rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -rvt)
 
-    add_test(NAME mk_for_trash_1 COMMAND ${PROJECT_NAME} mk -f file.txt
-                                         file2.txt file3.txt
+    add_test(NAME mk_for_trash COMMAND ${PROJECT_NAME} mk -f file.txt file2.txt
+                                       file3.txt
     )
-    add_test(NAME rm_for_trash_1 COMMAND ${PROJECT_NAME} rm file.txt file2.txt
-                                         file3.txt
+    add_test(NAME rm_for_trash COMMAND ${PROJECT_NAME} rm file.txt file2.txt
+                                       file3.txt
     )
-
-    get_ids_from_trash(ids)
-
-    list(GET ids 0 id_remove)
-    list(GET ids 1 id_restore)
 
     add_test(NAME trash_list COMMAND ${PROJECT_NAME} trash list)
     add_test(NAME trash_list_plain COMMAND ${PROJECT_NAME} trash list --plain)
 
     add_test(NAME trash_restore COMMAND ${PROJECT_NAME} trash restore
-                                        ${id_restore}
+                                        20260806_195324_0
     )
     add_test(NAME trash_remove COMMAND ${PROJECT_NAME} trash remove
-                                       ${id_remove}
-    )
-
-    add_test(NAME mk_for_trash_3 COMMAND ${PROJECT_NAME} mk -f file.txt
-                                         file2.txt file3.txt
-    )
-    add_test(NAME rm_for_trash_3 COMMAND ${PROJECT_NAME} rm file.txt file2.txt
-                                         file3.txt
+                                       20260806_195324_0
     )
 
     add_test(NAME trash_empty COMMAND ${PROJECT_NAME} trash empty -y)
