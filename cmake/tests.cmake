@@ -26,11 +26,6 @@ endif()
 option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 
 if(FIMA_BUILD_TESTS)
-    get_ids_from_trash(ids)
-
-    list(GET ids 0 id_remove)
-    list(GET ids 1 id_restore)
-
     add_test(NAME version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME version_subcmd COMMAND ${PROJECT_NAME} version)
     add_test(NAME ls COMMAND ${PROJECT_NAME} .. ls)
@@ -73,6 +68,11 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME rm_for_trash_1 COMMAND ${PROJECT_NAME} rm file.txt file2.txt
                                          file3.txt
     )
+
+    get_ids_from_trash(ids)
+
+    list(GET ids 0 id_remove)
+    list(GET ids 1 id_restore)
 
     add_test(NAME trash_list COMMAND ${PROJECT_NAME} trash list)
     add_test(NAME trash_list_plain COMMAND ${PROJECT_NAME} trash list --plain)

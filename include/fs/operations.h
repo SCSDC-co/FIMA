@@ -96,9 +96,6 @@ is_ancestor(const std::filesystem::path& ancestor, const std::filesystem::path& 
 void
 create(const std::filesystem::path& path, const std::string_view& conent);
 
-void
-overwrite(const std::filesystem::path& path, const std::string_view& content);
-
 std::string
 get_perms(const std::filesystem::path& item);
 

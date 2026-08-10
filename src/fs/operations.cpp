@@ -19,7 +19,6 @@
 #include <fstream>
 #include <ftxui/dom/node.hpp>
 #include <grp.h>
-#include <ios>
 #include <iostream>
 #include <iterator>
 #include <string>
@@ -326,16 +325,6 @@ create(const std::filesystem::path& path, const std::string_view& conent)
     outfile << conent;
 
     outfile.close();
-}
-
-void
-overwrite(const std::filesystem::path& path, const std::string_view& content)
-{
-    std::ofstream file{ path, std::ios::trunc };
-
-    file << content;
-
-    file.close();
 }
 
 std::string
