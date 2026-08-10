@@ -19,16 +19,10 @@ set(CPACK_DEB_COMPONENT_INSTALL YES)
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Sckab <giuliano@scsdc-co.org>")
 
-if(NOT CMAKE_INSTALL_PREFIX
-   OR CMAKE_INSTALL_PREFIX
-      STREQUAL
-      "/usr/local"
-)
+if(NOT CMAKE_INSTALL_PREFIX OR CMAKE_INSTALL_PREFIX STREQUAL "/usr/local")
     set(CMAKE_INSTALL_PREFIX
         "/usr"
-        CACHE PATH
-              ""
-              FORCE
+        CACHE PATH "" FORCE
     )
 endif()
 
