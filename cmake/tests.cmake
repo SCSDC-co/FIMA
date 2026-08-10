@@ -1,7 +1,7 @@
 enable_testing()
 
 include(CTest)
-include(get_file_id_from_trash)
+include(get_ids_from_trash)
 
 # code doverage config
 add_library(coverage_config INTERFACE)
@@ -26,8 +26,10 @@ endif()
 option(FIMA_BUILD_TESTS "Builds the test cases" OFF)
 
 if(FIMA_BUILD_TESTS)
-    get_file_id_from_trash(id_restore)
-    get_file_id_from_trash(id_remove)
+    get_ids_from_trash(ids)
+
+    list(GET ids 0 id_remove)
+    list(GET ids 1 id_restore)
 
     add_test(NAME version COMMAND ${PROJECT_NAME} -v)
     add_test(NAME version_subcmd COMMAND ${PROJECT_NAME} version)
@@ -62,7 +64,7 @@ if(FIMA_BUILD_TESTS)
     add_test(NAME add_items_to_zip COMMAND ${PROJECT_NAME} zip test.txt -o
                                            tests.zip
     )
-    add_test(NAME unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o tests)
+    add_test(NAME unzip COMMAND ${PROJECT_NAME} unzip tests.zip -o unzip_tests)
     add_test(NAME rm_for_unzip COMMAND ${PROJECT_NAME} rm tests -rvt)
 
     add_test(NAME mk_for_trash_1 COMMAND ${PROJECT_NAME} mk -f file.txt
