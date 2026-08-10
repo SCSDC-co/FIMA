@@ -29,6 +29,6 @@ cmake --build . -- -j "$(nproc)" || {
     exit 1
 }
 
-ctest -j "$(nproc)" --output-on-failure
+ctest --output-on-failure
 
 echo
