@@ -20,6 +20,8 @@
     --vp-c-bg-soft: #2a2a2a;
 
     --vp-code-block-divider-color: var(--vp-c-bg);
+
+    scrollbar-color: var(--vp-c-brand-1) var(--vp-c-gutter);
 }
 
 .VPNavBarSearchButton {
