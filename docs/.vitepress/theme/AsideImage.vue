@@ -1,6 +1,7 @@
 <script setup>
 import DefaultTheme from "vitepress/theme";
 
+// biome-ignore lint/correctness/noUnusedImports: Layout is actually used but biome doesn't recognize it
 const { Layout } = DefaultTheme;
 </script>
 
