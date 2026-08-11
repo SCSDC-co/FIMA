@@ -32,6 +32,19 @@
     border: 1px var(--vp-c-brand-1) solid;
 }
 
+@media (min-width: 960px) {
+    img.VPImage.image-src {
+        max-width: 400px;
+        max-height: 400px;
+
+        left: 60%;
+    }
+}
+
+img.VPImage.image-src {
+    user-select: none;
+}
+
 summary {
     cursor: pointer;
     user-select: none;
