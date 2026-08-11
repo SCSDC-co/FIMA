@@ -6,6 +6,7 @@ import "./style.css";
 
 import contributors from "../contributors.json";
 import Showcase from "../../components/Showcase.vue";
+import AsideImage from "./AsideImage.vue";
 
 export default {
     extends: DefaultTheme,
@@ -16,4 +17,5 @@ export default {
 
         app.config.globalProperties.$contributors = contributors;
     },
+    Layout: AsideImage,
 };

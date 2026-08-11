@@ -18,6 +18,8 @@ const vitePressOptions: UserConfig = {
             { text: "Get Started", link: "/get-started" },
         ],
 
+        logo: { src: "/F.svg", alt: "FIMA's F" },
+
         socialLinks: [
             { icon: "github", link: "https://github.com/SCSDC-co/FIMA" },
         ],
@@ -34,7 +36,11 @@ const vitePressOptions: UserConfig = {
             message: "Released under the GPL 3.0 License.",
             copyright: "Copyright © 2026-present Giuliano De Amicis",
         },
+
+        externalLinkIcon: true,
     },
+
+    head: [["link", { rel: "icon", href: "/FIMA/favicon.ico" }]],
 };
 
 const vitePressSidebarOptions: VitePressSidebarOptions = {

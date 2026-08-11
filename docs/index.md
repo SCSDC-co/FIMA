@@ -13,6 +13,9 @@ hero:
     - theme: alt
       text: Features
       link: /features
+  image:
+    src: /FIMA.svg
+    alt: FIMA's logo
 
 features:
   - title: Filesystem Toolbox
