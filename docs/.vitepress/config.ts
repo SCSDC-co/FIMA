@@ -1,6 +1,5 @@
 import { defineConfig, UserConfig } from "vitepress";
 import { withSidebar } from "vitepress-sidebar";
-import { VitePressSidebarOptions } from "vitepress-sidebar/types";
 
 const rootLocale = "en";
 const supportedLocales = [rootLocale, "it"];
@@ -111,6 +110,60 @@ const vitePressOptions: UserConfig = {
 
     rewrites: {
         "en/:rest*": ":rest*",
+    },
+
+    transformHead(context) {
+        return [
+            [
+                "meta",
+                {
+                    property: "og:title",
+                    content: context.title,
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:description",
+                    content: context.description,
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:image",
+                    content: "https://scsdc-co.github.io/FIMA/banner.png",
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:type",
+                    content: "website",
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:url",
+                    content: `https://scsdc-co.github.io/FIMA/${context.pageData.relativePath.replace(/\.md$/, "")}`,
+                },
+            ],
+            [
+                "meta",
+                {
+                    name: "twitter:card",
+                    content: "summary_large_image",
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:site_name",
+                    content: "FIMA",
+                },
+            ],
+        ];
     },
 };
 

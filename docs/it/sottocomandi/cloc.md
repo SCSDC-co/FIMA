@@ -12,11 +12,11 @@ outline: deep
 
 **Opzioni:**
 
-- `-i, --ignore TEXT ...`  Percorsi da ignorare
-- `-S, --sort TEXT`  Tipo di ordinamento (total (predefinito), files, code, comments, blank)
-- `-q, --quiet`  Abilita l'output silenzioso
-- `-G, --no-gitignore`  Ignora il .gitignore
-- `-s, --show-languages`  Mostra tutti i linguaggi supportati da cloc
+- `-i, --ignore TEXT ...` Percorsi da ignorare
+- `-S, --sort TEXT` Tipo di ordinamento (total (predefinito), files, code, comments, blank)
+- `-q, --quiet` Abilita l'output silenzioso
+- `-G, --no-gitignore` Ignora il .gitignore
+- `-s, --show-languages` Mostra tutti i linguaggi supportati da cloc
 
 ## Esempi
 
