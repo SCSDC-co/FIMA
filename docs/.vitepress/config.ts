@@ -44,8 +44,8 @@ const vitePressOptions: UserConfig = {
 };
 
 const vitePressSidebarOptions: VitePressSidebarOptions = {
+    rootGroupText: "Contents",
     documentRootPath: "docs/",
-    collapsed: true,
     capitalizeFirst: true,
     hyphenToSpace: true,
     useTitleFromFileHeading: true,
