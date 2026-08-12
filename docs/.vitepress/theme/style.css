@@ -44,6 +44,7 @@
 }
 
 div.action > .link {
+    color: var(--vp-c-brand-1) !important;
     border: 1px solid var(--vp-c-brand-1) !important;
 }
 
@@ -87,6 +88,22 @@ summary {
     color: var(--vp-c-brand-1);
     font-weight: bold;
     margin-top: 48px;
+}
+
+.group:has([role="button"]) .VPSidebarItem.level-0 .items {
+    padding-left: 16px !important;
+    border-left: 1px solid var(--vp-c-gutter);
+    border-radius: 2px;
+    transition: background-color 0.25s;
+}
+
+.menu + .translations::after {
+    margin-right: 8px;
+    margin-left: 5px;
+    width: 1px;
+    height: 24px;
+    background-color: var(--vp-c-divider);
+    content: "";
 }
 
 @media (min-width: 960px) {
