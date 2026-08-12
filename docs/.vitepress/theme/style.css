@@ -34,13 +34,17 @@
 }
 
 .vp-doc a:hover {
-    color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1) !important;
 
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: 2px !important;
 }
 
 .vp-doc a:hover > code {
-    color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1) !important;
+}
+
+div.action > .link {
+    border: 1px solid var(--vp-c-brand-1) !important;
 }
 
 li > section.VPSidebarItem > ul.items {
