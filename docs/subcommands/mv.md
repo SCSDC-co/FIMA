@@ -4,7 +4,7 @@ outline: deep
 
 # MV
 
-`fima mv` is a simple command renames
+`fima mv` is a simple command that renames
 or moves a file or a directory in another location.
 
 ## Usage

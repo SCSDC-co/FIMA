@@ -4,7 +4,7 @@ outline: deep
 
 # Info
 
-`fima info` is a useful command to get info from a directory or a file or a git repository.
+`fima info` is a useful command to get info from a directory, a file or a git repository.
 
 ## Usage
 
@@ -33,7 +33,7 @@ fima info
 fima info file.txt
 
 # Get info of a git repository
-fima ingo -g
+fima info -g
 ```
 
 ## Showcase

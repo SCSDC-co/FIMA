@@ -4,7 +4,7 @@ outline: deep
 
 # Perms
 
-`fima perms` is a command that display files and directories permissions.
+`fima perms` is a command that displays file and directory permissions.
 
 ## Usage
 

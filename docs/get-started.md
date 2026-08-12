@@ -28,7 +28,7 @@ Cons:
 
 - **slow with big amounts of data**: when you pass to FIMA
   medium to big amounts of data it may become slower.
-- **early stage of development**: FIMA is its early stages
+- **early stage of development**: FIMA is in its early stages
   of development so it has some bugs.
 
 ---

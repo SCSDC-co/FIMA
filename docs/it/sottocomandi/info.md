@@ -33,7 +33,7 @@ fima info
 fima info file.txt
 
 # Ottieni informazioni su un repository git
-fima ingo -g
+fima info -g
 ```
 
 ## Anteprime

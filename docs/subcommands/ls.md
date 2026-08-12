@@ -14,7 +14,7 @@ with additional features and customization options.
 **Options:**
 
 - `-i, --icons` Put an icon next to the name of the item
-- `-a, --all` Will also count the dotfiles
+- `-a, --all` Will also show the hidden files
 - `-1, --one-line` Display one entry per line
 - `--group-directories-first` List directories before files
 - `--group-directories-last` List directories after files
