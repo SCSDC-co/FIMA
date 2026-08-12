@@ -2,10 +2,14 @@ name: Check the formatting
 
 on:
   pull_request:
+    branches:
+      - main
 
 jobs:
-  check-the-formatting:
+  check-the-formatting-cpp:
     runs-on: ubuntu-latest
+
+    if: github.head_ref != 'website-docs'
 
     steps:
       - name: Checkout repo
@@ -24,3 +28,23 @@ jobs:
 
       - name: Check CMake Formatting
         run: cmake-format $(find cmake src -type f \( -name "CMakeLists.txt" -o -name "*.cmake" \)) CMakeLists.txt --check
+
+  check-the-formatting-site:
+    runs-on: ubuntu-latest
+
+    if: github.head_ref == 'website-docs'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup node
+        uses: actions/setup-node@v7
+
+      - name: Install prettier
+        run: npm install -D prettier@latest
+
+      - name: Check the formatting
+        run: npx prettier $(find docs -type f \( -name "*.ts" -o -name "*css" -o -name "*.md" \) -not -path "*/dist/*") -c
