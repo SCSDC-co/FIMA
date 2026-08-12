@@ -17,11 +17,11 @@ outline: deep
 - `restore IDs` Restore an item given an ID (supports multiple IDs)
 - `remove IDs` Remove an item given an ID (supports multiple IDs)
 
-**List Opions:**
+**List Options:**
 
 - `-p, --plain` Plain output
 
-**Empty Opions:**
+**Empty Options:**
 
 - `-y, --yes` Don't ask for confirmation
 

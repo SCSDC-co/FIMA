@@ -4,7 +4,7 @@ outline: deep
 
 # Trash Bin
 
-FIMA has a builtin trash bin.
+FIMA has a built-in trash bin.
 
 It is located at:
 
@@ -13,12 +13,12 @@ It is located at:
 
 ## How does it work?
 
-When a file is deleted with `rm` without the `-t, --no-trash`
+When a file is deleted with `rm` without the `-t, --no-trash` flag
 it moves the file here: `TRASH_DIRECTORY/files/` and it gives it a new name
 following these rules: `ID_<original file name>`.
 
 `ID` looks like this: `YYYYMMDD_HHMMSS_COUNTER`.
-`COUNTER` is used for avoiding `ID`s duplication.
+`COUNTER` is used for avoiding `ID` duplication.
 
 So if we delete a file named `file.txt` its name in
 the trash bin can look like this:
@@ -32,11 +32,11 @@ Directories are handled the same way as files
 
 After the file is moved a `.trashinfo` is created here: `TRASH_DIRECTORY/trashinfo/`.
 
-A `.trashinfo` file complete name is this: `<trash file name>.trashinfo`,
+A `.trashinfo` file's complete name is this: `<trash file name>.trashinfo`,
 so the name of the `.trashinfo` file for our `file.txt` will be this:
 `20260806_195324_0_file.txt.trashinfo`.
 
-The contents of it looks like this:
+Its contents look like this:
 
 ```toml
 [metadata]

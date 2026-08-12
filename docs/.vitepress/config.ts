@@ -2,6 +2,9 @@ import { defineConfig, UserConfig } from "vitepress";
 import { withSidebar } from "vitepress-sidebar";
 import { VitePressSidebarOptions } from "vitepress-sidebar/types";
 
+const rootLocale = "en";
+const supportedLocales = [rootLocale, "it"];
+
 const vitePressOptions: UserConfig = {
     title: "FIMA",
     description: "Fast, Incredible, Minimal & Awesome File Manager",
@@ -10,6 +13,42 @@ const vitePressOptions: UserConfig = {
     appearance: "force-dark",
     lastUpdated: true,
     base: "/FIMA/",
+
+    locales: {
+        root: { label: "English", lang: "en-US" },
+        it: {
+            label: "Italiano",
+            lang: "it-IT",
+            description:
+                "Veloce, Incredibile, Minimale e Fantastico File Manager",
+            themeConfig: {
+                nav: [
+                    { text: "Pagina Iniziale", link: "/it/" },
+                    { text: "Per iniziare", link: "/it/per-iniziare" },
+                ],
+
+                footer: {
+                    message: "Distribuito con la licenza GPL 3.0.",
+                    copyright: "Copyright © 2026-presente Giuliano De Amicis",
+                },
+
+                docFooter: {
+                    prev: "Pagina precedente",
+                    next: "Pagina successiva",
+                },
+
+                outline: {
+                    label: "In questa pagina",
+                },
+
+                lastUpdated: {
+                    text: "Ultimo aggiornamento",
+                },
+
+                returnToTopLabel: "Ritorna in cima",
+            },
+        },
+    },
 
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
@@ -26,6 +65,34 @@ const vitePressOptions: UserConfig = {
 
         search: {
             provider: "local",
+
+            options: {
+                locales: {
+                    it: {
+                        translations: {
+                            button: {
+                                buttonText: "Cerca",
+                                buttonAriaLabel: "Cerca",
+                            },
+                            modal: {
+                                displayDetails: "Mostra elenco dettagliato",
+                                resetButtonTitle: "Reimposta ricerca",
+                                backButtonTitle: "Chiudi ricerca",
+                                noResultsText: "Nessun risultato per",
+                                footer: {
+                                    selectText: "per selezionare",
+                                    selectKeyAriaLabel: "invio",
+                                    navigateText: "per navigare",
+                                    navigateUpKeyAriaLabel: "freccia su",
+                                    navigateDownKeyAriaLabel: "freccia giù",
+                                    closeText: "per chiudere",
+                                    closeKeyAriaLabel: "esc",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
 
         editLink: {
@@ -41,22 +108,45 @@ const vitePressOptions: UserConfig = {
     },
 
     head: [["link", { rel: "icon", href: "/FIMA/favicon.ico" }]],
+
+    rewrites: {
+        "en/:rest*": ":rest*",
+    },
 };
 
-const vitePressSidebarOptions: VitePressSidebarOptions = {
+const commonSidebarConfigs = {
     rootGroupText: "Contents",
     documentRootPath: "docs/",
     capitalizeFirst: true,
     hyphenToSpace: true,
     useTitleFromFileHeading: true,
+    excludeByGlobPattern: ["it"],
     manualSortFileNameByPriority: [
         "get-started.md",
         "features.md",
         "customization-and-configuration.md",
         "trash-bin.md",
+        "per-iniziare.md",
+        "funzionalita.md",
+        "configurazione-e-personalizzazione.md",
+        "cestino.md",
     ],
     sortMenusOrderByDescending: false,
 };
+
+const vitePressSidebarOptions = supportedLocales.map((lang) => {
+    const isRootLocale = rootLocale === lang;
+
+    return {
+        ...commonSidebarConfigs,
+
+        documentRootPath: "docs",
+        scanStartPath: isRootLocale ? undefined : lang,
+
+        resolvePath: isRootLocale ? "/" : `/${lang}/`,
+        basePath: isRootLocale ? "/" : `/${lang}/`,
+    };
+});
 
 export default defineConfig(
     withSidebar(vitePressOptions, vitePressSidebarOptions),

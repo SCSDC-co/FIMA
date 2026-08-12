@@ -10,7 +10,7 @@ outline: deep
 
 `fima cloc [PATHS] [OPTIONS]`
 
-**options:**
+**Options:**
 
 - `-i, --ignore TEXT ...`  Paths to ignore
 - `-S, --sort TEXT`  Type of sorting (total (default), files, code, comments, blank)

@@ -10,10 +10,10 @@ outline: deep
 
 `fima rm PATHS [OPTIONS]`
 
-**Opions:**
+**Options:**
 
 - `-r, --recursive` Remove directories and their contents recursively
-- `-v, --verbose` Outputs the names of the removed directory
+- `-v, --verbose` Outputs the names of the removed items
 - `-t, --no-trash` Remove the item directly
 
 ## Examples
