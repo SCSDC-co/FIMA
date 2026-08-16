@@ -1,9 +1,15 @@
+import os
+
 from conan import ConanFile
+from conan.tools.cmake import CMakeToolchain
 
 
 class Fima(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = (
+        "CMakeDeps",
+        "VirtualRunEnv",
+    )
 
     requires = (
         "ftxui/7.0.3",
@@ -18,3 +24,17 @@ class Fima(ConanFile):
     def requirements(self):
         if self.settings.os != "Windows":
             self.requires("libmagic/5.45")
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+
+        if self.settings.os != "Windows":
+            magic = self.dependencies["libmagic"]
+
+            tc.variables["FIMA_MAGIC_DATABASE"] = os.path.join(
+                magic.package_folder,
+                "res",
+                "magic.mgc",
+            )
+
+        tc.generate()

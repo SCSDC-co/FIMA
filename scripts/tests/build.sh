@@ -31,4 +31,6 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
+source conanrun.sh
+
 ctest --output-on-failure -T Test -T Coverage

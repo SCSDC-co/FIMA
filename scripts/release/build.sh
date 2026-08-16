@@ -29,6 +29,10 @@ cmake --build . -- -j "$(nproc)" || {
     exit 1
 }
 
+echo
+
+source conanrun.sh
+
 ctest --output-on-failure
 
 echo

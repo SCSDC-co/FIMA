@@ -103,5 +103,24 @@ include(GNUInstallDirs)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+if(NOT WIN32)
+    if(NOT FIMA_MAGIC_DATABASE)
+        message(FATAL_ERROR "FIMA_MAGIC_DATABASE was not provided by Conan")
+    endif()
+
+    install(FILES "${FIMA_MAGIC_DATABASE}"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/fima"
+    )
+
+    set(FIMA_MAGIC_DATABASE_INSTALL_PATH
+        "${CMAKE_INSTALL_FULL_DATADIR}/fima/magic.mgc"
+    )
+
+    target_compile_definitions(
+        fima_lib
+        PUBLIC FIMA_MAGIC_DATABASE="${FIMA_MAGIC_DATABASE_INSTALL_PATH}"
+    )
+endif()
+
 include(tests)
 include(deploy)
