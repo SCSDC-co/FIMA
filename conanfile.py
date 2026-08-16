@@ -6,7 +6,7 @@ class Fima(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     requires = (
-        "ftxui/6.1.9",
+        "ftxui/7.0.3",
         "libgit2/1.9.1",
         "libzippp/7.1-1.10.1",
         "cli11/2.6.2",

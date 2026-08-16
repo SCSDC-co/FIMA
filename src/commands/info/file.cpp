@@ -45,7 +45,8 @@ file(const std::filesystem::directory_entry& path)
       { // header
         border(hbox(
           text("FINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
-          text(file.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
+          text(file.metadata.get_path().string()) |
+            color(fima::theme::theme.secondary.get_color_for_tui()),
           text((file.metadata.is_symlink() ? " -> " : "")),
           text((file.metadata.is_symlink() ? file.metadata.get_symlink_target().string() : "")) |
             color(fima::theme::theme.symlink.get_color_for_tui()),

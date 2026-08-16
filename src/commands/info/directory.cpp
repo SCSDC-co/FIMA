@@ -92,13 +92,14 @@ dir(const std::filesystem::directory_entry& path,
 
         document = vbox(
           // header
-          border(hbox(
-            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
-            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
-            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-              color(fima::theme::theme.secondary.get_color_for_tui()),
-            text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
-            text(" " + dir.metadata.get_icon() + " "))) |
+          border(
+            hbox(text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                 text(dir.metadata.get_path().string()) |
+                   color(fima::theme::theme.secondary.get_color_for_tui()),
+                 text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+                   color(fima::theme::theme.secondary.get_color_for_tui()),
+                 text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+                 text(" " + dir.metadata.get_icon() + " "))) |
             color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(
@@ -129,13 +130,14 @@ dir(const std::filesystem::directory_entry& path,
     } else {
         document = vbox(
           // header
-          border(hbox(
-            text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
-            text(dir.metadata.get_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
-            text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
-              color(fima::theme::theme.secondary.get_color_for_tui()),
-            text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
-            text("  " + dir.metadata.get_icon() + " "))) |
+          border(
+            hbox(text("DINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                 text(dir.metadata.get_path().string()) |
+                   color(fima::theme::theme.secondary.get_color_for_tui()),
+                 text((dir.metadata.get_path().string().ends_with("/") ? "" : "/")) |
+                   color(fima::theme::theme.secondary.get_color_for_tui()),
+                 text((dir.metadata.get_is_hidden() ? " (hidden)" : "")) | flex,
+                 text("  " + dir.metadata.get_icon() + " "))) |
             color(fima::theme::theme.border.get_color_for_tui()),
 
           hbox(

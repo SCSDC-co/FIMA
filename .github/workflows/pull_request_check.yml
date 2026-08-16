@@ -22,8 +22,7 @@ jobs:
         run: |
           mkdir -p ~/.config/fima
           cat > ~/.config/fima/config.toml << 'EOF'
-          depth = 2
-          process_directory_size = false
+          process_directory_size = true
 
           [icons.files]
           cpp = "󰙲"

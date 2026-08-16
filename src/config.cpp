@@ -41,7 +41,6 @@ parse_config_file()
 
     auto config{ toml::parse_file(CONFIG_FILE_PATH.string()) };
 
-    depth                  = config["depth"].value_or(0);
     process_directory_size = config["process_directory_size"].value_or(false);
 
     if (config["icons"]["files"].is_table()) {

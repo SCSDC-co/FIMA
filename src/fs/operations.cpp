@@ -53,16 +53,8 @@ get_item_size(const std::filesystem::path& path)
 
     if (std::filesystem::is_directory(path)) {
         if (fima::config::process_directory_size) {
-            for (auto i = std::filesystem::recursive_directory_iterator(
-                   path, std::filesystem::directory_options::skip_permission_denied);
-                 i != std::filesystem::recursive_directory_iterator();
-                 ++i) {
-                const std::filesystem::path item = i->path();
-
-                if (i.depth() >= fima::config::depth && fima::config::depth >= 0) {
-                    continue;
-                }
-
+            for (auto& item : std::filesystem::directory_iterator(
+                   path, std::filesystem::directory_options::skip_permission_denied)) {
                 if (std::filesystem::is_directory(item)) {
                     continue;
                 }
@@ -85,9 +77,9 @@ get_item_size(const std::filesystem::path& path)
         } else {
             // instead of the directory size we just get the number of entries
             size =
-              std::distance(std::filesystem::recursive_directory_iterator(
+              std::distance(std::filesystem::directory_iterator(
                               path, std::filesystem::directory_options::skip_permission_denied),
-                            std::filesystem::recursive_directory_iterator());
+                            std::filesystem::directory_iterator());
         }
     } else {
         try {

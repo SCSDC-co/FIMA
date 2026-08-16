@@ -150,7 +150,6 @@ main(int argc, char** argv)
     });
 
     app.add_flag_callback("--dump-default-config", [&]() {
-        std::cout << "depth = 8" << '\n';
         std::cout << "process_directory_size = false" << '\n' << '\n';
 
         std::cout << "[ls]" << '\n';
