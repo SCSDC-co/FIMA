@@ -33,7 +33,6 @@ This will define the following variables:
 # cmake-format: on
 
 # Requirements
-cmake_minimum_required(VERSION 3.10)
 find_package(Git)
 
 # Check if a git executable was found

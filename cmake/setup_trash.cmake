@@ -19,5 +19,5 @@ function(setup_trash)
         "[metadata]\npath = \"$ENV{HOME}/test1.txt\"\ndeleted_at = 2026-08-06T19:53:24"
     )
 
-    message(STATUS "The trash has been setupped correctly.")
+    message(STATUS "Trash setup complete")
 endfunction()

@@ -46,7 +46,15 @@ target_link_libraries(
 )
 
 if(WIN32)
+    message(STATUS "Building for windows, libmagic will not be included")
+
     target_link_libraries(fima_lib PRIVATE Advapi32)
+else()
+    find_package(libmagic REQUIRED)
+
+    message(STATUS "Not building for windows, linking libmagic")
+
+    target_link_libraries(fima_lib PUBLIC libmagic::libmagic)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE fima_lib)

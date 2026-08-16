@@ -14,7 +14,7 @@ mkdir ../../build
 
 cd ../../build || exit 1
 
-conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 --settings=build_type=Debug || {
+conan install .. --output-folder=. --build=missing -s compiler.cppstd=23 --settings=build_type=Debug --lockfile-out=../conan.lock || {
     echo "Conan setup failed"
     exit 1
 }

@@ -14,3 +14,7 @@ class Fima(ConanFile):
         "p-ranav-glob/0.0.1",
         "tomlplusplus/3.4.0",
     )
+
+    def requirements(self):
+        if self.settings.os != "Windows":
+            self.requires("libmagic/5.45")
