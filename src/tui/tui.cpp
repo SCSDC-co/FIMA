@@ -66,7 +66,7 @@ start_tui(_fs::path path)
 
       hflow({
         text(" PATH ") | border | color(Color::Green),
-        text(path) | border | flex | color(Color::Green),
+        text(path.string()) | border | flex | color(Color::Green),
       }),
 
       border(

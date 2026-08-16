@@ -92,12 +92,12 @@ git(const fima::options::info_options& options, const fima::git::GitRepo& repo)
 
     std::vector<Element> document_data = {
         // header
-        border(
-          hbox(text("GINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
-               text(repo.get_repo_path()) | color(fima::theme::theme.secondary.get_color_for_tui()),
-               text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
-                 color(Color::White) | flex,
-               text(std::string(fima::mappings::get_item_icon(repo.get_repo_path())) + " "))) |
+        border(hbox(text("GINFO: ") | bold | color(fima::theme::theme.primary.get_color_for_tui()),
+                    text(repo.get_repo_path().string()) |
+                      color(fima::theme::theme.secondary.get_color_for_tui()),
+                    text((repo.get_repo_path().string().ends_with("/") ? " " : "/ ")) |
+                      color(Color::White) | flex,
+                    text(std::string(fima::mappings::get_item_icon(repo.get_repo_path())) + " "))) |
           color(fima::theme::theme.border.get_color_for_tui()),
 
         hbox(window(text(" INFO ") | bold,
