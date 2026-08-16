@@ -49,7 +49,8 @@ if(FIMA_BUILD_TESTS)
                                            -S files -qG
     )
     add_test(NAME cloc_show_languages COMMAND ${PROJECT_NAME} .. cloc -s)
-    add_test(NAME info COMMAND ${PROJECT_NAME} ../src info -v)
+    add_test(NAME info COMMAND ${PROJECT_NAME} ../src info)
+    add_test(NAME info_verbose COMMAND ${PROJECT_NAME} ../src info -v)
     add_test(NAME info_file COMMAND ${PROJECT_NAME} info ../conanfile.py)
     add_test(NAME info_git COMMAND ${PROJECT_NAME} info -grt)
     add_test(NAME mk_for_zip COMMAND ${PROJECT_NAME} mk -d tests -f
