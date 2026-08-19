@@ -109,11 +109,11 @@ if(NOT WIN32)
     endif()
 
     install(FILES "${FIMA_MAGIC_DATABASE}"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/fima"
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/fima"
     )
 
     set(FIMA_MAGIC_DATABASE_INSTALL_PATH
-        "${CMAKE_INSTALL_FULL_DATADIR}/fima/magic.mgc"
+        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/fima/magic.mgc"
     )
 
     target_compile_definitions(

@@ -14,10 +14,9 @@
 #include <filesystem>
 #include <regex>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
-#include "fs/operations.h"
+#include "fs/FileDetector.h"
 #include "utility/regex.h"
 
 namespace _fs = std::filesystem;
@@ -108,11 +107,6 @@ get_files_for_cloc(const _fs::directory_entry& path,
 {
     std::vector<_fs::directory_entry> paths{};
 
-    static const std::unordered_set<std::string> ft_to_skip = {
-        ".undo", ".spl", ".icns", ".mpack", ".class", ".woff2", ".ttf",  ".ttf2", ".a",    ".lib",
-        ".pdb",  ".md5", ".pdf",  ".gtk",   ".gtk1",  ".gtk2",  ".gtk3", ".gtk4", ".gtk5", ".gtk6"
-    };
-
     auto file_is_ignored = [&](const std::filesystem::path& path) {
         return ignore && fima::utility::regex::matches_any_regex(path.filename().string(),
                                                                  ignored_files_or_directories);
@@ -122,10 +116,7 @@ get_files_for_cloc(const _fs::directory_entry& path,
         std::string ext{ path.extension().string() };
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-        return !(ft_to_skip.contains(ext) || fima::fs::operations::is_file_executable(path) ||
-                 fima::fs::operations::is_compressed_archive(path) ||
-                 fima::fs::operations::is_media(path) || fima::fs::operations::is_lockfile(path)) &&
-               _fs::is_regular_file(path);
+        return ext != ".md5" && fima::fs::file_detector.is_file_clocable(path);
     };
 
     if (_fs::is_directory(path)) {

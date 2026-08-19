@@ -28,6 +28,26 @@ inline const std::unordered_set<std::string> lockfiles{
     "opam.locked",        "vcpkg-lock.json",    "biome-lock.json"
 };
 
+inline const std::unordered_set<std::string> executables = {
+    ".exe", ".dll",   ".sys", ".cpl", ".ocx",      ".scr", ".efi",  ".msi",
+    ".app", ".apk",   ".ipa", ".elf", ".o",        ".obj", ".com",  ".bin",
+    ".so",  ".dylib", ".out", ".run", ".appimage", ".ko",  ".wasm", ".pyc",
+};
+
+inline const std::unordered_set<std::string> scripts = {
+    ".sh",  ".zsh", ".bash", ".csh", ".ksh", ".tcsh", ".fish",        ".py", ".pyw",
+    ".pl",  ".pm",  ".rb",   ".php", ".js",  ".mjs",  ".cjs",         ".ts", ".lua",
+    ".ps1", ".vbs", ".bat",  ".cmd", ".awk", ".tcl",  ".applescript",
+};
+
+inline const std::unordered_set<std::string> text_mimes{
+    "application/json",         "application/xml",           "application/javascript",
+    "application/x-javascript", "application/sql",           "application/graphql",
+    "application/ld+json",      "application/manifest+json", "application/geo+json",
+    "application/yaml",         "application/x-yaml",        "application/toml",
+    "application/x-sh",         "application/x-httpd-php",   "application/rtf"
+};
+
 inline const std::unordered_set<std::string> media{
     ".jpg",  ".jpeg", ".png", ".bmp",  ".tiff", ".tif",  ".webp", ".avif", ".heif", ".heic", ".ico",
     ".cur",  ".psd",  ".xcf", ".raw",  ".cr2",  ".nef",  ".arw",  ".dng",  ".gif",  ".mp4",  ".mkv",
@@ -46,18 +66,6 @@ inline const std::unordered_set<std::string> archives{
     ".zst", ".dmg", ".pkg", ".xip", ".cab", ".msi",  ".wim",   ".deb", ".rpm",  ".snap", ".jar",
     ".war", ".ear", ".aar", ".apk", ".ipa", ".whl",  ".egg",   ".tgz", ".tbz2", ".txz",  ".tzst",
     ".lz4", ".br",  ".iso", ".img", ".ar",  ".cpio", ".crate", ".ace", ".arc",  ".arj",
-};
-
-inline const std::unordered_set<std::string> executables = {
-    ".exe", ".dll",   ".sys", ".cpl", ".ocx",      ".scr", ".efi",  ".msi",
-    ".app", ".apk",   ".ipa", ".elf", ".o",        ".obj", ".com",  ".bin",
-    ".so",  ".dylib", ".out", ".run", ".appimage", ".ko",  ".wasm", ".pyc",
-};
-
-inline const std::unordered_set<std::string> scripts = {
-    ".sh",  ".zsh", ".bash", ".csh", ".ksh", ".tcsh", ".fish",        ".py", ".pyw",
-    ".pl",  ".pm",  ".rb",   ".php", ".js",  ".mjs",  ".cjs",         ".ts", ".lua",
-    ".ps1", ".vbs", ".bat",  ".cmd", ".awk", ".tcl",  ".applescript",
 };
 
 size_t
