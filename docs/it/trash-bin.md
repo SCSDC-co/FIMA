@@ -50,7 +50,7 @@ path = '/home/giuliano/Programmazione/Cpp/FIMA/file.txt'
 
 Per rimuovere i file usi `rm` senza il flag `-t, --no-trash`.
 
-FIMA ha il sottocomando [`trash`](sottocomandi/trash.md) per:
+FIMA ha il sottocomando [`trash`](subcommands/trash.md) per:
 
 - `list` elencare tutti i file.
 - `restore` e `remove` ripristinare e rimuovere i file.
