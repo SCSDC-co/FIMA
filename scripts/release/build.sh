@@ -31,7 +31,12 @@ cmake --build . -- -j "$(nproc)" || {
 
 echo
 
-source conanrun.sh
+cmake --install . || {
+    echo "Install failed"
+    exit 1
+}
+
+echo
 
 ctest --output-on-failure
 
