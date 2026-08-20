@@ -179,10 +179,6 @@ const commonSidebarConfigs = {
         "features.md",
         "customization-and-configuration.md",
         "trash-bin.md",
-        "per-iniziare.md",
-        "funzionalita.md",
-        "configurazione-e-personalizzazione.md",
-        "cestino.md",
     ],
     sortMenusOrderByDescending: false,
 };
