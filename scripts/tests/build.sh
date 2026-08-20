@@ -31,7 +31,7 @@ cmake --build . --config Debug -- -j "$(nproc)" || {
 
 echo
 
-cmake --install . || {
+sudo cmake --install . || {
     echo "Install failed"
     exit 1
 }
