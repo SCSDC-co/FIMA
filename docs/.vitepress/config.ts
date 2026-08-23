@@ -11,7 +11,7 @@ const vitePressOptions: UserConfig = {
     cleanUrls: true,
     appearance: "force-dark",
     lastUpdated: true,
-    base: "/FIMA/",
+    base: "/",
 
     locales: {
         root: { label: "English", lang: "en-US" },
