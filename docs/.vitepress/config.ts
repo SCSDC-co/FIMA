@@ -132,7 +132,7 @@ const vitePressOptions: UserConfig = {
                 "meta",
                 {
                     property: "og:image",
-                    content: "https://scsdc-co.github.io/FIMA/banner.png",
+                    content: "https://fima.scsdc-co.org/banner.png",
                 },
             ],
             [
@@ -146,7 +146,7 @@ const vitePressOptions: UserConfig = {
                 "meta",
                 {
                     property: "og:url",
-                    content: `https://scsdc-co.github.io/FIMA/${context.pageData.relativePath.replace(/\.md$/, "")}`,
+                    content: `https://fima.scsdc-co.org/${context.pageData.relativePath.replace(/\.md$/, "")}`,
                 },
             ],
             [
