@@ -106,7 +106,7 @@ const vitePressOptions: UserConfig = {
         externalLinkIcon: true,
     },
 
-    head: [["link", { rel: "icon", href: "/FIMA/favicon.ico" }]],
+    head: [["link", { rel: "icon", href: "/favicon.ico" }]],
 
     rewrites: {
         "en/:rest*": ":rest*",
