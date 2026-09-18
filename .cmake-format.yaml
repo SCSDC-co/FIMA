@@ -1,5 +1,0 @@
-format:
-  line_width: 80
-  tab_size: 4
-  max_pargs_hwrap: 4
-  dangle_parens: true

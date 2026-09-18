@@ -2,24 +2,21 @@
 
 # FIMA
 
-[Documentation](https://scsdc-co.github.io/FIMA/)
+[Documentation](https://fima.scsdc-co.org)
 
-<img src="https://skillicons.dev/icons?i=cpp,cmake" >
-
----
-
-[![build and test the program](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml/badge.svg)](https://github.com/SCSDC-co/FIMA/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/github/SCSDC-co/FIMA/graph/badge.svg?token=ZO0IOFUOJD)](https://codecov.io/github/SCSDC-co/FIMA)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1a9d219ee673455a9a953d475843bdbb)](https://app.codacy.com/gh/SCSDC-co/FIMA/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+<img src="https://skillicons.dev/icons?i=rust" >
 
 </div>
 
 <br>
 
-FIMA (File Manager) is a simple and fast file manager, written in C++.
+FIMA (File Manager) is a simple and blazingly fast file manager, written in `Rust`.
 
 > [!WARNING]
 > This program is in its early stage of development, so there might be some bugs.
+
+> [!CAUTION]
+> The program is going into a complete rewrite in rust
 
 ## Customization
 
@@ -183,19 +180,19 @@ name = "green"
 ## Road Map
 
 - [x] add the following commands:
-  - [x] `create`
-  - [x] `remove`
-  - [x] `copy`
-  - [x] `rename`
-  - [x] `permissions`
-  - [x] `cloc`
-  - [x] `info`
+    - [x] `create`
+    - [x] `remove`
+    - [x] `copy`
+    - [x] `rename`
+    - [x] `permissions`
+    - [x] `cloc`
+    - [x] `info`
 - [x] add config file support (TOML format)
 - [x] add `zip` and `unzip` functionality
 - [x] version 0.1.0:
-  - [x] general improvement
-  - [x] polish
-  - [x] add verbose mode to `info`
+    - [x] general improvement
+    - [x] polish
+    - [x] add verbose mode to `info`
 - [x] add theming features
 - [x] create docs website using `vitepress`
 - [x] add trash features
