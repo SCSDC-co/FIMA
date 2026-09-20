@@ -1,13 +1,13 @@
 use glob::glob;
 use std::fs;
-use std::io::{Error, ErrorKind};
+use std::io;
 use std::path::Path;
 
 /// Options for the remove functions
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```rust,no_run,ignore
 /// use libfima::fs::operations::remove;
 ///
 /// let options = remove::Options {
@@ -15,7 +15,7 @@ use std::path::Path;
 /// };
 ///
 /// remove::remove(
-///     &"foo.txt".to_string(),
+///     "foo.txt",
 ///     &options,
 /// )?;
 /// ```
@@ -27,14 +27,14 @@ pub struct Options {
 
 /// Removes a file or a directory
 ///
-/// It will panic with a `std::io::Error` if:
+/// It will return a `std::io::Error` if:
 ///
 /// - The path doesn't exist or
-/// - The path is a directory, it's not empty and the recursive options is off
+/// - The path is a directory and it's not empty and the recursive options is off
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```rust,no_run,ignore
 /// use libfima::fs::operations::remove;
 ///
 /// let options = remove::Options {
@@ -42,19 +42,19 @@ pub struct Options {
 /// };
 ///
 /// remove::remove(
-///     &"fest.txt".to_string(),
+///     "foo.txt",
 ///     &options,
 /// )?;
 /// ```
-pub fn remove<P>(path: &P, opts: &Options) -> Result<(), Error>
+pub fn remove<P>(path: P, opts: &Options) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
     let path = path.as_ref();
 
     if !path.exists() {
-        return Err(Error::new(
-            ErrorKind::NotFound,
+        return Err(io::Error::new(
+            io::ErrorKind::NotFound,
             format!("The path {} doesn't exist.", path.display()),
         ));
     }
@@ -63,14 +63,14 @@ where
         if crate::fs::utility::is_dir_empty(path)? {
             fs::remove_dir(path)?;
         } else {
-            if opts.recursive {
-                fs::remove_dir_all(path)?;
-            } else {
-                return Err(Error::new(
-                    ErrorKind::DirectoryNotEmpty,
+            if !opts.recursive {
+                return Err(io::Error::new(
+                    io::ErrorKind::DirectoryNotEmpty,
                     format!("The directory {} is not empty.", path.display()),
                 ));
             }
+
+            fs::remove_dir_all(path)?;
         }
     } else {
         fs::remove_file(path)?;
@@ -85,7 +85,7 @@ where
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```rust,no_run,ignore
 /// use libfima::fs::operations::remove;
 ///
 /// let options = remove::Options {
@@ -94,14 +94,14 @@ where
 ///
 /// remove::remove_many(
 ///     &[
-///         &"foo.txt".to_string(),
-///         &"bar.txt".to_string(),
-///         &"baz.txt".to_string(),
+///         "foo.txt",
+///         "bar.txt",
+///         "baz.txt",
 ///     ],
 ///     &options,
 /// )?;
 /// ```
-pub fn remove_many<P>(paths: &[P], opts: &Options) -> Result<(), Error>
+pub fn remove_many<P>(paths: &[P], opts: &Options) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
@@ -118,7 +118,7 @@ where
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```rust,no_run,ignore
 /// use libfima::fs::operations::remove;
 ///
 /// let options = remove::Options {
@@ -128,7 +128,12 @@ where
 /// // This removes all the rust source files
 /// remove::remove_glob("**/*.rs", &options)?;
 /// ```
-pub fn remove_glob(pattern: &str, opts: &Options) -> Result<(), Error> {
+pub fn remove_glob<S>(pattern: S, opts: &Options) -> Result<(), io::Error>
+where
+    S: AsRef<str>,
+{
+    let pattern = pattern.as_ref();
+
     for entry in glob(pattern).expect("Failed to read glob pattern") {
         remove(&entry?, opts)?;
     }
