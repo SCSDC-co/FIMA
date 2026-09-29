@@ -1,4 +1,4 @@
-/// Gets general metadata from files.
+/// Gets general metadata from items
 ///
 /// # Examples
 /// ```rust,no_run,ignore
