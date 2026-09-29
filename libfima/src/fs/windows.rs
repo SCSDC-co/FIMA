@@ -1,8 +1,3 @@
-use std::path::Path;
-
-#[cfg(unix)]
-use file_owner::PathExt;
-
 #[cfg(windows)]
 use std::{os::windows::io::AsRawHandle, ptr};
 
@@ -11,8 +6,7 @@ use windows::{
     Win32::{
         Foundation::{HANDLE, LocalFree},
         Security::{
-            GROUP_SECURITY_INFORMATION, GetSecurityInfo, LookupAccountSidW,
-            OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, PSID, SE_FILE_OBJECT,
+            GetSecurityInfo, LookupAccountSidW, PSECURITY_DESCRIPTOR, PSID, SE_FILE_OBJECT,
         },
     },
     core::PWSTR,
@@ -82,80 +76,4 @@ fn sid_name(sid: PSID) -> Result<String, Box<dyn std::error::Error>> {
     }
 
     Ok(String::from_utf16_lossy(&name[..name_size as usize]))
-}
-
-/// Gets the owner of a file (cross-platform)
-///
-/// # Examples
-///
-/// ```rust,no_run,ignore
-/// use libfima::fs::operations::metadata;
-///
-/// metadata::owner("foo.txt"); // "Giuliano"
-/// ```
-pub fn owner<P>(path: P) -> Result<String, Box<dyn std::error::Error>>
-where
-    P: AsRef<Path>,
-{
-    let path = path.as_ref();
-
-    let owner: String;
-
-    #[cfg(unix)]
-    {
-        owner = path.owner()?.name()?.unwrap_or("Unknown".to_string());
-    }
-
-    #[cfg(windows)]
-    {
-        let (sid, security_descriptor) = security_info(path, OWNER_SECURITY_INFORMATION)?;
-
-        let sid_name = sid_name(sid);
-
-        unsafe {
-            LocalFree(Some(security_descriptor));
-        }
-
-        owner = sid_name;
-    }
-
-    Ok(owner)
-}
-
-/// Gets the group of a file (cross-platform)
-///
-/// # Examples
-///
-/// ```rust,no_run,ignore
-/// use libfima::fs::operations::metadata;
-///
-/// metadata::group("foo.txt"); // "users"
-/// ```
-pub fn group<P>(path: P) -> Result<String, Box<dyn std::error::Error>>
-where
-    P: AsRef<Path>,
-{
-    let path = path.as_ref();
-
-    let group: String;
-
-    #[cfg(unix)]
-    {
-        group = path.group()?.name()?.unwrap_or("Unknown".to_string());
-    }
-
-    #[cfg(windows)]
-    {
-        let (sid, security_descriptor) = security_info(path, GROUP_SECURITY_INFORMATION)?;
-
-        let sid_name = sid_name(sid);
-
-        unsafe {
-            LocalFree(Some(security_descriptor));
-        }
-
-        group = sid_name;
-    }
-
-    Ok(group)
 }

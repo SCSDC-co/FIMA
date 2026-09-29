@@ -1,17 +1,3 @@
-/// Gets general metadata from items
-///
-/// # Examples
-/// ```rust,no_run,ignore
-/// use libfima::fs::operations::metadata;
-///
-/// // Get the owner of an item (cross-platform)
-/// metadata::owner("foo.txt"); // "Giuliano"
-///
-/// // Get the group of an item (cross-platform)
-/// metadata::group("foo.txt"); // "users"
-/// ```
-pub mod metadata;
-
 /// A module to remove a file or a directory, or many of them
 ///
 /// # Examples
