@@ -11,7 +11,7 @@ use std::{fs, io, path::Path};
 /// # Examples
 ///
 /// ```rust,no_run,ignore
-/// use libfima::operations::size;
+/// use libfima::fs::operations::size;
 ///
 /// size::size("foo.txt")?; // 64
 /// size::size("bar")?;     // 128
@@ -49,7 +49,7 @@ where
 /// # Examples
 ///
 /// ```rust,no_run,ignore
-/// use libfima::operations::size;
+/// use libfima::fs::operations::size;
 ///
 /// size::item_count("foo.txt")?; // 1
 /// size::item_count("bar")?;     // 30
