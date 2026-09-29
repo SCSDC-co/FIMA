@@ -1,7 +1,5 @@
 use glob::glob;
-use std::fs;
-use std::io;
-use std::path::Path;
+use std::{fs, io, path::Path};
 
 /// Options for the remove functions
 ///
@@ -51,13 +49,6 @@ where
     P: AsRef<Path>,
 {
     let path = path.as_ref();
-
-    if !path.exists() {
-        return Err(io::Error::new(
-            io::ErrorKind::NotFound,
-            format!("The path {} doesn't exist.", path.display()),
-        ));
-    }
 
     if path.is_dir() {
         if crate::fs::utility::is_dir_empty(path)? {
