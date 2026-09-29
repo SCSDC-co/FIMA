@@ -29,3 +29,5 @@
 /// remove::remove_glob("**/*.rs", &options)?;
 /// ```
 pub mod remove;
+
+pub mod size;
