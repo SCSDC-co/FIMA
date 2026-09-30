@@ -72,3 +72,57 @@ where
 
     Ok(count)
 }
+
+/// Takes a size in bytes and makes it readable
+///
+/// # Arguments
+///
+/// - `size` - The size to make readable
+/// - `si_units` - If you want to use SI units (KB, MB and the size is divided by 1000 instead of 1024)
+///
+/// # Example
+///
+/// ```
+/// use libfima::fs::operations::size;
+///
+/// assert_eq!(
+///     size::make_size_readable(1_500, true),
+///     ("1.5".to_string(), "KB".to_string())
+/// );
+/// assert_eq!(
+///     size::make_size_readable(1_000_000, true),
+///     ("1".to_string(), "MB".to_string())
+/// );
+///
+/// assert_eq!(
+///     size::make_size_readable(1_536, false),
+///     ("1.5".to_string(), "KiB".to_string())
+/// );
+/// assert_eq!(
+///     size::make_size_readable(1_048_576, false),
+///     ("1".to_string(), "MiB".to_string())
+/// );
+/// ```
+pub fn make_size_readable(size: u64, si_units: bool) -> (String, String) {
+    let mut extensions = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
+    let mut unit = 1024.0;
+
+    if si_units {
+        extensions = ["B", "KB", "MB", "GB", "TB", "PB", "EB"];
+        unit = 1000.0;
+    }
+
+    let mut bytes = size as f64;
+    let mut i = 0;
+
+    while bytes >= unit && i < extensions.len() - 1 {
+        bytes /= unit;
+
+        i += 1;
+    }
+
+    (
+        format!("{bytes}").trim_end_matches(".0").to_string(),
+        extensions[i].to_string(),
+    )
+}

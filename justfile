@@ -15,3 +15,4 @@ check workspace="--workspace":
 
 test workspace="--all-targets":
     cargo test {{ workspace }}
+    cargo test --doc
