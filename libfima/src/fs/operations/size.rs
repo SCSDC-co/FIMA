@@ -73,14 +73,19 @@ where
     Ok(count)
 }
 
-/// Takes a size in bytes and makes it readable
+/// Converts a size in bytes to a human-readable representation.
 ///
 /// # Arguments
 ///
-/// - `size` - The size to make readable
-/// - `si_units` - If you want to use SI units (KB, MB and the size is divided by 1000 instead of 1024)
+/// - `size` - The size in bytes.
+/// - `si_units` - Whether to use SI units (`KB`, `MB`, etc.), which divide the size by 1000 instead of 1024.
 ///
-/// # Example
+/// # Returns
+///
+/// A tuple containing the formatted size and its unit as `String`
+/// (for example, `("10.85", "MB")`).
+///
+/// # Examples
 ///
 /// ```
 /// use libfima::fs::operations::size;
