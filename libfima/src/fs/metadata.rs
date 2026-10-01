@@ -113,28 +113,52 @@ where
     Ok(path.symlink_metadata()?.modified()?)
 }
 
-/// Returns the last modified date formatted
+/// Returns the last modified date of an item formatted
 ///
-/// This is the default format: [year]/[month]/[day] [hour]:[minute]:[second]
+/// This is the format: `[day]/[month]/[year] [hour]:[minute]:[second]`
 ///
 /// # Examples
 ///
 /// ```
 /// use libfima::fs::metadata;
 ///
-/// metadata::file_time_formatted("foo")?; // 2026/11/30 22:44:43
+/// metadata::file_time_formatted("foo")?; // 30/11/2026 22:44:43
 /// ```
-pub fn file_time_formatted<P>(
-    path: P,
-    format: Option<String>,
-) -> Result<String, Box<dyn std::error::Error>>
+pub fn file_time_formatted<P>(path: P) -> Result<String, Box<dyn std::error::Error>>
 where
     P: AsRef<Path>,
 {
     let path = path.as_ref();
     let format = time::format_description::parse_owned::<3>(
-        &format.unwrap_or("[year]/[month]/[day] [hour]:[minute]:[second]".to_string()),
+        "[day]/[month]/[year] [hour]:[minute]:[second]",
     )?;
+
+    let time = file_time(path)?;
+
+    Ok(time::OffsetDateTime::from(time).format(&format)?)
+}
+
+/// Returns the last modified date of an item with a custom format
+///
+/// For the full syntax of the formats: <https://time-rs.github.io/book/api/format-description.html>
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::metadata;
+///
+/// metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
+/// ```
+pub fn file_time_formatted_custom<P, S>(
+    path: P,
+    format: S,
+) -> Result<String, Box<dyn std::error::Error>>
+where
+    P: AsRef<Path>,
+    S: AsRef<str>,
+{
+    let path = path.as_ref();
+    let format = time::format_description::parse_owned::<3>(&format.as_ref())?;
 
     let time = file_time(path)?;
 

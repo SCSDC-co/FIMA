@@ -2,6 +2,8 @@ use std::fs;
 use std::io::Error;
 use std::path::Path;
 
+pub use glob;
+
 /// Checks if a directory is empty
 ///
 /// # Examples
