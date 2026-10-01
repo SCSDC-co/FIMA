@@ -4,6 +4,9 @@ default: check lint run test
 run:
     cargo run -p fima
 
+build:
+    cargo build
+
 docs workspace="--workspace":
     cargo doc {{ workspace }} --no-deps
 

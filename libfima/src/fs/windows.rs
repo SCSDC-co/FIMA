@@ -16,7 +16,7 @@ use windows::{
 fn security_info<P>(
     path: P,
     security_information: u32,
-) -> Result<(PSID, PSECURITY_DESCRIPTOR), Box<dyn std::error::Error>>
+) -> anyhow::Result<(PSID, PSECURITY_DESCRIPTOR)>
 where
     P: AsRef<Path>,
 {
@@ -43,7 +43,7 @@ where
 }
 
 #[cfg(windows)]
-fn sid_name(sid: PSID) -> Result<String, Box<dyn std::error::Error>> {
+fn sid_name(sid: PSID) -> anyhow::Result<String> {
     let mut name_size = 0;
     let mut domain_size = 0;
     let mut sid_type = 0;
