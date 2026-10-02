@@ -1,40 +1,126 @@
 use anyhow::Context;
 use magic::cookie;
-use magic::cookie::Flags;
 use std::path::Path;
 
+/// A module that exposes the libmagic flags
+pub mod magic_flags {
+    pub use magic::cookie::Flags;
+}
+
+/// A struct that represents a `Magic` object that you can use it to make every sort of `libmagic`
+/// operations
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use libgima::fs::metadata;
+///
+/// // The variable must be `mut` as the methods will change the flags of it
+/// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+///
+/// let mime = magic.mime_type("foo.txt")?; // "text/plain"
+/// let encoding = magic.encoding("foo.txt")?; // "us-ascii"
+/// ```
+#[derive(Debug)]
 pub struct Magic {
     cookie: magic::Cookie<cookie::Load>,
-    flags: Flags,
+    flags: cookie::Flags,
 }
 
 impl Magic {
-    pub fn new(default_flags: Flags) -> anyhow::Result<Magic> {
-        let cookie = magic::Cookie::open(default_flags)?;
+    /// Creates a new `Magic` object with the flags that you set, the database will be the default one
+    pub fn new(flags: cookie::Flags) -> anyhow::Result<Self> {
+        let cookie = magic::Cookie::open(flags)?;
 
         let cookie = cookie
             .load(&cookie::DatabasePaths::default())
             .map_err(|err| anyhow::anyhow!("{err}"))
             .with_context(|| "failed to load libmagic database")?;
 
-        Ok(Magic {
-            cookie,
-            flags: default_flags,
-        })
+        Ok(Magic { cookie, flags })
     }
 
+    /// Returns the current flags of the cookie
+    pub fn flags(&self) -> cookie::Flags {
+        self.flags
+    }
+
+    /// Sets new flags and return old ones
+    pub fn set_flags(
+        &mut self,
+        flags: cookie::Flags,
+    ) -> Result<cookie::Flags, cookie::SetFlagsError> {
+        let old_flags = self.flags;
+
+        self.cookie.set_flags(flags)?;
+        self.flags = flags;
+
+        Ok(old_flags)
+    }
+
+    /// Executes the `file` operation to an item
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libgima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::MIME)?;
+    ///
+    /// let file = magic.file("foo.txt")?; // "text/plain; charset=us-ascii"
+    /// ```
+    pub fn file<P>(&self, path: P) -> Result<String, cookie::Error>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.cookie.file(path)?)
+    }
+
+    /// Returns the MIME type of an item
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libgima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// let mime = magic.mime_type("foo.txt")?; // "text/plain"
+    /// let mime2 = magic.mime_type("foo")?; // "inode/directory"
+    /// ```
     pub fn mime_type<P>(&mut self, path: P) -> anyhow::Result<String>
     where
         P: AsRef<Path>,
     {
-        let old_flags = self.flags;
-
-        self.cookie.set_flags(Flags::MIME_TYPE)?;
+        let old_flags = self.set_flags(cookie::Flags::MIME_TYPE)?;
 
         let mime_type = self.cookie.file(path)?;
 
         self.cookie.set_flags(old_flags)?;
 
         Ok(mime_type)
+    }
+
+    /// Returns the encoding of an item:
+    ///
+    /// ```rust,no_run,ignore
+    /// use libgima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// let mime = magic.encoding("foo.txt")?; // "us-ascii"
+    /// let mime2 = magic.encoding("foo")?; // "binary"
+    /// ```
+    pub fn encoding<P>(&mut self, path: P) -> anyhow::Result<String>
+    where
+        P: AsRef<Path>,
+    {
+        let old_flags = self.set_flags(cookie::Flags::MIME_ENCODING)?;
+
+        let encoding = self.cookie.file(path)?;
+
+        self.cookie.set_flags(old_flags)?;
+
+        Ok(encoding)
     }
 }
