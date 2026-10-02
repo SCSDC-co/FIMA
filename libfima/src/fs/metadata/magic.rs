@@ -84,6 +84,20 @@ impl Magic {
         Ok(self.cookie.file(path)?)
     }
 
+    /// Runs `Magic::file` with custom flags that you pass to it
+    pub fn file_with_flags<P>(&mut self, path: P, flags: cookie::Flags) -> anyhow::Result<String>
+    where
+        P: AsRef<Path>,
+    {
+        let old_flags = self.set_flags(flags)?;
+
+        let result = self.file(path);
+
+        self.set_flags(old_flags)?;
+
+        Ok(result?)
+    }
+
     /// Returns the MIME type of an item
     ///
     /// # Examples
@@ -100,13 +114,7 @@ impl Magic {
     where
         P: AsRef<Path>,
     {
-        let old_flags = self.set_flags(cookie::Flags::MIME_TYPE)?;
-
-        let mime_type = self.file(path)?;
-
-        self.set_flags(old_flags)?;
-
-        Ok(mime_type)
+        self.file_with_flags(path, cookie::Flags::MIME_TYPE)
     }
 
     /// Returns the encoding of an item:
@@ -123,12 +131,6 @@ impl Magic {
     where
         P: AsRef<Path>,
     {
-        let old_flags = self.set_flags(cookie::Flags::MIME_ENCODING)?;
-
-        let encoding = self.file(path)?;
-
-        self.set_flags(old_flags)?;
-
-        Ok(encoding)
+        self.file_with_flags(path, cookie::Flags::MIME_ENCODING)
     }
 }
