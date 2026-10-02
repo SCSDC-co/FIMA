@@ -46,19 +46,27 @@ impl Magic {
     }
 
     /// Sets new flags and return old ones
+    ///
+    /// If the passed flags are the same as the current ones they will not be changed and the
+    /// function will return the current flags
     pub fn set_flags(
         &mut self,
         flags: cookie::Flags,
     ) -> Result<cookie::Flags, cookie::SetFlagsError> {
         let old_flags = self.flags;
 
-        self.cookie.set_flags(flags)?;
-        self.flags = flags;
+        if flags != old_flags {
+            self.cookie.set_flags(flags)?;
+
+            self.flags = flags;
+        }
 
         Ok(old_flags)
     }
 
     /// Executes the `file` operation to an item
+    ///
+    /// It uses the current `Magic::flags()`
     ///
     /// # Examples
     ///
@@ -94,9 +102,9 @@ impl Magic {
     {
         let old_flags = self.set_flags(cookie::Flags::MIME_TYPE)?;
 
-        let mime_type = self.cookie.file(path)?;
+        let mime_type = self.file(path)?;
 
-        self.cookie.set_flags(old_flags)?;
+        self.set_flags(old_flags)?;
 
         Ok(mime_type)
     }
@@ -117,9 +125,9 @@ impl Magic {
     {
         let old_flags = self.set_flags(cookie::Flags::MIME_ENCODING)?;
 
-        let encoding = self.cookie.file(path)?;
+        let encoding = self.file(path)?;
 
-        self.cookie.set_flags(old_flags)?;
+        self.set_flags(old_flags)?;
 
         Ok(encoding)
     }

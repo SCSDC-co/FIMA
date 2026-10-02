@@ -63,6 +63,7 @@ where
 /// use libfima::fs::metadata;
 ///
 /// metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
+/// // 2026/11/30 22:44:43
 /// ```
 pub fn file_time_formatted_custom<P, S>(path: P, format: S) -> anyhow::Result<String>
 where
