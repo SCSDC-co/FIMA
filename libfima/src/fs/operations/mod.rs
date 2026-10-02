@@ -48,3 +48,7 @@ pub mod remove;
 /// size::item_count("bar")?;     // 30
 /// ```
 pub mod size;
+
+pub mod rename;
+
+pub mod create;

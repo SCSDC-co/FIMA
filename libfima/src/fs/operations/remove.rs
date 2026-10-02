@@ -50,6 +50,20 @@ where
 {
     let path = path.as_ref();
 
+    if crate::fs::utility::is_root(path)? {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "You can't delete the root.",
+        ));
+    }
+
+    if crate::fs::utility::is_ancestor(path)? {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "You can't delete a parent of the current directory.",
+        ));
+    }
+
     if path.is_dir() {
         if crate::fs::utility::is_dir_empty(path)? {
             fs::remove_dir(path)?;
