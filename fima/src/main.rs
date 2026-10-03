@@ -15,7 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("file: {file}");
         println!("  MIME: {}", magic.mime_type(file)?);
         println!("  Encoding: {}", magic.encoding(file)?);
-        println!("  Binary: {}", metadata::is_binary(&mut magic, file)?);
+        println!("  Binary: {}", magic.is_binary(file)?);
         println!()
     }
 

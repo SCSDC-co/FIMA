@@ -133,4 +133,23 @@ impl Magic {
     {
         self.file_with_flags(path, cookie::Flags::MIME_ENCODING)
     }
+
+    /// Checks if a file is binary
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libgima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// magic.is_binary("foo.txt")?; // false
+    /// magic.is_binary("bar.mp3")?; // true
+    /// ```
+    pub fn is_binary<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.encoding(path)? == "binary")
+    }
 }
