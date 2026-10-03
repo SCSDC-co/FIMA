@@ -16,10 +16,12 @@ where
     P: AsRef<Path>,
     K: AsRef<Path>,
 {
-    let destination = destination.as_ref();
+    let destination = crate::fs::utility::expand_path(destination);
 
     for path in paths {
-        std::fs::rename(path, destination.join(path.as_ref().file_name().unwrap()))?;
+        let path = crate::fs::utility::expand_path(path);
+
+        std::fs::rename(&path, destination.join(path.file_name().unwrap()))?;
     }
 
     Ok(())
@@ -39,8 +41,8 @@ where
     P: AsRef<Path>,
     K: AsRef<Path>,
 {
-    let old_name = old_name.as_ref();
-    let new_name = new_name.as_ref();
+    let old_name = crate::fs::utility::expand_path(old_name);
+    let new_name = crate::fs::utility::expand_path(new_name);
 
     std::fs::rename(old_name, new_name)
 }

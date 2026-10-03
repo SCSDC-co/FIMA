@@ -5,7 +5,7 @@ pub fn create_file<P>(path: P) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
-    std::fs::File::create_new(path)?;
+    std::fs::File::create_new(crate::fs::utility::expand_path(path))?;
 
     Ok(())
 }
@@ -16,7 +16,7 @@ where
     P: AsRef<Path>,
 {
     for path in paths {
-        std::fs::File::create_new(path)?;
+        std::fs::File::create_new(crate::fs::utility::expand_path(path))?;
     }
 
     Ok(())
@@ -27,7 +27,7 @@ pub fn create_dir<P>(path: P) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
-    std::fs::create_dir(path)?;
+    std::fs::create_dir(crate::fs::utility::expand_path(path))?;
 
     Ok(())
 }
@@ -38,7 +38,7 @@ where
     P: AsRef<Path>,
 {
     for path in paths {
-        std::fs::create_dir(path)?;
+        std::fs::create_dir(crate::fs::utility::expand_path(path))?;
     }
 
     Ok(())
@@ -49,7 +49,7 @@ pub fn create_dir_all<P>(path: P) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
-    std::fs::create_dir_all(path)?;
+    std::fs::create_dir_all(crate::fs::utility::expand_path(path))?;
 
     Ok(())
 }
@@ -60,7 +60,7 @@ where
     P: AsRef<Path>,
 {
     for path in paths {
-        std::fs::create_dir_all(path)?;
+        std::fs::create_dir_all(crate::fs::utility::expand_path(path))?;
     }
 
     Ok(())

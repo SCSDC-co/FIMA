@@ -7,6 +7,7 @@ edition = "2024"
 anyhow = "1.0.104"
 glob = "0.3.4"
 magic = "0.16.7"
+shellexpand = "3.1.2"
 time = { version = "0.3.55", features = ["formatting"] }
 
 [target.'cfg(unix)'.dependencies]

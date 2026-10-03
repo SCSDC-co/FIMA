@@ -20,8 +20,10 @@ pub fn size<P>(path: P) -> Result<u64, io::Error>
 where
     P: AsRef<Path>,
 {
+    let path = crate::fs::utility::expand_path(path);
+
     // we won't follow symlinks as we are counting the path size itself
-    let metadata = path.as_ref().symlink_metadata()?;
+    let metadata = path.symlink_metadata()?;
 
     let mut size: u64 = 0;
 
@@ -58,7 +60,9 @@ pub fn item_count<P>(path: P) -> Result<u64, io::Error>
 where
     P: AsRef<Path>,
 {
-    let metadata = path.as_ref().symlink_metadata()?;
+    let path = crate::fs::utility::expand_path(path);
+
+    let metadata = path.symlink_metadata()?;
 
     let mut count: u64 = 0;
 

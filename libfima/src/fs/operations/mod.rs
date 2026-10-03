@@ -49,6 +49,56 @@ pub mod remove;
 /// ```
 pub mod size;
 
+/// Rename and move items
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::operations::rename;
+///
+/// // moves multiple items into a directory
+/// rename::move_(&["foo/bar.txt", "foo/baz"], "barbar")?;
+///
+/// // rename an item
+/// rename::rename("foo", "bar")?;
+/// ```
 pub mod rename;
 
+/// Creates an item or more
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::operations::create;
+///
+/// // Creates a single file
+/// create::create_file("foo.txt")?;
+///
+/// // Creates multiple files
+/// create::create_file_many(&[
+///     "foo.txt",
+///     "bar.txt",
+///     "baz.txt",
+/// ])?;
+///
+/// // Creates a single directory
+/// create::create_dir("foo")?;
+///
+/// // Creates multiple directories
+/// create::create_dir_many(&[
+///     "foo",
+///     "bar",
+///     "baz",
+/// ])?;
+///
+/// // Creates a directory and its parents
+/// create::create_dir_all("foo/bar/baz")?;
+///
+/// // Creates multiple directories and their parents
+/// create::create_dir_all_many(&[
+///     "foo/bar",
+///     "baz/qux",
+///     "quux/corge",
+/// ])?;
+/// ```
 pub mod create;

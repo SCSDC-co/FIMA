@@ -22,7 +22,7 @@ pub fn owner<P>(path: P) -> anyhow::Result<String>
 where
     P: AsRef<Path>,
 {
-    let path = path.as_ref();
+    let path = crate::fs::utility::expand_path(path);
 
     let owner: String;
 
@@ -60,7 +60,7 @@ pub fn group<P>(path: P) -> anyhow::Result<String>
 where
     P: AsRef<Path>,
 {
-    let path = path.as_ref();
+    let path = crate::fs::utility::expand_path(path);
 
     let group: String;
 

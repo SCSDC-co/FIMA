@@ -23,7 +23,7 @@ pub fn file_time<P>(path: P) -> Result<std::time::SystemTime, io::Error>
 where
     P: AsRef<Path>,
 {
-    let path = path.as_ref();
+    let path = crate::fs::utility::expand_path(path);
 
     Ok(path.symlink_metadata()?.modified()?)
 }
@@ -43,7 +43,7 @@ pub fn file_time_formatted<P>(path: P) -> anyhow::Result<String>
 where
     P: AsRef<Path>,
 {
-    let path = path.as_ref();
+    let path = crate::fs::utility::expand_path(path);
     let format = time::format_description::parse_owned::<3>(
         "[day]/[month]/[year] [hour]:[minute]:[second]",
     )?;
@@ -70,7 +70,7 @@ where
     P: AsRef<Path>,
     S: AsRef<str>,
 {
-    let path = path.as_ref();
+    let path = crate::fs::utility::expand_path(path);
     let format = time::format_description::parse_owned::<3>(&format.as_ref())?;
 
     let time = file_time(path)?;

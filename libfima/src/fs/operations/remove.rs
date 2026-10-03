@@ -48,7 +48,7 @@ pub fn remove<P>(path: P, opts: &Options) -> Result<(), io::Error>
 where
     P: AsRef<Path>,
 {
-    let path = path.as_ref();
+    let path = &crate::fs::utility::expand_path(path);
 
     if crate::fs::utility::is_root(path)? {
         return Err(io::Error::new(

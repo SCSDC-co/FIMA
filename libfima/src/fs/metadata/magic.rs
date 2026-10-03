@@ -81,7 +81,7 @@ impl Magic {
     where
         P: AsRef<Path>,
     {
-        Ok(self.cookie.file(path)?)
+        Ok(self.cookie.file(crate::fs::utility::expand_path(path))?)
     }
 
     /// Runs `Magic::file` with custom flags that you pass to it
