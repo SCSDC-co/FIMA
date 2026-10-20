@@ -18,8 +18,8 @@ pub mod magic_flags {
 /// // The variable must be `mut` as the methods will change the flags of it
 /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
 ///
-/// let mime = magic.mime_type("foo.txt")?; // "text/plain"
-/// let encoding = magic.encoding("foo.txt")?; // "us-ascii"
+/// magic.mime_type("foo.txt")?; // "text/plain"
+/// magic.encoding("foo.txt")?; // "us-ascii"
 /// ```
 #[derive(Debug)]
 pub struct Magic {
@@ -75,7 +75,7 @@ impl Magic {
     ///
     /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::MIME)?;
     ///
-    /// let file = magic.file("foo.txt")?; // "text/plain; charset=us-ascii"
+    /// magic.file("foo.txt")?; // "text/plain; charset=us-ascii"
     /// ```
     pub fn file<P>(&self, path: P) -> Result<String, cookie::Error>
     where
@@ -84,7 +84,7 @@ impl Magic {
         Ok(self.cookie.file(crate::fs::utility::expand_path(path))?)
     }
 
-    /// Runs `Magic::file` with custom flags that you pass to it
+    /// Runs `Magic::file` with custom flags
     pub fn file_with_flags<P>(&mut self, path: P, flags: cookie::Flags) -> anyhow::Result<String>
     where
         P: AsRef<Path>,
@@ -107,8 +107,8 @@ impl Magic {
     ///
     /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
     ///
-    /// let mime = magic.mime_type("foo.txt")?; // "text/plain"
-    /// let mime2 = magic.mime_type("foo")?; // "inode/directory"
+    /// magic.mime_type("foo.txt")?; // "text/plain"
+    /// magic.mime_type("foo")?; // "inode/directory"
     /// ```
     pub fn mime_type<P>(&mut self, path: P) -> anyhow::Result<String>
     where
@@ -124,8 +124,8 @@ impl Magic {
     ///
     /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
     ///
-    /// let mime = magic.encoding("foo.txt")?; // "us-ascii"
-    /// let mime2 = magic.encoding("foo")?; // "binary"
+    /// magic.encoding("foo.txt")?; // "us-ascii"
+    /// magic.encoding("foo")?; // "binary"
     /// ```
     pub fn encoding<P>(&mut self, path: P) -> anyhow::Result<String>
     where

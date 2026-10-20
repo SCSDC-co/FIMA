@@ -1,7 +1,7 @@
-use libfima::fs::metadata;
+use libfima::{fs, fs::metadata};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("libfima version: {}", libfima::VERSION);
+    println!("libfima version: {}\n", libfima::VERSION);
 
     let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
 
@@ -11,11 +11,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "~/Videos/2025-05-21 22-12-36.mp4",
         "justfile",
         "~/Documents/PAG_2025_DMCGLN09P11A515K.pdf",
+        "~/Videos",
+        "fima/src/main.rs",
     ] {
-        println!("file: {file}");
+        println!("item: {file}");
         println!("  MIME: {}", magic.mime_type(file)?);
         println!("  Encoding: {}", magic.encoding(file)?);
         println!("  Binary: {}", magic.is_binary(file)?);
+        println!(
+            "  Expanded path: {}",
+            fs::utility::expand_path(file).display()
+        );
         println!()
     }
 
