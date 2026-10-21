@@ -1,11 +1,53 @@
 use anyhow::Context;
 use magic::cookie;
+use std::collections::HashSet;
+use std::ffi::OsStr;
 use std::path::Path;
+use std::sync::LazyLock;
 
 /// A module that exposes the libmagic flags
 pub mod magic_flags {
     pub use magic::cookie::Flags;
 }
+
+/// These are all the lock files names, they are a LazyLock so we have only one for thread
+///
+/// File names:
+///
+/// - `package-lock.json`,
+/// - `pnpm-lock.yaml`,
+/// - `bun.lockb`,
+/// - `.terraform.lock.hcl`,
+/// - `packages.lock.json`,
+/// - `gradle.lockfile`,
+/// - `go.sum`,
+/// - `package.resolved`,
+/// - `cartfile.resolved`,
+/// - `packages-lock.json`,
+/// - `manifest.toml`,
+/// - `cabal.project.freeze`,
+/// - `opam.locked`,
+/// - `vcpkg-lock.json`,
+/// - `biome-lock.json`
+pub static LOCK_FILES: LazyLock<HashSet<&OsStr>> = LazyLock::new(|| {
+    HashSet::from([
+        OsStr::new("package-lock.json"),
+        OsStr::new("pnpm-lock.yaml"),
+        OsStr::new("bun.lockb"),
+        OsStr::new(".terraform.lock.hcl"),
+        OsStr::new("packages.lock.json"),
+        OsStr::new("gradle.lockfile"),
+        OsStr::new("go.sum"),
+        OsStr::new("package.resolved"),
+        OsStr::new("cartfile.resolved"),
+        OsStr::new("packages-lock.json"),
+        OsStr::new("manifest.toml"),
+        OsStr::new("cabal.project.freeze"),
+        OsStr::new("opam.locked"),
+        OsStr::new("vcpkg-lock.json"),
+        OsStr::new("biome-lock.json"),
+    ])
+});
 
 /// A struct that represents a `Magic` object that you can use it to make every sort of `libmagic`
 /// operations
@@ -229,5 +271,30 @@ impl Magic {
         P: AsRef<Path>,
     {
         Ok(self.is_video(&path)? || self.is_image(&path)? || self.is_audio(&path)?)
+    }
+
+    /// Checks if a file is a lock file
+    ///
+    /// It checks if the extension is ".lock" or if it is part of a predefined set of lock files
+    /// file names ([`LOCK_FILES`])
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libfima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// magic.is_lock_file("Cargo.lock")?; // true
+    /// magic.is_lock_file("package-lock.json")?; // true
+    /// magic.is_lock_file("justfile")?; // false
+    /// ```
+    pub fn is_lock_file<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        let path = path.as_ref();
+
+        Ok(LOCK_FILES.contains(path.file_name().unwrap()) || path.extension().unwrap() == "lock")
     }
 }
