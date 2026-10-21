@@ -139,7 +139,7 @@ impl Magic {
     /// # Examples
     ///
     /// ```rust,no_run,ignore
-    /// use libgima::fs::metadata;
+    /// use libfima::fs::metadata;
     ///
     /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
     ///
@@ -151,5 +151,83 @@ impl Magic {
         P: AsRef<Path>,
     {
         Ok(self.encoding(path)? == "binary")
+    }
+
+    /// Checks if a path is a video file
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libfima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// megic.is_media("video.mp4")?; // true
+    /// megic.is_media("file.txt")?; // false
+    /// ```
+    pub fn is_video<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.mime_type(path)?.starts_with("video/"))
+    }
+
+    /// Checks if a path is an audio file
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libfima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// megic.is_media("audio.mp3")?; // true
+    /// megic.is_media("file.txt")?; // false
+    /// ```
+    pub fn is_audio<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.mime_type(path)?.starts_with("audio/"))
+    }
+
+    /// Checks if a path is an image
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libfima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// megic.is_media("image.png")?; // true
+    /// megic.is_media("file.txt")?; // false
+    /// ```
+    pub fn is_image<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.mime_type(path)?.starts_with("image/"))
+    }
+
+    /// Checks if a path is a media (audio, video or an image)
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run,ignore
+    /// use libfima::fs::metadata;
+    ///
+    /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+    ///
+    /// megic.is_media("image.png")?; // true
+    /// megic.is_media("video.mp4")?; // true
+    /// megic.is_media("audio.mp3")?; // true
+    /// megic.is_media("file.txt")?; // false
+    /// ```
+    pub fn is_media<P>(&mut self, path: P) -> anyhow::Result<bool>
+    where
+        P: AsRef<Path>,
+    {
+        Ok(self.is_video(&path)? || self.is_image(&path)? || self.is_audio(&path)?)
     }
 }
