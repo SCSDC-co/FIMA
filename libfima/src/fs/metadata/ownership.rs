@@ -33,15 +33,12 @@ where
 
     #[cfg(windows)]
     {
-        let (sid, security_descriptor) = windows::security_info(path, OWNER_SECURITY_INFORMATION)?;
+        let (sid, _, _, security_descriptor) =
+            windows::security_info(&path, OWNER_SECURITY_INFORMATION)?;
 
-        let sid_name = windows::sid_name(sid);
+        let _guard = windows::SecurityDescriptorGuard(security_descriptor);
 
-        unsafe {
-            LocalFree(Some(security_descriptor));
-        }
-
-        owner = sid_name;
+        owner = windows::sid_name(sid);
     }
 
     Ok(owner)
@@ -71,15 +68,12 @@ where
 
     #[cfg(windows)]
     {
-        let (sid, security_descriptor) = windows::security_info(path, GROUP_SECURITY_INFORMATION)?;
+        let (sid, _, _, security_descriptor) =
+            windows::security_info(&path, GROUP_SECURITY_INFORMATION)?;
 
-        let sid_name = windows::sid_name(sid);
+        let _guard = windows::SecurityDescriptorGuard(security_descriptor);
 
-        unsafe {
-            LocalFree(Some(security_descriptor));
-        }
-
-        group = sid_name;
+        owner = windows::sid_name(sid);
     }
 
     Ok(group)

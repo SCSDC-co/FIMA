@@ -13,14 +13,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "~/Documents/PAG_2025_DMCGLN09P11A515K.pdf",
         "~/Videos",
         "fima/src/main.rs",
+        "libfima/Cargo.lock",
     ] {
         println!("item: {file}");
         println!("  MIME: {}", magic.mime_type(file)?);
         println!("  Encoding: {}", magic.encoding(file)?);
         println!("  Binary: {}", magic.is_binary(file)?);
+        println!("  Is media: {}", magic.is_media(file)?);
+        println!("  Is video: {}", magic.is_video(file)?);
+        println!("  Is audio: {}", magic.is_audio(file)?);
+        println!("  Is image: {}", magic.is_image(file)?);
+        println!("  Is lockfile: {}", magic.is_lockfile(file)?);
         println!(
             "  Expanded path: {}",
             fs::utility::expand_path(file).display()
+        );
+        println!(
+            "  Permissions: {}",
+            fs::operations::permissions::Permissions::new(file)?.display(false, file)?
         );
         println!()
     }

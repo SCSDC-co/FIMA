@@ -285,16 +285,17 @@ impl Magic {
     ///
     /// let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
     ///
-    /// magic.is_lock_file("Cargo.lock")?; // true
-    /// magic.is_lock_file("package-lock.json")?; // true
-    /// magic.is_lock_file("justfile")?; // false
+    /// magic.is_lockfile("Cargo.lock")?; // true
+    /// magic.is_lockfile("package-lock.json")?; // true
+    /// magic.is_lockfile("justfile")?; // false
     /// ```
-    pub fn is_lock_file<P>(&mut self, path: P) -> anyhow::Result<bool>
+    pub fn is_lockfile<P>(&mut self, path: P) -> anyhow::Result<bool>
     where
         P: AsRef<Path>,
     {
-        let path = path.as_ref();
+        let path = crate::fs::utility::expand_path(path);
 
-        Ok(LOCK_FILES.contains(path.file_name().unwrap()) || path.extension().unwrap() == "lock")
+        Ok(LOCK_FILES.contains(path.file_name().unwrap())
+            || path.extension().unwrap_or(OsStr::new("")) == "lock")
     }
 }
