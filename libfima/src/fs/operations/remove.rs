@@ -57,7 +57,7 @@ where
         ));
     }
 
-    if crate::fs::utility::is_ancestor(path)? {
+    if crate::fs::utility::is_ancestor_of_current_directory(path)? {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
             "You can't delete a parent of the current directory.",

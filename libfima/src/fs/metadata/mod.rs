@@ -1,3 +1,106 @@
+// keep that first empty line, it is just to not show the content of the docs in the module overview
+// of fs
+//!
+//! It implements a wrapper around `magic` that exposes useful methods
+//!
+//! # Examples
+//!
+//! ## Owner ship:
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::metadata;
+//!
+//! // Get the owner of an item (cross-platform)
+//! metadata::owner("foo.txt"); // "Giuliano"
+//!
+//! // Get the group of an item (cross-platform)
+//! metadata::group("foo.txt"); // "users"
+//! ```
+//!
+//! ## Last modification time:
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::metadata;
+//!
+//! // Get the last modified time:
+//! metadata::file_time("foo")?;
+//! // SystemTime {
+//! //     tv_sec: 1790777179,
+//! //     tv_nsec: 304247090,
+//! // }
+//! metadata::file_time_formatted("foo")?; // 30/11/2026 22:44:43
+//! metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
+//! // 2026/11/30 22:44:43
+//! ```
+//!
+//! ## Size:
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::metadata;
+//!
+//! // Gets the size in bytes (it doesn't recurse into subdirectories as it's a slow process)
+//! metadata::size("foo.txt")?; // 64
+//! metadata::size("bar")?;     // 128
+//!
+//! // Gets the number of items in a directory
+//! metadata::item_count("foo.txt")?; // 1
+//! metadata::item_count("bar")?;     // 30
+//! ```
+//!
+//! ## [`metadata::Permissions`]:
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::metadata;
+//!
+//! // This creates a new permissions object, which holds all the permissions of a file.
+//! let perms = metadata::Permissions::new("foo.txt");
+//!
+//! println!("{}", perms.display(false); // rw-r--r--
+//! println!("{}", perms.display(true);
+//! // ------ (no special attributes, this works only on windows, on unix like systems it does nothing and the output is the same as the above)
+//!
+//! // You can access fields like this:
+//! match perms {
+//!   metadata::Permissions::Unix {
+//!     user_read,
+//!     group_read,
+//!     other_read,
+//!     .. // you can access other properties
+//!   } => {
+//!     println!("Can the user read: {}", user_read);
+//!     println!("Can the group read: {}", group_read);
+//!     println!("Can others read: {}", other_read);
+//!   }
+//!   metadata::Permissions::Windows {
+//!     permissions,
+//!     ..
+//!   } => {
+//!     for permission in permissions {
+//!       println!("Can {} read: {}", permission.identity, permission.read);
+//!     }
+//!   }
+//! }
+//! ```
+//!
+//! ## [`metadata::Magic`]:
+//!
+//! ```rust,no_run,ignore
+//! use libgima::fs::metadata;
+//!
+//! // The variable must be `mut` as the methods will change the flags of it
+//! let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
+//!
+//! let path = "foo.txt";
+//!
+//! let mime = magic.mime_type(path)?; // "text/plain"
+//! let encoding = magic.encoding(path)?; // "us-ascii"
+//!
+//! // `Magic::file()` uses the current flags (`Magic::flags()`)
+//! magic.set_flags(metadata::magic_flags::Flags::MIME)?;
+//!
+//! let file = magic.file("foo.txt")?; // "text/plain; charset=us-ascii"
+//! ```
+
 mod magic;
 mod ownership;
 mod permissions;
