@@ -13,6 +13,8 @@ pub mod utility;
 ///
 /// # Examples
 ///
+/// ## Owner ship:
+///
 /// ```rust,no_run,ignore
 /// use libfima::fs::metadata;
 ///
@@ -21,6 +23,12 @@ pub mod utility;
 ///
 /// // Get the group of an item (cross-platform)
 /// metadata::group("foo.txt"); // "users"
+/// ```
+///
+/// ## Last modification time:
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::metadata;
 ///
 /// // Get the last modified time:
 /// metadata::file_time("foo")?;
@@ -31,12 +39,28 @@ pub mod utility;
 /// metadata::file_time_formatted("foo")?; // 30/11/2026 22:44:43
 /// metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
 /// // 2026/11/30 22:44:43
+/// ```
 ///
-/// // Permissions:
+/// ## Size:
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::metadata;
+///
+/// // Gets the size in bytes (it doesn't recurse into subdirectories as it's a slow process)
+/// metadata::size("foo.txt")?; // 64
+/// metadata::size("bar")?;     // 128
+///
+/// // Gets the number of items in a directory
+/// metadata::item_count("foo.txt")?; // 1
+/// metadata::item_count("bar")?;     // 30
+/// ```
+///
+/// ## [`metadata::Permissions`]:
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::metadata;
 ///
 /// // This creates a new permissions object, which holds all the permissions of a file.
-/// //
-/// // Check `Permissions` for more info.
 /// let perms = metadata::Permissions::new("foo.txt");
 ///
 /// println!("{}", perms.display(false); // rw-r--r--
@@ -66,9 +90,7 @@ pub mod utility;
 /// }
 /// ```
 ///
-/// ---
-///
-/// [`metadata::Magic`]:
+/// ## [`metadata::Magic`]:
 ///
 /// ```rust,no_run,ignore
 /// use libgima::fs::metadata;
