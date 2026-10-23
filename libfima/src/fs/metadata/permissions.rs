@@ -24,6 +24,7 @@ use std::os::windows::fs::MetadataExt;
 use anyhow::Result;
 
 /// Represents a Windows access-control entry.
+#[derive(Debug)]
 pub struct WindowsPermission {
     /// The user or group this permission applies to.
     pub identity: String,
@@ -123,6 +124,7 @@ impl WindowsPermission {
 /// Represents the permissions of a file or directory.
 ///
 /// Unix and Windows represent permissions differently.
+#[derive(Debug)]
 pub enum Permissions {
     /// Unix-style permissions. Example: `rwxr-xr-x`.
     Unix {
