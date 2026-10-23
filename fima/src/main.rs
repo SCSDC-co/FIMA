@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         println!(
             "  Permissions: {}",
-            fs::operations::permissions::Permissions::new(file)?.display(false, file)?
+            fs::metadata::Permissions::new(file)?.display(false)?
         );
         println!()
     }

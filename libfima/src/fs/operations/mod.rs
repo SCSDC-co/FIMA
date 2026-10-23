@@ -102,6 +102,3 @@ pub mod rename;
 /// ])?;
 /// ```
 pub mod create;
-
-/// Work with file permissions
-pub mod permissions;

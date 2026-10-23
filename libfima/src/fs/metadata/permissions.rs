@@ -1,4 +1,7 @@
-use std::{io, path::Path};
+use std::{
+    io,
+    path::{Path, PathBuf},
+};
 
 #[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
@@ -149,6 +152,10 @@ pub enum Permissions {
     Windows {
         /// The access-control entries associated with the file or directory.
         permissions: Vec<WindowsPermission>,
+
+        /// The path of the item that was analyzed for the permissions, it is used for when displaying
+        /// with the `mode` output
+        path: PathBuf,
     },
 }
 
@@ -226,7 +233,7 @@ impl Permissions {
                 }
             }
 
-            Ok(Permissions::Windows { permissions })
+            Ok(Permissions::Windows { path, permissions })
         }
 
         #[cfg(unix)]
@@ -257,12 +264,7 @@ impl Permissions {
     /// - `mode` - Display the mode (like the dir command), this is created for compatibility with
     ///            `ls -l`
     /// - `path` - Used for when you use the `mode` output
-    pub fn display<P>(&self, _mode: bool, path: P) -> anyhow::Result<String>
-    where
-        P: AsRef<Path>,
-    {
-        let _path = crate::fs::utility::expand_path(path);
-
+    pub fn display(&self, _mode: bool) -> anyhow::Result<String> {
         let mut string = String::new();
 
         match self {
@@ -277,6 +279,8 @@ impl Permissions {
                 other_write,
                 other_exec,
             } => {
+                // We don't add the file type as it isn't actually part of the permissions
+
                 for (enabled, character) in [
                     (user_read, 'r'),
                     (user_write, 'w'),
@@ -293,9 +297,12 @@ impl Permissions {
             }
             Permissions::Windows {
                 permissions: _permissions,
+                path: _path,
             } => {
                 #[cfg(windows)]
                 if _mode {
+                    // We have this option because it's the best for an ls -l like command, as every
+                    // file has multiple users permissions
                     let attributes = _path.symlink_metadata()?.file_attributes();
 
                     string.push(if attributes & 0x10 != 0 { 'd' } else { '-' }); // Directory

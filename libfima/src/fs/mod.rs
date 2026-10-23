@@ -31,6 +31,39 @@ pub mod utility;
 /// metadata::file_time_formatted("foo")?; // 30/11/2026 22:44:43
 /// metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
 /// // 2026/11/30 22:44:43
+///
+/// // Permissions:
+///
+/// // This creates a new permissions object, which holds all the permissions of a file.
+/// //
+/// // Check `Permissions` for more info.
+/// let perms = metadata::Permissions::new("foo.txt");
+///
+/// println!("{}", perms.display(false); // rw-r--r--
+/// println!("{}", perms.display(true);
+/// // ------ (no special attributes, this works only on windows, on unix like systems it does nothing and the output is the same as the above)
+///
+/// // You can access fields like this:
+/// match perms {
+///   metadata::Permissions::Unix {
+///     user_read,
+///     group_read,
+///     other_read,
+///     .. // you can access other properties
+///   } => {
+///     println!("Can the user read: {}", user_read);
+///     println!("Can the group read: {}", group_read);
+///     println!("Can others read: {}", other_read);
+///   }
+///   metadata::Permissions::Windows {
+///     permissions,
+///     ..
+///   } => {
+///     for permission in permissions {
+///       println!("Can {} read: {}", permission.identity, permission.read);
+///     }
+///   }
+/// }
 /// ```
 ///
 /// ---
