@@ -1,4 +1,4 @@
-use libfima::{fs, fs::metadata};
+use libfima::{fs, fs::archive, fs::metadata};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("libfima version: {}\n", libfima::VERSION);
@@ -34,6 +34,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         println!()
     }
+
+    let mut archive = archive::Archive::new("test.zip", fs::archive::ArchiveFormat::Zip)?;
+
+    archive.add_file_many(["package.json", "justfile"])?;
+    archive.add_directory("libfima/src")?;
+
+    archive.finish()?;
 
     Ok(())
 }

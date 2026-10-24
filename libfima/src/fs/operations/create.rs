@@ -11,8 +11,9 @@ where
 }
 
 /// Creates many file
-pub fn create_file_many<P>(paths: &[P]) -> Result<(), io::Error>
+pub fn create_file_many<P, K>(paths: K) -> Result<(), io::Error>
 where
+    K: IntoIterator<Item = P>,
     P: AsRef<Path>,
 {
     for path in paths {
@@ -33,8 +34,9 @@ where
 }
 
 /// Creates many directories (without creating the parents)
-pub fn create_dir_many<P>(paths: &[P]) -> Result<(), io::Error>
+pub fn create_dir_many<P, K>(paths: K) -> Result<(), io::Error>
 where
+    K: IntoIterator<Item = P>,
     P: AsRef<Path>,
 {
     for path in paths {
@@ -55,8 +57,9 @@ where
 }
 
 /// Creates many directories (and the parents)
-pub fn create_dir_all_many<P>(paths: &[P]) -> Result<(), io::Error>
+pub fn create_dir_all_many<P, K>(paths: K) -> Result<(), io::Error>
 where
+    K: IntoIterator<Item = P>,
     P: AsRef<Path>,
 {
     for path in paths {

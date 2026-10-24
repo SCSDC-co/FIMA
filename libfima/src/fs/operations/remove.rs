@@ -98,7 +98,7 @@ where
 /// };
 ///
 /// remove::remove_many(
-///     &[
+///     [
 ///         "foo.txt",
 ///         "bar.txt",
 ///         "baz.txt",
@@ -106,8 +106,9 @@ where
 ///     &options,
 /// )?;
 /// ```
-pub fn remove_many<P>(paths: &[P], opts: &Options) -> Result<(), io::Error>
+pub fn remove_many<P, K>(paths: K, opts: &Options) -> Result<(), io::Error>
 where
+    K: IntoIterator<Item = P>,
     P: AsRef<Path>,
 {
     for path in paths {

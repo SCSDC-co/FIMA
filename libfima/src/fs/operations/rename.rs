@@ -9,10 +9,11 @@ use std::path::Path;
 /// ```rust,no_run,ignore
 /// use libfima::fs::operations::rename;
 ///
-/// rename::move_(&["foo/bar.txt", "foo/baz"], "barbar")?;
+/// rename::move_(["foo/bar.txt", "foo/baz"], "barbar")?;
 /// ```
-pub fn move_<P, K>(paths: &[P], destination: K) -> Result<(), std::io::Error>
+pub fn move_<P, K, I>(paths: I, destination: K) -> Result<(), std::io::Error>
 where
+    I: IntoIterator<Item = P>,
     P: AsRef<Path>,
     K: AsRef<Path>,
 {
