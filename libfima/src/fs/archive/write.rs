@@ -41,13 +41,14 @@ impl super::Archive {
 
         match self.archive {
             super::ArchiveType::Zip {
-                ref mut zip,
+                ref mut writer,
                 options,
+                ..
             } => {
                 let canonical_path = path.canonicalize()?;
                 let root = canonical_path.parent().unwrap();
 
-                add_file_to_zip(zip, &path, root, options)?;
+                add_file_to_zip(writer, &path, root, options)?;
             }
         }
 
@@ -77,8 +78,9 @@ impl super::Archive {
 
         match self.archive {
             super::ArchiveType::Zip {
-                ref mut zip,
+                ref mut writer,
                 options,
+                ..
             } => {
                 for item in WalkDir::new(&path) {
                     let mut item = item?.into_path();
@@ -88,9 +90,9 @@ impl super::Archive {
                     }
 
                     if item.is_file() {
-                        add_file_to_zip(zip, &item, root, options)?;
+                        add_file_to_zip(writer, &item, root, options)?;
                     } else if item.is_dir() {
-                        zip.add_directory(&*item.to_str().unwrap(), options)?;
+                        writer.add_directory(&*item.to_str().unwrap(), options)?;
                     }
                 }
             }

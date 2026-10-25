@@ -35,12 +35,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!()
     }
 
-    let mut archive = archive::Archive::new("test.zip", fs::archive::ArchiveFormat::Zip)?;
+    let archive_file = "test.zip";
+    let output_path = "zip_output";
+
+    if std::fs::exists(archive_file)? {
+        fs::operations::remove::remove(
+            archive_file,
+            &fs::operations::remove::Options { recursive: false },
+        )?;
+    }
+
+    let mut archive = archive::Archive::new(archive_file, fs::archive::ArchiveFormat::Zip)?;
 
     archive.add_file_many(["package.json", "justfile"])?;
     archive.add_directory("libfima/src")?;
 
+    let archive_type = archive.format.clone();
+
     archive.finish()?;
+
+    let errs = archive::extract(archive_file, output_path, archive_type)?;
+
+    for err in errs {
+        eprintln!("{}", err);
+    }
 
     Ok(())
 }
