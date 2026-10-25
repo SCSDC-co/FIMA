@@ -16,7 +16,7 @@ use std::path::Path;
 ///
 /// - `archive` - The archive to extract
 /// - `output` - The output directory
-/// - `archive_type` - The type of the archive
+/// - `archive_format` - The type of the archive
 ///
 /// # Examples
 ///
@@ -25,13 +25,6 @@ use std::path::Path;
 ///
 /// let archive_file = "foo.zip";
 /// let output_path = "output";
-///
-/// if std::fs::exists(archive_file)? {
-///     fs::operations::remove::remove(
-///         archive_file,
-///         &fs::operations::remove::Options { recursive: false },
-///     )?;
-/// }
 ///
 /// let mut archive = archive::Archive::new(archive_file, fs::archive::ArchiveFormat::Zip)?;
 ///
@@ -53,7 +46,7 @@ use std::path::Path;
 pub fn extract<P, K>(
     archive: P,
     output: K,
-    archive_type: super::ArchiveFormat,
+    archive_format: super::ArchiveFormat,
 ) -> anyhow::Result<Vec<io::Error>>
 where
     P: AsRef<Path>,
@@ -65,7 +58,7 @@ where
 
     let mut errors: Vec<io::Error> = vec![];
 
-    match archive_type {
+    match archive_format {
         super::ArchiveFormat::Zip => {
             let archive_file = File::open(&archive)?;
 

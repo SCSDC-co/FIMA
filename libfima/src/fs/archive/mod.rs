@@ -6,9 +6,11 @@ use std::{
 use zip::write::SimpleFileOptions;
 
 mod extract;
+mod list;
 mod write;
 
 pub use extract::*;
+pub use list::*;
 
 /// All the types of archives available
 #[derive(Debug, Clone, Copy)]
@@ -70,6 +72,10 @@ enum ArchiveType {
 ///
 /// for err in errs {
 ///     eprintln!("{}", err);
+/// }
+///
+/// for files in archive::list(zip_file, format)? {
+///     println!("{}", files.display())
 /// }
 /// ```
 pub struct Archive {
