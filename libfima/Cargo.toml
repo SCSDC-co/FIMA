@@ -2,6 +2,11 @@
 name = "libfima"
 version = "0.1.0"
 edition = "2024"
+description = "A library for creating Fast, Incredible, Minimal and Awesome file managers"
+homepage = "https://github.com/SCSDC-co/FIMA"
+repository = "https://github.com/SCSDC-co/FIMA"
+license = "LGPL-3.0-only"
+license-file = "LICENSE"
 readme = "README.md"
 
 [dependencies]
