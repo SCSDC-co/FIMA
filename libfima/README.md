@@ -2,6 +2,8 @@
 
 # libfima
 
+[Documentation](https://docs.rs/libfima/0.1.0)
+
 <img src="https://skillicons.dev/icons?i=rust" >
 
 </div>
