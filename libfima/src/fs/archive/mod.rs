@@ -1,3 +1,60 @@
+// keep that first empty line, it is just to not show the content of the docs in the module overview
+// of fs
+//!
+//! It contains a struct and 2 functions for working with archives
+//!
+//! # Examples
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::archive;
+//!
+//! use libfima::fs::archive;
+//!
+//! let zip_file = "foo.zip";
+//!
+//! let mut archive = archive::Archive::new(zip_file, fs::archive::ArchiveFormat::Zip)?;
+//!
+//! // add files:
+//! archive.add_file("foo.txt")?;
+//! archive.add_file("bar.txt")?;
+//! archive.add_file("baz.txt")?;
+//! // or
+//! archive.add_file_many(&[
+//!  "foo.txt",
+//!  "bar.txt",
+//!  "baz.txt",
+//! ])?;
+//!
+//! // add directories:
+//! archive.add_directory("foo")?;
+//! archive.add_directory("bar")?;
+//! archive.add_directory("baz")?;
+//! // or
+//! archive.add_directory_many(&[
+//!  "foo",
+//!  "bar",
+//!  "baz",
+//! ])?;
+//!
+//! let archive_type = archive.format.clone();
+//!
+//! // always call `.finish()` when finished with the archive
+//! // this will destroy the object
+//! archive.finish()?;
+//!
+//! // you can then extract it:
+//! let errs = archive::extract(zip_file, "foobarbaz", format)?;
+//!
+//! for err in errs {
+//!     eprintln!("{}", err);
+//! }
+//!
+//! // list files in archive
+//! for files in archive::list(zip_file, format)? {
+//!     println!("{}", files.display())
+//! }
+//! ```
+
 use std::{
     fs::File,
     path::{Path, PathBuf},
@@ -74,6 +131,7 @@ enum ArchiveType {
 ///     eprintln!("{}", err);
 /// }
 ///
+/// // list files in archive
 /// for files in archive::list(zip_file, format)? {
 ///     println!("{}", files.display())
 /// }
