@@ -8,33 +8,31 @@
 //! ```rust,no_run,ignore
 //! use libfima::fs::archive;
 //!
-//! use libfima::fs::archive;
-//!
 //! let zip_file = "foo.zip";
 //!
 //! let mut archive = archive::Archive::new(zip_file, fs::archive::ArchiveFormat::Zip)?;
 //!
 //! // add files:
-//! archive.add_file("foo.txt")?;
-//! archive.add_file("bar.txt")?;
-//! archive.add_file("baz.txt")?;
+//! archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); )?;
+//! archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); )?;
+//! archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); )?;
 //! // or
-//! archive.add_file_many(&[
+//! archive.add_file_many([
 //!  "foo.txt",
 //!  "bar.txt",
 //!  "baz.txt",
-//! ])?;
+//! ], |path| { println!("adding: {}", path.display()); })?;
 //!
 //! // add directories:
-//! archive.add_directory("foo")?;
-//! archive.add_directory("bar")?;
-//! archive.add_directory("baz")?;
+//! archive.add_directory("foo", |path| { println!("adding: {}", path.display()); })?;
+//! archive.add_directory("bar", |path| { println!("adding: {}", path.display()); })?;
+//! archive.add_directory("baz", |path| { println!("adding: {}", path.display()); })?;
 //! // or
-//! archive.add_directory_many(&[
+//! archive.add_directory_many([
 //!  "foo",
 //!  "bar",
 //!  "baz",
-//! ])?;
+//! ], |path| { println!("adding: {}", path.display()); })?;
 //!
 //! let archive_type = archive.format.clone();
 //!
@@ -43,7 +41,7 @@
 //! archive.finish()?;
 //!
 //! // you can then extract it:
-//! let errs = archive::extract(zip_file, "foobarbaz", format)?;
+//! let errs = archive::extract(zip_file, "foobarbaz", format, |path| { println!("extracting: {}", path.display()); })?;
 //!
 //! for err in errs {
 //!     eprintln!("{}", err);
@@ -56,7 +54,7 @@
 //! ```
 
 use std::{
-    fs::File,
+    fs::{File, OpenOptions},
     path::{Path, PathBuf},
 };
 
@@ -97,26 +95,26 @@ enum ArchiveType {
 /// let mut archive = archive::Archive::new(zip_file, fs::archive::ArchiveFormat::Zip)?;
 ///
 /// // add files:
-/// archive.add_file("foo.txt")?;
-/// archive.add_file("bar.txt")?;
-/// archive.add_file("baz.txt")?;
+/// archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); )?;
+/// archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); )?;
+/// archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); )?;
 /// // or
-/// archive.add_file_many(&[
+/// archive.add_file_many([
 ///  "foo.txt",
 ///  "bar.txt",
 ///  "baz.txt",
-/// ])?;
+/// ], |path| { println!("adding: {}", path.display()); })?;
 ///
 /// // add directories:
-/// archive.add_directory("foo")?;
-/// archive.add_directory("bar")?;
-/// archive.add_directory("baz")?;
+/// archive.add_directory("foo", |path| { println!("adding: {}", path.display()); })?;
+/// archive.add_directory("bar", |path| { println!("adding: {}", path.display()); })?;
+/// archive.add_directory("baz", |path| { println!("adding: {}", path.display()); })?;
 /// // or
-/// archive.add_directory_many(&[
+/// archive.add_directory_many([
 ///  "foo",
 ///  "bar",
 ///  "baz",
-/// ])?;
+/// ], |path| { println!("adding: {}", path.display()); })?;
 ///
 /// let archive_type = archive.format.clone();
 ///
@@ -125,7 +123,7 @@ enum ArchiveType {
 /// archive.finish()?;
 ///
 /// // you can then extract it:
-/// let errs = archive::extract(zip_file, "foobarbaz", format)?;
+/// let errs = archive::extract(zip_file, "foobarbaz", format, |path| { println!("extracting: {}", path.display()); })?;
 ///
 /// for err in errs {
 ///     eprintln!("{}", err);
@@ -148,17 +146,28 @@ pub struct Archive {
 
 impl Archive {
     /// Creates an archive of type `format` in `path`
+    ///
+    /// If the archive already exists it will append files to it
     pub fn new<P>(path: P, format: ArchiveFormat) -> anyhow::Result<Archive>
     where
         P: AsRef<Path>,
     {
         let path = path.as_ref();
 
-        let file = File::create(path)?;
+        let file;
+        let writer: zip::ZipWriter<File>;
+
+        if !path.exists() {
+            file = File::create(path)?;
+            writer = zip::ZipWriter::new(file);
+        } else {
+            file = OpenOptions::new().read(true).write(true).open(path)?;
+            writer = zip::ZipWriter::new_append(file)?;
+        }
 
         let archive: ArchiveType = match format {
             ArchiveFormat::Zip => ArchiveType::Zip {
-                writer: zip::ZipWriter::new(file),
+                writer: writer,
                 options: SimpleFileOptions::default(),
             },
         };

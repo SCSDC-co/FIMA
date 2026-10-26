@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use libfima::{fs, fs::archive, fs::metadata};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -37,28 +39,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let file = "test.zip";
     let output_path = "zip_output";
+    let mut count = 0;
 
-    if std::fs::exists(file)? {
-        fs::operations::remove::remove(
-            file,
-            &fs::operations::remove::Options { recursive: false },
-        )?;
-    }
+    let mut action = |path: PathBuf| -> () {
+        count += 1;
+        println!("Adding {}", path.display())
+    };
 
     let mut archive = archive::Archive::new(file, fs::archive::ArchiveFormat::Zip)?;
 
-    archive.add_file_many(["package.json", "justfile"])?;
-    archive.add_directory("libfima/src")?;
+    archive.add_file_many(["package.json", "justfile"], &mut action)?;
+    archive.add_directory("libfima/src", action)?;
 
     let format = archive.format.clone();
 
     archive.finish()?;
 
-    let errs = archive::extract(file, output_path, format)?;
+    println!("Item added: {count}");
+
+    let errs = archive::extract(file, output_path, format, |path| {
+        println!("extracting {}", path.display())
+    })?;
 
     for err in errs {
         eprintln!("{}", err);
     }
+
+    println!();
 
     for files in archive::list(file, format)? {
         println!("{}", files.display())

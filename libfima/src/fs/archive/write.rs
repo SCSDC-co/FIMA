@@ -1,12 +1,11 @@
-use std::{fs::File, io::Write, path::Path};
+use std::{
+    fs::File,
+    io::Write,
+    path::{Path, PathBuf},
+};
 use walkdir::WalkDir;
 
-fn add_file_to_zip<P, K>(
-    zip: &mut zip::ZipWriter<File>,
-    path: P,
-    root: K,
-    options: zip::write::SimpleFileOptions,
-) -> anyhow::Result<()>
+fn sanitize_path<P, K>(path: P, root: K) -> anyhow::Result<PathBuf>
 where
     P: AsRef<Path>,
     K: AsRef<Path>,
@@ -25,17 +24,26 @@ where
     let canonical_path = path.canonicalize()?;
     let relative_path = canonical_path.strip_prefix(&root)?;
 
-    zip.start_file(relative_path.to_str().unwrap(), options)?;
-    zip.write_all(std::fs::read(relative_path)?.as_slice())?;
+    Ok(relative_path.to_path_buf())
+}
+
+fn add_file_to_zip(
+    zip: &mut zip::ZipWriter<File>,
+    path: PathBuf,
+    options: zip::write::SimpleFileOptions,
+) -> anyhow::Result<()> {
+    zip.start_file(path.to_str().unwrap(), options)?;
+    zip.write_all(std::fs::read(path)?.as_slice())?;
 
     Ok(())
 }
 
 impl super::Archive {
     /// Add one file to the archive
-    pub fn add_file<P>(&mut self, path: P) -> anyhow::Result<()>
+    pub fn add_file<P, F>(&mut self, path: P, mut action: F) -> anyhow::Result<()>
     where
         P: AsRef<Path>,
+        F: FnMut(PathBuf),
     {
         let path = crate::fs::utility::expand_path(path);
 
@@ -48,7 +56,11 @@ impl super::Archive {
                 let canonical_path = path.canonicalize()?;
                 let root = canonical_path.parent().unwrap();
 
-                add_file_to_zip(writer, &path, root, options)?;
+                let sanitized_path = sanitize_path(&canonical_path, root)?;
+
+                add_file_to_zip(writer, sanitized_path.clone(), options)?;
+
+                action(sanitized_path);
             }
         }
 
@@ -56,22 +68,24 @@ impl super::Archive {
     }
 
     /// Add multiple files into the archive
-    pub fn add_file_many<P, K>(&mut self, paths: K) -> anyhow::Result<()>
+    pub fn add_file_many<P, K, F>(&mut self, paths: K, mut action: F) -> anyhow::Result<()>
     where
         K: IntoIterator<Item = P>,
         P: AsRef<Path>,
+        F: FnMut(PathBuf),
     {
         for path in paths {
-            self.add_file(path)?;
+            self.add_file(path, &mut action)?;
         }
 
         Ok(())
     }
 
     /// Add one directory to the archive
-    pub fn add_directory<P>(&mut self, path: P) -> anyhow::Result<()>
+    pub fn add_directory<P, F>(&mut self, path: P, mut action: F) -> anyhow::Result<()>
     where
         P: AsRef<Path>,
+        F: FnMut(PathBuf),
     {
         let path = crate::fs::utility::expand_path(path);
         let root = path.parent().unwrap();
@@ -89,11 +103,15 @@ impl super::Archive {
                         item = item.strip_prefix(root)?.to_path_buf();
                     }
 
+                    let sanitized_path = sanitize_path(&item, root)?;
+
                     if item.is_file() {
-                        add_file_to_zip(writer, &item, root, options)?;
+                        add_file_to_zip(writer, sanitized_path.clone(), options)?;
                     } else if item.is_dir() {
                         writer.add_directory(&*item.to_str().unwrap(), options)?;
                     }
+
+                    action(sanitized_path);
                 }
             }
         }
@@ -102,13 +120,14 @@ impl super::Archive {
     }
 
     /// Add multiple directories into the archive
-    pub fn add_directory_many<P, K>(&mut self, paths: K) -> anyhow::Result<()>
+    pub fn add_directory_many<P, K, F>(&mut self, paths: K, mut action: F) -> anyhow::Result<()>
     where
         K: IntoIterator<Item = P>,
         P: AsRef<Path>,
+        F: FnMut(PathBuf),
     {
         for path in paths {
-            self.add_directory(path)?;
+            self.add_directory(path, &mut action)?;
         }
 
         Ok(())

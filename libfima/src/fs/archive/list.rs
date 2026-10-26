@@ -18,8 +18,8 @@ use std::{
 ///
 /// let mut archive = archive::Archive::new(archive_file, fs::archive::ArchiveFormat::Zip)?;
 ///
-/// archive.add_file_many(["foo.txt", "bar.json"])?;
-/// archive.add_directory("baz/barbar")?;
+/// archive.add_file_many(["foo.txt", "bar.json"], |path| {})?;
+/// archive.add_directory("baz/barbar", |path| {})?;
 ///
 /// // we need to call `.clone()` because `archive` will be
 /// // destroyed after calling `.finish()`

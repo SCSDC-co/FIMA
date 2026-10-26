@@ -1,7 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Extract an archive into output
 ///
@@ -28,8 +28,8 @@ use std::path::Path;
 ///
 /// let mut archive = archive::Archive::new(archive_file, fs::archive::ArchiveFormat::Zip)?;
 ///
-/// archive.add_file_many(["foo.txt", "bar.json"])?;
-/// archive.add_directory("baz/barbar")?;
+/// archive.add_file_many(["foo.txt", "bar.json"], |path| {})?;
+/// archive.add_directory("baz/barbar", |path| {})?;
 ///
 /// // we need to call `.clone()` because `archive` will be
 /// // destroyed after calling `.finish()`
@@ -37,20 +37,24 @@ use std::path::Path;
 ///
 /// archive.finish()?;
 ///
-/// let errs = archive::extract(archive_file, output_path, format)?;
+/// let errs = archive::extract(archive_file, output_path, format, |path| {
+///     println!("extracting {}", path.display())
+/// })?;
 ///
 /// for err in errs {
 ///     eprintln!("{}", err);
 /// }
 /// ```
-pub fn extract<P, K>(
+pub fn extract<P, K, F>(
     archive: P,
     output: K,
     archive_format: super::ArchiveFormat,
+    mut action: F,
 ) -> anyhow::Result<Vec<io::Error>>
 where
     P: AsRef<Path>,
     K: AsRef<Path>,
+    F: FnMut(PathBuf),
 {
     let path = crate::fs::utility::expand_path(output);
 
@@ -118,6 +122,8 @@ where
                         }
                     }
                 }
+
+                action(out_path);
             }
 
             Ok(errors)
