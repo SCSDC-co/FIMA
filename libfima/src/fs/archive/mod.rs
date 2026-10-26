@@ -3,6 +3,11 @@
 //!
 //! It contains a struct and 2 functions for working with archives
 //!
+//! Supported formats:
+//!
+//! - `zip` (compressed)
+//! - `tar` (not compressed)
+//!
 //! # Examples
 //!
 //! ```rust,no_run,ignore
