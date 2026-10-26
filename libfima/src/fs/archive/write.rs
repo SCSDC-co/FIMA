@@ -27,11 +27,16 @@ where
     Ok(relative_path.to_path_buf())
 }
 
-fn add_file_to_zip(
+fn add_file_to_zip<P>(
     zip: &mut zip::ZipWriter<File>,
-    path: PathBuf,
+    path: P,
     options: zip::write::SimpleFileOptions,
-) -> anyhow::Result<()> {
+) -> anyhow::Result<()>
+where
+    P: AsRef<Path>,
+{
+    let path = path.as_ref();
+
     zip.start_file(path.to_str().unwrap(), options)?;
     zip.write_all(std::fs::read(path)?.as_slice())?;
 
@@ -47,18 +52,23 @@ impl super::Archive {
     {
         let path = crate::fs::utility::expand_path(path);
 
+        let canonical_path = path.canonicalize()?;
+        let root = canonical_path.parent().unwrap();
+
+        let sanitized_path = sanitize_path(&canonical_path, root)?;
+
         match self.archive {
             super::ArchiveType::Zip {
                 ref mut writer,
                 options,
                 ..
             } => {
-                let canonical_path = path.canonicalize()?;
-                let root = canonical_path.parent().unwrap();
+                add_file_to_zip(writer, &sanitized_path, options)?;
 
-                let sanitized_path = sanitize_path(&canonical_path, root)?;
-
-                add_file_to_zip(writer, sanitized_path.clone(), options)?;
+                action(sanitized_path);
+            }
+            super::ArchiveType::Tar { ref mut builder } => {
+                builder.append_file(&sanitized_path, &mut File::open(sanitized_path.clone())?)?;
 
                 action(sanitized_path);
             }
@@ -103,16 +113,21 @@ impl super::Archive {
                         item = item.strip_prefix(root)?.to_path_buf();
                     }
 
-                    let sanitized_path = sanitize_path(&item, root)?;
-
                     if item.is_file() {
-                        add_file_to_zip(writer, sanitized_path.clone(), options)?;
+                        add_file_to_zip(writer, &item, options)?;
                     } else if item.is_dir() {
                         writer.add_directory(&*item.to_str().unwrap(), options)?;
                     }
 
-                    action(sanitized_path);
+                    action(item);
                 }
+            }
+            super::ArchiveType::Tar { ref mut builder } => {
+                let sanitized_path = sanitize_path(&path, root)?;
+
+                builder.append_dir_all(&sanitized_path, &path)?;
+
+                action(path);
             }
         }
 

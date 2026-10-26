@@ -72,17 +72,21 @@ pub use list::*;
 pub enum ArchiveFormat {
     /// Zip archive format
     Zip,
+
+    /// Tarball archive format (no compression)
+    Tar,
 }
 
-#[derive(Debug)]
 enum ArchiveType {
     Zip {
         writer: zip::ZipWriter<File>,
         options: SimpleFileOptions,
     },
+    Tar {
+        builder: tar::Builder<File>,
+    },
 }
 
-#[derive(Debug)]
 /// A struct representing an archive
 ///
 /// # Examples
@@ -154,21 +158,33 @@ impl Archive {
     {
         let path = path.as_ref();
 
-        let file;
-        let writer: zip::ZipWriter<File>;
+        let exists = path.exists();
 
-        if !path.exists() {
-            file = File::create(path)?;
-            writer = zip::ZipWriter::new(file);
-        } else {
+        let file;
+
+        if exists {
             file = OpenOptions::new().read(true).write(true).open(path)?;
-            writer = zip::ZipWriter::new_append(file)?;
+        } else {
+            file = File::create(path)?;
         }
 
         let archive: ArchiveType = match format {
-            ArchiveFormat::Zip => ArchiveType::Zip {
-                writer: writer,
-                options: SimpleFileOptions::default(),
+            ArchiveFormat::Zip => {
+                let writer;
+
+                if exists {
+                    writer = zip::ZipWriter::new_append(file)?;
+                } else {
+                    writer = zip::ZipWriter::new(file);
+                }
+
+                ArchiveType::Zip {
+                    writer: writer,
+                    options: SimpleFileOptions::default(),
+                }
+            }
+            ArchiveFormat::Tar => ArchiveType::Tar {
+                builder: tar::Builder::new(file),
             },
         };
 
@@ -184,6 +200,9 @@ impl Archive {
         match self.archive {
             ArchiveType::Zip { writer, .. } => {
                 writer.finish()?;
+            }
+            ArchiveType::Tar { mut builder, .. } => {
+                builder.finish()?;
             }
         }
 

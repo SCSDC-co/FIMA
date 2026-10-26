@@ -37,12 +37,12 @@ where
 {
     let path = crate::fs::utility::expand_path(archive);
 
+    let archive_file = File::open(path)?;
+
     let mut paths: Vec<PathBuf> = vec![];
 
     match archive_format {
         super::ArchiveFormat::Zip => {
-            let archive_file = File::open(path)?;
-
             let mut archive = zip::ZipArchive::new(archive_file)?;
 
             for i in 0..archive.len() {
@@ -52,6 +52,15 @@ where
                     io::ErrorKind::InvalidFilename,
                     "Error: invalid path",
                 ))?);
+            }
+        }
+        super::ArchiveFormat::Tar => {
+            let mut archive = tar::Archive::new(archive_file);
+
+            for file in archive.entries()? {
+                let file = file?;
+
+                paths.push(file.path().unwrap().to_path_buf());
             }
         }
     }

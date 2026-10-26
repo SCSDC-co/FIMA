@@ -1,6 +1,6 @@
-use std::path::PathBuf;
+use libfima::{fs, fs::metadata};
 
-use libfima::{fs, fs::archive, fs::metadata};
+mod archive;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("libfima version: {}\n", libfima::VERSION);
@@ -37,39 +37,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!()
     }
 
-    let file = "test.zip";
-    let output_path = "zip_output";
-    let mut count = 0;
+    archive::setup()?;
 
-    let mut action = |path: PathBuf| -> () {
-        count += 1;
-        println!("Adding {}", path.display())
-    };
+    archive::test_zip()?;
 
-    let mut archive = archive::Archive::new(file, fs::archive::ArchiveFormat::Zip)?;
-
-    archive.add_file_many(["package.json", "justfile"], &mut action)?;
-    archive.add_directory("libfima/src", action)?;
-
-    let format = archive.format.clone();
-
-    archive.finish()?;
-
-    println!("Item added: {count}");
-
-    let errs = archive::extract(file, output_path, format, |path| {
-        println!("extracting {}", path.display())
-    })?;
-
-    for err in errs {
-        eprintln!("{}", err);
-    }
-
-    println!();
-
-    for files in archive::list(file, format)? {
-        println!("{}", files.display())
-    }
+    archive::test_tar()?;
 
     Ok(())
 }

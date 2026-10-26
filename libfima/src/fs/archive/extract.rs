@@ -60,12 +60,12 @@ where
 
     fs::create_dir_all(&path)?;
 
+    let archive_file = File::open(&archive)?;
+
     let mut errors: Vec<io::Error> = vec![];
 
     match archive_format {
         super::ArchiveFormat::Zip => {
-            let archive_file = File::open(&archive)?;
-
             let mut archive = zip::ZipArchive::new(archive_file)?;
 
             for i in 0..archive.len() {
@@ -125,8 +125,36 @@ where
 
                 action(out_path);
             }
+        }
+        super::ArchiveFormat::Tar => {
+            let mut archive = tar::Archive::new(archive_file);
 
-            Ok(errors)
+            for item in archive.entries()? {
+                let mut item = match item {
+                    Ok(f) => f,
+                    Err(e) => {
+                        errors.push(e);
+                        continue;
+                    }
+                };
+
+                let item_path = item.path().unwrap().to_path_buf();
+
+                if item.header().entry_type().is_dir() {
+                    crate::fs::operations::create::create_dir_all(&item_path)?;
+                } else {
+                    let dest = path.join(&item_path);
+
+                    crate::fs::operations::create::create_dir_all(dest.parent().unwrap())?;
+
+                    let mut output = File::create(dest)?;
+                    io::copy(&mut item, &mut output)?;
+                }
+
+                action(item_path);
+            }
         }
     }
+
+    Ok(errors)
 }
