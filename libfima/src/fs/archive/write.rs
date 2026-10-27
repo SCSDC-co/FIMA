@@ -63,18 +63,6 @@ impl super::Archive {
                 options,
                 ..
             } => {
-                match self.format {
-                    super::ArchiveFormat::Xz => {
-                        if self.entries_count > 1 {
-                            anyhow::bail!(
-                                "Error: can't add multiple files to '{}': it only support one file.",
-                                self.path.display()
-                            );
-                        }
-                    }
-                    _ => {}
-                }
-
                 add_file_to_zip(writer, &sanitized_path, options)?;
 
                 action(sanitized_path);
@@ -86,10 +74,6 @@ impl super::Archive {
             }
         }
 
-        // This variable is only a counter for xz and gz that supports only file, so adding the
-        // increment in the directory functions is useless, as you can't add them anyways
-        self.entries_count += 1;
-
         Ok(())
     }
 
@@ -100,18 +84,8 @@ impl super::Archive {
         P: AsRef<Path>,
         F: FnMut(PathBuf),
     {
-        match self.format {
-            super::ArchiveFormat::Xz => {
-                anyhow::bail!(
-                    "Error: can't add multiple files to '{}': it only support one file.",
-                    self.path.display()
-                );
-            }
-            _ => {
-                for path in paths {
-                    self.add_file(path, &mut action)?;
-                }
-            }
+        for path in paths {
+            self.add_file(path, &mut action)?;
         }
 
         Ok(())
@@ -125,16 +99,6 @@ impl super::Archive {
     {
         let path = crate::fs::utility::expand_path(path);
         let root = path.parent().unwrap();
-
-        match self.format {
-            super::ArchiveFormat::Xz => {
-                anyhow::bail!(
-                    "Error: can't add a directory to '{}': it only support one file.",
-                    self.path.display()
-                );
-            }
-            _ => {}
-        }
 
         match self.archive {
             super::ArchiveType::Zip {
@@ -177,18 +141,8 @@ impl super::Archive {
         P: AsRef<Path>,
         F: FnMut(PathBuf),
     {
-        match self.format {
-            super::ArchiveFormat::Xz => {
-                anyhow::bail!(
-                    "Error: can't add directories to '{}': it only support one file.",
-                    self.path.display()
-                );
-            }
-            _ => {
-                for path in paths {
-                    self.add_directory(path, &mut action)?;
-                }
-            }
+        for path in paths {
+            self.add_directory(path, &mut action)?;
         }
 
         Ok(())

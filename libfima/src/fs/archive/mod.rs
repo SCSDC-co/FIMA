@@ -80,13 +80,9 @@ pub enum ArchiveFormat {
 
     /// Tarball archive format (no compression)
     Tar,
-
-    /// Xz algorithm (single file)
-    Xz,
 }
 
 enum ArchiveType {
-    // reuse the ZIP writer for formats supported by the `zip` crate (xz, zip, bzip2)
     Zip {
         writer: zip::ZipWriter<File>,
         options: SimpleFileOptions,
@@ -155,38 +151,32 @@ pub struct Archive {
     pub path: PathBuf,
 
     archive: ArchiveType,
-    entries_count: usize,
 }
 
 impl Archive {
     /// Creates an archive of type `format` in `path`
     ///
     /// If the archive already exists it will append files to it
-    pub fn new<P>(path: P, format: ArchiveFormat) -> anyhow::Result<Archive>
+    pub fn new<P>(path: P, format: ArchiveFormat) -> anyhow::Result<Self>
     where
         P: AsRef<Path>,
     {
-        let path = path.as_ref();
+        let path = crate::fs::utility::expand_path(path);
 
         let exists = path.exists();
 
         let file;
 
         if exists {
-            file = OpenOptions::new().read(true).write(true).open(path)?;
+            file = OpenOptions::new().read(true).write(true).open(&path)?;
         } else {
-            file = File::create(path)?;
+            file = File::create(&path)?;
         }
 
         let archive: ArchiveType = match format {
-            ArchiveFormat::Zip | ArchiveFormat::Xz => {
+            ArchiveFormat::Zip => {
                 let writer;
                 let options = SimpleFileOptions::default();
-
-                let options = match format {
-                    ArchiveFormat::Xz => options.compression_method(zip::CompressionMethod::Xz),
-                    _ => options,
-                };
 
                 if exists {
                     writer = zip::ZipWriter::new_append(file)?;
@@ -201,11 +191,10 @@ impl Archive {
             },
         };
 
-        Ok(Archive {
-            path: PathBuf::from(path),
+        Ok(Self {
+            path,
             format,
             archive,
-            entries_count: 0,
         })
     }
 

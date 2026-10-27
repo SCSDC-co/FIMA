@@ -42,7 +42,7 @@ where
     let mut paths: Vec<PathBuf> = vec![];
 
     match archive_format {
-        super::ArchiveFormat::Zip | super::ArchiveFormat::Xz => {
+        super::ArchiveFormat::Zip => {
             let mut archive = zip::ZipArchive::new(archive_file)?;
 
             for i in 0..archive.len() {
@@ -50,7 +50,7 @@ where
 
                 paths.push(item.enclosed_name().ok_or(io::Error::new(
                     io::ErrorKind::InvalidFilename,
-                    "Error: invalid path",
+                    "Invalid path",
                 ))?);
             }
         }

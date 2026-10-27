@@ -16,6 +16,7 @@ shellexpand = "3.1.2"
 tar = "0.4.46"
 time = { version = "0.3.55", features = ["formatting"] }
 walkdir = "2.5.0"
+xz = "0.1.0"
 zip = "9.0.5"
 
 [target.'cfg(unix)'.dependencies]

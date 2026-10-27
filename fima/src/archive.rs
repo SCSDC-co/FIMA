@@ -1,13 +1,15 @@
-use std::{io, path::PathBuf};
+use std::{
+    io,
+    path::{Path, PathBuf},
+};
 
-use libfima::fs::archive;
+use libfima::fs::operations::{create, remove};
+use libfima::fs::{archive, compressors};
 use std::sync::LazyLock;
 
 static ARCHIVE_DIR: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("archive"));
 
 pub fn setup() -> io::Result<()> {
-    use libfima::fs::operations::{create, remove};
-
     remove::remove(
         ARCHIVE_DIR.to_path_buf(),
         &remove::Options { recursive: true },
@@ -95,36 +97,17 @@ pub fn test_tar() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn test_xz() -> Result<(), Box<dyn std::error::Error>> {
-    let file = ARCHIVE_DIR.join("test.xz");
-    let output_path = ARCHIVE_DIR.join("xz_extract");
-    let mut count = 0;
+    let file = Path::new("package.json");
+    let xz_file = ARCHIVE_DIR.join(file.with_added_extension("xz"));
 
-    let mut action = |path: PathBuf| -> () {
-        count += 1;
-        println!("(xz) adding {}", path.display())
-    };
+    let output_dir = ARCHIVE_DIR.join("xz_output");
+    create::create_dir_all(&output_dir)?;
 
-    let mut archive = archive::Archive::new(&file, archive::ArchiveFormat::Xz)?;
+    let output_file = output_dir.join(file);
 
-    archive.add_file("package.json", &mut action)?;
+    compressors::compress_file(file, &xz_file, compressors::CompressorFormat::Xz, 9)?;
 
-    let format = archive.format.clone();
-
-    archive.finish()?;
-
-    let errs = archive::extract(&file, output_path, format, |path| {
-        println!("(xz) extracting {}", path.display())
-    })?;
-
-    for err in errs {
-        eprintln!("(xz) {}", err);
-    }
-
-    println!();
-
-    for files in archive::list(file, format)? {
-        println!("(xz) {}", files.display())
-    }
+    compressors::decompress_file(&xz_file, &output_file, compressors::CompressorFormat::Xz)?;
 
     Ok(())
 }

@@ -10,5 +10,8 @@ pub mod utility;
 /// A module for working with archives
 pub mod archive;
 
+/// A module for working with compressors for single files (xz, gzip, bzip2, zstd)
+pub mod compressors;
+
 /// Work with general metadata of an item
 pub mod metadata;

@@ -65,7 +65,7 @@ where
     let mut errors: Vec<io::Error> = vec![];
 
     match archive_format {
-        super::ArchiveFormat::Zip | super::ArchiveFormat::Xz => {
+        super::ArchiveFormat::Zip => {
             let mut archive = zip::ZipArchive::new(archive_file)?;
 
             for i in 0..archive.len() {
@@ -80,10 +80,13 @@ where
                 let out_path = match item.enclosed_name() {
                     Some(e) => path.join(e),
                     None => {
-                        errors.push(io::Error::new( io::ErrorKind::InvalidFilename,format!(
-                            "Error: unable to extract file {:?} because it has an invalid path.",
-                            item.name()
-                        )));
+                        errors.push(io::Error::new(
+                            io::ErrorKind::InvalidFilename,
+                            format!(
+                                "Unable to extract file {:?} because it has an invalid path.",
+                                item.name()
+                            ),
+                        ));
                         continue;
                     }
                 };
