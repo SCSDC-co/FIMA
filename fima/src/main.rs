@@ -41,17 +41,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     archive::test_zip()?;
 
-    // println!("\n");
-    //
-    // archive::test_tar()?;
-    //
-    // println!("\n");
-    //
-    // archive::test_xz()?;
-    //
-    // println!("\n");
-    //
-    // archive::test_gzip()?;
+    println!("\n");
+
+    archive::test_tar()?;
+
+    println!("\n");
+
+    archive::test_xz()?;
+
+    println!("\n");
+
+    archive::test_gzip()?;
 
     Ok(())
 }

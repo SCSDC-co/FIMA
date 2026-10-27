@@ -144,7 +144,7 @@ where
                 let item_path = item.path().unwrap().to_path_buf();
 
                 if item.header().entry_type().is_dir() {
-                    crate::fs::operations::create::create_dir_all(&item_path)?;
+                    crate::fs::operations::create::create_dir_all(path.join(&item_path))?;
                 } else {
                     let dest = path.join(&item_path);
 
