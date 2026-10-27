@@ -41,7 +41,7 @@ where
         }
         super::CompressorFormat::Gzip => {
             let mut encoder =
-                flate2::write::GzEncoder::new(output_file, flate2::Compression::default());
+                flate2::write::GzEncoder::new(output_file, flate2::Compression::new(level));
 
             io::copy(&mut file, &mut encoder)?;
             encoder.finish()?;
