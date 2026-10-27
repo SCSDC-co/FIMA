@@ -53,8 +53,6 @@ pub fn test_zip() -> Result<(), Box<dyn std::error::Error>> {
         println!("(zip) {}", files.display())
     }
 
-    println!("\n");
-
     Ok(())
 }
 
@@ -91,6 +89,41 @@ pub fn test_tar() -> Result<(), Box<dyn std::error::Error>> {
 
     for files in archive::list(file, format)? {
         println!("(tar) {}", files.display())
+    }
+
+    Ok(())
+}
+
+pub fn test_xz() -> Result<(), Box<dyn std::error::Error>> {
+    let file = ARCHIVE_DIR.join("test.xz");
+    let output_path = ARCHIVE_DIR.join("xz_extract");
+    let mut count = 0;
+
+    let mut action = |path: PathBuf| -> () {
+        count += 1;
+        println!("(xz) adding {}", path.display())
+    };
+
+    let mut archive = archive::Archive::new(&file, archive::ArchiveFormat::Xz)?;
+
+    archive.add_file("package.json", &mut action)?;
+
+    let format = archive.format.clone();
+
+    archive.finish()?;
+
+    let errs = archive::extract(&file, output_path, format, |path| {
+        println!("(xz) extracting {}", path.display())
+    })?;
+
+    for err in errs {
+        eprintln!("(xz) {}", err);
+    }
+
+    println!();
+
+    for files in archive::list(file, format)? {
+        println!("(xz) {}", files.display())
     }
 
     Ok(())

@@ -65,7 +65,7 @@ where
     let mut errors: Vec<io::Error> = vec![];
 
     match archive_format {
-        super::ArchiveFormat::Zip => {
+        super::ArchiveFormat::Zip | super::ArchiveFormat::Xz => {
             let mut archive = zip::ZipArchive::new(archive_file)?;
 
             for i in 0..archive.len() {

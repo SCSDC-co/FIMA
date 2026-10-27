@@ -80,9 +80,13 @@ pub enum ArchiveFormat {
 
     /// Tarball archive format (no compression)
     Tar,
+
+    /// Xz algorithm (single file)
+    Xz,
 }
 
 enum ArchiveType {
+    // reuse the ZIP writer for formats supported by the `zip` crate (xz, zip, bzip2)
     Zip {
         writer: zip::ZipWriter<File>,
         options: SimpleFileOptions,
@@ -151,6 +155,7 @@ pub struct Archive {
     pub path: PathBuf,
 
     archive: ArchiveType,
+    entries_count: usize,
 }
 
 impl Archive {
@@ -174,8 +179,14 @@ impl Archive {
         }
 
         let archive: ArchiveType = match format {
-            ArchiveFormat::Zip => {
+            ArchiveFormat::Zip | ArchiveFormat::Xz => {
                 let writer;
+                let options = SimpleFileOptions::default();
+
+                let options = match format {
+                    ArchiveFormat::Xz => options.compression_method(zip::CompressionMethod::Xz),
+                    _ => options,
+                };
 
                 if exists {
                     writer = zip::ZipWriter::new_append(file)?;
@@ -183,10 +194,7 @@ impl Archive {
                     writer = zip::ZipWriter::new(file);
                 }
 
-                ArchiveType::Zip {
-                    writer: writer,
-                    options: SimpleFileOptions::default(),
-                }
+                ArchiveType::Zip { writer, options }
             }
             ArchiveFormat::Tar => ArchiveType::Tar {
                 builder: tar::Builder::new(file),
@@ -197,6 +205,7 @@ impl Archive {
             path: PathBuf::from(path),
             format,
             archive,
+            entries_count: 0,
         })
     }
 
