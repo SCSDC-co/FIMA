@@ -105,9 +105,33 @@ pub fn test_xz() -> Result<(), Box<dyn std::error::Error>> {
 
     let output_file = output_dir.join(file);
 
+    println!("(xz) compressing {}", file.display());
+
     compressors::compress_file(file, &xz_file, compressors::CompressorFormat::Xz, 9)?;
 
+    println!("(xz) decompressing {}", xz_file.display());
+
     compressors::decompress_file(&xz_file, &output_file, compressors::CompressorFormat::Xz)?;
+
+    Ok(())
+}
+
+pub fn test_gzip() -> Result<(), Box<dyn std::error::Error>> {
+    let file = Path::new("package.json");
+    let gz_file = ARCHIVE_DIR.join(file.with_added_extension("gz"));
+
+    let output_dir = ARCHIVE_DIR.join("gz_output");
+    create::create_dir_all(&output_dir)?;
+
+    let output_file = output_dir.join(file);
+
+    println!("(gzip) compressing {}", file.display());
+
+    compressors::compress_file(file, &gz_file, compressors::CompressorFormat::Gzip, 9)?;
+
+    println!("(gzip) decompressing {}", gz_file.display());
+
+    compressors::decompress_file(&gz_file, &output_file, compressors::CompressorFormat::Gzip)?;
 
     Ok(())
 }

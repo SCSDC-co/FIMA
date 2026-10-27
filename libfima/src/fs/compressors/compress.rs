@@ -1,7 +1,5 @@
 use std::{fs::File, io, path::Path};
 
-use xz::write::XzEncoder;
-
 /// Compress a `path` into `output`
 ///
 /// # Examples
@@ -31,11 +29,19 @@ where
         );
     }
 
+    let mut file = File::open(&path)?;
+    let output_file = File::create_new(&output)?;
+
     match format {
         super::CompressorFormat::Xz => {
-            let mut file = File::open(&path)?;
-            let output_file = File::create_new(&output)?;
-            let mut encoder = XzEncoder::new(output_file, level);
+            let mut encoder = xz::write::XzEncoder::new(output_file, level);
+
+            io::copy(&mut file, &mut encoder)?;
+            encoder.finish()?;
+        }
+        super::CompressorFormat::Gzip => {
+            let mut encoder =
+                flate2::write::GzEncoder::new(output_file, flate2::Compression::default());
 
             io::copy(&mut file, &mut encoder)?;
             encoder.finish()?;

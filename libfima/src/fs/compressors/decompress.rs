@@ -1,7 +1,5 @@
 use std::{fs::File, io, path::Path};
 
-use xz::read::XzDecoder;
-
 /// Decompress a `path` into `output`
 ///
 /// # Examples
@@ -23,12 +21,17 @@ where
     let path = crate::fs::utility::expand_path(path);
     let output = crate::fs::utility::expand_path(output);
 
+    let file = File::open(&path)?;
+    let mut new_file = File::create_new(output)?;
+
     match format {
         super::CompressorFormat::Xz => {
-            let file = File::open(&path)?;
-            let mut decoder = XzDecoder::new(file);
+            let mut decoder = xz::read::XzDecoder::new(file);
 
-            let mut new_file = File::create_new(output)?;
+            io::copy(&mut decoder, &mut new_file)?;
+        }
+        super::CompressorFormat::Gzip => {
+            let mut decoder = flate2::read::GzDecoder::new(file);
 
             io::copy(&mut decoder, &mut new_file)?;
         }

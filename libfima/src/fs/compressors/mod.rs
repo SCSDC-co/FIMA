@@ -7,6 +7,9 @@ pub use decompress::*;
 /// The format of the compressor
 #[derive(Debug, Clone, Copy)]
 pub enum CompressorFormat {
-    /// Xz algorithm
+    /// Xz compression
     Xz,
+
+    /// Gzip compression, commonly used with TAR archives.
+    Gzip,
 }
