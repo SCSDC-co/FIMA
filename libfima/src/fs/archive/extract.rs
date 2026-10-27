@@ -115,7 +115,7 @@ where
                         None => {}
                     }
 
-                    match fs::File::create(&out_path)
+                    match File::create(&out_path)
                         .and_then(|mut outfile| io::copy(&mut item, &mut outfile))
                     {
                         Ok(_) => {}
@@ -150,8 +150,15 @@ where
 
                     crate::fs::operations::create::create_dir_all(dest.parent().unwrap())?;
 
-                    let mut output = File::create(dest)?;
-                    io::copy(&mut item, &mut output)?;
+                    match File::create(dest)
+                        .and_then(|mut outfile| io::copy(&mut item, &mut outfile))
+                    {
+                        Ok(_) => {}
+                        Err(e) => {
+                            errors.push(e);
+                            continue;
+                        }
+                    }
                 }
 
                 action(item_path);

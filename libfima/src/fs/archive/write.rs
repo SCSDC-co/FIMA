@@ -27,18 +27,18 @@ where
     Ok(relative_path.to_path_buf())
 }
 
-fn add_file_to_zip<P>(
+fn add_file_to_zip<P, K>(
     zip: &mut zip::ZipWriter<File>,
-    path: P,
+    archive_path: P,
+    source: K,
     options: zip::write::SimpleFileOptions,
 ) -> anyhow::Result<()>
 where
     P: AsRef<Path>,
+    K: AsRef<Path>,
 {
-    let path = path.as_ref();
-
-    zip.start_file(path.to_str().unwrap(), options)?;
-    zip.write_all(std::fs::read(path)?.as_slice())?;
+    zip.start_file(archive_path.as_ref().to_str().unwrap(), options)?;
+    zip.write_all(std::fs::read(source)?.as_slice())?;
 
     Ok(())
 }
@@ -63,7 +63,7 @@ impl super::Archive {
                 options,
                 ..
             } => {
-                add_file_to_zip(writer, &sanitized_path, options)?;
+                add_file_to_zip(writer, &sanitized_path, canonical_path, options)?;
 
                 action(sanitized_path);
             }
@@ -107,19 +107,16 @@ impl super::Archive {
                 ..
             } => {
                 for item in WalkDir::new(&path) {
-                    let mut item = item?.into_path();
-
-                    if path.is_absolute() {
-                        item = item.strip_prefix(root)?.to_path_buf();
-                    }
+                    let item = item?.into_path();
+                    let archive_path = item.strip_prefix(root)?.to_path_buf();
 
                     if item.is_file() {
-                        add_file_to_zip(writer, &item, options)?;
+                        add_file_to_zip(writer, &archive_path, item, options)?;
                     } else if item.is_dir() {
-                        writer.add_directory(&*item.to_str().unwrap(), options)?;
+                        writer.add_directory(&*archive_path.to_str().unwrap(), options)?;
                     }
 
-                    action(item);
+                    action(archive_path);
                 }
             }
             super::ArchiveType::Tar { ref mut builder } => {
