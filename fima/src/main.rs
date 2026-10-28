@@ -57,5 +57,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     archive::test_bzip()?;
 
+    println!("\n");
+
+    archive::test_zstd()?;
+
     Ok(())
 }

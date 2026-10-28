@@ -21,7 +21,7 @@ where
     let path = crate::fs::utility::expand_path(path);
     let output = crate::fs::utility::expand_path(output);
 
-    let file = File::open(&path)?;
+    let mut file = File::open(&path)?;
     let mut new_file = File::create_new(output)?;
 
     match format {
@@ -39,6 +39,9 @@ where
             let mut decoder = bzip2::read::BzDecoder::new(file);
 
             io::copy(&mut decoder, &mut new_file)?;
+        }
+        super::CompressorFormat::Zstd => {
+            zstd::stream::copy_decode(&mut file, &mut new_file)?;
         }
     }
 

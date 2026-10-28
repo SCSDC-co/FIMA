@@ -15,4 +15,7 @@ pub enum CompressorFormat {
 
     /// Bzip2 compression
     Bzip2,
+
+    /// Zstd compression
+    Zstd,
 }

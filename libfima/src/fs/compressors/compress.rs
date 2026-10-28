@@ -30,7 +30,7 @@ where
     }
 
     let mut file = File::open(&path)?;
-    let output_file = File::create_new(&output)?;
+    let mut output_file = File::create_new(&output)?;
 
     match format {
         super::CompressorFormat::Xz => {
@@ -52,6 +52,9 @@ where
 
             io::copy(&mut file, &mut encoder)?;
             encoder.finish()?;
+        }
+        super::CompressorFormat::Zstd => {
+            zstd::stream::copy_encode(&mut file, &mut output_file, level as i32)?;
         }
     }
 

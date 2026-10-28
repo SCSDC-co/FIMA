@@ -155,3 +155,23 @@ pub fn test_bzip() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+pub fn test_zstd() -> Result<(), Box<dyn std::error::Error>> {
+    let file = Path::new("package.json");
+    let zst_file = ARCHIVE_DIR.join(file.with_added_extension("zst"));
+
+    let output_dir = ARCHIVE_DIR.join("zstd_output");
+    create::create_dir_all(&output_dir)?;
+
+    let output_file = output_dir.join(file);
+
+    println!("(zstd) compressing {}", file.display());
+
+    compressors::compress_file(file, &zst_file, compressors::CompressorFormat::Zstd, 9)?;
+
+    println!("(zstd) decompressing {}", zst_file.display());
+
+    compressors::decompress_file(&zst_file, &output_file, compressors::CompressorFormat::Zstd)?;
+
+    Ok(())
+}

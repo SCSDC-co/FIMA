@@ -398,6 +398,7 @@ dependencies = [
  "windows",
  "xz",
  "zip",
+ "zstd",
 ]
 
 [[package]]
