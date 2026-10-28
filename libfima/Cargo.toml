@@ -1,6 +1,6 @@
 [package]
 name = "libfima"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "A library for creating Fast, Incredible, Minimal and Awesome file managers"
 homepage = "https://github.com/SCSDC-co/FIMA"
