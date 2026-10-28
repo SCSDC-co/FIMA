@@ -386,6 +386,7 @@ name = "libfima"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bzip2",
  "file-owner",
  "flate2",
  "glob",

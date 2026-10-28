@@ -46,6 +46,13 @@ where
             io::copy(&mut file, &mut encoder)?;
             encoder.finish()?;
         }
+        super::CompressorFormat::Bzip2 => {
+            let mut encoder =
+                bzip2::write::BzEncoder::new(output_file, bzip2::Compression::new(level));
+
+            io::copy(&mut file, &mut encoder)?;
+            encoder.finish()?;
+        }
     }
 
     Ok(())

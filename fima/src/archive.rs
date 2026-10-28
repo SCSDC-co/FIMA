@@ -135,3 +135,23 @@ pub fn test_gzip() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+pub fn test_bzip() -> Result<(), Box<dyn std::error::Error>> {
+    let file = Path::new("package.json");
+    let bz_file = ARCHIVE_DIR.join(file.with_added_extension("bz2"));
+
+    let output_dir = ARCHIVE_DIR.join("bzip2_output");
+    create::create_dir_all(&output_dir)?;
+
+    let output_file = output_dir.join(file);
+
+    println!("(bzip) compressing {}", file.display());
+
+    compressors::compress_file(file, &bz_file, compressors::CompressorFormat::Bzip2, 9)?;
+
+    println!("(bzip) decompressing {}", bz_file.display());
+
+    compressors::decompress_file(&bz_file, &output_file, compressors::CompressorFormat::Bzip2)?;
+
+    Ok(())
+}

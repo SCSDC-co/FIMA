@@ -35,6 +35,11 @@ where
 
             io::copy(&mut decoder, &mut new_file)?;
         }
+        super::CompressorFormat::Bzip2 => {
+            let mut decoder = bzip2::read::BzDecoder::new(file);
+
+            io::copy(&mut decoder, &mut new_file)?;
+        }
     }
 
     Ok(())

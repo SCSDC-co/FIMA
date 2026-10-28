@@ -12,4 +12,7 @@ pub enum CompressorFormat {
 
     /// Gzip compression, commonly used with TAR archives.
     Gzip,
+
+    /// Bzip2 compression
+    Bzip2,
 }

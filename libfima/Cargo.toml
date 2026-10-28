@@ -10,6 +10,7 @@ readme = "README.md"
 
 [dependencies]
 anyhow = "1.0.104"
+bzip2 = "0.6.1"
 flate2 = "1.1.10"
 glob = "0.3.4"
 magic = "0.16.7"
