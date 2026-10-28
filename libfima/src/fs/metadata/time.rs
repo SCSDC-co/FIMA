@@ -19,7 +19,7 @@ use time;
 /// //     tv_nsec: 304247090,
 /// // }
 /// ```
-pub fn file_time<P>(path: P) -> Result<std::time::SystemTime, io::Error>
+pub fn last_modified_time<P>(path: P) -> io::Result<std::time::SystemTime>
 where
     P: AsRef<Path>,
 {
@@ -37,9 +37,9 @@ where
 /// ```
 /// use libfima::fs::metadata;
 ///
-/// metadata::file_time_formatted("foo")?; // 30/11/2026 22:44:43
+/// metadata::last_modified_time_formatted("foo")?; // 30/11/2026 22:44:43
 /// ```
-pub fn file_time_formatted<P>(path: P) -> anyhow::Result<String>
+pub fn last_modified_time_formatted<P>(path: P) -> anyhow::Result<String>
 where
     P: AsRef<Path>,
 {
@@ -48,7 +48,7 @@ where
         "[day]/[month]/[year] [hour]:[minute]:[second]",
     )?;
 
-    let time = file_time(path)?;
+    let time = last_modified_time(path)?;
 
     Ok(time::OffsetDateTime::from(time).format(&format)?)
 }
@@ -62,10 +62,10 @@ where
 /// ```rust,no_run,ignore
 /// use libfima::fs::metadata;
 ///
-/// metadata::file_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
+/// metadata::last_modified_time_formatted_custom("foo", "[year]/[month]/[day] [hour]:[minute]:[second]")?;
 /// // 2026/11/30 22:44:43
 /// ```
-pub fn file_time_formatted_custom<P, S>(path: P, format: S) -> anyhow::Result<String>
+pub fn last_modified_time_formatted_custom<P, S>(path: P, format: S) -> anyhow::Result<String>
 where
     P: AsRef<Path>,
     S: AsRef<str>,
@@ -73,7 +73,7 @@ where
     let path = crate::fs::utility::expand_path(path);
     let format = time::format_description::parse_owned::<3>(&format.as_ref())?;
 
-    let time = file_time(path)?;
+    let time = last_modified_time(path)?;
 
     Ok(time::OffsetDateTime::from(time).format(&format)?)
 }

@@ -21,8 +21,6 @@ use windows::Win32::Security::{
 #[cfg(windows)]
 use std::os::windows::fs::MetadataExt;
 
-use anyhow::Result;
-
 /// Represents a Windows access-control entry.
 #[derive(Debug)]
 pub struct WindowsPermission {
@@ -163,7 +161,7 @@ pub enum Permissions {
 
 impl Permissions {
     /// Gets the permissions of a file as a [`Permissions`].
-    pub fn new<P>(path: P) -> Result<Permissions, io::Error>
+    pub fn new<P>(path: P) -> io::Result<Permissions>
     where
         P: AsRef<Path>,
     {

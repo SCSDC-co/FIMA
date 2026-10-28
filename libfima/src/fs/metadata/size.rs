@@ -16,7 +16,7 @@ use std::{fs, io, path::Path};
 /// size::size("foo.txt")?; // 64
 /// size::size("bar")?;     // 128
 /// ```
-pub fn size<P>(path: P) -> Result<u64, io::Error>
+pub fn size<P>(path: P) -> io::Result<u64>
 where
     P: AsRef<Path>,
 {
@@ -56,7 +56,7 @@ where
 /// size::item_count("foo.txt")?; // 1
 /// size::item_count("bar")?;     // 30
 /// ```
-pub fn item_count<P>(path: P) -> Result<u64, io::Error>
+pub fn item_count<P>(path: P) -> io::Result<u64>
 where
     P: AsRef<Path>,
 {

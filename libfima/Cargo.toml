@@ -8,6 +8,9 @@ repository = "https://github.com/SCSDC-co/FIMA"
 license = "LGPL-3.0-only"
 readme = "README.md"
 
+[features]
+path-extension = []
+
 [dependencies]
 anyhow = "1.0.104"
 bzip2 = "0.6.1"

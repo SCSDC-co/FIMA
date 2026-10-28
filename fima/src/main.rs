@@ -1,4 +1,6 @@
-use libfima::{fs, fs::metadata};
+use std::path::Path;
+
+use libfima::{fs::extentions::PathExt, fs::metadata};
 
 mod archive;
 
@@ -17,7 +19,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "fima/src/main.rs",
         "libfima/Cargo.lock",
     ] {
-        println!("item: {file}");
+        let file = Path::new(file);
+
+        println!("item: {}", file.display());
         println!("  MIME: {}", magic.mime_type(file)?);
         println!("  Encoding: {}", magic.encoding(file)?);
         println!("  Binary: {}", magic.is_binary(file)?);
@@ -26,14 +30,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  Is audio: {}", magic.is_audio(file)?);
         println!("  Is image: {}", magic.is_image(file)?);
         println!("  Is lockfile: {}", magic.is_lockfile(file)?);
-        println!(
-            "  Expanded path: {}",
-            fs::utility::expand_path(file).display()
-        );
-        println!(
-            "  Permissions: {}",
-            fs::metadata::Permissions::new(file)?.display(false)?
-        );
+        println!("  Expanded path: {}", file.expand().display());
+        println!("  Permissions: {}", file.permissions()?.display(false)?);
         println!()
     }
 

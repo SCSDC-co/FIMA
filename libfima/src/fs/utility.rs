@@ -24,13 +24,13 @@
 //! ```
 
 use std::fs;
-use std::io::Error;
+use std::io;
 use std::path::{Path, PathBuf};
 
 pub use glob;
 
 /// Checks if a directory is empty
-pub fn is_dir_empty<P>(dir: P) -> Result<bool, Error>
+pub fn is_dir_empty<P>(dir: P) -> io::Result<bool>
 where
     P: AsRef<Path>,
 {
@@ -38,7 +38,7 @@ where
 }
 
 /// Checks if a directory is an ancestor of the current directory
-pub fn is_ancestor_of_current_directory<P>(path: P) -> Result<bool, Error>
+pub fn is_ancestor_of_cwd<P>(path: P) -> io::Result<bool>
 where
     P: AsRef<Path>,
 {
@@ -72,7 +72,7 @@ where
 }
 
 /// Checks if the directory is the root
-pub fn is_root<P>(path: P) -> Result<bool, std::io::Error>
+pub fn is_root<P>(path: P) -> io::Result<bool>
 where
     P: AsRef<Path>,
 {
