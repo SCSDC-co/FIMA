@@ -83,3 +83,23 @@ pub mod rename;
 /// ])?;
 /// ```
 pub mod create;
+
+/// Copies files or directories
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use libfima::fs::operations::copy;
+///
+/// // copies foo.txt into foo2.txt
+/// copy::copy_file("foo.txt", "foo2.txt")?;
+/// // if destination is a directory it will add the file name, so it's going to be copied at foo/foo.txt
+/// copy::copy_file("foo.txt", "foo")?;
+///
+/// // copies bar.toml and baz into foo
+/// copy::copy_file_many(["bar.toml", "baz"], "foo")?;
+///
+/// // copies barbar/baz into foo
+/// copy::copy_dir("barbar/baz", "foo")?;
+/// ```
+pub mod copy;

@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use libfima::{fs::extensions::PathExt, fs::metadata};
+use libfima::fs::{self, extensions::PathExt, metadata};
 
 mod archive;
 
@@ -34,6 +34,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  Permissions: {}", file.permissions()?.display(false)?);
         println!()
     }
+
+    fs::operations::copy::copy_file("package.json", "copy_output")?;
+    fs::operations::copy::copy_file_many(["Cargo.toml", "justfile"], "copy_output")?;
+    fs::operations::copy::copy_dir("libfima/src/fs", "copy_output")?;
 
     archive::setup()?;
 
