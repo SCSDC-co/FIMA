@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use libfima::{fs::extentions::PathExt, fs::metadata};
+use libfima::{fs::extensions::PathExt, fs::metadata};
 
 mod archive;
 
