@@ -29,3 +29,9 @@ mod compressor_ext;
 
 #[cfg(feature = "compressor-extension")]
 pub use compressor_ext::*;
+
+#[cfg(feature = "archive-extension")]
+mod archive_ext;
+
+#[cfg(feature = "archive-extension")]
+pub use archive_ext::*;

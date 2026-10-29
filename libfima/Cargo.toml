@@ -11,6 +11,9 @@ readme = "README.md"
 [features]
 path-extension = []
 compressor-extension = []
+archive-extension = []
+
+extensions = ["path-extension", "compressor-extension", "archive-extension"]
 
 [dependencies]
 anyhow = "1.0.104"

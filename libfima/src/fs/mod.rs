@@ -25,6 +25,10 @@ pub mod compressors;
 /// Work with general metadata of an item
 pub mod metadata;
 
-#[cfg(any(feature = "path-extension"))]
+#[cfg(any(
+    feature = "path-extension",
+    feature = "compressor-extension",
+    feature = "archive-extension"
+))]
 /// Extensions of Path
 pub mod extensions;
