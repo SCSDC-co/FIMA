@@ -10,6 +10,7 @@ readme = "README.md"
 
 [features]
 path-extension = []
+compressor-extension = []
 
 [dependencies]
 anyhow = "1.0.104"

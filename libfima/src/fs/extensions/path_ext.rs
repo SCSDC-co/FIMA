@@ -1,23 +1,3 @@
-// keep that first empty line, it is just to not show the content of the docs in the module overview
-// of fs
-//!
-//! The main function of this module is to simplify the usage of libfima by adding custom methods to
-//! Path and PathBuf.
-//!
-//! # Examples
-//!
-//! ```rust,no_run,ignore
-//! use libfima::fs::extensions::PathExt;
-//!
-//! let path = Path::new("foo.txt");
-//!
-//! path.create()?;
-//!
-//! path.rename("bar.txt")?;
-//!
-//! path.size()?;
-//! ```
-
 use crate::fs::{metadata::Permissions, operations::remove};
 use std::{
     ffi::OsStr,
