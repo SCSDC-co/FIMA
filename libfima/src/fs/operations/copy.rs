@@ -11,20 +11,13 @@ where
     K: AsRef<Path>,
 {
     let source = crate::fs::utility::expand_path(source);
-    let mut destination = crate::fs::utility::expand_path(destination);
-
-    let file_name = match source.file_name() {
-        Some(n) => n,
-        None => {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "Source has no file name.",
-            ));
-        }
-    };
+    let destination = crate::fs::utility::expand_path(destination);
 
     if destination.is_dir() {
-        destination = destination.join(file_name);
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "Destination must be a file.",
+        ));
     }
 
     if source == destination {
@@ -40,6 +33,41 @@ where
     io::copy(&mut source_file, &mut destination_file)?;
 
     Ok(())
+}
+
+/// Copies a file into a directory
+pub fn copy_file_to_dir<P, K>(source: P, destination: K) -> io::Result<()>
+where
+    P: AsRef<Path>,
+    K: AsRef<Path>,
+{
+    let source = crate::fs::utility::expand_path(source);
+    let mut destination = crate::fs::utility::expand_path(destination);
+
+    let file_name = match source.file_name() {
+        Some(n) => n,
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidFilename,
+                "Source has an invalid file name.",
+            ));
+        }
+    };
+
+    if !destination.is_dir() {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "Destination must be a dir.",
+        ));
+    }
+
+    if !destination.exists() {
+        crate::fs::operations::create::create_dir_all(&destination)?;
+    }
+
+    destination = destination.join(file_name);
+
+    copy_file(source, destination)
 }
 
 /// Copies multiple files into a directory
@@ -65,17 +93,7 @@ where
     for path in paths {
         let path = crate::fs::utility::expand_path(path);
 
-        let file_name = match path.file_name() {
-            Some(n) => n,
-            None => {
-                return Err(io::Error::new(
-                    io::ErrorKind::InvalidInput,
-                    format!("Path {} has no file name.", path.display()),
-                ));
-            }
-        };
-
-        copy_file(&path, destination.join(file_name))?;
+        copy_file_to_dir(path, &destination)?;
     }
 
     Ok(())

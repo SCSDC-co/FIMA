@@ -92,7 +92,7 @@ where
 /// # Examples
 ///
 /// ```
-/// use libfima::fs::operations::size;
+/// use libfima::fs::metadata::size;
 ///
 /// assert_eq!(
 ///     size::make_size_readable(1_500, true),

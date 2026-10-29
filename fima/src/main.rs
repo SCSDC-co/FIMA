@@ -35,9 +35,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!()
     }
 
-    fs::operations::copy::copy_file("package.json", "copy_output")?;
-    fs::operations::copy::copy_file_many(["Cargo.toml", "justfile"], "copy_output")?;
-    fs::operations::copy::copy_dir("libfima/src/fs", "copy_output")?;
+    let copy_output = Path::new("copy_output");
+
+    copy_output.create(true)?;
+
+    fs::operations::copy::copy_file_to_dir("package.json", copy_output)?;
+    fs::operations::copy::copy_file_many(["Cargo.toml", "justfile"], copy_output)?;
+    fs::operations::copy::copy_dir("libfima/src/fs", copy_output)?;
 
     archive::setup()?;
 

@@ -19,3 +19,7 @@ check workspace="--workspace":
 test workspace="--all-targets":
     cargo test {{ workspace }}
     cargo test --doc
+
+# Publish a new version of libfima in crates.io
+publish:
+    cargo publish -p libfima

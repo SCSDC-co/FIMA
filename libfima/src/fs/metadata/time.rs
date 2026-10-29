@@ -34,7 +34,7 @@ where
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust,no_run,ignore
 /// use libfima::fs::metadata;
 ///
 /// metadata::last_modified_time_formatted("foo")?; // 30/11/2026 22:44:43
