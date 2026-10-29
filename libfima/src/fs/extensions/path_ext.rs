@@ -47,6 +47,13 @@ pub trait PathExt {
     where
         P: AsRef<Path>;
 
+    /// Copies this path into a directory
+    ///
+    /// wrapper around `copy_file_to_dir`
+    fn copy_to_dir<P>(&self, destination: P) -> io::Result<()>
+    where
+        P: AsRef<Path>;
+
     /// Removes this path using the specified options
     ///
     /// Wrapper around `remove::remove`
@@ -148,6 +155,12 @@ impl PathExt for Path {
         P: AsRef<Path>,
     {
         crate::fs::operations::copy::copy_file(self, destination)
+    }
+    fn copy_to_dir<P>(&self, destination: P) -> io::Result<()>
+    where
+        P: AsRef<Path>,
+    {
+        crate::fs::operations::copy::copy_file_to_dir(self, destination)
     }
     fn remove(&self, options: &remove::Options) -> io::Result<()> {
         crate::fs::operations::remove::remove(self, options)
