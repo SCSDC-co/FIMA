@@ -96,6 +96,44 @@ pub fn test_tar() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+pub fn test_7z() -> Result<(), Box<dyn std::error::Error>> {
+    let file = ARCHIVE_DIR.join("test.7z");
+    let output_path = ARCHIVE_DIR.join("7z_extract");
+    let mut count = 0;
+
+    let mut action = |path: PathBuf| -> () {
+        count += 1;
+        println!("(7z) adding {}", path.display())
+    };
+
+    let mut archive = archive::Archive::new(&file, archive::ArchiveFormat::SevenZip)?;
+
+    archive.add_file_many(["package.json", "justfile"], &mut action)?;
+    archive.add_directory("libfima/src/fs", action)?;
+
+    let format = archive.format.clone();
+
+    archive.finish()?;
+
+    println!("(7z) item added: {count}");
+
+    let errs = archive::extract(&file, output_path, format, |path| {
+        println!("(7z) extracting {}", path.display())
+    })?;
+
+    for err in errs {
+        eprintln!("(7z) {}", err);
+    }
+
+    println!();
+
+    for files in archive::list(file, format)? {
+        println!("(7z) {}", files.display())
+    }
+
+    Ok(())
+}
+
 pub fn test_xz() -> Result<(), Box<dyn std::error::Error>> {
     let file = Path::new("package.json");
     let xz_file = ARCHIVE_DIR.join(file.with_added_extension("xz"));

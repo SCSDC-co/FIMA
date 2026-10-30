@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use libfima::fs::{self, extensions::PathExt, metadata};
+use libfima::fs::{extensions::PathExt, metadata};
 
 mod archive;
 
@@ -35,14 +35,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!()
     }
 
-    let copy_output = Path::new("copy_output");
-
-    copy_output.create(true)?;
-
-    fs::operations::copy::copy_file_to_dir("package.json", copy_output)?;
-    fs::operations::copy::copy_file_many(["Cargo.toml", "justfile"], copy_output)?;
-    fs::operations::copy::copy_dir("libfima/src/fs", copy_output)?;
-
     archive::setup()?;
 
     archive::test_zip()?;
@@ -50,6 +42,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("\n");
 
     archive::test_tar()?;
+
+    println!("\n");
+
+    archive::test_7z()?;
 
     println!("\n");
 

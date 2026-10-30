@@ -72,6 +72,17 @@ impl super::Archive {
 
                 action(sanitized_path);
             }
+            super::ArchiveType::SevenZip { ref mut writer } => {
+                writer.push_archive_entry(
+                    sevenz_rust2::ArchiveEntry::from_path(
+                        &canonical_path,
+                        sanitized_path.to_str().unwrap().to_string(),
+                    ),
+                    Some(File::open(canonical_path)?),
+                )?;
+
+                action(sanitized_path);
+            }
         }
 
         Ok(())
@@ -100,32 +111,41 @@ impl super::Archive {
         let path = crate::fs::utility::expand_path(path);
         let root = path.parent().unwrap();
 
-        match self.archive {
-            super::ArchiveType::Zip {
-                ref mut writer,
-                options,
-                ..
-            } => {
-                for item in WalkDir::new(&path) {
-                    let item = item?.into_path();
-                    let archive_path = item.strip_prefix(root)?.to_path_buf();
+        for item in WalkDir::new(&path) {
+            let item = item?.into_path();
+            let archive_path = item.strip_prefix(root)?.to_path_buf();
 
+            match self.archive {
+                super::ArchiveType::Zip {
+                    ref mut writer,
+                    options,
+                    ..
+                } => {
                     if item.is_file() {
                         add_file_to_zip(writer, &archive_path, item, options)?;
                     } else if item.is_dir() {
                         writer.add_directory(&*archive_path.to_str().unwrap(), options)?;
                     }
-
-                    action(archive_path);
+                }
+                super::ArchiveType::Tar { ref mut builder } => {
+                    if item.is_file() {
+                        builder.append_file(&archive_path, &mut File::open(item)?)?;
+                    } else if item.is_dir() {
+                        builder.append_dir(&archive_path, item)?;
+                    }
+                }
+                super::ArchiveType::SevenZip { ref mut writer } => {
+                    writer.push_archive_entry(
+                        sevenz_rust2::ArchiveEntry::from_path(
+                            &item,
+                            archive_path.to_str().unwrap().to_string(),
+                        ),
+                        Some(File::open(item)?),
+                    )?;
                 }
             }
-            super::ArchiveType::Tar { ref mut builder } => {
-                let sanitized_path = sanitize_path(&path, root)?;
 
-                builder.append_dir_all(&sanitized_path, &path)?;
-
-                action(path);
-            }
+            action(archive_path);
         }
 
         Ok(())

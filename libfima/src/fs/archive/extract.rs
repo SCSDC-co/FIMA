@@ -56,9 +56,9 @@ where
     K: AsRef<Path>,
     F: FnMut(PathBuf),
 {
-    let path = crate::fs::utility::expand_path(output);
+    let output = crate::fs::utility::expand_path(output);
 
-    fs::create_dir_all(&path)?;
+    fs::create_dir_all(&output)?;
 
     let archive_file = File::open(&archive)?;
 
@@ -78,7 +78,7 @@ where
                 };
 
                 let out_path = match item.enclosed_name() {
-                    Some(e) => path.join(e),
+                    Some(e) => output.join(e),
                     None => {
                         errors.push(io::Error::new(
                             io::ErrorKind::InvalidFilename,
@@ -144,9 +144,9 @@ where
                 let item_path = item.path().unwrap().to_path_buf();
 
                 if item.header().entry_type().is_dir() {
-                    crate::fs::operations::create::create_dir_all(path.join(&item_path))?;
+                    crate::fs::operations::create::create_dir_all(output.join(&item_path))?;
                 } else {
-                    let dest = path.join(&item_path);
+                    let dest = output.join(&item_path);
 
                     crate::fs::operations::create::create_dir_all(dest.parent().unwrap())?;
 
@@ -163,6 +163,9 @@ where
 
                 action(item_path);
             }
+        }
+        super::ArchiveFormat::SevenZip => {
+            sevenz_rust2::decompress_file(&archive, output)?;
         }
     }
 

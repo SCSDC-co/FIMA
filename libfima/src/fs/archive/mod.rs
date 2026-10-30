@@ -7,6 +7,7 @@
 //!
 //! - `zip` (compressed, default)
 //! - `tar` (not compressed)
+//! - `7z` (compressed)
 //!
 //! # Examples
 //!
@@ -75,12 +76,15 @@ pub use list::*;
 /// All the types of archives available
 #[derive(Debug, Clone, Copy, Default)]
 pub enum ArchiveFormat {
-    /// Zip archive format (default)
+    /// Zip archive format (compression, default)
     #[default]
     Zip,
 
     /// Tarball archive format (no compression)
     Tar,
+
+    /// 7z archive format (compression)
+    SevenZip,
 }
 
 enum ArchiveType {
@@ -90,6 +94,9 @@ enum ArchiveType {
     },
     Tar {
         builder: tar::Builder<File>,
+    },
+    SevenZip {
+        writer: sevenz_rust2::ArchiveWriter<File>,
     },
 }
 
@@ -190,6 +197,9 @@ impl Archive {
             ArchiveFormat::Tar => ArchiveType::Tar {
                 builder: tar::Builder::new(file),
             },
+            ArchiveFormat::SevenZip => ArchiveType::SevenZip {
+                writer: sevenz_rust2::ArchiveWriter::new(file)?,
+            },
         };
 
         Ok(Self {
@@ -205,8 +215,11 @@ impl Archive {
             ArchiveType::Zip { writer, .. } => {
                 writer.finish()?;
             }
-            ArchiveType::Tar { mut builder, .. } => {
+            ArchiveType::Tar { mut builder } => {
                 builder.finish()?;
+            }
+            ArchiveType::SevenZip { writer } => {
+                writer.finish()?;
             }
         }
 

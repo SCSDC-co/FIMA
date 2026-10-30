@@ -63,6 +63,14 @@ where
                 paths.push(file.path().unwrap().to_path_buf());
             }
         }
+        super::ArchiveFormat::SevenZip => {
+            let archive =
+                sevenz_rust2::ArchiveReader::new(archive_file, sevenz_rust2::Password::empty())?;
+
+            for item in archive.archive().files.iter() {
+                paths.push(PathBuf::from(item.name()));
+            }
+        }
     }
 
     Ok(paths)

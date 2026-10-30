@@ -42,6 +42,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "block-padding"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "710f1dd022ef4e93f8a438b4ba958de7f64308434fa6a87104481645cc30068b"
+dependencies = [
+ "hybrid-array",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -54,6 +63,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3a53fac24f34a81bc9954b5d6cfce0c21e18ec6959f44f56e8e90e4bb7c346c"
 dependencies = [
  "libbz2-rs-sys",
+]
+
+[[package]]
+name = "cbc"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce2dc9ee5f88d11e0beb842c88b33c8a5cf0d1329c4b19494af42b07dbfe8896"
+dependencies = [
+ "cipher",
 ]
 
 [[package]]
@@ -345,6 +363,7 @@ version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b5cf4372d022092674a83b8febf5865f7a573cc0c5baec5e49c879b6a20978f"
 dependencies = [
+ "block-padding",
  "hybrid-array",
 ]
 
@@ -391,6 +410,7 @@ dependencies = [
  "flate2",
  "glob",
  "magic",
+ "sevenz-rust2",
  "shellexpand",
  "tar",
  "time",
@@ -430,6 +450,12 @@ checksum = "7277c9742229dc25243236d578b6471a798c554512c6f6a04365ec2e87c2a3bb"
 dependencies = [
  "sha2",
 ]
+
+[[package]]
+name = "lzma-rust2"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1c46f3fcd2e888afdb01a07efc071cb21300e07c68d32c3e8b01b5c8cb1fcaa"
 
 [[package]]
 name = "lzma-sys"
@@ -622,6 +648,24 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.6",
+]
+
+[[package]]
+name = "sevenz-rust2"
+version = "0.24.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2f0c68c0e8289bfd09e49ef433e8de02c7c464afc1d7f5a275c99749a880e301"
+dependencies = [
+ "aes",
+ "bzip2",
+ "cbc",
+ "crc32fast",
+ "getrandom",
+ "js-sys",
+ "lzma-rust2 0.23.0",
+ "ppmd-rust",
+ "sha2",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -1017,7 +1061,7 @@ dependencies = [
  "getrandom",
  "hmac",
  "indexmap",
- "lzma-rust2",
+ "lzma-rust2 0.22.0",
  "memchr",
  "nix",
  "pbkdf2",
