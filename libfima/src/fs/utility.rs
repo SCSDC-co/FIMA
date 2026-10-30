@@ -42,33 +42,21 @@ pub fn is_ancestor_of_cwd<P>(path: P) -> io::Result<bool>
 where
     P: AsRef<Path>,
 {
-    let path = expand_path(path);
+    let path = expand_path(path).canonicalize()?;
 
-    for parent in std::env::current_dir()?.ancestors() {
-        if path == parent {
-            return Ok(true);
-        }
-    }
-
-    Ok(false)
+    Ok(std::env::current_dir()?.starts_with(path))
 }
 
 /// Checks if a directory is an ancestor of another
-pub fn is_ancestor<P, K>(path: P, parent: K) -> bool
+pub fn is_ancestor<P, K>(path: P, parent: K) -> io::Result<bool>
 where
     P: AsRef<Path>,
     K: AsRef<Path>,
 {
-    let path = expand_path(path);
-    let parent = expand_path(parent);
+    let path = expand_path(path).canonicalize()?;
+    let parent = expand_path(parent).canonicalize()?;
 
-    for ancestor in path.ancestors() {
-        if parent == ancestor {
-            return true;
-        }
-    }
-
-    false
+    Ok(parent.starts_with(path))
 }
 
 /// Checks if the directory is the root

@@ -44,20 +44,29 @@ pub struct Options {
 ///     &options,
 /// )?;
 /// ```
-pub fn remove<P>(path: P, opts: &Options) -> Result<(), io::Error>
+pub fn remove<P>(path: P, opts: &Options) -> io::Result<()>
 where
     P: AsRef<Path>,
 {
-    let path = &crate::fs::utility::expand_path(path);
+    let path = &crate::fs::utility::expand_path(path).canonicalize()?;
+    let current_dir = std::env::current_dir()?;
 
-    if crate::fs::utility::is_root(path)? {
+    if *path == current_dir {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "You can't delete the current directory.",
+        ));
+    }
+
+    // we don't use the functions of utility because it would canonicalize multiple time `path`
+    if path.parent().is_none() {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
             "You can't delete the root.",
         ));
     }
 
-    if crate::fs::utility::is_ancestor_of_cwd(path)? {
+    if current_dir.starts_with(path) {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
             "You can't delete a parent of the current directory.",
@@ -106,7 +115,7 @@ where
 ///     &options,
 /// )?;
 /// ```
-pub fn remove_many<P, K>(paths: K, opts: &Options) -> Result<(), io::Error>
+pub fn remove_many<P, K>(paths: K, opts: &Options) -> io::Result<()>
 where
     K: IntoIterator<Item = P>,
     P: AsRef<Path>,
@@ -134,7 +143,7 @@ where
 /// // This removes all the rust source files
 /// remove::remove_glob("**/*.rs", &options)?;
 /// ```
-pub fn remove_glob<S>(pattern: S, opts: &Options) -> Result<(), io::Error>
+pub fn remove_glob<S>(pattern: S, opts: &Options) -> io::Result<()>
 where
     S: AsRef<str>,
 {

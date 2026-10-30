@@ -59,7 +59,7 @@ pub trait PathExt {
     /// Checks whether this path is an ancestor of the specified path
     ///
     /// Wrapper around `utility::is_ancestor`
-    fn is_ancestor_of<P>(&self, path: P) -> bool
+    fn is_ancestor_of<P>(&self, path: P) -> io::Result<bool>
     where
         P: AsRef<Path>;
 
@@ -158,7 +158,7 @@ impl PathExt for Path {
     fn is_root(&self) -> io::Result<bool> {
         crate::fs::utility::is_root(self)
     }
-    fn is_ancestor_of<P>(&self, path: P) -> bool
+    fn is_ancestor_of<P>(&self, path: P) -> io::Result<bool>
     where
         P: AsRef<Path>,
     {

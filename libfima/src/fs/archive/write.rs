@@ -11,7 +11,7 @@ where
     K: AsRef<Path>,
 {
     let path = crate::fs::utility::expand_path(path);
-    let mut root = crate::fs::utility::expand_path(root);
+    let mut root = crate::fs::utility::expand_path(root).canonicalize()?;
 
     if !root.is_empty() {
         root = root.canonicalize()?;
