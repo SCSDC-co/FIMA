@@ -1,11 +1,11 @@
 // keep that first empty line, it is just to not show the content of the docs in the module overview
 // of fs
 //!
-//! It contains a struct and 2 functions for working with archives
+//! It contains a struct and functions for working with them
 //!
 //! Supported formats:
 //!
-//! - `zip` (compressed)
+//! - `zip` (compressed, default)
 //! - `tar` (not compressed)
 //!
 //! # Examples
@@ -15,12 +15,12 @@
 //!
 //! let zip_file = "foo.zip";
 //!
-//! let mut archive = archive::Archive::new(zip_file, fs::archive::ArchiveFormat::Zip)?;
+//! let mut archive = archive::Archive::new(zip_file, archive::ArchiveFormat::default())?;
 //!
 //! // add files:
-//! archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); )?;
-//! archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); )?;
-//! archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); )?;
+//! archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); })?;
+//! archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); })?;
+//! archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); })?;
 //! // or
 //! archive.add_file_many([
 //!  "foo.txt",
@@ -54,7 +54,7 @@
 //!
 //! // list files in archive
 //! for files in archive::list(zip_file, format)? {
-//!     println!("{}", files.display())
+//!     println!("{}", files.display());
 //! }
 //! ```
 
@@ -73,9 +73,10 @@ pub use extract::*;
 pub use list::*;
 
 /// All the types of archives available
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub enum ArchiveFormat {
-    /// Zip archive format
+    /// Zip archive format (default)
+    #[default]
     Zip,
 
     /// Tarball archive format (no compression)
@@ -101,12 +102,12 @@ enum ArchiveType {
 ///
 /// let zip_file = "foo.zip";
 ///
-/// let mut archive = archive::Archive::new(zip_file, fs::archive::ArchiveFormat::Zip)?;
+/// let mut archive = archive::Archive::new(zip_file, archive::ArchiveFormat::Zip)?;
 ///
 /// // add files:
-/// archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); )?;
-/// archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); )?;
-/// archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); )?;
+/// archive.add_file("foo.txt", |path| { println!("adding: {}", path.display()); })?;
+/// archive.add_file("bar.txt", |path| { println!("adding: {}", path.display()); })?;
+/// archive.add_file("baz.txt", |path| { println!("adding: {}", path.display()); })?;
 /// // or
 /// archive.add_file_many([
 ///  "foo.txt",
@@ -125,7 +126,7 @@ enum ArchiveType {
 ///  "baz",
 /// ], |path| { println!("adding: {}", path.display()); })?;
 ///
-/// let archive_type = archive.format.clone();
+/// let format = archive.format.clone();
 ///
 /// // always call `.finish()` when finished with the archive
 /// // this will destroy the object
@@ -140,7 +141,7 @@ enum ArchiveType {
 ///
 /// // list files in archive
 /// for files in archive::list(zip_file, format)? {
-///     println!("{}", files.display())
+///     println!("{}", files.display());
 /// }
 /// ```
 pub struct Archive {

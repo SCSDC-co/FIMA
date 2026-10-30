@@ -8,7 +8,7 @@ build:
     cargo build
 
 docs workspace="--workspace":
-    cargo doc {{ workspace }} --no-deps
+    cargo doc {{ workspace }} --no-deps --all-features
 
 lint:
     cargo clippy --no-deps
