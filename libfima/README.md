@@ -18,7 +18,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-libfima = "0.1.0"
+libfima = "0.1.3"
 ```
 
 ## Example
