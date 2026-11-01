@@ -1,6 +1,10 @@
 use std::path::Path;
 
-use libfima::fs::{extensions::PathExt, metadata, operations::hash};
+use libfima::fs::{
+    extensions::PathExt,
+    metadata,
+    operations::{hash, list_directory},
+};
 
 mod archive;
 
@@ -80,6 +84,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let hash = hash::Hash::from_bytes(message, hash_type);
 
         println!("{hash}")
+    }
+
+    let dir = "libfima/src/fs";
+
+    let options = list_directory::Options {
+        sorting: list_directory::Sorting::DirectoriesFirst,
+        hidden_files: true,
+        filter: Some(Box::new(|path| path.file_name().unwrap() != "mod.rs")),
+    };
+
+    println!("\nlisting {dir}:\n");
+
+    for item in list_directory::list_dir(dir, options)? {
+        println!("{}", item.display())
     }
 
     Ok(())

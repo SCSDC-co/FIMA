@@ -1,11 +1,11 @@
 //!
 //! Useful filesystem toolbox
 //!
-//! - [`fs::operations`] — Common file operations
-//! - [`fs::metadata`] — Get general and specific metadata about an item
-//! - [`fs::utility`] — Useful general-purpose utilities
-//! - [`fs::archive`] — Working with archives (compressed and not)
-//! - [`fs::compressors`] — Working with compressors, like gzip and xz
+//! - [`operations`] — Common file operations
+//! - [`metadata`] — Get general and specific metadata about an item
+//! - [`utility`] — Useful general-purpose utilities
+//! - [`archive`] — Working with archives (compressed and not)
+//! - [`compressors`] — Working with compressors, like gzip and xz
 
 /// A module for windows-specific functions
 mod windows;

@@ -21,7 +21,9 @@
 //!
 //! # Crate Features
 //!
-//! - `path-extension` — adds the `PathExt` trait into Path and PathBuf
+//! - `path-extension` — adds the [`fs::extensions::PathExt`] trait into Path and PathBuf
+//! - `compressor-extension` — adds the [`fs::extensions::CompressorExt`] trait into Path and PathBuf
+//! - `archive-extension` — adds the [`fs::extensions::ArchiveExt`] trait into Path and PathBuf
 
 /// A filesystem toolkit
 pub mod fs;

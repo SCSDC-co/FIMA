@@ -103,3 +103,32 @@ where
         path.to_path_buf()
     }
 }
+
+/// Checks if a file is hidden
+///
+/// - windows: checks if the file has the HIDDEN attribute
+/// - unix: checks if the file starts with .
+pub fn is_file_hidden<P>(path: P) -> io::Result<bool>
+where
+    P: AsRef<Path>,
+{
+    #[cfg(unix)]
+    {
+        use std::os::unix::ffi::OsStrExt;
+
+        Ok(path
+            .as_ref()
+            .file_name()
+            .is_some_and(|name| name.as_bytes().starts_with(b".")))
+    }
+
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt;
+        use windows::Win32::Storage::FileSystem::FILE_ATTRIBUTE_HIDDEN;
+
+        let metadata = std::fs::metadata(path)?;
+
+        Ok(metadata.file_attributes() & FILE_ATTRIBUTE_HIDDEN.0 != 0)
+    }
+}

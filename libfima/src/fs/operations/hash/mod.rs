@@ -57,7 +57,7 @@ impl Hash {
         Self { algorithm, digest }
     }
 
-    /// Creates a [`Hash`] from a reader
+    /// Creates a [`struct@Hash`] from a reader
     ///
     /// Uses incremental hashing to avoid loading the entire input into memory
     pub fn from_reader<R>(reader: R, algorithm: HashAlgorithm) -> io::Result<Self>
@@ -102,7 +102,7 @@ impl Hash {
         Ok(Self { algorithm, digest })
     }
 
-    /// Creates a [`Hash`] from a file
+    /// Creates a [`struct@Hash`] from a file
     ///
     /// Internally uses [`Hash::from_reader`] to process the file incrementally
     pub fn from_file<P>(path: P, algorithm: HashAlgorithm) -> io::Result<Self>

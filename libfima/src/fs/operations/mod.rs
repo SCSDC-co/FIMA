@@ -130,4 +130,28 @@ pub mod copy;
 /// ```
 pub mod hash;
 
+/// List directories with advanced sorting and filtering options
+///
+/// # Examples
+///
+/// ```rust,no_run,ignore
+/// use std::path::Path;
+///
+/// use libfima::fs::operations::list_directory::{list_dir, Options, Sorting};
+///
+/// let options = Options {
+///     sorting: Sorting::AlphabeticalDirectoriesFirst,
+///     hidden_files: false,
+///     filter: Some(Box::new(|path: &Path| {
+///         path.extension().is_some_and(|ext| ext == "rs")
+///             || path.is_dir()
+///     })),
+/// };
+///
+/// let entries = list_dir("./src", options)?;
+///
+/// for entry in entries {
+///     println!("{}", entry.display());
+/// }
+/// ```
 pub mod list_directory;
