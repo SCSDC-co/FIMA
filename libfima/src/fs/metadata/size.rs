@@ -92,23 +92,23 @@ where
 /// # Examples
 ///
 /// ```
-/// use libfima::fs::metadata::size;
+/// use libfima::fs::metadata;
 ///
 /// assert_eq!(
-///     size::make_size_readable(1_500, true),
+///     metadata::make_size_readable(1_500, true),
 ///     ("1.5".to_string(), "KB".to_string())
 /// );
 /// assert_eq!(
-///     size::make_size_readable(1_000_000, true),
+///     metadata::make_size_readable(1_000_000, true),
 ///     ("1".to_string(), "MB".to_string())
 /// );
 ///
 /// assert_eq!(
-///     size::make_size_readable(1_536, false),
+///     metadata::make_size_readable(1_536, false),
 ///     ("1.5".to_string(), "KiB".to_string())
 /// );
 /// assert_eq!(
-///     size::make_size_readable(1_048_576, false),
+///     metadata::make_size_readable(1_048_576, false),
 ///     ("1".to_string(), "MiB".to_string())
 /// );
 /// ```

@@ -130,6 +130,19 @@ impl Hash {
 
         Ok(calculated.digest == hash.as_ref())
     }
+
+    /// Gets the hash digest as a hexadecimal string
+    pub fn as_string(&self) -> String {
+        use fmt::Write;
+
+        let mut string = String::with_capacity(self.digest.len() * 2);
+
+        for byte in &self.digest {
+            write!(string, "{byte:02x}").unwrap();
+        }
+
+        string
+    }
 }
 
 impl fmt::Display for Hash {

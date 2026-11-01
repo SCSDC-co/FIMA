@@ -104,4 +104,30 @@ pub mod create;
 /// ```
 pub mod copy;
 
+/// Hashing for files, readers, and raw bytes
+///
+/// Supported algorithms:
+///
+/// - SHA-256 (default)
+/// - SHA-512
+/// - BLAKE3
+/// - MD5 (not suitable for security-sensitive applications)
+///
+/// # Examples
+///
+/// ```
+/// use libfima::fs::operations::hash;
+///
+/// let hash = hash::Hash::from_bytes(
+///     b"hello, world!",
+///     hash::HashAlgorithm::Sha256,
+/// );
+///
+/// assert_eq!(
+///     hash.as_string(),
+///     "68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728"
+/// );
+/// ```
 pub mod hash;
+
+pub mod list_directory;
