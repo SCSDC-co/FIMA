@@ -26,7 +26,7 @@ use std::{fmt, fs, io};
 
 use path_clean::PathClean;
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 /// Types of symlinks
 ///
 /// Unix-like systems will treat both types the exact the same way
@@ -35,7 +35,13 @@ pub enum SymlinkType {
     File,
 
     /// A symlink to a directory
-    Dir,
+    Directory,
+}
+
+impl fmt::Display for SymlinkType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -74,7 +80,7 @@ impl Symlink {
         let symlink_type: SymlinkType;
 
         if fs::symlink_metadata(&path)?.is_dir() {
-            symlink_type = SymlinkType::Dir;
+            symlink_type = SymlinkType::Directory;
         } else {
             symlink_type = SymlinkType::File;
         }
@@ -90,7 +96,7 @@ impl Symlink {
     pub fn create(&self) -> io::Result<()> {
         match &self.symlink_type {
             SymlinkType::File => symlink::symlink_file(&self.target, &self.path),
-            SymlinkType::Dir => symlink::symlink_dir(&self.target, &self.path),
+            SymlinkType::Directory => symlink::symlink_dir(&self.target, &self.path),
         }
     }
 
@@ -116,7 +122,7 @@ impl Symlink {
 
         match &self.symlink_type {
             SymlinkType::File => crate::fs::operations::create::create_file(target),
-            SymlinkType::Dir => crate::fs::operations::create::create_dir_all(target),
+            SymlinkType::Directory => crate::fs::operations::create::create_dir_all(target),
         }
     }
 
@@ -150,7 +156,7 @@ impl Symlink {
     pub fn remove(&self) -> io::Result<()> {
         match &self.symlink_type {
             SymlinkType::File => symlink::remove_symlink_file(&self.path),
-            SymlinkType::Dir => symlink::remove_symlink_dir(&self.path),
+            SymlinkType::Directory => symlink::remove_symlink_dir(&self.path),
         }
     }
 

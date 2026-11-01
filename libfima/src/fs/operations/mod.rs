@@ -103,3 +103,5 @@ pub mod create;
 /// copy::copy_dir("barbar/baz", "foo")?;
 /// ```
 pub mod copy;
+
+pub mod hash;

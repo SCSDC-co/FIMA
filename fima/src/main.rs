@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use libfima::fs::{extensions::PathExt, metadata};
+use libfima::fs::{extensions::PathExt, metadata, operations::hash};
 
 mod archive;
 
@@ -62,6 +62,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("\n");
 
     archive::test_zstd()?;
+
+    let hash_types = [
+        hash::HashAlgorithm::Sha256,
+        hash::HashAlgorithm::Sha512,
+        hash::HashAlgorithm::Md5,
+        hash::HashAlgorithm::Blake3,
+    ];
+
+    let message = "hello, world!";
+
+    println!("\nstring: {message}\n");
+
+    for hash_type in hash_types {
+        let hash = hash::Hash::from_bytes(message, hash_type);
+
+        println!("{hash}")
+    }
 
     Ok(())
 }

@@ -17,12 +17,15 @@ extensions = ["path-extension", "compressor-extension", "archive-extension"]
 
 [dependencies]
 anyhow = "1.0.104"
+blake3 = "1.8.7"
 bzip2 = "0.6.1"
 flate2 = "1.1.10"
 glob = "0.3.4"
 magic = "0.17.0"
+md5 = "0.8.1"
 path-clean = "1.0.1"
 sevenz-rust2 = "0.24.1"
+sha2 = "0.11.1"
 shellexpand = "3.1.2"
 symlink = "0.1.0"
 tar = "0.4.46"

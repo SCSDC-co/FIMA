@@ -60,6 +60,7 @@
 //! ```
 
 use std::{
+    fmt,
     fs::{File, OpenOptions},
     path::{Path, PathBuf},
 };
@@ -74,7 +75,7 @@ pub use extract::*;
 pub use list::*;
 
 /// All the types of archives available
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum ArchiveFormat {
     /// Zip archive format (compression, default)
     #[default]
@@ -85,6 +86,16 @@ pub enum ArchiveFormat {
 
     /// 7z archive format (compression)
     SevenZip,
+}
+
+impl fmt::Display for ArchiveFormat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Zip => write!(f, "Zip"),
+            Self::Tar => write!(f, "Tar"),
+            Self::SevenZip => write!(f, "7z"),
+        }
+    }
 }
 
 enum ArchiveType {
