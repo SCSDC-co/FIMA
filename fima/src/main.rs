@@ -32,36 +32,38 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  Is lockfile: {}", magic.is_lockfile(file)?);
         println!("  Expanded path: {}", file.expand().display());
         println!("  Permissions: {}", file.permissions()?.display(false)?);
+
+        if file.expand().is_file() {
+            println!(
+                "  {}",
+                hash::Hash::from_file(file, hash::HashAlgorithm::default())?
+            );
+        }
+
         println!()
     }
 
-    archive::setup()?;
-
-    archive::test_zip()?;
-
-    println!("\n");
-
-    archive::test_tar()?;
-
-    println!("\n");
-
-    archive::test_7z()?;
-
-    println!("\n");
-
-    archive::test_xz()?;
-
-    println!("\n");
-
-    archive::test_gzip()?;
-
-    println!("\n");
-
-    archive::test_bzip()?;
-
-    println!("\n");
-
-    archive::test_zstd()?;
+    // archive::setup()?;
+    //
+    // archive::test_zip()?;
+    // println!("\n");
+    //
+    // archive::test_tar()?;
+    // println!("\n");
+    //
+    // archive::test_7z()?;
+    // println!("\n");
+    //
+    // archive::test_xz()?;
+    // println!("\n");
+    //
+    // archive::test_gzip()?;
+    // println!("\n");
+    //
+    // archive::test_bzip()?;
+    // println!("\n");
+    //
+    // archive::test_zstd()?;
 
     let hash_types = [
         hash::HashAlgorithm::Sha256,
