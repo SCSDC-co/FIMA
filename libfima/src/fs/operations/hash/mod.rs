@@ -114,6 +114,22 @@ impl Hash {
 
         Self::from_reader(file, algorithm)
     }
+
+    /// Checks whether a file matches the provided hash
+    ///
+    /// Computes the hash of the specified file using the given algorithm
+    /// and compares it with the provided digest
+    ///
+    /// The hash must be provided as raw bytes, not as a hexadecimal string
+    pub fn check_file<P, H>(path: P, hash: H, algorithm: HashAlgorithm) -> io::Result<bool>
+    where
+        P: AsRef<Path>,
+        H: AsRef<[u8]>,
+    {
+        let calculated = Self::from_file(path, algorithm)?;
+
+        Ok(calculated.digest == hash.as_ref())
+    }
 }
 
 impl fmt::Display for Hash {
