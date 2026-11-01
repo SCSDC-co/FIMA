@@ -1,3 +1,26 @@
+// keep that first empty line, it is just to not show the content of the docs in the module overview
+// of fs
+//!
+//! # Examples
+//!
+//! ```rust,no_run,ignore
+//! use libfima::fs::symlink;
+//!
+//! // Creates a Symlink object, this will not create the symlink in the filesystem
+//! let symlink = symlink::Symlink::new("link", "../foo.txt", symlink::SymlinkType::File);
+//!
+//! // This will create the actual symlink in the filesystem
+//! symlink.create()?;
+//!
+//! // This will print the resolved path of the symlink target
+//! println!("{}", symlink.revolve()?.display());
+//! // output: /home/user/bar/baz/foo.txt
+//!
+//! // Symlink implements Display so you can print it easily
+//! println!("{symlink}");
+//! // output: link -> ../foo.txt
+//! ```
+
 use std::path::{Path, PathBuf};
 use std::{fmt, fs, io};
 

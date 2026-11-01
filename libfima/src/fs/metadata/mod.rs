@@ -55,8 +55,8 @@
 //! // This creates a new permissions object, which holds all the permissions of a file.
 //! let perms = metadata::Permissions::new("foo.txt");
 //!
-//! println!("{}", perms.display(false); // rw-r--r--
-//! println!("{}", perms.display(true);
+//! println!("{}", perms.display(false)); // rw-r--r--
+//! println!("{}", perms.display(true));
 //! // ------ (no special attributes, this works only on windows, on unix like systems it does nothing and the output is the same as the above)
 //!
 //! // You can access fields like this:
@@ -85,7 +85,7 @@
 //! ## [`metadata::Magic`]:
 //!
 //! ```rust,no_run,ignore
-//! use libgima::fs::metadata;
+//! use libfima::fs::metadata;
 //!
 //! // The variable must be `mut` as the methods will change the flags of it
 //! let mut magic = metadata::Magic::new(metadata::magic_flags::Flags::empty())?;
@@ -105,12 +105,10 @@ mod magic;
 mod ownership;
 mod permissions;
 mod size;
-mod symlink;
 mod time;
 
 pub use magic::*;
 pub use ownership::*;
 pub use permissions::*;
 pub use size::*;
-pub use symlink::*;
 pub use time::*;

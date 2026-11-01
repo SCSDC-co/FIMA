@@ -25,6 +25,9 @@ pub mod compressors;
 /// Work with general metadata of an item
 pub mod metadata;
 
+/// Work with symlinks
+pub mod symlink;
+
 #[cfg(any(
     feature = "path-extension",
     feature = "compressor-extension",
