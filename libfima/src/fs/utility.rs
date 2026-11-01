@@ -28,6 +28,7 @@ use std::io;
 use std::path::{Path, PathBuf};
 
 pub use glob;
+pub use path_clean;
 
 /// Checks if a directory is empty
 pub fn is_dir_empty<P>(dir: P) -> io::Result<bool>
