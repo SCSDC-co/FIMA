@@ -2,7 +2,7 @@
 
 # libfima
 
-[Documentation](https://docs.rs/libfima/0.1.0)
+[Documentation](https://docs.rs/libfima/latest/libfima)
 
 <img src="https://skillicons.dev/icons?i=rust" >
 
@@ -18,7 +18,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-libfima = "0.2.0"
+libfima = "0.2.1"
 ```
 
 ## Example
