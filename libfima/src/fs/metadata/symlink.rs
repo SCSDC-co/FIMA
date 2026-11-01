@@ -66,8 +66,8 @@ impl Symlink {
     /// Creates the symlink in the filesystem
     pub fn create(&self) -> io::Result<()> {
         match &self.symlink_type {
-            SymlinkType::File => symlink::symlink_file(&self.path, &self.target),
-            SymlinkType::Dir => symlink::symlink_dir(&self.path, &self.target),
+            SymlinkType::File => symlink::symlink_file(&self.target, &self.path),
+            SymlinkType::Dir => symlink::symlink_dir(&self.target, &self.path),
         }
     }
 
@@ -104,7 +104,7 @@ impl Symlink {
 
     /// Resolve the symlink target
     pub fn resolve(&self) -> io::Result<PathBuf> {
-        let parent = match self.path.parent() {
+        let parent = match self.path.canonicalize()?.parent() {
             Some(p) => p.canonicalize()?,
             None => {
                 return Err(io::Error::new(
